@@ -250,10 +250,10 @@ export default function Quiz({
         <Ficha
           esquerda={
             // A posição é lida pelo sr-only "Afirmação n de N" logo abaixo: aqui não anuncia de novo.
-            <span aria-hidden>
+            <>
               {rodada > 1 && <span className="font-sans text-[11px] font-bold uppercase">Rodada {rodada} · </span>}
-              Ficha {doisDigitos(indice + 1)}/{doisDigitos(ordem.length)}
-            </span>
+              <span aria-hidden>Ficha {doisDigitos(indice + 1)}/{doisDigitos(ordem.length)}</span>
+            </>
           }
           direita={<span data-contador>{`Placar ${doisDigitos(acertos)}`}</span>}
         />
