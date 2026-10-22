@@ -1,11 +1,15 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { FOCO, ROTULO_VEREDITO, SELO_VEREDITO } from '@/components/rotulos'
+import { CARTAO_SUPERFICIE, FOCO, ROTULO_VEREDITO, SELO_VEREDITO } from '@/components/rotulos'
 import { type Afirmacao, carregarAfirmacoes, carregarReserva } from '@/lib/afirmacoes'
 
 export const metadata: Metadata = { title: 'As afirmações do jogo · Caiu Nessa?' }
 
-const LINK = `rounded font-medium text-stone-900 underline underline-offset-4 ${FOCO}`
+const LINK = `rounded font-medium text-stone-900 underline underline-offset-4 dark:text-stone-100 ${FOCO}`
+
+// Dentro do cartão (claro nos dois temas) o link e o foco ficam escuros.
+const LINK_CARTAO =
+  'rounded font-medium text-stone-900 underline underline-offset-4 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-stone-900'
 
 function formatarData(iso: string): string {
   const [ano, mes, dia] = iso.split('-')
@@ -14,14 +18,14 @@ function formatarData(iso: string): string {
 
 function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
   return (
-    <article className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
+    <article className={`flex flex-col gap-3 rounded-2xl p-5 ${CARTAO_SUPERFICIE}`}>
       <p className="text-lg font-semibold text-stone-900">{a.texto}</p>
       <p className="text-base text-stone-600">Quem disse: {a.autor}</p>
       <blockquote className="border-l-4 border-stone-200 pl-3 text-base text-stone-600 italic">“{a.citacao}”</blockquote>
       <span className={SELO_VEREDITO[a.veredito]}>{ROTULO_VEREDITO[a.veredito]}</span>
       {a.observacao && <p className="text-base text-stone-600">{a.observacao}</p>}
       <p className="text-base text-stone-700">{a.explicacao}</p>
-      <a href={a.fonte_url} target="_blank" rel="noopener noreferrer" className={`self-start ${LINK}`}>
+      <a href={a.fonte_url} target="_blank" rel="noopener noreferrer" className={`self-start ${LINK_CARTAO}`}>
         Ver a checagem ({a.fonte_nome}, {formatarData(a.data_checagem)})
       </a>
     </article>
@@ -31,7 +35,7 @@ function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
 function Secao({ id, titulo, afirmacoes }: { id: string; titulo: string; afirmacoes: Afirmacao[] }) {
   return (
     <section aria-labelledby={id} className="mt-10">
-      <h2 id={id} className="text-2xl font-bold text-stone-900">
+      <h2 id={id} className="text-2xl font-bold text-stone-900 dark:text-stone-100">
         {titulo}
       </h2>
       <ul className="mt-4 flex flex-col gap-4">
@@ -47,11 +51,11 @@ function Secao({ id, titulo, afirmacoes }: { id: string; titulo: string; afirmac
 
 export default function Afirmacoes() {
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 text-base leading-relaxed text-stone-800">
+    <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 text-base leading-relaxed text-stone-800 dark:text-stone-200">
       <Link href="/" className={LINK}>
         Caiu Nessa?
       </Link>
-      <h1 className="mt-6 text-3xl font-bold text-stone-900">As afirmações do jogo</h1>
+      <h1 className="mt-6 text-3xl font-bold text-stone-900 dark:text-stone-100">As afirmações do jogo</h1>
       <p className="mt-4">
         Estas são todas as afirmações que já checamos: as 12 em jogo agora e as que estão na reserva. Parte da
         reserva pode entrar em rodadas futuras; outra parte ficou de fora porque agências diferentes deram vereditos

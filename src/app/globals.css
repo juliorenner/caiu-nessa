@@ -4,3 +4,15 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+
+/* Carimbo (claro) e Noite (escuro). O `dark:` do Tailwind segue prefers-color-scheme. */
+@theme {
+  --color-fundo: #fbf7ef;
+  --color-fundo-escuro: #14121a;
+  --color-superficie: #ffffff;
+  --color-superficie-escura: #fdfcf9;
+}
+
+:root {
+  color-scheme: light dark;
+}
