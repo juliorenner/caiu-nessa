@@ -9,9 +9,9 @@ async function erroPorAfirmacao(afirmacoes: ReturnType<typeof carregarAfirmacoes
   try {
     const estatisticas = await obterEstatisticas(await getDb(), afirmacoes)
     return estatisticas?.erroPorAfirmacao ?? null
-  } catch {
+  } catch (erro) {
     // Sem banco o jogo continua jogável, só sem "% das pessoas erraram esta".
-    console.error('quiz: estatísticas indisponíveis')
+    console.error('quiz: estatísticas indisponíveis', erro instanceof Error ? erro.message : String(erro))
     return null
   }
 }

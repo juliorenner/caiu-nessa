@@ -61,7 +61,13 @@ export async function processarResultado(
   )
   if (!gravada) return { status: 429, body: { erro: 'muitas_jogadas' } }
 
-  const estatisticas = await obterEstatisticas(db, afirmacoes)
+  // A jogada já foi gravada: se as estatísticas falharem, o jogador não deve ser mandado tentar de novo.
+  let estatisticas: Estatisticas | null = null
+  try {
+    estatisticas = await obterEstatisticas(db, afirmacoes)
+  } catch (erro) {
+    console.error('resultado: estatísticas indisponíveis', erro instanceof Error ? erro.message : String(erro))
+  }
   return {
     status: 200,
     body: {

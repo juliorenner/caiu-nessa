@@ -2,13 +2,18 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { PGlite } from '@electric-sql/pglite'
-import { afterEach, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { getDb, resetDbParaTestes } from '@/db/client'
 
 vi.mock('drizzle-orm/pglite/migrator', () => ({ migrate: vi.fn().mockRejectedValue(new Error('migração falhou')) }))
 
 const urlOriginal = process.env.DATABASE_URL
-const dirTemp = fs.mkdtempSync(path.join(os.tmpdir(), 'caiu-nessa-db-'))
+let dirTemp: string
+
+beforeEach(async () => {
+  await resetDbParaTestes()
+  dirTemp = fs.mkdtempSync(path.join(os.tmpdir(), 'caiu-nessa-db-'))
+})
 
 afterEach(async () => {
   await resetDbParaTestes()

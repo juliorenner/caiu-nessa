@@ -6,7 +6,7 @@ import { BOTAO_PRIMARIO, FOCO } from './rotulos'
 export function ResultadoFinal(p: { dados: RespostaResultado }) {
   const { resultado, avaliacao, estatisticas, percentilAbaixo } = p.dados
   return (
-    <section className="flex flex-col gap-5 text-center">
+    <section aria-live="polite" className="flex flex-col gap-5 text-center">
       <p className="text-6xl font-extrabold tracking-tight">
         {resultado.acertos} de {TOTAL_AFIRMACOES}
       </p>

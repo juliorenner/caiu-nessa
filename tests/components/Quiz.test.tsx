@@ -119,4 +119,35 @@ describe('Quiz', () => {
     expect(await screen.findByText('Caiu feio')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledTimes(3)
   })
+
+  it('no 400 não oferece repetir o mesmo envio: mostra erro e link para jogar de novo', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: false, status: 400, json: async () => ({ erro: 'respostas_invalidas' }) })
+    vi.stubGlobal('fetch', fetchMock)
+    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const user = userEvent.setup()
+    for (let i = 0; i < 12; i++) {
+      await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+      await user.click(screen.getByRole('button', { name: i === 11 ? 'Ver meu resultado' : 'Próxima' }))
+    }
+    expect(await screen.findByText('Não conseguimos salvar seu resultado.')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Tentar de novo' })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('o feedback rola suave, exceto com prefers-reduced-motion', async () => {
+    const rolar = vi.fn()
+    Element.prototype.scrollIntoView = rolar
+    for (const reduzir of [false, true]) {
+      vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: reduzir }))
+      const { unmount } = render(
+        <Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />,
+      )
+      await userEvent.setup().click(screen.getByRole('button', { name: 'VERDADE' }))
+      expect(rolar).toHaveBeenLastCalledWith({ behavior: reduzir ? 'auto' : 'smooth', block: 'start' })
+      unmount()
+    }
+    // @ts-expect-error jsdom não implementa scrollIntoView
+    delete Element.prototype.scrollIntoView
+  })
 })

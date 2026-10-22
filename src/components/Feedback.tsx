@@ -31,7 +31,8 @@ export function Feedback(p: {
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    ref.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' })
+    const reduzir = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+    ref.current?.scrollIntoView?.({ behavior: reduzir ? 'auto' : 'smooth', block: 'start' })
   }, [])
 
   return (

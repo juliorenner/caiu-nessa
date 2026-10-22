@@ -1,6 +1,7 @@
 import { count } from 'drizzle-orm'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { jogadas } from '@/db/schema'
+import * as estatisticas from '@/lib/estatisticas'
 import { hashIp } from '@/lib/rate-limit'
 import { processarResultado } from '@/lib/resultado-api'
 import { afirmacoesValidas, todasCertas } from '../fixtures/afirmacoes-validas'
@@ -11,6 +12,10 @@ const deps = async () => ({ db: await criarDbTeste(), afirmacoes: afirmacoesVali
 const cab = new Headers({ 'x-forwarded-for': '9.9.9.9' })
 
 describe('processarResultado', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('400 quando falta um id, sobra um id ou valor está fora do enum; nada é gravado', async () => {
     const d = await deps()
     const { e1: _, ...semE1 } = todasCertas
@@ -60,5 +65,17 @@ describe('processarResultado', () => {
     if (r.status !== 200) return
     expect(r.body.estatisticas?.totalJogadas).toBe(100)
     expect(r.body.percentilAbaixo).toBe(99)
+  })
+
+  it('200 com estatisticas null quando a consulta de estatísticas falha depois de gravar', async () => {
+    const d = await deps()
+    vi.spyOn(estatisticas, 'obterEstatisticas').mockRejectedValue(new Error('banco caiu'))
+    const r = await processarResultado({ respostas: todasCertas }, cab, d)
+    expect(r.status).toBe(200)
+    if (r.status !== 200) return
+    expect(r.body.resultado.acertos).toBe(12)
+    expect(r.body.estatisticas).toBeNull()
+    expect(r.body.percentilAbaixo).toBeNull()
+    expect(await d.db.select().from(jogadas)).toHaveLength(1)
   })
 })

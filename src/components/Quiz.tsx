@@ -21,7 +21,7 @@ type Estado =
   | { etapa: 'pergunta' | 'feedback'; indice: number }
   | { etapa: 'enviando' }
   | { etapa: 'resultado'; dados: RespostaResultado }
-  | { etapa: 'erro'; limite: boolean }
+  | { etapa: 'erro'; motivo: 'limite' | 'invalido' | 'falha' }
 
 const OPCOES: { valor: Veredito; rotulo: string; cor: string }[] = [
   { valor: 'verdadeiro', rotulo: 'VERDADE', cor: 'border-emerald-700 text-emerald-900 hover:bg-emerald-50' },
@@ -53,12 +53,13 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
         body: JSON.stringify({ respostas: todas }),
       })
       if (!resposta.ok) {
-        setEstado({ etapa: 'erro', limite: resposta.status === 429 })
+        const motivo = resposta.status === 429 ? 'limite' : resposta.status === 400 ? 'invalido' : 'falha'
+        setEstado({ etapa: 'erro', motivo })
         return
       }
       setEstado({ etapa: 'resultado', dados: (await resposta.json()) as RespostaResultado })
     } catch {
-      setEstado({ etapa: 'erro', limite: false })
+      setEstado({ etapa: 'erro', motivo: 'falha' })
     } finally {
       enviando.current = false
     }
@@ -75,10 +76,21 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
   if (estado.etapa === 'resultado') return <ResultadoFinal dados={estado.dados} />
 
   if (estado.etapa === 'erro') {
+    // 400: reenviar as mesmas respostas daria o mesmo erro; o jeito é recomeçar.
+    if (estado.motivo === 'invalido') {
+      return (
+        <div role="alert" className="flex flex-col gap-5 py-10 text-center">
+          <p className="text-lg">Não conseguimos salvar seu resultado.</p>
+          <a href="/quiz" className={BOTAO_PRIMARIO}>
+            Jogar de novo
+          </a>
+        </div>
+      )
+    }
     return (
       <div role="alert" className="flex flex-col gap-5 py-10 text-center">
         <p className="text-lg">
-          {estado.limite
+          {estado.motivo === 'limite'
             ? 'Calma aí: muitas jogadas em pouco tempo. Tente de novo em um minuto.'
             : 'Não conseguimos salvar seu resultado. Tente de novo.'}
         </p>
