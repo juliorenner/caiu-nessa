@@ -55,7 +55,7 @@ GitHub Actions, em `.github/workflows/`:
 - **Deploy** (`deploy.yml`): a cada push em `main` (ou manual), roda o mesmo CI e, se passar, aplica as migrações do banco e publica na Vercel. Esse é o único caminho para produção; a Vercel não está ligada ao GitHub.
 - **Segredos**, no environment `production` do GitHub (Settings → Environments): `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` e `DATABASE_URL`. Enquanto `VERCEL_PROJECT_ID` não estiver cadastrado, o deploy é pulado com um aviso, sem falhar.
 - **Links de checagem** (`fontes.yml`): toda segunda o script `verificar-fontes` acessa cada link; se algum quebrar, abre ou atualiza a issue "Link de checagem quebrado".
-- O ESLint ainda não roda com o TypeScript 7: o pacote `typescript` aponta para o TS 6 (`@typescript/typescript6`) só para ele, e o `tsc` do `npm run typecheck` vem do TS 7 (`@typescript/native`).
+- O ESLint ainda não roda com o TypeScript 7, então o pacote `typescript` aponta para o TS 6 (`@typescript/typescript6`): é ele que o ESLint e a checagem de tipos do `next build` usam. O `tsc` do `npm run typecheck` vem do TS 7 (`@typescript/native`). Quando o typescript-eslint suportar o TS 7, o alias sai.
 - O Dependabot propõe atualizações semanais de pacotes npm e de actions.
 
 ## Produção
