@@ -1,6 +1,6 @@
-import type { Afirmacao, Lado, Respostas } from '@/lib/afirmacoes'
+import type { Afirmacao, Lado, Respostas, Veredito } from '@/lib/afirmacoes'
 
-function criar(id: string, lado: Lado, veredito: boolean): Afirmacao {
+function criar(id: string, lado: Lado, veredito: Veredito): Afirmacao {
   return {
     id,
     texto: `Afirmação de teste ${id}`,
@@ -15,18 +15,18 @@ function criar(id: string, lado: Lado, veredito: boolean): Afirmacao {
 }
 
 export const afirmacoesValidas: Afirmacao[] = [
-  criar('e1', 'esquerda', true),
-  criar('e2', 'esquerda', true),
-  criar('e3', 'esquerda', true),
-  criar('e4', 'esquerda', false),
-  criar('e5', 'esquerda', false),
-  criar('e6', 'esquerda', false),
-  criar('d1', 'direita', true),
-  criar('d2', 'direita', true),
-  criar('d3', 'direita', true),
-  criar('d4', 'direita', false),
-  criar('d5', 'direita', false),
-  criar('d6', 'direita', false),
+  criar('e1', 'esquerda', 'verdadeiro'),
+  criar('e2', 'esquerda', 'verdadeiro'),
+  criar('e3', 'esquerda', 'falso'),
+  criar('e4', 'esquerda', 'falso'),
+  criar('e5', 'esquerda', 'enganoso'),
+  criar('e6', 'esquerda', 'enganoso'),
+  criar('d1', 'direita', 'verdadeiro'),
+  criar('d2', 'direita', 'verdadeiro'),
+  criar('d3', 'direita', 'falso'),
+  criar('d4', 'direita', 'falso'),
+  criar('d5', 'direita', 'enganoso'),
+  criar('d6', 'direita', 'enganoso'),
 ]
 
 export const todasCertas: Respostas = Object.fromEntries(

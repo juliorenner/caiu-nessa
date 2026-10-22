@@ -3,19 +3,23 @@ import { embaralhar, fonteEhPermitida, validarAfirmacoes } from '@/lib/afirmacoe
 import { afirmacoesValidas } from '../fixtures/afirmacoes-validas'
 
 describe('validarAfirmacoes', () => {
-  it('aceita 12 afirmações na proporção 6/6 e 3/3', () => {
+  it('aceita 12 afirmações na proporção 6/6 e 2/2/2', () => {
     expect(validarAfirmacoes(afirmacoesValidas)).toHaveLength(12)
   })
   it('rejeita total diferente de 12', () => {
     expect(() => validarAfirmacoes(afirmacoesValidas.slice(0, 11))).toThrow(/12/)
   })
-  it('rejeita 4 falsas de um lado', () => {
-    const alterada = afirmacoesValidas.map(a => a.id === 'e1' ? { ...a, veredito: false } : a)
+  it('rejeita 3 falsas de um lado', () => {
+    const alterada = afirmacoesValidas.map(a => a.id === 'e1' ? { ...a, veredito: 'falso' as const } : a)
     expect(() => validarAfirmacoes(alterada)).toThrow(/esquerda/)
   })
   it('rejeita id duplicado', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'e2' ? { ...a, id: 'e1' } : a)
     expect(() => validarAfirmacoes(alterada)).toThrow(/duplicad/)
+  })
+  it('rejeita veredito fora do enum', () => {
+    const alterada = afirmacoesValidas.map(a => a.id === 'e1' ? { ...a, veredito: 'parcialmente' } : a)
+    expect(() => validarAfirmacoes(alterada)).toThrow(/veredito/)
   })
   it('rejeita fonte fora da lista de agências', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, fonte_url: 'https://exemplo.com/x' } : a)

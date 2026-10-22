@@ -3,23 +3,26 @@ import dados from '@/data/afirmacoes.json'
 
 export type Lado = 'esquerda' | 'direita'
 
+export const VEREDITOS = ['verdadeiro', 'falso', 'enganoso'] as const
+export type Veredito = (typeof VEREDITOS)[number]
+
 export interface Afirmacao {
   id: string
   texto: string
   lado: Lado
   autor: string
-  veredito: boolean
+  veredito: Veredito
   explicacao: string
   fonte_nome: string
   fonte_url: string
   data_checagem: string // YYYY-MM-DD
 }
 
-export type Respostas = Record<string, boolean>
+export type Respostas = Record<string, Veredito>
 
 export const TOTAL_AFIRMACOES = 12
 export const POR_LADO = 6
-export const POR_VEREDITO_POR_LADO = 3
+export const POR_VEREDITO_POR_LADO = 2
 
 const LADOS: readonly Lado[] = ['esquerda', 'direita']
 
@@ -51,7 +54,7 @@ const esquemaAfirmacao = z.object({
   texto: z.string(),
   lado: z.enum(LADOS, { error: 'lado deve ser "esquerda" ou "direita"' }),
   autor: z.string(),
-  veredito: z.boolean({ error: 'veredito deve ser booleano' }),
+  veredito: z.enum(VEREDITOS, { error: 'veredito deve ser "verdadeiro", "falso" ou "enganoso"' }),
   explicacao: z.string(),
   fonte_nome: z.string(),
   fonte_url: z
@@ -86,16 +89,12 @@ export function validarAfirmacoes(dados: unknown): Afirmacao[] {
 
   for (const lado of LADOS) {
     const doLado = afirmacoes.filter((a) => a.lado === lado)
-    const verdadeiras = doLado.filter((a) => a.veredito).length
-    const falsas = doLado.length - verdadeiras
-    if (
-      doLado.length !== POR_LADO ||
-      verdadeiras !== POR_VEREDITO_POR_LADO ||
-      falsas !== POR_VEREDITO_POR_LADO
-    ) {
+    const contagens = VEREDITOS.map((v) => doLado.filter((a) => a.veredito === v).length)
+    if (doLado.length !== POR_LADO || contagens.some((n) => n !== POR_VEREDITO_POR_LADO)) {
+      const detalhe = VEREDITOS.map((v, k) => `${contagens[k]} ${v}`).join(', ')
       throw new Error(
-        `Afirmações inválidas: lado ${lado} deve ter ${POR_VEREDITO_POR_LADO} verdadeiras e ` +
-          `${POR_VEREDITO_POR_LADO} falsas (tem ${verdadeiras} verdadeiras e ${falsas} falsas)`,
+        `Afirmações inválidas: lado ${lado} deve ter ${POR_VEREDITO_POR_LADO} de cada veredito ` +
+          `(${VEREDITOS.join(', ')}); tem ${detalhe}`,
       )
     }
   }
