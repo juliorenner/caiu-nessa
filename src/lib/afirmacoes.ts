@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import dados from '@/data/afirmacoes.json'
+import dadosReserva from '@/data/afirmacoes-reserva.json'
 
 export type Lado = 'esquerda' | 'direita'
 
@@ -117,6 +118,22 @@ let afirmacoesCarregadas: Afirmacao[] | undefined
 export function carregarAfirmacoes(): Afirmacao[] {
   afirmacoesCarregadas ??= validarAfirmacoes(dados)
   return afirmacoesCarregadas.map((a) => ({ ...a }))
+}
+
+let reservaCarregada: Afirmacao[] | undefined
+
+export function carregarReserva(): Afirmacao[] {
+  reservaCarregada ??= dadosReserva.map((item, i) => {
+    const resultado = esquemaAfirmacao.safeParse(item)
+    if (!resultado.success) {
+      const problemas = resultado.error.issues
+        .map(({ path, message }) => (path.length ? `[${path.join('.')}] ${message}` : message))
+        .join('; ')
+      throw new Error(`Reserva inválida: [${i}] ${problemas}`)
+    }
+    return resultado.data
+  })
+  return reservaCarregada.map((a) => ({ ...a }))
 }
 
 export function embaralhar<T>(itens: readonly T[], aleatorio: () => number = Math.random): T[] {
