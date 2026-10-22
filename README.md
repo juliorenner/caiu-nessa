@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Caiu Nessa?
 
-## Getting Started
+Quiz de checagem de fatos políticos, neutro e em português. São 12 afirmações políticas já checadas por agências de checagem; para cada uma o jogador responde **VERDADE**, **MENTIRA** ou **ISSO ME CHEIRA MAL 🤔** (enganoso). No fim vê a nota, o viés das respostas e como se saiu em comparação com os outros jogadores. É anônimo e não tem login.
 
-First, run the development server:
+## Regras de neutralidade
+
+- Só entram checagens de cinco agências: Aos Fatos, Lupa, Comprova, G1 Fato ou Fake e Estadão Verifica. Toda afirmação tem link para a checagem original.
+- 6 afirmações por lado, cada lado com 2 verdadeiras, 2 falsas e 2 enganosas.
+- Afirmações em que as agências discordam ficam de fora.
+- O lado é o de quem disse a frase, e nunca aparece durante o jogo.
+- Nenhum texto do site apoia ou ataca um lado. O resultado mede a pessoa, não os políticos.
+
+Os critérios completos estão na página `/como-escolhemos`. As afirmações em jogo ficam em `src/data/afirmacoes.json` e as de reserva em `src/data/afirmacoes-reserva.json`.
+
+## Transparência
+
+A especificação e os planos de implementação estão em `docs/superpowers/specs/` e `docs/superpowers/plans/`. O app foi construído com agentes de IA seguindo esses planos, e todo plano executado está no repositório. Os PRs são públicos no GitHub.
+
+## Rodar localmente
+
+Requisito: Node.js 22.12 ou mais recente.
+
+```bash
+npm ci
+```
+
+Crie um `.env.local` (veja `.env.example`):
+
+```
+DATABASE_URL=file:./.pglite
+IP_HASH_SALT=<qualquer string aleatória>
+```
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra http://localhost:3000. Com `DATABASE_URL=file:...` o app usa um Postgres local (PGlite) no diretório `.pglite/`, que é ignorado pelo git; as migrações são aplicadas sozinhas no primeiro acesso.
 
-You can start editing the page by modifying `src/app/page.tsx`. The page auto-updates as you edit the file.
+## Testes e verificações
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm test                              # testes (Vitest)
+npm run typecheck                     # tipos
+npm run build                         # build de produção
+npx tsx scripts/verificar-fontes.ts   # acessa cada link de checagem
+```
 
-## Learn More
+## Produção
 
-To learn more about Next.js, take a look at the following resources:
+Vercel + Neon.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `DATABASE_URL`: vem da integração do Neon na Vercel.
+- `IP_HASH_SALT`: gere com `openssl rand -hex 32` e cadastre como variável de ambiente na Vercel.
+- Aplique as migrações uma vez: `DATABASE_URL=... npx drizzle-kit migrate`.
+- Domínio `caiunessa.com.br`, registrado no Registro.br e apontado para a Vercel.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Dados e privacidade (LGPD)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Cada jogada grava uma linha: respostas, nota, nota por lado e data/hora.
+- Para o limite de 5 jogadas por minuto, guardamos um hash SHA-256 do IP com salt, apagado depois de 1 hora. O IP em si não é gravado.
+- Sem cookies, sem login, sem dados pessoais.
