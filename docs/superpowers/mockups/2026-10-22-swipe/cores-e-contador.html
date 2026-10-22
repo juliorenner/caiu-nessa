@@ -1,0 +1,78 @@
+<h2>Cores e o contador de acertos</h2>
+<p class="subtitle">Duas direções de cor, as duas com o contador pequeno no topo ("3 de 5 ✔"). O layout mostrado é o C (painel sobe de baixo), mas as cores valem para qualquer um dos três. Clique na direção que combina mais com o jogo.</p>
+
+<style>
+  .fone { width: 300px; height: 580px; border-radius: 36px; background: #111; padding: 12px; box-shadow: 0 12px 30px rgba(0,0,0,.25); margin: 0 auto; }
+  .tela { border-radius: 26px; height: 100%; padding: 16px; display: flex; flex-direction: column; font-family: -apple-system, system-ui, sans-serif; position: relative; overflow: hidden; }
+  .topo { font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .chip { font-weight: 800; border-radius: 999px; padding: 4px 10px; font-size: 12px; }
+  .barra { height: 6px; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+  .barra i { display: block; height: 100%; width: 42%; }
+  .cartao { border-radius: 22px; padding: 24px 18px; font-size: 20px; font-weight: 800; line-height: 1.3; margin-top: 16px; position: relative; box-shadow: 0 10px 28px rgba(0,0,0,.12); }
+  .cartao-sombra { border-radius: 22px; height: 110px; margin: -92px 10px 0; opacity: .55; }
+  .dica { text-align: center; font-size: 11px; margin-top: 10px; opacity: .8; }
+  .botoes { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+  .b { border-radius: 14px; padding: 12px; text-align: center; font-weight: 900; font-size: 14px; letter-spacing: .02em; }
+  .pros-cons { margin-top: 8px; }
+  .cards .card-image { padding: 16px 0; }
+
+  /* Direção 1: Carimbo. Fundo claro quente, cartão branco, três cores fortes nos botões (cheias). */
+  .d1 .tela { background: #fbf7ef; color: #1c1917; }
+  .d1 .topo { color: #78716c; } .d1 .chip { background: #1c1917; color: #fff; }
+  .d1 .barra { background: #e7e0d3; } .d1 .barra i { background: #1c1917; }
+  .d1 .cartao { background: #fff; color: #1c1917; border: 1px solid #ebe4d8; }
+  .d1 .cartao-sombra { background: #fff; border: 1px solid #ebe4d8; }
+  .d1 .bv { background: #15803d; color: #fff; } .d1 .bm { background: #dc2626; color: #fff; } .d1 .bc { background: #f59e0b; color: #1c1917; }
+  .d1 .dica { color: #78716c; }
+
+  /* Direção 2: Noite. Fundo escuro, cartão claro em destaque, cores neon nas bordas. */
+  .d2 .tela { background: #14121a; color: #f5f3ff; }
+  .d2 .topo { color: #a39fb5; } .d2 .chip { background: #2a2636; color: #f5f3ff; border: 1px solid #3f3a50; }
+  .d2 .barra { background: #2a2636; } .d2 .barra i { background: linear-gradient(90deg,#34d399,#fbbf24); }
+  .d2 .cartao { background: #fdfcf9; color: #1c1917; }
+  .d2 .cartao-sombra { background: #fdfcf9; }
+  .d2 .b { background: transparent; border: 2px solid; }
+  .d2 .bv { border-color: #34d399; color: #34d399; } .d2 .bm { border-color: #fb7185; color: #fb7185; } .d2 .bc { border-color: #fbbf24; color: #fbbf24; }
+  .d2 .dica { color: #a39fb5; }
+</style>
+
+<div class="cards">
+  <div class="card d1" data-choice="direcao-1-carimbo" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#efe9de">
+      <div class="fone"><div class="tela">
+        <div class="topo"><span>Afirmação 6 de 12</span><span class="chip">3 de 5 ✔</span></div>
+        <div class="barra"><i></i></div>
+        <div class="cartao">Lula vetou o fim da "saidinha" de presos e o Congresso derrubou o veto.</div>
+        <div class="cartao-sombra"></div>
+        <div class="dica">← mentira &nbsp;·&nbsp; ↑ cheira mal &nbsp;·&nbsp; verdade →</div>
+        <div class="botoes"><div class="b bv">VERDADE</div><div class="b bm">MENTIRA</div><div class="b bc">ISSO ME CHEIRA MAL 🤔</div></div>
+      </div></div>
+    </div>
+    <div class="card-body">
+      <h3>Direção 1: Carimbo</h3>
+      <p>Fundo claro e quente, cartão branco, botões cheios nas três cores (verde, vermelho, âmbar). Lê bem no sol, parece papel e carimbo, e as cores são de veredito, não de partido.</p>
+    </div>
+  </div>
+
+  <div class="card d2" data-choice="direcao-2-noite" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f0e14">
+      <div class="fone"><div class="tela">
+        <div class="topo"><span>Afirmação 6 de 12</span><span class="chip">3 de 5 ✔</span></div>
+        <div class="barra"><i></i></div>
+        <div class="cartao">Lula vetou o fim da "saidinha" de presos e o Congresso derrubou o veto.</div>
+        <div class="cartao-sombra"></div>
+        <div class="dica">← mentira &nbsp;·&nbsp; ↑ cheira mal &nbsp;·&nbsp; verdade →</div>
+        <div class="botoes"><div class="b bv">VERDADE</div><div class="b bm">MENTIRA</div><div class="b bc">ISSO ME CHEIRA MAL 🤔</div></div>
+      </div></div>
+    </div>
+    <div class="card-body">
+      <h3>Direção 2: Noite</h3>
+      <p>Fundo escuro, cartão claro saltando da tela, cores vivas só nas bordas dos botões. Mais "app", mais contraste no cartão, melhor à noite; no sol perde um pouco.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:18px">
+  <h3>O contador</h3>
+  <p class="subtitle">"3 de 5 ✔" conta só o que já foi respondido. Fica pequeno no topo, ao lado do número da afirmação, e some na tela de resultado, onde a nota aparece grande.</p>
+</div>
