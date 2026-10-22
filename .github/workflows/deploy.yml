@@ -22,6 +22,8 @@ jobs:
 
   deploy:
     needs: ci
+    # O workflow_dispatch pode ser disparado de qualquer branch; só main vai para produção.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: production

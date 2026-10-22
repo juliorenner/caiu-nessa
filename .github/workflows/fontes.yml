@@ -16,7 +16,8 @@ concurrency:
 jobs:
   verificar-fontes:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 41 links em sequência com timeout de 30 s cada = até ~20,5 min, mais npm ci e a issue.
+    timeout-minutes: 30
     permissions:
       contents: read
       issues: write # abre ou comenta a issue de link quebrado

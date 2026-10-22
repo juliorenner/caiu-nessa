@@ -9,7 +9,7 @@
     "test": "vitest run --maxWorkers=2",
     "test:watch": "vitest",
     "typecheck": "next typegen && tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint . --max-warnings 0"
   },
   "engines": {
     "node": ">=22.12.0"
