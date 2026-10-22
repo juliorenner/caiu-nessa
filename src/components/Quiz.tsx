@@ -10,7 +10,7 @@ import { ResultadoFinal } from './ResultadoFinal'
 import { CarimbosDeProgresso } from './CarimbosDeProgresso'
 import { Ficha } from './Ficha'
 import { IconeVeredito } from './IconeVeredito'
-import { ARIA_BOTAO_RESPOSTA, BOTAO_PRIMARIO, BOTAO_RESPOSTA, FOCO, ROTULO_BOTAO } from './rotulos'
+import { ARIA_BOTAO_RESPOSTA, BOTAO_EM_CARTAO, BOTAO_RESPOSTA, FOCO, ROTULO_BOTAO, SUPERFICIE } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
 export type { AfirmacaoNoQuiz }
@@ -146,9 +146,9 @@ export default function Quiz({
 
   if (estado.etapa === 'enviando') {
     return (
-      <p role="status" className="px-4 py-16 text-center text-lg">
-        Calculando seu resultado…
-      </p>
+      <div role="status" className="px-4 py-16">
+        <Ficha esquerda="Calculando seu resultado…" />
+      </div>
     )
   }
 
@@ -173,22 +173,22 @@ export default function Quiz({
     // 400: reenviar as mesmas respostas daria o mesmo erro; o jeito é recomeçar.
     if (estado.motivo === 'invalido') {
       return (
-        <div role="alert" className="flex flex-col gap-5 px-4 py-10 text-center">
+        <div role="alert" className={`mx-4 my-10 flex flex-col gap-5 p-5 text-center ${SUPERFICIE}`}>
           <p className="text-lg">Não conseguimos salvar seu resultado.</p>
-          <a href="/quiz" className={BOTAO_PRIMARIO}>
+          <a href="/quiz" className={BOTAO_EM_CARTAO}>
             Jogar de novo
           </a>
         </div>
       )
     }
     return (
-      <div role="alert" className="flex flex-col gap-5 px-4 py-10 text-center">
+      <div role="alert" className={`mx-4 my-10 flex flex-col gap-5 p-5 text-center ${SUPERFICIE}`}>
         <p className="text-lg">
           {estado.motivo === 'limite'
             ? 'Calma aí: muitas jogadas em pouco tempo. Tente de novo em um minuto.'
             : 'Não conseguimos salvar seu resultado. Tente de novo.'}
         </p>
-        <button type="button" onClick={() => enviar(respostas)} className={BOTAO_PRIMARIO}>
+        <button type="button" onClick={() => enviar(respostas)} className={BOTAO_EM_CARTAO}>
           Tentar de novo
         </button>
       </div>

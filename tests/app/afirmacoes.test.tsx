@@ -116,7 +116,9 @@ describe('ResultadoFinal', () => {
 
   it('rodada 1 mostra comparação e Continuar jogando', () => {
     render(<ResultadoFinal {...primeira} onContinuar={async () => 'fim'} />)
-    expect(screen.getByText('4 de 12')).toBeInTheDocument()
+    expect(screen.getByText('4/12')).toBeInTheDocument()
+    expect(screen.getByText('Fim de jogo')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: 'Caiu feio' })).toBeInTheDocument()
     expect(screen.getByText(/Você é um dos primeiros a jogar/)).toBeInTheDocument()
     expect(screen.queryByText(/Na partida/)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Continuar jogando' })).toBeEnabled()

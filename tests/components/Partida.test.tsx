@@ -98,7 +98,7 @@ describe('Partida', () => {
     expect([...corpo.vistas].sort()).toEqual(inicial.map(a => a.id).sort())
   })
 
-  it('resultado da rodada 2 mostra "Rodada 2: x de 6" e "Na partida: y de 18", sem comparação', async () => {
+  it('resultado da rodada 2 mostra "Rodada 2", "x/6" e "Na partida y/18", sem comparação', async () => {
     const fetchMock = mockFetch(async () => ok({ afirmacoes: segunda, erroPorAfirmacao: null }))
     render(<Partida inicial={inicial} erroPorAfirmacao={null} />)
     const user = userEvent.setup()
@@ -106,8 +106,10 @@ describe('Partida', () => {
     await user.click(await screen.findByRole('button', { name: 'Continuar jogando' }))
     await screen.findByText('Afirmação 1 de 6')
     await jogar(user, 6)
-    expect(await screen.findByText('Rodada 2: 3 de 6')).toBeInTheDocument()
-    expect(screen.getByText('Na partida: 7 de 18')).toBeInTheDocument()
+    expect(await screen.findByText('3/6')).toBeInTheDocument()
+    // "Rodada 2" aparece na ficha e como rótulo do placar.
+    expect(screen.getAllByText('Rodada 2')).toHaveLength(2)
+    expect(screen.getByText('Na partida 7/18')).toBeInTheDocument()
     expect(screen.queryByText(/Você é um dos primeiros a jogar/)).not.toBeInTheDocument()
     expect(screen.getByText('Acertei 7 de 18 no Caiu Nessa? caiunessa.com.br')).toBeInTheDocument()
     const envio = fetchMock.mock.calls.filter(([url]) => url === '/api/resultado')[1] as unknown as [string, RequestInit]
@@ -130,7 +132,7 @@ describe('Partida', () => {
     ).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Continuar jogando' })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
-    expect(screen.getByText('4 de 12')).toBeInTheDocument()
+    expect(screen.getByText('4/12')).toBeInTheDocument()
   })
 
   it('falha de rede mostra o alerta e o botão continua', async () => {

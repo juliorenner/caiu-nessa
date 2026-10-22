@@ -82,7 +82,7 @@ describe('Quiz', () => {
     expect(Object.keys(corpo.respostas).sort()).toEqual(afirmacoesValidas.map(a => a.id).sort())
     expect(Object.values(corpo.respostas).every(v => v === 'verdadeiro')).toBe(true)
     expect(await screen.findByText(/Você é um dos primeiros a jogar/)).toBeInTheDocument()
-    expect(screen.getByText('4 de 12')).toBeInTheDocument()
+    expect(screen.getByText('4/12')).toBeInTheDocument()
     expect(screen.getByText('Texto do viés.')).toBeInTheDocument()
   })
 
@@ -167,6 +167,7 @@ describe('Quiz', () => {
     expect(
       await screen.findByText('Calma aí: muitas jogadas em pouco tempo. Tente de novo em um minuto.'),
     ).toBeInTheDocument()
+    expect(screen.getByRole('alert').className).toMatch(/border-tinta/)
     await user.click(screen.getByRole('button', { name: 'Tentar de novo' }))
     expect(await screen.findByText('Caiu feio')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledTimes(3)
