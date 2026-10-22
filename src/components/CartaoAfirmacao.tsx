@@ -21,7 +21,7 @@ export const CARTAO_BASE = `rounded-2xl p-6 ${CARTAO_SUPERFICIE}`
 // Posição parada (respondido) ou de saída (saindo) no eixo da resposta.
 function transformFinal(veredito: Veredito, fase: 'respondido' | 'saindo'): string {
   const saindo = fase === 'saindo'
-  if (veredito === 'enganoso') return `translateY(${saindo ? '-120%' : '-40px'})`
+  if (veredito === 'enganoso') return `translateY(${saindo ? '-120%' : '-40px'}) rotate(-6deg)`
   const sinal = veredito === 'verdadeiro' ? '' : '-'
   return `translateX(${sinal}${saindo ? '120%' : '40px'}) rotate(${sinal}8deg)`
 }
@@ -40,7 +40,7 @@ export function CartaoAfirmacao({
   reduzirMovimento: boolean
 }): ReactElement {
   const ativo = fase === 'ativo'
-  const { handlers, dx, dy, selo } = useArrasto({ ativo, onResposta })
+  const { handlers, dx, dy, arrastando, selo } = useArrasto({ ativo, onResposta })
   // Medido no início de cada arrasto (jsdom devolve 0: sem inclinação nem selo visível).
   const [tamanho, setTamanho] = useState({ largura: 0, altura: 0 })
 
@@ -56,6 +56,8 @@ export function CartaoAfirmacao({
   if (ativo) {
     const giro = reduzirMovimento ? '' : ` rotate(${inclinacao(dx, tamanho.largura)}deg)`
     style = { transform: `translate(${dx}px, ${dy}px)${giro}` }
+    // Mola curta ao soltar aquém do limiar; durante o arrasto, sem transição para não atrasar o dedo.
+    if (!arrastando && !reduzirMovimento) transicao = 'transition-transform duration-200 ease-out'
   } else if (respostaDada && !reduzirMovimento) {
     style = { transform: transformFinal(respostaDada, fase) }
     transicao = 'transition-transform duration-300 ease-out'

@@ -77,7 +77,7 @@ describe('CartaoAfirmacao', () => {
     const selo = container.querySelector<HTMLElement>('span[data-selo]')
     expect(selo).toHaveAttribute('data-selo', 'enganoso')
     expect(selo!.style.opacity).toBe('1')
-    expect(cartao().style.transform).toBe('translateY(-40px)')
+    expect(cartao().style.transform).toBe('translateY(-40px) rotate(-6deg)')
     expect(cartao()).toHaveClass('transition-transform')
   })
 
@@ -87,6 +87,34 @@ describe('CartaoAfirmacao', () => {
     fireEvent.pointerMove(cartao(), ponteiro(60, 10))
     expect(cartao()).not.toHaveClass('transition-transform')
     expect(cartao().style.transform).toContain('rotate(')
+  })
+
+  it('soltar aquém do limiar volta ao centro com mola curta (transição só fora do arrasto)', () => {
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} />)
+    fireEvent.pointerDown(cartao(), ponteiro(10, 10))
+    fireEvent.pointerMove(cartao(), ponteiro(60, 10))
+    expect(cartao()).not.toHaveClass('transition-transform')
+    fireEvent.pointerUp(cartao(), ponteiro(60, 10))
+    expect(cartao()).toHaveClass('transition-transform', 'duration-200', 'ease-out')
+    expect(cartao().style.transform).toBe('translate(0px, 0px) rotate(0deg)')
+  })
+
+  it('reduzirMovimento: soltar aquém do limiar não anima', () => {
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento />)
+    fireEvent.pointerDown(cartao(), ponteiro(10, 10))
+    fireEvent.pointerMove(cartao(), ponteiro(60, 10))
+    fireEvent.pointerUp(cartao(), ponteiro(60, 10))
+    expect(cartao()).not.toHaveClass('transition-transform')
+  })
+
+  it('enganoso saindo: voa para cima ainda inclinado', () => {
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="saindo" respostaDada="enganoso" onResposta={vi.fn()} reduzirMovimento={false} />)
+    expect(cartao().style.transform).toBe('translateY(-120%) rotate(-6deg)')
+  })
+
+  it('reduzirMovimento: enganoso respondido sem transform', () => {
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="respondido" respostaDada="enganoso" onResposta={vi.fn()} reduzirMovimento />)
+    expect(cartao().style.transform).toBe('')
   })
 
   it('tamanhoDoTexto degrada por comprimento', () => {
@@ -131,7 +159,7 @@ describe('PilhaDeCartoes', () => {
     expect(fundo).not.toBeNull()
     expect(fundo).toHaveAttribute('aria-hidden', 'true')
     expect(fundo).toHaveClass('scale-95', 'opacity-60')
-    expect(fundo).toHaveTextContent('')
+    expect(fundo).toBeEmptyDOMElement()
     expect(fundo!.compareDocumentPosition(cartao()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(screen.getByText(afirmacao.texto)).toBeInTheDocument()
     expect(screen.queryByText(proxima.texto)).toBeNull()

@@ -287,7 +287,8 @@ describe('Quiz', () => {
       <Quiz afirmacoes={[maisLonga, ...afirmacoesValidas.slice(1)]} erroPorAfirmacao={null} embaralharFn={identidade} />,
     )
     const raiz = container.firstElementChild as HTMLElement
-    for (const c of ['flex', 'h-dvh', 'flex-col', 'box-border', 'overflow-hidden']) expect(raiz).toHaveClass(c)
+    for (const c of ['flex', 'h-dvh', 'flex-col', 'box-border', 'overflow-y-auto']) expect(raiz).toHaveClass(c)
+    expect(raiz).not.toHaveClass('overflow-hidden')
     const texto = screen.getByText(maisLonga.texto)
     expect(texto).toHaveClass(tamanhoDoTexto(maisLonga.texto))
     expect(['text-lg', 'text-base']).toContain(tamanhoDoTexto(maisLonga.texto))

@@ -81,19 +81,29 @@ export function useArrasto({ ativo, onResposta }: { ativo: boolean; onResposta: 
     setDy(ultimo.current.dy)
   }
 
-  // Uses the last move delta: pointercancel coordinates are not reliable across browsers.
-  function terminar() {
-    if (!ativo || !inicio.current) return
+  function reiniciar() {
     inicio.current = null
-    const veredito = passouLimiar(ultimo.current.dx, ultimo.current.dy, tamanho.current.largura, tamanho.current.altura)
+    ultimo.current = { dx: 0, dy: 0 }
     setDx(0)
     setDy(0)
     setArrastando(false)
+  }
+
+  function onPointerUp() {
+    if (!ativo || !inicio.current) return
+    const veredito = passouLimiar(ultimo.current.dx, ultimo.current.dy, tamanho.current.largura, tamanho.current.altura)
+    reiniciar()
     if (veredito) onResposta(veredito)
   }
 
+  // A cancelled gesture (system scroll, incoming call, lost capture) never answers: the card goes back.
+  function onPointerCancel() {
+    if (!inicio.current) return
+    reiniciar()
+  }
+
   return {
-    handlers: { onPointerDown, onPointerMove, onPointerUp: terminar, onPointerCancel: terminar },
+    handlers: { onPointerDown, onPointerMove, onPointerUp, onPointerCancel },
     dx,
     dy,
     arrastando,

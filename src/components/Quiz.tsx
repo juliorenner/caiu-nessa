@@ -191,9 +191,9 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
     <div
       ref={raiz}
       tabIndex={-1}
-      className="box-border flex h-dvh flex-col overflow-hidden px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
+      className="box-border flex h-dvh flex-col overflow-y-auto overscroll-contain px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
     >
-      <div data-conteudo inert={etapa === 'feedback' ? true : undefined} className="flex min-h-0 flex-1 flex-col gap-3">
+      <div data-conteudo inert={etapa === 'feedback' ? true : undefined} className="flex flex-1 flex-col gap-3">
         <div className="flex items-center justify-between gap-2">
           <p className={`text-base font-medium ${TEXTO_SECUNDARIO}`}>
             Afirmação {indice + 1} de {TOTAL_AFIRMACOES}
@@ -220,7 +220,7 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
             style={{ width: `${((indice + 1) / TOTAL_AFIRMACOES) * 100}%` }}
           />
         </div>
-        <div className="flex min-h-0 flex-1 items-center">
+        <div className="flex flex-1 items-center">
           <div className="w-full">
             <PilhaDeCartoes
               atual={afirmacao}

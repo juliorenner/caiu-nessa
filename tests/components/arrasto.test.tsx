@@ -100,6 +100,22 @@ describe('useArrasto', () => {
     expect(cartao).toHaveAttribute('data-arrastando', 'false')
   })
 
+  it('pointercancel além do limiar não responde e devolve o cartão ao centro', () => {
+    const onResposta = vi.fn()
+    render(<Cartao ativo onResposta={onResposta} />)
+    const cartao = screen.getByTestId('cartao')
+    arrastar(cartao, { x: 150, y: 0 })
+    expect(cartao).toHaveAttribute('data-dx', '150')
+    fireEvent.pointerCancel(cartao, { pointerId: 1 })
+    expect(onResposta).not.toHaveBeenCalled()
+    expect(cartao).toHaveAttribute('data-dx', '0')
+    expect(cartao).toHaveAttribute('data-dy', '0')
+    expect(cartao).toHaveAttribute('data-arrastando', 'false')
+    fireEvent.pointerUp(cartao, { clientX: 250, clientY: 100, pointerId: 1 })
+    expect(onResposta).not.toHaveBeenCalled()
+    expect(cartao).toHaveAttribute('data-dx', '0')
+  })
+
   it('ignora botão secundário e movimento sem arrasto ativo', () => {
     const onResposta = vi.fn()
     render(<Cartao ativo onResposta={onResposta} />)
