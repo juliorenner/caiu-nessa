@@ -98,7 +98,7 @@ describe('Partida', () => {
     expect([...corpo.vistas].sort()).toEqual(inicial.map(a => a.id).sort())
   })
 
-  it('resultado da rodada 2 mostra "Rodada 2", "x/6" e "Na partida y/18", sem comparação', async () => {
+  it('resultado da rodada 2 mostra "Rodada 2", "Placar", "x/6" e "Na partida y/18", sem comparação', async () => {
     const fetchMock = mockFetch(async () => ok({ afirmacoes: segunda, erroPorAfirmacao: null }))
     render(<Partida inicial={inicial} erroPorAfirmacao={null} />)
     const user = userEvent.setup()
@@ -107,8 +107,8 @@ describe('Partida', () => {
     await screen.findByText('Afirmação 1 de 6')
     await jogar(user, 6)
     expect(await screen.findByText('3/6')).toBeInTheDocument()
-    // "Rodada 2" aparece na ficha e como rótulo do placar.
-    expect(screen.getAllByText('Rodada 2')).toHaveLength(2)
+    expect(screen.getByText('Rodada 2')).toBeInTheDocument()
+    expect(screen.getByText('Placar')).toBeInTheDocument()
     expect(screen.getByText('Na partida 7/18')).toBeInTheDocument()
     expect(screen.queryByText(/Você é um dos primeiros a jogar/)).not.toBeInTheDocument()
     expect(screen.getByText('Acertei 7 de 18 no Caiu Nessa? caiunessa.com.br')).toBeInTheDocument()

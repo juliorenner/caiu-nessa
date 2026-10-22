@@ -37,7 +37,7 @@ export function ResultadoFinal(p: {
     <section aria-live="polite" className="flex flex-col gap-5 text-center text-tinta dark:text-papel">
       <Ficha esquerda="Fim de jogo" direita={`Rodada ${p.rodada}`} />
       <div className="flex flex-col items-center gap-3">
-        <p className="font-letreiro text-[13px]">{p.rodada === 1 ? 'Placar' : `Rodada ${p.rodada}`}</p>
+        <p className="font-letreiro text-[13px]">Placar</p>
         <p data-placar className={NUMERO_PLACAR}>
           {resultado.acertos}/{resultado.total}
         </p>
