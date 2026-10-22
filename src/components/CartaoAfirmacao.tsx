@@ -4,7 +4,7 @@ import { useState } from 'react'
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactElement } from 'react'
 import type { Veredito } from '@/lib/afirmacoes'
 import { inclinacao, opacidadeSelo, useArrasto } from './arrasto'
-import { CARTAO_SUPERFICIE, COR_SELO_CARTAO, ROTULO_BOTAO } from './rotulos'
+import { CARIMBO_CARTAO, ROTULO_BOTAO, SUPERFICIE } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
 // ativo: arrastável; respondido: inclinado e carimbado, parado (painel aberto); saindo: voa para fora (300 ms).
@@ -16,7 +16,10 @@ export function tamanhoDoTexto(texto: string): 'text-xl' | 'text-lg' | 'text-bas
   return 'text-base'
 }
 
-export const CARTAO_BASE = `rounded-2xl p-6 ${CARTAO_SUPERFICIE}`
+export const CARTAO_BASE = `p-5 ${SUPERFICIE}`
+
+// Dentro da superfície branca: secundário sem variante escura (o cartão é branco nos dois temas).
+const DICA = 'pointer-events-none absolute font-letreiro text-[11px] leading-none whitespace-nowrap'
 
 // Posição parada (respondido) ou de saída (saindo) no eixo da resposta.
 function transformFinal(veredito: Veredito, fase: 'respondido' | 'saindo'): string {
@@ -74,12 +77,27 @@ export function CartaoAfirmacao({
       style={style}
       {...(ativo ? { ...handlers, onPointerDown } : {})}
     >
-      <p className={`${tamanhoDoTexto(afirmacao.texto)} font-semibold leading-snug text-balance`}>{afirmacao.texto}</p>
+      <span aria-hidden className="absolute -top-4 left-2 font-letreiro text-[72px] leading-none text-papel">
+        ?
+      </span>
+      {/* Dicas de gesto nas bordas; o texto para leitor de tela sobre as setas fica no Quiz. */}
+      <span aria-hidden className={`${DICA} top-1 left-1/2 -translate-x-1/2 text-secundario`}>
+        ↑ Cheira mal
+      </span>
+      <span aria-hidden className={`${DICA} bottom-1 left-2 text-mentira`}>
+        ← Mentira
+      </span>
+      <span aria-hidden className={`${DICA} right-2 bottom-1 text-verdade`}>
+        Verdade →
+      </span>
+      <p className={`relative ${tamanhoDoTexto(afirmacao.texto)} font-bold leading-snug text-balance`}>
+        {afirmacao.texto}
+      </p>
       {vereditoSelo && (
         <span
           data-selo={vereditoSelo}
           aria-hidden
-          className={`absolute top-4 right-4 -rotate-12 rounded-lg border-4 px-2 py-1 text-lg font-black tracking-wider uppercase ${COR_SELO_CARTAO[vereditoSelo]}`}
+          className={`absolute top-4 right-4 ${CARIMBO_CARTAO[vereditoSelo]}`}
           style={{ opacity: opacidade }}
         >
           {ROTULO_BOTAO[vereditoSelo]}

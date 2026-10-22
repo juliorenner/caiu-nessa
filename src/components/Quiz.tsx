@@ -7,7 +7,10 @@ import type { FaseCartao } from './CartaoAfirmacao'
 import { PainelVeredito } from './PainelVeredito'
 import { PilhaDeCartoes } from './PilhaDeCartoes'
 import { ResultadoFinal } from './ResultadoFinal'
-import { BOTAO_PRIMARIO, BOTAO_RESPOSTA, FOCO, ROTULO_BOTAO, TEXTO_SECUNDARIO } from './rotulos'
+import { CarimbosDeProgresso } from './CarimbosDeProgresso'
+import { Ficha } from './Ficha'
+import { IconeVeredito } from './IconeVeredito'
+import { ARIA_BOTAO_RESPOSTA, BOTAO_PRIMARIO, BOTAO_RESPOSTA, FOCO, ROTULO_BOTAO } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
 export type { AfirmacaoNoQuiz }
@@ -38,7 +41,10 @@ type Estado =
 
 const DURACAO_MS = 300
 
-const ORDEM_BOTOES: Veredito[] = ['verdadeiro', 'falso', 'enganoso']
+// Na ordem dos gestos: esquerda, cima, direita.
+const ORDEM_BOTOES: Veredito[] = ['falso', 'enganoso', 'verdadeiro']
+
+const doisDigitos = (n: number) => String(n).padStart(2, '0')
 
 const TECLAS: Record<string, Veredito> = { ArrowLeft: 'falso', ArrowUp: 'enganoso', ArrowRight: 'verdadeiro' }
 
@@ -195,8 +201,11 @@ export default function Quiz({
   const ultima = indice === ordem.length - 1
   // O contador só muda quando o painel revela o veredito, não enquanto o cartão ainda desliza.
   const contadas = ordem.filter(a => a.id in respostas && !(etapa === 'respondendo' && a.id === afirmacao.id))
-  const respondidas = contadas.length
   const acertos = contadas.filter(a => respostas[a.id] === a.veredito).length
+  const estados = ordem.map(a => {
+    if (!contadas.includes(a)) return null
+    return respostas[a.id] === a.veredito ? ('acerto' as const) : ('erro' as const)
+  })
   const marcada = etapa === 'respondendo' || etapa === 'feedback'
 
   // A resposta entra no mesmo render que muda a fase do cartão: a transição parte de onde o dedo soltou.
@@ -231,35 +240,26 @@ export default function Quiz({
     <div
       ref={raiz}
       tabIndex={-1}
-      className="box-border flex h-dvh flex-col overflow-x-hidden overflow-y-auto overscroll-contain px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
+      className="box-border flex h-dvh flex-col overflow-x-hidden overflow-y-auto overscroll-contain px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
     >
-      <div data-conteudo inert={etapa === 'feedback' ? true : undefined} className="flex flex-1 flex-col gap-3">
-        <div className="flex items-center justify-between gap-2">
-          <p className={`text-base font-medium ${TEXTO_SECUNDARIO}`}>
-            Afirmação {indice + 1} de {ordem.length}
-          </p>
-          {respondidas > 0 && (
-            <span
-              data-contador
-              className="rounded-full bg-stone-900 px-3 py-1 text-base font-bold text-white dark:bg-stone-100 dark:text-stone-900"
-            >
-              {acertos} de {respondidas} ✔
-            </span>
-          )}
-        </div>
-        <div
-          role="progressbar"
-          aria-label="Progresso"
-          aria-valuenow={indice + 1}
-          aria-valuemin={0}
-          aria-valuemax={ordem.length}
-          className="h-1.5 w-full overflow-hidden rounded-full bg-stone-300 dark:bg-stone-700"
-        >
-          <div
-            className="h-full rounded-full bg-stone-900 dark:bg-stone-100"
-            style={{ width: `${((indice + 1) / ordem.length) * 100}%` }}
-          />
-        </div>
+      <div
+        data-conteudo
+        inert={etapa === 'feedback' ? true : undefined}
+        className={`flex flex-1 flex-col gap-3 ${etapa === 'feedback' ? '[filter:brightness(.75)_saturate(.6)]' : ''}`}
+      >
+        <Ficha
+          esquerda={
+            <>
+              {rodada > 1 && <span className="font-sans text-[11px] font-bold uppercase">Rodada {rodada} · </span>}
+              Ficha {doisDigitos(indice + 1)}/{doisDigitos(ordem.length)}
+            </>
+          }
+          direita={<span data-contador>{`Placar ${doisDigitos(acertos)}`}</span>}
+        />
+        <p className="sr-only">
+          Afirmação {indice + 1} de {ordem.length}
+        </p>
+        <CarimbosDeProgresso total={ordem.length} atual={indice} estados={estados} />
         <div className="flex flex-1 items-center">
           <div className="w-full">
             <PilhaDeCartoes
@@ -272,19 +272,18 @@ export default function Quiz({
             />
           </div>
         </div>
-        <p aria-hidden className={`${TEXTO_SECUNDARIO} text-center text-sm`}>
-          ← mentira · ↑ cheira mal · verdade →
-        </p>
         <p className="sr-only">Use as setas: esquerda é mentira, cima é cheira mal, direita é verdade.</p>
-        <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-3 gap-2.5">
           {ORDEM_BOTOES.map(v => (
             <button
               key={v}
               type="button"
+              aria-label={ARIA_BOTAO_RESPOSTA[v]}
               aria-disabled={etapa === 'pergunta' ? undefined : true}
               onClick={() => responder(v)}
-              className={`min-h-12 w-full rounded-xl px-4 text-base font-bold transition-[opacity,box-shadow] motion-reduce:transition-none ${FOCO} ${classeBotao(v)}`}
+              className={`flex min-h-14 flex-col items-center justify-center gap-2 px-1 py-2 text-[11px] leading-tight ${FOCO} ${classeBotao(v)}`}
             >
+              <IconeVeredito veredito={v} />
               {ROTULO_BOTAO[v]}
             </button>
           ))}

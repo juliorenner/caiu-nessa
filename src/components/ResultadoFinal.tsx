@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import type { RespostaResultado } from '@/lib/resultado-api'
-import { BOTAO_PRIMARIO, BOTAO_SECUNDARIO, CARTAO_SUPERFICIE, FOCO, TEXTO_SECUNDARIO } from './rotulos'
+import { BOTAO_PRIMARIO, BOTAO_SECUNDARIO, SUPERFICIE, FOCO, TEXTO_SECUNDARIO } from './rotulos'
 
 type EstadoContinuar = 'parado' | 'sorteando' | 'fim' | 'falha'
 
@@ -41,7 +41,7 @@ export function ResultadoFinal(p: {
       {avaliacao.vies !== null && <p className={`text-base leading-relaxed ${TEXTO_SECUNDARIO}`}>{avaliacao.vies}</p>}
       {/* A comparação com os outros jogadores só existe para a rodada de 12. */}
       {p.rodada === 1 && (
-        <p className={`rounded-xl p-4 text-base ${CARTAO_SUPERFICIE}`}>
+        <p className={`rounded-xl p-4 text-base ${SUPERFICIE}`}>
           {estatisticasIndisponiveis
             ? 'A comparação com os outros jogadores não está disponível agora.'
             : estatisticas

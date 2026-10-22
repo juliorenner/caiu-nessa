@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { CARTAO_SUPERFICIE, LINK_EM_CARTAO, LINK_PAGINA, ROTULO_VEREDITO, SELO_VEREDITO } from '@/components/rotulos'
+import { SUPERFICIE, LINK_EM_CARTAO, LINK_PAGINA, ROTULO_VEREDITO, SELO_VEREDITO } from '@/components/rotulos'
 import { type Afirmacao, carregarPool, foraDoJogo, jogaveis } from '@/lib/afirmacoes'
 
 export const metadata: Metadata = { title: 'As afirmações do jogo · Caiu Nessa?' }
@@ -13,7 +13,7 @@ function formatarData(iso: string): string {
 
 function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
   return (
-    <article className={`flex flex-col gap-3 rounded-2xl p-5 ${CARTAO_SUPERFICIE}`}>
+    <article className={`flex flex-col gap-3 rounded-2xl p-5 ${SUPERFICIE}`}>
       <p className="text-lg font-semibold text-stone-900">{a.texto}</p>
       <p className="text-base text-stone-600">Quem disse: {a.autor}</p>
       <blockquote className="border-l-4 border-stone-200 pl-3 text-base text-stone-600 italic">“{a.citacao}”</blockquote>

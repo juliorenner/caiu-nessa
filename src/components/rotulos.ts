@@ -111,8 +111,3 @@ export const BOTAO_RESPOSTA = Object.fromEntries(
     return [v, { base, destaque: `${afundado} translate-y-[5px] shadow-none`, esmaecido: 'opacity-35' }]
   }),
 ) as Record<Veredito, { base: string; destaque: string; esmaecido: string }>
-
-// temporário: sai na Task 4
-export const CARTAO_SUPERFICIE = SUPERFICIE
-// temporário: sai na Task 4
-export const COR_SELO_CARTAO = CARIMBO_CARTAO

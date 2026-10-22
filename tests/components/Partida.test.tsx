@@ -65,7 +65,7 @@ const pedidosDeRodada = (fetchMock: ReturnType<typeof mockFetch>) =>
 
 async function jogar(user: ReturnType<typeof userEvent.setup>, total: number) {
   for (let i = 0; i < total; i++) {
-    await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+    await user.click(screen.getByRole('button', { name: 'Verdade' }))
     await user.click(screen.getByRole('button', { name: i === total - 1 ? 'Ver meu resultado' : 'Próxima' }))
   }
 }
@@ -88,7 +88,7 @@ describe('Partida', () => {
     await jogar(user, 12)
     await user.click(await screen.findByRole('button', { name: 'Continuar jogando' }))
     expect(await screen.findByText('Afirmação 1 de 6')).toBeInTheDocument()
-    expect(document.querySelector('[data-contador]')).toBeNull()
+    expect(document.querySelector('[data-contador]')).toHaveTextContent('Placar 00')
     // O botão clicado sumiu: o foco vai para a raiz do quiz, não para o body.
     expect(document.activeElement).toBe(document.querySelector('.h-dvh'))
     const pedidos = pedidosDeRodada(fetchMock)

@@ -40,7 +40,7 @@ describe('CartaoAfirmacao', () => {
     expect(onResposta).toHaveBeenCalledExactlyOnceWith('verdadeiro')
   })
 
-  it('mostra o selo MENTIRA enquanto arrasta para a esquerda', () => {
+  it('mostra o selo Mentira enquanto arrasta para a esquerda', () => {
     const { container } = render(
       <CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} />,
     )
@@ -48,7 +48,7 @@ describe('CartaoAfirmacao', () => {
     fireEvent.pointerMove(cartao(), ponteiro(120, 10))
     const selo = container.querySelector<HTMLElement>('span[data-selo="falso"]')
     expect(selo).not.toBeNull()
-    expect(selo).toHaveTextContent('MENTIRA')
+    expect(selo).toHaveTextContent('Mentira')
     expect(Number(selo!.style.opacity)).toBeGreaterThan(0)
     expect(cartao().style.transform).toContain('translate(-80px, 0px)')
   })
@@ -115,6 +115,11 @@ describe('CartaoAfirmacao', () => {
   it('reduzirMovimento: enganoso respondido sem transform', () => {
     render(<CartaoAfirmacao afirmacao={afirmacao} fase="respondido" respostaDada="enganoso" onResposta={vi.fn()} reduzirMovimento />)
     expect(cartao().style.transform).toBe('')
+  })
+
+  it('dicas de gesto ficam nas bordas do cartão, fora da árvore acessível', () => {
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={() => {}} reduzirMovimento />)
+    for (const t of ['← Mentira', '↑ Cheira mal', 'Verdade →']) expect(screen.getByText(t)).toHaveAttribute('aria-hidden')
   })
 
   it('tamanhoDoTexto degrada por comprimento', () => {
