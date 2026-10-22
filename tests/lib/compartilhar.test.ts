@@ -2,11 +2,11 @@ import { expect, it } from 'vitest'
 import type { Casa } from '@/lib/cartao'
 import { NOME_ARQUIVO, gradeDeCasas, textoDeCompartilhar } from '@/lib/compartilhar'
 
-const doze: Casa[] = ['acerto', 'erro', 'acerto', 'acerto', 'erro', 'quase', 'erro', 'acerto', 'erro', 'erro', 'acerto', 'acerto']
+const doze: Casa[] = ['acerto', 'erro', 'acerto', 'acerto', 'erro', 'quase', 'erro', 'acerto', 'erro', 'erro', 'erro', 'erro']
 
 it('texto com caiu > 0: título, duas linhas de 6 emojis e o domínio no fim', () => {
   expect(textoDeCompartilhar({ acertos: 4, total: 12, caiu: 3, casas: doze })).toBe(
-    'Fiz 4/12 no Caiu Nessa? e caí em 3. E você?\n✅❌✅✅❌🤔\n❌✅❌❌✅✅\ncaiunessa.com.br',
+    'Fiz 4/12 no Caiu Nessa? e caí em 3. E você?\n✅❌✅✅❌🤔\n❌✅❌❌❌❌\ncaiunessa.com.br',
   )
 })
 it('texto com caiu 0: não caí em nenhuma', () => {
@@ -21,5 +21,5 @@ it('rodada extra de 6 casas: uma linha só', () => {
   )
 })
 it('gradeDeCasas usa ✅ ❌ 🤔', () => expect(gradeDeCasas(['acerto', 'erro', 'quase'])).toBe('✅❌🤔'))
-it('gradeDeCasas quebra a cada 6', () => expect(gradeDeCasas(doze)).toBe('✅❌✅✅❌🤔\n❌✅❌❌✅✅'))
+it('gradeDeCasas quebra a cada 6', () => expect(gradeDeCasas(doze)).toBe('✅❌✅✅❌🤔\n❌✅❌❌❌❌'))
 it('nome do arquivo da imagem', () => expect(NOME_ARQUIVO).toBe('caiu-nessa-placar.png'))

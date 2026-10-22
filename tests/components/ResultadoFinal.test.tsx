@@ -151,6 +151,19 @@ describe('ResultadoFinal: compartilhar', () => {
     await waitFor(() => expect(aviso()).toHaveTextContent('Não deu para copiar'))
   })
 
+  it('folha abre depois de Não deu para copiar: o aviso some', async () => {
+    const share = vi.fn().mockRejectedValueOnce(new DOMException('negado', 'NotAllowedError')).mockResolvedValue(undefined)
+    stubNavegador({ share, canShare: () => true, writeText: vi.fn().mockRejectedValue(new Error('negado')) })
+    renderizar()
+    await assentar()
+    fireEvent.click(botao())
+    await waitFor(() => expect(aviso()).toHaveTextContent('Não deu para copiar'))
+    fireEvent.click(botao())
+    await assentar()
+    expect(share).toHaveBeenCalledTimes(2)
+    expect(aviso()).toHaveTextContent(/^$/)
+  })
+
   it('link Baixar imagem para os stories baixa o cartão', async () => {
     stubNavegador({})
     renderizar()

@@ -7,13 +7,22 @@ const valido = { a: '4', t: '12', c: '3', f: 'caiu-feio', g: 'aeaeeqeaeeae' }
 it('aceita parâmetros válidos e converte números', () => {
   expect(parametrosSchema.parse(valido)).toEqual({ a: 4, t: 12, c: 3, f: 'caiu-feio', g: 'aeaeeqeaeeae' })
 })
+it('aceita c igual ao número de letras e em g', () => {
+  expect(parametrosSchema.safeParse({ ...valido, c: '7' }).success).toBe(true)
+})
+it('rejeita caídas sem nenhum erro em g (só quase)', () => {
+  expect(parametrosSchema.safeParse({ a: '0', t: '6', c: '1', f: 'caiu-feio', g: 'qqqqqq' }).success).toBe(false)
+})
 it('aceita rodada de 6', () => {
   expect(parametrosSchema.safeParse({ a: '6', t: '6', c: '0', f: 'imune', g: 'aaaaaa' }).success).toBe(true)
 })
 it.each([
   ['t fora de {6, 12}', { t: '7' }],
   ['g com 5 letras a quando a=4', { g: 'aaaaaeeeeeee' }],
-  ['c maior que t − a', { c: '9' }],
+  ['c maior que o número de e em g', { c: '8' }],
+  ['c negativo', { c: '-1' }],
+  ['c não inteiro', { c: '1.5' }],
+  ['c não numérico', { c: 'abc' }],
   ['faixa desconhecida', { f: 'x' }],
   ['a maior que t', { a: '13' }],
   ['a negativo', { a: '-1' }],

@@ -1,4 +1,4 @@
-import { expect, it, vi } from 'vitest'
+import { afterEach, expect, it, vi } from 'vitest'
 import { metadata } from '@/app/layout'
 import { DESCRICAO, SITE_URL } from '@/lib/site'
 
@@ -15,7 +15,6 @@ it('metadata tem OG e Twitter com base absoluta', () => {
   expect(metadata.openGraph).toMatchObject({
     title: 'Caiu Nessa?',
     description: DESCRICAO,
-    url: '/',
     siteName: 'Caiu Nessa?',
     locale: 'pt_BR',
     type: 'website',
@@ -23,6 +22,25 @@ it('metadata tem OG e Twitter com base absoluta', () => {
   expect(metadata.twitter).toMatchObject({ card: 'summary_large_image', title: 'Caiu Nessa?', description: DESCRICAO })
 })
 
-it('SITE_URL padrão é o domínio final', () => {
-  expect(SITE_URL).toBe('https://caiunessa.com.br')
+// SITE_URL é lido ao importar o módulo: cada caso reimporta com o ambiente controlado.
+const original = process.env.NEXT_PUBLIC_SITE_URL
+
+afterEach(() => {
+  if (original === undefined) delete process.env.NEXT_PUBLIC_SITE_URL
+  else process.env.NEXT_PUBLIC_SITE_URL = original
+  vi.resetModules()
+})
+
+it('SITE_URL padrão é o domínio final', async () => {
+  delete process.env.NEXT_PUBLIC_SITE_URL
+  vi.resetModules()
+  const { SITE_URL: padrao } = await import('@/lib/site')
+  expect(padrao).toBe('https://caiunessa.com.br')
+})
+
+it('SITE_URL respeita NEXT_PUBLIC_SITE_URL', async () => {
+  process.env.NEXT_PUBLIC_SITE_URL = 'https://preview.example'
+  vi.resetModules()
+  const { SITE_URL: sobrescrito } = await import('@/lib/site')
+  expect(sobrescrito).toBe('https://preview.example')
 })

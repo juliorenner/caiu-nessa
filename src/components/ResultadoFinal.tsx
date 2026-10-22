@@ -64,6 +64,12 @@ export function ResultadoFinal(p: {
   // Síncrono até o share: usa a imagem que já chegou, sem esperar a que falta.
   function aoCompartilhar() {
     void compartilhar({ texto, url: SITE_URL, titulo: TITULO, arquivo }).then(desfecho => {
+      // A folha abriu: um aviso de toque anterior já não vale.
+      if (desfecho === 'folha') {
+        if (temporizador.current) clearTimeout(temporizador.current)
+        temporizador.current = null
+        setAviso(null)
+      }
       if (desfecho !== 'copiado' && desfecho !== 'falhou') return
       // A folha recusou o arquivo (ex.: NotAllowedError no Android): o próximo toque vai direto para texto + link.
       if (arquivo) setArquivo(null)

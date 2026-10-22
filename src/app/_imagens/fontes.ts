@@ -11,9 +11,13 @@ function ler(nome: string) {
 }
 
 export async function carregarFontes(): Promise<Fontes> {
-  cache ??= Promise.all([ler('Bungee-Regular.ttf'), ler('AtkinsonHyperlegible-Bold.ttf')]).then(
-    ([bungee, atkinson]) => ({ bungee, atkinson }),
-  )
+  cache ??= Promise.all([ler('Bungee-Regular.ttf'), ler('AtkinsonHyperlegible-Bold.ttf')])
+    .then(([bungee, atkinson]) => ({ bungee, atkinson }))
+    // Falha de leitura não fica no cache: a próxima chamada tenta de novo.
+    .catch(erro => {
+      cache = undefined
+      throw erro
+    })
   return cache
 }
 

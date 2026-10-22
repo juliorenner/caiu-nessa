@@ -45,8 +45,11 @@ export const parametrosSchema: z.ZodType<{ a: number; t: 6 | 12; c: number; f: F
     g: z.string().regex(/^[aeq]+$/),
   })
   .refine(p => p.a <= p.t, { path: ['a'] })
-  // Quem caiu errou: caídas não passam dos erros.
-  .refine(p => p.c <= p.t - p.a, { path: ['c'] })
+  // Quem caiu errou (e errar o grau não é cair): caídas não passam das letras 'e'.
+  .refine(p => p.c <= [...p.g].filter(letra => letra === 'e').length, {
+    path: ['c'],
+    message: 'c maior que o número de erros em g',
+  })
   .refine(p => p.g.length === p.t, { path: ['g'] })
   .refine(p => [...p.g].filter(letra => letra === 'a').length === p.a, { path: ['g'] })
 
