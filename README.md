@@ -1,6 +1,6 @@
 # Caiu Nessa?
 
-Quiz de checagem de fatos políticos, neutro e em português. São 12 afirmações políticas já checadas por agências de checagem; para cada uma o jogador responde **VERDADE**, **MENTIRA** ou **ISSO ME CHEIRA MAL 🤔** (enganoso). No fim vê a nota, o viés das respostas e como se saiu em comparação com os outros jogadores. É anônimo e não tem login.
+Quiz de checagem de fatos políticos, neutro e em português. São 12 afirmações políticas já checadas por agências de checagem; para cada uma o jogador responde **VERDADE**, **MENTIRA** ou **ISSO ME CHEIRA MAL 🤔** (enganoso), arrastando o cartão (direita, esquerda ou para cima), pelos botões ou pelas setas do teclado. No fim vê a nota, o viés das respostas e como se saiu em comparação com os outros jogadores. É anônimo e não tem login.
 
 ## Regras de neutralidade
 
