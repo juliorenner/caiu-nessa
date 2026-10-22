@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     return Response.json({ erro: 'respostas_invalidas' }, { status: 400 })
   }
   const { status, body } = await processarResultado(corpo, req.headers, {
-    db: getDb(),
+    db: await getDb(),
     afirmacoes: carregarAfirmacoes(),
     salt: obterSalt(),
   })
