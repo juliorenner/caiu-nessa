@@ -80,3 +80,19 @@ it('nenhuma cor de partido em src/', () => {
   )
   expect(ocorrencias).toEqual([])
 })
+
+// Classes de família de cor são só um dos caminhos: um hex solto (em CSS, SVG ou classe arbitrária `bg-[#...]`)
+// também entra na tela. Todo hex em src/ precisa ser um token da paleta, branco ou preto.
+it('todo hex em src/ é um token da paleta', () => {
+  const permitidos = new Set([...Object.values(cores), '#ffffff', '#000000'].map((h) => h.toLowerCase()))
+  const fora = arquivos(join(RAIZ, 'src')).flatMap((caminho) =>
+    readFileSync(caminho, 'utf8')
+      .split('\n')
+      .flatMap((linha, i) =>
+        (linha.match(/#[0-9a-f]{6}\b/gi) ?? [])
+          .filter((hex) => !permitidos.has(hex.toLowerCase()))
+          .map((hex) => `${caminho.slice(RAIZ.length + 1)}:${i + 1} ${hex}`),
+      ),
+  )
+  expect(fora).toEqual([])
+})

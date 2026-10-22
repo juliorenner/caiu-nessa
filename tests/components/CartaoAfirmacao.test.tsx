@@ -119,7 +119,7 @@ describe('CartaoAfirmacao', () => {
 
   it('dicas de gesto ficam nas bordas do cartão, fora da árvore acessível', () => {
     render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={() => {}} reduzirMovimento />)
-    for (const t of ['← Mentira', '↑ Cheira mal', 'Verdade →']) expect(screen.getByText(t)).toHaveAttribute('aria-hidden')
+    for (const t of ['← Mentira', '↑ Cheira mal', 'Verdade →']) expect(screen.getByText(t)).toHaveAttribute('aria-hidden', 'true')
   })
 
   it('tamanhoDoTexto degrada por comprimento', () => {

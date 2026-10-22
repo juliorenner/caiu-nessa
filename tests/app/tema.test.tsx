@@ -52,7 +52,12 @@ it('rótulos dos botões e do carimbo', () => {
 
 it('landing: título em letreiro, carimbo, botão Começar e dicas', () => {
   render(<Landing />)
-  expect(screen.getByRole('heading', { level: 1, name: 'Caiu Nessa?' })).toHaveClass('font-letreiro-sombra')
+  const titulo = screen.getByRole('heading', { level: 1, name: 'Caiu Nessa?' })
+  expect(titulo).toHaveClass('font-letreiro-sombra')
+  // O carimbo (logo) fica no mesmo quadro do título, decorativo.
+  const carimbo = titulo.parentElement!.querySelector('svg')
+  expect(carimbo).not.toBeNull()
+  expect(carimbo).toHaveAttribute('aria-hidden', 'true')
   expect(screen.getByRole('link', { name: 'Começar' })).toHaveAttribute('href', '/quiz')
   expect(screen.getByText('← Mentira · ↑ Cheira mal · Verdade →')).toBeInTheDocument()
   expect(screen.getByText('Arraste o cartão ou toque')).toBeInTheDocument()
