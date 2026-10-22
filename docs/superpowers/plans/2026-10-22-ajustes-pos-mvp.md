@@ -56,5 +56,12 @@ Documento de transparência: cada mudança feita depois do plano do MVP (`2026-1
 **Resultado:** 8 candidatos checados, nenhum no pool; 4 elegíveis, todos direita + falso; 4 fora por não terem autor (entre eles o mais viral da janela, um infográfico sobre o Pisa com mais de 1 milhão de visualizações). Nenhum caso novo de direita verdadeiro ou enganoso, nem da esquerda com checagem de agência.
 **Decisão (dono):** entram as duas verificadas nas páginas das agências: "recorde de empresas fechadas" (Flávio, debate da Band; Aos Fatos, falso) e o vídeo da mulher com droga atribuído ao ato pró-Lula na Paulista (Flávio repostando Rony Gabriel; Lupa, falso). "Cervejinha" e "Lula foi à Justiça pela saidinha" esperam confirmação das checagens originais.
 
+## 2026-10-22 — Ícone do site (ticket de ícone no Linear)
+**Pedido (dono):** trocar o favicon padrão do Next.js por um logo do app.
+**Opções vistas:** rodada 1, três variações de cartão com "?" (cartão caindo, bordas dos gestos, pilha) — nenhuma agradou; rodada 2, quatro direções (anzol, carimbo, letras, cara de dúvida).
+**Decisão (dono):** carimbo — anel em rose-700 sobre o creme do tema claro, "CAIU NESSA? •" em volta, "?" grande no centro, inclinado 12°; letras com folga dos anéis (ajuste pedido).
+**Como foi feito:** SVG só com caminhos (sem `<text>`), glifos da Geist Black (o "?") e Geist Bold (o anel) extraídos com fontTools e distribuídos em meia circunferência por cópia; PNG e ICO renderizados do mesmo SVG com `sharp`. Arquivos: `src/app/icon.svg`, `src/app/favicon.ico` (16/32/48, PNG embutido), `src/app/apple-icon.png` (180). Licença da fonte: SIL OFL 1.1.
+**Fora do escopo:** imagem de compartilhamento (Open Graph) e um wordmark na página inicial.
+
 ## Pendentes (ainda em desenho)
 - Nada no momento.
