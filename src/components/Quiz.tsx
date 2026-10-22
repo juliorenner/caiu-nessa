@@ -1,11 +1,13 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { type Respostas, TOTAL_AFIRMACOES, type Veredito } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
-import { Feedback } from './Feedback'
+import type { FaseCartao } from './CartaoAfirmacao'
+import { PainelVeredito } from './PainelVeredito'
+import { PilhaDeCartoes } from './PilhaDeCartoes'
 import { ResultadoFinal } from './ResultadoFinal'
-import { BOTAO_PRIMARIO, FOCO } from './rotulos'
+import { BOTAO_PRIMARIO, BOTAO_RESPOSTA, FOCO, ROTULO_BOTAO, TEXTO_SECUNDARIO } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
 export type { AfirmacaoNoQuiz }
@@ -17,30 +19,67 @@ export interface QuizProps {
   embaralharFn?: (itens: AfirmacaoNoQuiz[]) => AfirmacaoNoQuiz[]
 }
 
+// respondendo: o cartão desliza carimbado antes do painel subir; saindo: painel fechado, cartão voando para fora.
 type Estado =
-  | { etapa: 'pergunta' | 'feedback'; indice: number }
+  | { etapa: 'pergunta' | 'respondendo' | 'feedback' | 'saindo'; indice: number }
   | { etapa: 'enviando' }
   | { etapa: 'resultado'; dados: RespostaResultado }
   | { etapa: 'erro'; motivo: 'limite' | 'invalido' | 'falha' }
 
-const OPCOES: { valor: Veredito; rotulo: string; cor: string }[] = [
-  { valor: 'verdadeiro', rotulo: 'VERDADE', cor: 'border-emerald-700 text-emerald-900 hover:bg-emerald-50' },
-  { valor: 'falso', rotulo: 'MENTIRA', cor: 'border-rose-700 text-rose-900 hover:bg-rose-50' },
-  { valor: 'enganoso', rotulo: 'ISSO ME CHEIRA MAL 🤔', cor: 'border-amber-600 text-amber-900 hover:bg-amber-50' },
-]
+const DURACAO_MS = 300
 
-const SELECIONADA: Record<Veredito, string> = {
-  verdadeiro: 'bg-emerald-700 text-white',
-  falso: 'bg-rose-700 text-white',
-  enganoso: 'bg-amber-700 text-white',
+const ORDEM_BOTOES: Veredito[] = ['verdadeiro', 'falso', 'enganoso']
+
+const TECLAS: Record<string, Veredito> = { ArrowLeft: 'falso', ArrowUp: 'enganoso', ArrowRight: 'verdadeiro' }
+
+const FASE_CARTAO: Record<'pergunta' | 'respondendo' | 'feedback' | 'saindo', FaseCartao> = {
+  pergunta: 'ativo',
+  respondendo: 'respondido',
+  feedback: 'respondido',
+  saindo: 'saindo',
 }
 
 export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x => x }: QuizProps) {
   const [ordem] = useState(() => embaralharFn(afirmacoes))
   const [estado, setEstado] = useState<Estado>({ etapa: 'pergunta', indice: 0 })
   const [respostas, setRespostas] = useState<Respostas>({})
+  const [reduzirMovimento, setReduzirMovimento] = useState(false)
   const enviando = useRef(false)
-  const topo = useRef<HTMLDivElement>(null)
+  const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const responderRef = useRef<(v: Veredito) => void>(() => {})
+
+  useEffect(() => {
+    setReduzirMovimento(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false)
+    return () => {
+      if (temporizador.current) clearTimeout(temporizador.current)
+    }
+  }, [])
+
+  const naPergunta = estado.etapa === 'pergunta'
+  useEffect(() => {
+    if (!naPergunta) return
+    // Na janela: as setas funcionam sem precisar focar o quiz antes.
+    function aoTeclar(e: KeyboardEvent) {
+      const veredito = TECLAS[e.key]
+      if (!veredito || e.altKey || e.ctrlKey || e.metaKey) return
+      e.preventDefault()
+      responderRef.current(veredito)
+    }
+    window.addEventListener('keydown', aoTeclar)
+    return () => window.removeEventListener('keydown', aoTeclar)
+  }, [naPergunta])
+
+  // Sem movimento a transição é imediata; com movimento espera a animação do cartão.
+  function depois(acao: () => void) {
+    if (reduzirMovimento) {
+      acao()
+      return
+    }
+    temporizador.current = setTimeout(() => {
+      temporizador.current = null
+      acao()
+    }, DURACAO_MS)
+  }
 
   async function enviar(todas: Respostas) {
     if (enviando.current) return
@@ -67,19 +106,25 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
 
   if (estado.etapa === 'enviando') {
     return (
-      <p role="status" className="py-16 text-center text-lg">
+      <p role="status" className="px-4 py-16 text-center text-lg">
         Calculando seu resultado…
       </p>
     )
   }
 
-  if (estado.etapa === 'resultado') return <ResultadoFinal dados={estado.dados} />
+  if (estado.etapa === 'resultado') {
+    return (
+      <div className="px-4 py-8">
+        <ResultadoFinal dados={estado.dados} />
+      </div>
+    )
+  }
 
   if (estado.etapa === 'erro') {
     // 400: reenviar as mesmas respostas daria o mesmo erro; o jeito é recomeçar.
     if (estado.motivo === 'invalido') {
       return (
-        <div role="alert" className="flex flex-col gap-5 py-10 text-center">
+        <div role="alert" className="flex flex-col gap-5 px-4 py-10 text-center">
           <p className="text-lg">Não conseguimos salvar seu resultado.</p>
           <a href="/quiz" className={BOTAO_PRIMARIO}>
             Jogar de novo
@@ -88,7 +133,7 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
       )
     }
     return (
-      <div role="alert" className="flex flex-col gap-5 py-10 text-center">
+      <div role="alert" className="flex flex-col gap-5 px-4 py-10 text-center">
         <p className="text-lg">
           {estado.motivo === 'limite'
             ? 'Calma aí: muitas jogadas em pouco tempo. Tente de novo em um minuto.'
@@ -103,57 +148,108 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
 
   const { indice, etapa } = estado
   const afirmacao = ordem[indice]
-  const respostaDada = respostas[afirmacao.id]
+  const respostaDada = respostas[afirmacao.id] ?? null
   const ultima = indice === ordem.length - 1
+  const respondidas = Object.keys(respostas).length
+  const acertos = ordem.filter(a => respostas[a.id] === a.veredito).length
+  const marcada = etapa === 'respondendo' || etapa === 'feedback'
 
+  // A resposta entra no mesmo render que muda a fase do cartão: a transição parte de onde o dedo soltou.
   function responder(valor: Veredito) {
     if (etapa !== 'pergunta') return
     setRespostas(atual => ({ ...atual, [afirmacao.id]: valor }))
-    setEstado({ etapa: 'feedback', indice })
+    setEstado({ etapa: 'respondendo', indice })
+    depois(() => setEstado({ etapa: 'feedback', indice }))
   }
+  responderRef.current = responder
 
-  function proximo() {
-    if (ultima) {
-      void enviar(respostas)
+  function fechar() {
+    if (etapa !== 'feedback') return
+    const seguir = () => (ultima ? void enviar(respostas) : setEstado({ etapa: 'pergunta', indice: indice + 1 }))
+    if (reduzirMovimento) {
+      seguir()
       return
     }
-    setEstado({ etapa: 'pergunta', indice: indice + 1 })
-    topo.current?.scrollIntoView?.({ block: 'start' })
+    setEstado({ etapa: 'saindo', indice })
+    depois(seguir)
+  }
+
+  function classeBotao(v: Veredito) {
+    const estilo = BOTAO_RESPOSTA[v]
+    if (!marcada) return estilo.base
+    return respostaDada === v ? estilo.destaque : `${estilo.base} ${estilo.esmaecido}`
   }
 
   return (
-    <div ref={topo} className="scroll-mt-4">
-      <p className="text-base font-medium text-stone-600">
-        Afirmação {indice + 1} de {TOTAL_AFIRMACOES}
-      </p>
-      <blockquote className="mt-3 text-2xl leading-snug font-semibold text-balance">{afirmacao.texto}</blockquote>
-      <div className="mt-6 flex flex-col gap-3">
-        {OPCOES.map(({ valor, rotulo, cor }) => (
-          <button
-            key={valor}
-            type="button"
-            disabled={etapa === 'feedback'}
-            onClick={() => responder(valor)}
-            className={`min-h-14 w-full rounded-xl border-2 px-4 py-3 text-lg font-bold tracking-wide transition-colors disabled:cursor-default ${
-              etapa === 'feedback'
-                ? respostaDada === valor
-                  ? `border-transparent ${SELECIONADA[valor]}`
-                  : 'border-stone-200 bg-stone-50 text-stone-400'
-                : `bg-white ${cor}`
-            } ${FOCO}`}
-          >
-            {rotulo}
-          </button>
-        ))}
+    <div
+      tabIndex={-1}
+      className="box-border flex h-dvh flex-col overflow-hidden px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
+    >
+      <div data-conteudo inert={etapa === 'feedback' ? true : undefined} className="flex min-h-0 flex-1 flex-col gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <p className={`text-base font-medium ${TEXTO_SECUNDARIO}`}>
+            Afirmação {indice + 1} de {TOTAL_AFIRMACOES}
+          </p>
+          {respondidas > 0 && (
+            <span
+              data-contador
+              className="rounded-full bg-stone-900 px-3 py-1 text-base font-bold text-white dark:bg-stone-100 dark:text-stone-900"
+            >
+              {acertos} de {respondidas} ✔
+            </span>
+          )}
+        </div>
+        <div
+          role="progressbar"
+          aria-label="Progresso"
+          aria-valuenow={indice + 1}
+          aria-valuemin={0}
+          aria-valuemax={TOTAL_AFIRMACOES}
+          className="h-1.5 w-full overflow-hidden rounded-full bg-stone-300 dark:bg-stone-700"
+        >
+          <div
+            className="h-full rounded-full bg-stone-900 dark:bg-stone-100"
+            style={{ width: `${((indice + 1) / TOTAL_AFIRMACOES) * 100}%` }}
+          />
+        </div>
+        <div className="flex min-h-0 flex-1 items-center">
+          <div className="w-full">
+            <PilhaDeCartoes
+              atual={afirmacao}
+              proxima={ordem[indice + 1] ?? null}
+              fase={FASE_CARTAO[etapa]}
+              respostaDada={respostaDada}
+              onResposta={responder}
+              reduzirMovimento={reduzirMovimento}
+            />
+          </div>
+        </div>
+        <p aria-hidden className={`${TEXTO_SECUNDARIO} text-center text-sm`}>
+          ← mentira · ↑ cheira mal · verdade →
+        </p>
+        <div className="flex flex-col gap-2">
+          {ORDEM_BOTOES.map(v => (
+            <button
+              key={v}
+              type="button"
+              aria-disabled={etapa === 'pergunta' ? undefined : true}
+              onClick={() => responder(v)}
+              className={`min-h-12 w-full rounded-xl px-4 text-base font-bold transition-[opacity,box-shadow] ${FOCO} ${classeBotao(v)}`}
+            >
+              {ROTULO_BOTAO[v]}
+            </button>
+          ))}
+        </div>
       </div>
       {etapa === 'feedback' && respostaDada && (
-        <Feedback
+        <PainelVeredito
           key={afirmacao.id}
           afirmacao={afirmacao}
           respostaDada={respostaDada}
           erroPct={erroPorAfirmacao?.[afirmacao.id] ?? null}
-          onProximo={proximo}
           ultima={ultima}
+          onFechar={fechar}
+          reduzirMovimento={reduzirMovimento}
         />
       )}
     </div>
