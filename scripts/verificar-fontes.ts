@@ -24,6 +24,7 @@ for (const { id, fonte_url } of afirmacoes) {
       falhou = true
       console.log(`FALHOU ${id} ${resposta.status}`)
     }
+    await resposta.body?.cancel()
   } catch (erro) {
     falhou = true
     const motivo =

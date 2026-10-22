@@ -1,4 +1,5 @@
 # Caiu Nessa? (caiu-nessa)
+> **Nota (2026-10-21):** este documento tem uma emenda no fim ("Emenda 2026-10-21: veredito em três níveis"). Onde o texto original e a emenda conflitarem, vale a emenda: três vereditos (verdadeiro, falso, enganoso), três botões, 2/2/2 por lado.
 
 ## O que é
 Quiz web neutro em português. A pessoa vê uma afirmação política e responde
