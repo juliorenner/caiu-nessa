@@ -34,7 +34,7 @@ function textoDoEixo(eixo: Eixo, a: number, d: number, g: number, caiuFeio: bool
     const texto = `Você desconfiou de ${porcentagem(d, VERDADEIRAS)}% das verdades.`
     return caiuFeio ? `${texto} Nem tudo é mentira.` : texto
   }
-  const texto = `Você percebeu o que não era verdade, mas errou o grau em ${g} delas: trocou mentira por enganoso, ou o contrário.`
+  const texto = `Você percebeu o que não era verdade, mas errou o grau em ${g === 1 ? 'uma' : g} delas: trocou mentira por enganoso, ou o contrário.`
   return caiuFeio ? `${texto} Vale conferir quais.` : texto
 }
 
@@ -52,7 +52,7 @@ function viesDoEixo(eixo: Eixo, r: Resultado): string | null {
     return `Você desconfiou de ${e}% das verdades da esquerda e ${d}% das da direita.`
   }
   if (r.grauErradoEsquerda + r.grauErradoDireita === 0) return null
-  return `Você errou o grau em ${r.grauErradoEsquerda} afirmações da esquerda e ${r.grauErradoDireita} da direita.`
+  return `Você errou o grau em ${r.grauErradoEsquerda} ${r.grauErradoEsquerda === 1 ? 'afirmação' : 'afirmações'} da esquerda e ${r.grauErradoDireita} da direita.`
 }
 
 export function gerarAvaliacao(r: Resultado): Avaliacao {

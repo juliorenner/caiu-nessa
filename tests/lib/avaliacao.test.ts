@@ -30,10 +30,10 @@ it('5–8 com grau errado dominante', () => {
   expect(a.texto).toBe(
     'Você percebeu o que não era verdade, mas errou o grau em 3 delas: trocou mentira por enganoso, ou o contrário.')
 })
-it('grau errado em 1 delas', () => {
+it('grau errado em uma delas', () => {
   const a = gerarAvaliacao({ ...base, acertos: 5, grauErradoDireita: 1 })
   expect(a.texto).toBe(
-    'Você percebeu o que não era verdade, mas errou o grau em 1 delas: trocou mentira por enganoso, ou o contrário.')
+    'Você percebeu o que não era verdade, mas errou o grau em uma delas: trocou mentira por enganoso, ou o contrário.')
 })
 it('0–4 com grau errado dominante tem o sufixo', () => {
   const a = gerarAvaliacao({ ...base, acertos: 4, grauErradoEsquerda: 4, grauErradoDireita: 4 })
@@ -44,6 +44,10 @@ it('acreditadas vence empates', () => {
   const a = gerarAvaliacao({ ...base, acertos: 8, acreditadasEsquerda: 2, desconfiadasDireita: 2 })
   expect(a.texto).toBe('Você acreditou em 25% das afirmações falsas ou enganosas.')
   expect(a.vies).toBe('Você acreditou em 50% das falsas ou enganosas da esquerda e 0% das da direita.')
+})
+it('viés de grau no singular quando a esquerda tem 1', () => {
+  const a = gerarAvaliacao({ ...base, acertos: 10, grauErradoEsquerda: 1, grauErradoDireita: 1 })
+  expect(a.vies).toBe('Você errou o grau em 1 afirmação da esquerda e 1 da direita.')
 })
 it('acertos 12 não tem viés', () => expect(gerarAvaliacao(base).vies).toBeNull())
 it('9–11 sem nenhum erro classificado (respostas ausentes) não tem viés', () =>
