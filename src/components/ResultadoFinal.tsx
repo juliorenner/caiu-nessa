@@ -65,6 +65,8 @@ export function ResultadoFinal(p: {
   function aoCompartilhar() {
     void compartilhar({ texto, url: SITE_URL, titulo: TITULO, arquivo }).then(desfecho => {
       if (desfecho !== 'copiado' && desfecho !== 'falhou') return
+      // A folha recusou o arquivo (ex.: NotAllowedError no Android): o próximo toque vai direto para texto + link.
+      if (arquivo) setArquivo(null)
       if (temporizador.current) clearTimeout(temporizador.current)
       temporizador.current = null
       setAviso(desfecho)

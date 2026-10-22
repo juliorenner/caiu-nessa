@@ -113,6 +113,21 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(writeText).toHaveBeenCalledWith(texto)
   })
 
+  it('share recusou o arquivo: o próximo toque vai sem files', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    const share = vi.fn().mockRejectedValueOnce(new DOMException('negado', 'NotAllowedError')).mockResolvedValue(undefined)
+    stubNavegador({ share, canShare: () => true, writeText })
+    renderizar()
+    await assentar()
+    fireEvent.click(botao())
+    await waitFor(() => expect(aviso()).toHaveTextContent('Texto copiado'))
+    expect(share.mock.calls[0][0]).toHaveProperty('files')
+    fireEvent.click(botao())
+    expect(share).toHaveBeenCalledTimes(2)
+    expect(share.mock.calls[1][0]).not.toHaveProperty('files')
+    expect(share.mock.calls[1][0]).toMatchObject({ text: texto, url: SITE_URL })
+  })
+
   it('sem share: copia, mostra Texto copiado por 2 s', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ writeText })
