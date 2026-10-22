@@ -16,7 +16,7 @@ export function tamanhoDoTexto(texto: string): 'text-xl' | 'text-lg' | 'text-bas
   return 'text-base'
 }
 
-export const CARTAO_BASE = `rounded-2xl p-6 shadow-md ${CARTAO_SUPERFICIE}`
+export const CARTAO_BASE = `rounded-2xl p-6 ${CARTAO_SUPERFICIE}`
 
 // Posição parada (respondido) ou de saída (saindo) no eixo da resposta.
 function transformFinal(veredito: Veredito, fase: 'respondido' | 'saindo'): string {
@@ -52,11 +52,13 @@ export function CartaoAfirmacao({
 
   let style: CSSProperties | undefined
   let transicao = ''
+  // Movimento reduzido: o cartão segue o dedo sem inclinar e não desliza nem voa depois da resposta.
   if (ativo) {
-    style = { transform: `translate(${dx}px, ${dy}px) rotate(${inclinacao(dx, tamanho.largura)}deg)` }
-  } else if (respostaDada && !(fase === 'saindo' && reduzirMovimento)) {
+    const giro = reduzirMovimento ? '' : ` rotate(${inclinacao(dx, tamanho.largura)}deg)`
+    style = { transform: `translate(${dx}px, ${dy}px)${giro}` }
+  } else if (respostaDada && !reduzirMovimento) {
     style = { transform: transformFinal(respostaDada, fase) }
-    if (fase === 'saindo') transicao = 'transition-transform duration-300 ease-in'
+    transicao = 'transition-transform duration-300 ease-out'
   }
 
   const vereditoSelo = ativo ? selo : respostaDada

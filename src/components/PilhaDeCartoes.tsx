@@ -24,7 +24,7 @@ export function PilhaDeCartoes({
     <div className="relative">
       {/* O próximo cartão aparece atrás, sem texto: só a pilha, não a próxima pergunta. */}
       {proxima && (
-        <div aria-hidden className={`pointer-events-none absolute inset-0 min-h-36 scale-95 opacity-60 ${CARTAO_BASE}`} />
+        <div data-verso aria-hidden className={`pointer-events-none absolute inset-0 scale-95 opacity-60 ${CARTAO_BASE}`} />
       )}
       <div className="relative z-10">
         <CartaoAfirmacao

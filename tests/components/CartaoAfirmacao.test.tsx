@@ -78,18 +78,41 @@ describe('CartaoAfirmacao', () => {
     expect(selo).toHaveAttribute('data-selo', 'enganoso')
     expect(selo!.style.opacity).toBe('1')
     expect(cartao().style.transform).toBe('translateY(-40px)')
+    expect(cartao()).toHaveClass('transition-transform')
+  })
+
+  it('arrasto não tem transição: o cartão segue o dedo', () => {
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} />)
+    fireEvent.pointerDown(cartao(), ponteiro(10, 10))
+    fireEvent.pointerMove(cartao(), ponteiro(60, 10))
+    expect(cartao()).not.toHaveClass('transition-transform')
+    expect(cartao().style.transform).toContain('rotate(')
   })
 
   it('tamanhoDoTexto degrada por comprimento', () => {
-    expect(tamanhoDoTexto('a'.repeat(80))).toBe('text-xl')
-    expect(tamanhoDoTexto('a'.repeat(150))).toBe('text-lg')
-    expect(tamanhoDoTexto('a'.repeat(200))).toBe('text-base')
+    expect(tamanhoDoTexto('a'.repeat(90))).toBe('text-xl')
+    expect(tamanhoDoTexto('a'.repeat(91))).toBe('text-lg')
+    expect(tamanhoDoTexto('a'.repeat(160))).toBe('text-lg')
+    expect(tamanhoDoTexto('a'.repeat(161))).toBe('text-base')
   })
 
   it('saindo: classe de transição e voo para fora no eixo da resposta', () => {
     render(<CartaoAfirmacao afirmacao={afirmacao} fase="saindo" respostaDada="falso" onResposta={vi.fn()} reduzirMovimento={false} />)
     expect(cartao()).toHaveClass('transition-transform')
     expect(cartao().style.transform).toContain('translateX(-120%)')
+  })
+
+  it('reduzirMovimento: arrasto translada sem rotate', () => {
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento />)
+    fireEvent.pointerDown(cartao(), ponteiro(10, 10))
+    fireEvent.pointerMove(cartao(), ponteiro(60, 10))
+    expect(cartao().style.transform).toBe('translate(50px, 0px)')
+  })
+
+  it('reduzirMovimento: respondido sem transform, sem rotate e sem transição', () => {
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="respondido" respostaDada="verdadeiro" onResposta={vi.fn()} reduzirMovimento />)
+    expect(cartao().style.transform).toBe('')
+    expect(cartao()).not.toHaveClass('transition-transform')
   })
 
   it('reduzirMovimento: sem classes de transição e sem rotate', () => {
@@ -104,8 +127,9 @@ describe('PilhaDeCartoes', () => {
     const { container } = render(
       <PilhaDeCartoes atual={afirmacao} proxima={proxima} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} />,
     )
-    const fundo = container.querySelector<HTMLElement>('[aria-hidden="true"]')
+    const fundo = container.querySelector<HTMLElement>('[data-verso]')
     expect(fundo).not.toBeNull()
+    expect(fundo).toHaveAttribute('aria-hidden', 'true')
     expect(fundo).toHaveClass('scale-95', 'opacity-60')
     expect(fundo).toHaveTextContent('')
     expect(fundo!.compareDocumentPosition(cartao()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
@@ -117,6 +141,6 @@ describe('PilhaDeCartoes', () => {
     const { container } = render(
       <PilhaDeCartoes atual={afirmacao} proxima={null} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} />,
     )
-    expect(container.querySelector('[aria-hidden="true"]')).toBeNull()
+    expect(container.querySelector('[data-verso]')).toBeNull()
   })
 })
