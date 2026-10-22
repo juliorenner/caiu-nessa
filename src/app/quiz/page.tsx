@@ -1,4 +1,4 @@
-import Quiz from '@/components/Quiz'
+import Partida from '@/components/Partida'
 import { getDb } from '@/db/client'
 import { type Afirmacao, carregarPool, POR_PAR_PRIMEIRA, semLado, sortearRodada } from '@/lib/afirmacoes'
 import { obterEstatisticas } from '@/lib/estatisticas'
@@ -23,7 +23,7 @@ export default async function QuizPage() {
   if (!rodada) throw new Error('Pool insuficiente para a primeira rodada')
   return (
     <main className="mx-auto w-full max-w-2xl flex-1">
-      <Quiz afirmacoes={rodada.map(semLado)} erroPorAfirmacao={await erroPorAfirmacao(pool)} />
+      <Partida inicial={rodada.map(semLado)} erroPorAfirmacao={await erroPorAfirmacao(pool)} />
     </main>
   )
 }

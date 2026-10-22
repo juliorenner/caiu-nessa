@@ -25,6 +25,9 @@ const BOTAO_BASE =
 
 export const BOTAO_PRIMARIO = `${BOTAO_BASE} dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-300 ${FOCO}`
 
+// Ação secundária ao lado do primário: mesma forma, só borda e texto.
+export const BOTAO_SECUNDARIO = `flex min-h-12 w-full items-center justify-center rounded-xl border-2 border-stone-900 bg-transparent px-5 py-3 text-lg font-semibold text-stone-900 transition-colors motion-reduce:transition-none hover:bg-stone-900/10 dark:border-stone-100 dark:text-stone-100 dark:hover:bg-stone-100/10 ${FOCO}`
+
 // Botão dentro de um cartão (claro nos dois temas): corpo e anel de foco sempre escuros.
 export const BOTAO_EM_CARTAO = `${BOTAO_BASE} focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-stone-900`
 

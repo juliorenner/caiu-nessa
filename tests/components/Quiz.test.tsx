@@ -6,9 +6,12 @@ import { tamanhoDoTexto } from '@/components/CartaoAfirmacao'
 import Quiz from '@/components/Quiz'
 import { carregarPool, ehRodadaBalanceada, jogaveis } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
-import { afirmacoesValidas } from '../fixtures/afirmacoes-validas'
+import { afirmacoesValidas, rodadaDeSeis } from '../fixtures/afirmacoes-validas'
 
 const identidade = <T,>(itens: T[]) => itens
+
+// Primeira rodada, sem acumulado; continuar não é exercitado aqui.
+const daRodada = { rodada: 1, acumuladoAnterior: { acertos: 0, total: 0 }, onContinuar: async () => 'fim' as const }
 
 const respostaOk: RespostaResultado = {
   resultado: {
@@ -61,7 +64,7 @@ describe('Quiz', () => {
   it('percorre as 12 afirmações, mostra veredito e link da checagem, e envia todas as respostas', async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => respostaOk })
     vi.stubGlobal('fetch', fetchMock)
-    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={{ e1: 37 }} />)
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={{ e1: 37 }} />)
     const user = userEvent.setup()
     for (let i = 0; i < 12; i++) {
       expect(screen.getByText(`Afirmação ${i + 1} de 12`)).toBeInTheDocument()
@@ -82,7 +85,7 @@ describe('Quiz', () => {
 
   it('esconde autor e citação na pergunta; mostra os dois no feedback', async () => {
     const [primeira] = afirmacoesValidas
-    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     expect(screen.getByText(primeira.texto)).toBeInTheDocument()
     expect(screen.queryByText(/Quem disse/)).not.toBeInTheDocument()
     expect(screen.queryByText(primeira.autor, { exact: false })).not.toBeInTheDocument()
@@ -96,7 +99,7 @@ describe('Quiz', () => {
   it('sem embaralharFn, mostra as afirmações na ordem recebida', async () => {
     const user = userEvent.setup()
     const invertida = [...afirmacoesValidas].reverse()
-    render(<Quiz afirmacoes={invertida} erroPorAfirmacao={null} />)
+    render(<Quiz {...daRodada} afirmacoes={invertida} erroPorAfirmacao={null} />)
     for (const a of invertida.slice(0, 3)) {
       expect(screen.getByText(a.texto)).toBeInTheDocument()
       await user.click(screen.getByRole('button', { name: 'VERDADE' }))
@@ -107,7 +110,7 @@ describe('Quiz', () => {
   it('mostra "Quase" quando o jogador confunde mentira com enganoso', async () => {
     const enganosaPrimeiro = [...afirmacoesValidas].sort((a, b) => (a.id === 'e5' ? -1 : b.id === 'e5' ? 1 : 0))
     expect(enganosaPrimeiro[0].veredito).toBe('enganoso')
-    render(<Quiz afirmacoes={enganosaPrimeiro} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={enganosaPrimeiro} erroPorAfirmacao={null} embaralharFn={identidade} />)
     await userEvent.setup().click(screen.getByRole('button', { name: 'MENTIRA' }))
     expect(
       screen.getByText('Quase: você desconfiou, mas a checagem classificou como Enganoso.'),
@@ -120,7 +123,7 @@ describe('Quiz', () => {
     // e1 é verdadeira; e3 é falsa
     const ordem = ['e1', 'e3'].map(id => afirmacoesValidas.find(a => a.id === id)!)
     const resto = afirmacoesValidas.filter(a => !['e1', 'e3'].includes(a.id))
-    render(<Quiz afirmacoes={[...ordem, ...resto]} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={[...ordem, ...resto]} erroPorAfirmacao={null} embaralharFn={identidade} />)
     await user.click(screen.getByRole('button', { name: 'MENTIRA' }))
     expect(screen.getByText('Era verdade.')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Próxima' }))
@@ -131,14 +134,14 @@ describe('Quiz', () => {
   it('mostra "% das pessoas erraram esta" só quando há estatística para a afirmação', async () => {
     const user = userEvent.setup()
     const { unmount } = render(
-      <Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />,
+      <Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />,
     )
     await user.click(screen.getByRole('button', { name: 'VERDADE' }))
     expect(screen.getByText('Você acertou.')).toBeInTheDocument()
     expect(screen.queryByText(/das pessoas erraram esta/)).not.toBeInTheDocument()
     unmount()
 
-    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={{ e1: 37 }} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={{ e1: 37 }} embaralharFn={identidade} />)
     await user.click(screen.getByRole('button', { name: 'VERDADE' }))
     expect(screen.getByText('37% das pessoas erraram esta.')).toBeInTheDocument()
   })
@@ -150,7 +153,7 @@ describe('Quiz', () => {
       .mockResolvedValueOnce({ ok: false, status: 429, json: async () => ({ erro: 'muitas_jogadas' }) })
       .mockResolvedValueOnce({ ok: true, status: 200, json: async () => respostaOk })
     vi.stubGlobal('fetch', fetchMock)
-    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     for (let i = 0; i < 12; i++) {
       await user.click(screen.getByRole('button', { name: 'VERDADE' }))
@@ -169,7 +172,7 @@ describe('Quiz', () => {
   it('no 400 não oferece repetir o mesmo envio: mostra erro e link para jogar de novo', async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: false, status: 400, json: async () => ({ erro: 'respostas_invalidas' }) })
     vi.stubGlobal('fetch', fetchMock)
-    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     for (let i = 0; i < 12; i++) {
       await user.click(screen.getByRole('button', { name: 'VERDADE' }))
@@ -184,7 +187,7 @@ describe('Quiz', () => {
   it('sem movimento reduzido, o painel abre 300 ms depois da resposta; com movimento reduzido, na hora', () => {
     vi.useFakeTimers()
     movimentoReduzido(false)
-    const { unmount } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { unmount } = render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     fireEvent.click(screen.getByRole('button', { name: 'VERDADE' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     act(() => vi.advanceTimersByTime(300))
@@ -192,7 +195,7 @@ describe('Quiz', () => {
     unmount()
 
     movimentoReduzido(true)
-    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     fireEvent.click(screen.getByRole('button', { name: 'VERDADE' }))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
   })
@@ -201,7 +204,7 @@ describe('Quiz', () => {
     vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue({
       width: 300, height: 400, top: 0, left: 0, right: 300, bottom: 400, x: 0, y: 0, toJSON: () => ({}),
     } as DOMRect)
-    render(<Quiz afirmacoes={porId(['e3'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={porId(['e3'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const cartao = screen.getByRole('group', { name: 'Afirmação' })
     fireEvent.pointerDown(cartao, ponteiro(200, 10))
     fireEvent.pointerMove(cartao, ponteiro(40, 12))
@@ -213,7 +216,7 @@ describe('Quiz', () => {
 
   it('contador aparece após a primeira resposta e conta acertos', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Quiz afirmacoes={porId(['e1', 'e3'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={porId(['e1', 'e3'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
     expect(contador(container)).toBeNull()
     await user.click(screen.getByRole('button', { name: 'VERDADE' }))
     expect(contador(container)).toHaveTextContent('1 de 1 ✔')
@@ -227,7 +230,7 @@ describe('Quiz', () => {
     movimentoReduzido(false)
     const fetchMock = vi.fn().mockReturnValue(new Promise(() => {}))
     vi.stubGlobal('fetch', fetchMock)
-    const { container } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     fireEvent.click(screen.getByRole('button', { name: 'VERDADE' }))
     expect(screen.getByRole('button', { name: 'MENTIRA' })).toHaveAttribute('aria-disabled', 'true')
     // O cartão ainda desliza: o contador só muda quando o painel abre.
@@ -252,7 +255,7 @@ describe('Quiz', () => {
 
   it('duas entradas no mesmo tick registram só a primeira', () => {
     movimentoReduzido(true)
-    render(<Quiz afirmacoes={porId(['e1', 'e5'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={porId(['e1', 'e5'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
     act(() => {
       screen.getByRole('button', { name: 'VERDADE' }).click()
       window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', cancelable: true }))
@@ -262,7 +265,7 @@ describe('Quiz', () => {
 
   it('setas do teclado respondem só na pergunta', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Quiz afirmacoes={porId(['e1', 'e5'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={porId(['e1', 'e5'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
     expect(fireEvent.keyDown(window, { key: 'ArrowDown' })).toBe(true)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(fireEvent.keyDown(window, { key: 'ArrowLeft' })).toBe(false)
@@ -282,7 +285,7 @@ describe('Quiz', () => {
   it('painel é obrigatório: próximo cartão só depois de Próxima', async () => {
     const user = userEvent.setup()
     const [primeira, segunda] = afirmacoesValidas
-    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     await user.click(screen.getByRole('button', { name: 'VERDADE' }))
     await user.click(screen.getByRole('button', { name: 'MENTIRA' }))
     fireEvent.keyDown(window, { key: 'ArrowRight' })
@@ -300,7 +303,7 @@ describe('Quiz', () => {
     const todas = [...carregarPool(), ...afirmacoesValidas]
     const maisLonga = todas.reduce((a, b) => (b.texto.length > a.texto.length ? b : a))
     const { container } = render(
-      <Quiz afirmacoes={[maisLonga, ...afirmacoesValidas.slice(1)]} erroPorAfirmacao={null} embaralharFn={identidade} />,
+      <Quiz {...daRodada} afirmacoes={[maisLonga, ...afirmacoesValidas.slice(1)]} erroPorAfirmacao={null} embaralharFn={identidade} />,
     )
     const raiz = container.firstElementChild as HTMLElement
     for (const c of ['flex', 'h-dvh', 'flex-col', 'box-border', 'overflow-y-auto']) expect(raiz).toHaveClass(c)
@@ -318,7 +321,7 @@ describe('Quiz', () => {
 
   it('QuizPage entrega 12 afirmações jogáveis, sem lado, balanceadas por par', async () => {
     const pagina = await QuizPage()
-    const { afirmacoes } = pagina.props.children.props as { afirmacoes: Record<string, unknown>[] }
+    const { inicial: afirmacoes } = pagina.props.children.props as { inicial: Record<string, unknown>[] }
     expect(afirmacoes).toHaveLength(12)
     expect(afirmacoes.every((a) => !('lado' in a))).toBe(true)
     const porId = new Map(jogaveis(carregarPool()).map((a) => [a.id, a]))
@@ -328,9 +331,15 @@ describe('Quiz', () => {
     expect(ehRodadaBalanceada(completas)).toBe(true)
   })
 
+  it('cabeçalho usa o tamanho da rodada (6)', () => {
+    render(<Quiz {...daRodada} rodada={2} afirmacoes={rodadaDeSeis} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    expect(screen.getByText('Afirmação 1 de 6')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuemax', '6')
+  })
+
   it('conteúdo do quiz fica inert enquanto o painel está aberto, e o painel não', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const conteudo = container.querySelector('[data-conteudo]')!
     expect(conteudo).not.toHaveAttribute('inert')
     await user.click(screen.getByRole('button', { name: 'VERDADE' }))
@@ -344,7 +353,7 @@ describe('Quiz', () => {
 
   it('foco volta para a raiz do quiz quando o painel fecha', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     await user.click(screen.getByRole('button', { name: 'VERDADE' }))
     await user.click(screen.getByRole('button', { name: 'Próxima' }))
     const raiz = container.firstElementChild as HTMLElement
@@ -355,7 +364,7 @@ describe('Quiz', () => {
   it('botão escolhido ganha destaque e os outros esmaecem enquanto o painel está aberto', async () => {
     vi.useFakeTimers()
     movimentoReduzido(false)
-    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const verdade = screen.getByRole('button', { name: 'VERDADE' })
     const mentira = screen.getByRole('button', { name: 'MENTIRA' })
     expect(verdade).not.toHaveClass('ring-4')
@@ -369,7 +378,7 @@ describe('Quiz', () => {
 
   it('contador some na tela de resultado', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => respostaOk }))
-    const { container } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     for (let i = 0; i < 12; i++) {
       await user.click(screen.getByRole('button', { name: 'VERDADE' }))
@@ -387,7 +396,7 @@ describe('Quiz', () => {
       json: async () => ({ ...respostaOk, estatisticasIndisponiveis: true }),
     })
     vi.stubGlobal('fetch', fetchMock)
-    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     for (let i = 0; i < 12; i++) {
       await user.click(screen.getByRole('button', { name: 'VERDADE' }))
@@ -402,7 +411,7 @@ describe('Quiz', () => {
   it('sem viés (vies null), não mostra o parágrafo do viés', async () => {
     const semVies: RespostaResultado = { ...respostaOk, avaliacao: { ...respostaOk.avaliacao, vies: null } }
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => semVies }))
-    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     for (let i = 0; i < 12; i++) {
       await user.click(screen.getByRole('button', { name: 'VERDADE' }))

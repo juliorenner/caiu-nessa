@@ -1,5 +1,6 @@
-import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { act, render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { describe, expect, it, vi } from 'vitest'
 import Afirmacoes from '@/app/afirmacoes/page'
 import { ResultadoFinal } from '@/components/ResultadoFinal'
 import { carregarPool, foraDoJogo, jogaveis } from '@/lib/afirmacoes'
@@ -79,34 +80,61 @@ describe('página /afirmacoes', () => {
   })
 })
 
+const dados: RespostaResultado = {
+  resultado: {
+    acertos: 4,
+    total: 12,
+    acertosEsquerda: 2,
+    acertosDireita: 2,
+    acreditadasEsquerda: 4,
+    acreditadasDireita: 4,
+    desconfiadasEsquerda: 0,
+    desconfiadasDireita: 0,
+    grauErradoEsquerda: 0,
+    grauErradoDireita: 0,
+    verdadeirasEsquerda: 2,
+    verdadeirasDireita: 2,
+    naoVerdadeirasEsquerda: 4,
+    naoVerdadeirasDireita: 4,
+  },
+  avaliacao: { titulo: 'Caiu feio', texto: 'Texto.', vies: null },
+  estatisticas: null,
+  percentilAbaixo: null,
+  estatisticasIndisponiveis: false,
+}
+
+const primeira = { dados, rodada: 1, acumulado: { acertos: 4, total: 12 } }
+
 describe('ResultadoFinal', () => {
   it('tem um link para /afirmacoes', () => {
-    const dados: RespostaResultado = {
-      resultado: {
-        acertos: 4,
-        total: 12,
-        acertosEsquerda: 2,
-        acertosDireita: 2,
-        acreditadasEsquerda: 4,
-        acreditadasDireita: 4,
-        desconfiadasEsquerda: 0,
-        desconfiadasDireita: 0,
-        grauErradoEsquerda: 0,
-        grauErradoDireita: 0,
-        verdadeirasEsquerda: 2,
-        verdadeirasDireita: 2,
-        naoVerdadeirasEsquerda: 4,
-        naoVerdadeirasDireita: 4,
-      },
-      avaliacao: { titulo: 'Caiu feio', texto: 'Texto.', vies: null },
-      estatisticas: null,
-      percentilAbaixo: null,
-      estatisticasIndisponiveis: false,
-    }
-    render(<ResultadoFinal dados={dados} />)
+    render(<ResultadoFinal {...primeira} onContinuar={async () => 'fim'} />)
     expect(screen.getByRole('link', { name: 'Ver todas as afirmações e suas fontes' })).toHaveAttribute(
       'href',
       '/afirmacoes',
     )
+  })
+
+  it('rodada 1 mostra comparação e Continuar jogando', () => {
+    render(<ResultadoFinal {...primeira} onContinuar={async () => 'fim'} />)
+    expect(screen.getByText('4 de 12')).toBeInTheDocument()
+    expect(screen.getByText(/Você é um dos primeiros a jogar/)).toBeInTheDocument()
+    expect(screen.queryByText(/Na partida/)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Continuar jogando' })).toBeEnabled()
+    expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
+    expect(screen.getByText('Acertei 4 de 12 no Caiu Nessa? caiunessa.com.br')).toBeInTheDocument()
+  })
+
+  it('Sorteando… enquanto espera', async () => {
+    let resolver: (r: 'ok' | 'fim' | 'falha') => void = () => {}
+    const onContinuar = vi.fn(() => new Promise<'ok' | 'fim' | 'falha'>(r => (resolver = r)))
+    render(<ResultadoFinal {...primeira} onContinuar={onContinuar} />)
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Continuar jogando' }))
+    const botao = screen.getByRole('button', { name: 'Sorteando…' })
+    expect(botao).toBeDisabled()
+    expect(botao).toHaveAttribute('aria-busy', 'true')
+    await act(async () => resolver('fim'))
+    expect(screen.getByText('Acabaram as afirmações por enquanto. Volte depois: a lista cresce.')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Continuar jogando|Sorteando/ })).not.toBeInTheDocument()
+    expect(onContinuar).toHaveBeenCalledTimes(1)
   })
 })
