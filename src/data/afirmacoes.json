@@ -66,8 +66,8 @@
     "data_checagem": "2026-08-27"
   },
   {
-    "id": "3255d9d2",
-    "texto": "[No governo Lula, há] recorde de mulher espancada.",
+    "id": "0e702aab",
+    "texto": "[Lula deixa] recorde de mulher espancada.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "verdadeiro",
@@ -104,7 +104,7 @@
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
-    "explicacao": "O valor corresponde às despesas com viagens a serviço de diferentes órgãos e servidores do governo federal entre 2023 e 2025, e não só aos deslocamentos de Lula e da primeira-dama; segundo o Portal da Transparência, a Presidência gastou R$ 150,5 milhões com viagens no período. Aos Fatos, Lupa e G1 Fato ou Fake classificam a afirmação como falsa; o Estadão Verifica, como enganosa, porque o valor se refere às viagens de cerca de 475 mil pessoas, entre servidores, militares, empregados públicos e colaboradores eventuais.",
+    "explicacao": "O valor corresponde às despesas com viagens a serviço de diferentes órgãos e servidores do governo federal entre 2023 e 2025, e não só aos deslocamentos de Lula e da primeira-dama; segundo o Portal da Transparência, a Presidência gastou R$ 150,5 milhões com viagens no período. Aos Fatos, Lupa e G1 Fato ou Fake classificam a afirmação como falsa; o Estadão Verifica, como enganosa, descrevendo o valor como o custo de viagens de cerca de 475 mil pessoas (servidores, militares, empregados públicos e colaboradores eventuais) entre janeiro de 2023 e maio de 2026.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18"

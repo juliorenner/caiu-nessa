@@ -30,7 +30,8 @@
     "explicacao": "Segundo a pesquisa da CNC, 77,9% das famílias se declararam endividadas em dezembro de 2022. A agência ressalva que o percentual subiu durante o atual mandato e chegou a 81,7% em setembro de 2026.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
-    "data_checagem": "2026-10-15"
+    "data_checagem": "2026-10-15",
+    "observacao": "Fora do jogo: Aos Fatos, G1 e Estadão Verifica dizem verdadeiro e a Lupa diz \"falta contexto\"."
   },
   {
     "id": "4372b28f",
@@ -85,7 +86,8 @@
     "explicacao": "Segundo o Banco Mundial, o Brasil registrou em 2010, último ano do segundo mandato de Lula, um PIB de US$ 2,21 trilhões, o que colocou o país como a sétima maior economia do mundo.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
-    "data_checagem": "2026-10-15"
+    "data_checagem": "2026-10-15",
+    "observacao": "Fora do jogo: o Estadão Verifica classifica a fala completa (economia e empregos) como \"verdadeiro em partes\", rótulo que não usamos."
   },
   {
     "id": "6bf3e590",
@@ -118,7 +120,8 @@
     "explicacao": "Em 2002, no governo Fernando Henrique Cardoso, o Brasil contraiu uma dívida de US$ 30,4 bilhões com o FMI, herdada em 2003. O Banco Central registra a quitação antecipada em 2005, e as reservas internacionais chegaram a US$ 270 bilhões em 2010.",
     "fonte_nome": "Estadão Verifica",
     "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
-    "data_checagem": "2026-10-18"
+    "data_checagem": "2026-10-18",
+    "observacao": "Fora do jogo: o Estadão Verifica diz verdadeiro e a Lupa diz \"subestimado\" sobre o valor das reservas."
   },
   {
     "id": "912298e6",
@@ -129,7 +132,8 @@
     "explicacao": "O Banco Central informou que a Dívida Bruta do Governo Geral atingiu R$ 11,1 trilhões em agosto de 2026, 82,9% do PIB. O indicador inclui governo federal, INSS, estados e municípios; no fim de 2022 estava em R$ 7,2 trilhões.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
-    "data_checagem": "2026-10-19"
+    "data_checagem": "2026-10-19",
+    "observacao": "Fora do jogo: G1, Aos Fatos e Lupa dizem verdadeiro e o Estadão Verifica diz \"falta contexto\"."
   },
   {
     "id": "068625bc",
@@ -195,7 +199,8 @@
     "explicacao": "Um estudo citado pelo jornal O Globo, a partir de 25,9 mil contracheques, estimou em ao menos R$ 24,3 bilhões os pagamentos acima do teto constitucional em 2025. Uma comissão técnica criada pelo STF chegou a valor compatível para as carreiras com maior peso.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/16/veja-o-que-e-fato-ou-fake-na-entrevista-de-flavio-bolsonaro-a-globo-no-2o-turno-das-eleicoes-2026.ghtml",
-    "data_checagem": "2026-10-16"
+    "data_checagem": "2026-10-16",
+    "observacao": "Fora do jogo: o G1 diz verdadeiro e o Estadão Verifica diz \"falta contexto\"."
   },
   {
     "id": "3715fbb7",
@@ -217,7 +222,8 @@
     "explicacao": "A Lei Antifacção, proposta pela Presidência e sancionada em março de 2026, elevou a pena por participação em organização criminosa para até 40 anos, e ela pode dobrar para 80 anos no caso de líderes. Mas o Código Penal limita o tempo de cumprimento da pena a 40 anos, então o preso não fica automaticamente 80 anos na cadeia.",
     "fonte_nome": "Estadão Verifica",
     "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
-    "data_checagem": "2026-10-18"
+    "data_checagem": "2026-10-18",
+    "observacao": "Fora do jogo: o Estadão Verifica diz enganoso e a Lupa diz \"falta contexto\"."
   },
   {
     "id": "483d6a7b",
@@ -250,7 +256,8 @@
     "explicacao": "Entre 2003 e 2010, nos dois primeiros mandatos de Lula, foram criados 15,4 milhões de empregos formais, segundo a Rais. O número só se aproxima de 22 milhões somando os governos de Dilma Rousseff; juntos, os governos petistas criaram cerca de 20 milhões de vagas.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
-    "data_checagem": "2026-10-15"
+    "data_checagem": "2026-10-15",
+    "observacao": "Fora do jogo: o Estadão Verifica classifica como \"verdadeiro em partes\", rótulo que não usamos."
   },
   {
     "id": "b8b388ad",

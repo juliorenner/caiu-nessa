@@ -55,6 +55,18 @@ describe('página /afirmacoes', () => {
       expect(within(card).getByRole('link')).toHaveAttribute('href', todas[i].fonte_url)
     })
   })
+
+  it('mostra a observação dos itens da reserva que a têm; nenhum item em jogo tem observação', () => {
+    expect(carregarAfirmacoes().filter((a) => a.observacao !== undefined)).toEqual([])
+    const reserva = carregarReserva()
+    const comObservacao = reserva.filter((a) => a.observacao !== undefined)
+    expect(comObservacao.length).toBeGreaterThan(0)
+    render(<Afirmacoes />)
+    const cards = within(screen.getByRole('region', { name: 'Na reserva' })).getAllByRole('article')
+    reserva.forEach((a, i) => {
+      if (a.observacao) expect(within(cards[i]).getByText(a.observacao)).toBeInTheDocument()
+    })
+  })
 })
 
 describe('ResultadoFinal', () => {

@@ -60,7 +60,7 @@ Decisão do autor durante a execução do plano MVP (depois da curadoria inicial
 - Mapeamento dos rótulos das agências para `enganoso`: Enganoso, Exagerado, Distorcido,
   Fora de contexto, Impreciso, "Não é bem assim". Ficam fora do jogo: Insustentável,
   Contraditório, "Ainda é cedo pra dizer". A regra de unanimidade continua: se uma agência
-  disse "falso" e outra "enganoso", a afirmação não entra no conjunto ativo.
+  disse "falso" e outra "enganoso", a afirmação não entra no conjunto ativo. (substituída pela emenda de 2026-10-22: entre falso e enganoso vale a maioria.)
 - Pontuação: acerto só com a opção exata; nota inteira de 0 a 12. Marcar MENTIRA numa
   enganosa (ou ENGANOSO numa falsa) é erro, mas o feedback reconhece o "quase".
 - Viés: "acreditou" = marcou VERDADE numa afirmação falsa ou enganosa.

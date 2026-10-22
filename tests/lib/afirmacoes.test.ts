@@ -41,6 +41,10 @@ describe('validarAfirmacoes', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, data_checagem: '01/10/2026' } : a)
     expect(() => validarAfirmacoes(alterada)).toThrow(/data_checagem/)
   })
+  it('rejeita observacao com menos de 20 caracteres', () => {
+    const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, observacao: 'curta' } : a)
+    expect(() => validarAfirmacoes(alterada)).toThrow(/observacao/)
+  })
 })
 describe('fonteEhPermitida', () => {
   it.each([
