@@ -7,7 +7,7 @@ Pesquisa feita a pedido do dono ("verifique se não existe nenhum artigo ou post
 | # | O que fazer | Por quê / evidência | Status |
 |---|---|---|---|
 | 1 | Cartão de compartilhamento sem spoiler: faixa + grade de emojis neutros (acerto / erro / "cheira mal") + link | Wardle automatizou a grade que os jogadores já colavam à mão; não revela a resposta e gera curiosidade (TechCrunch). O link é o que traz gente nova (inferência). | exige design |
-| 2 | Texto de compartilhamento que desafia ("Fiz X de 12, caí em Y. E você?") via Web Share API, que abre o WhatsApp | WhatsApp é a 3ª plataforma de notícias no Brasil (36%, Digital News Report 2025). Recomendação de canal, não dado sobre quiz. | fácil |
+| 2 | Texto de compartilhamento que desafia ("Fiz X de 12, caí em Y. E você?") via Web Share API, que abre a folha de compartilhamento do sistema (onde a pessoa escolhe o WhatsApp) | WhatsApp é a 3ª plataforma de notícias no Brasil (36%, Digital News Report 2025). Recomendação de canal, não dado sobre quiz. | fácil |
 | 3 | Rodadas curtas (6) e dizer "mais 3 minutos" | Wordle "não quer mais que 3 minutos do seu tempo" (Wardle); escassez evita cansaço. | já temos (rodadas) |
 | 4 | Feedback imediato após cada afirmação, com a checagem mesmo no acerto | Feedback item a item melhorou retenção em prova (Dihoff et al.); há estudos que discordam, contexto de sala. | já temos |
 | 5 | Lembrete de precisão antes de compartilhar ("Antes de repassar no grupo, confira") | Lembretes de precisão reduziram em 51% o compartilhamento de manchetes falsas, à esquerda e à direita (Nature 2021, via Cornell). | fácil |

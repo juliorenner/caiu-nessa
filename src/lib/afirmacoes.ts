@@ -22,7 +22,7 @@ export interface Afirmacao {
 
 export type Respostas = Record<string, Veredito>
 
-// Tamanho da primeira rodada: PARES.length * POR_PAR_PRIMEIRA.
+// Tamanho da primeira rodada; só rodadas desse tamanho entram no ranking.
 export const TOTAL_AFIRMACOES = 12
 // Mínimo de itens jogáveis que o pool precisa ter em cada par (lado, veredito).
 export const POR_VEREDITO_POR_LADO = 2

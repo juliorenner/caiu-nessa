@@ -46,6 +46,7 @@ Documento de transparência: cada mudança feita depois do plano do MVP (`2026-1
 - Ranking, histograma e percentil contam só rodadas de 12. "% das pessoas erraram esta" usa as jogadas em que a afirmação apareceu e só aparece com 30 aparições ou mais.
 - Rodadas extras são gravadas com `total = 6` e não entram na comparação com os outros.
 - Nada é lembrado entre visitas (sem login e sem cookie): cada visita recomeça do pool inteiro.
+- O portão de 100 jogadas vale para o objeto inteiro de estatísticas, inclusive "% erraram esta": com o sorteio, cada afirmação aparece em cerca de 35% das partidas, então chega a 30 aparições por volta das 85 jogadas; liberar antes exigiria dividir o tipo de estatísticas e não compensa no tamanho atual do pool.
 **Limite de hoje:** o pool tem 3 verdadeiras e 3 enganosas da direita, então só fecha 1 rodada extra; curadoria da direita é ticket separado.
 **Verificação em browser (controlador, Chrome, 320×568):** rodada de 12 → resultado com "Continuar jogando" → rodada de 6 → "Rodada 2: 2 de 6" e "Na partida: 6 de 18" sem a comparação → "Acabaram as afirmações por enquanto" com "Jogar de novo"; nenhuma afirmação repetida; sem erros no console.
 

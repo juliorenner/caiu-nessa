@@ -78,7 +78,7 @@ export default function Quiz({
   // Rodada extra: o botão "Continuar jogando" sumiu com a tela de resultado; o foco vem para o quiz em vez de cair no body.
   useEffect(() => {
     if (rodada > 1) raiz.current?.focus({ preventScroll: true })
-  }, [])
+  }, [rodada])
 
   // Sem dependências: depois de cada render, a tecla usa o responder com o estado atual.
   useEffect(() => {

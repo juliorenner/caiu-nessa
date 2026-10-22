@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import type { Db } from '@/db/client'
-import { type Afirmacao, VEREDITOS, ehRodadaBalanceada } from '@/lib/afirmacoes'
+import { type Afirmacao, TOTAL_AFIRMACOES, VEREDITOS, ehRodadaBalanceada } from '@/lib/afirmacoes'
 import { type Avaliacao, gerarAvaliacao } from '@/lib/avaliacao'
-import { type Estatisticas, MAXIMO_ACERTOS, obterEstatisticas, percentilAbaixo } from '@/lib/estatisticas'
+import { type Estatisticas, obterEstatisticas, percentilAbaixo } from '@/lib/estatisticas'
 import { type Resultado, calcularResultado } from '@/lib/pontuacao'
 import { extrairIp, hashIp, inserirDentroDoLimite, limparIpHashesExpirados } from '@/lib/rate-limit'
 
@@ -85,7 +85,7 @@ export async function processarResultado(
       estatisticas,
       // O ranking só compara rodadas de 12.
       percentilAbaixo:
-        estatisticas && resultado.total === MAXIMO_ACERTOS
+        estatisticas && resultado.total === TOTAL_AFIRMACOES
           ? percentilAbaixo(estatisticas.histograma, resultado.acertos)
           : null,
       estatisticasIndisponiveis,

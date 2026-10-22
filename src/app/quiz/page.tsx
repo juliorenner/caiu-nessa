@@ -1,13 +1,13 @@
 import Partida from '@/components/Partida'
 import { getDb } from '@/db/client'
 import { type Afirmacao, carregarPool, POR_PAR_PRIMEIRA, semLado, sortearRodada } from '@/lib/afirmacoes'
-import { obterEstatisticas } from '@/lib/estatisticas'
+import { obterEstatisticasComCache } from '@/lib/estatisticas'
 
 export const dynamic = 'force-dynamic'
 
 async function erroPorAfirmacao(pool: Afirmacao[]) {
   try {
-    const estatisticas = await obterEstatisticas(await getDb(), pool)
+    const estatisticas = await obterEstatisticasComCache(await getDb(), pool)
     return estatisticas?.erroPorAfirmacao ?? null
   } catch (erro) {
     // Sem banco o jogo continua jogável, só sem "% das pessoas erraram esta".

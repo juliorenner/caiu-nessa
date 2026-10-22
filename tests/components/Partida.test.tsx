@@ -1,10 +1,23 @@
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Partida from '@/components/Partida'
 import { semLado } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { afirmacoesValidas, rodadaDeSeis } from '../fixtures/afirmacoes-validas'
+
+// Embrulha o ResultadoFinal real só para guardar o onContinuar que ele recebe; a tela continua a de verdade.
+const capturado = vi.hoisted(() => ({ onContinuar: null as null | (() => Promise<'ok' | 'fim' | 'falha'>) }))
+vi.mock('@/components/ResultadoFinal', async importOriginal => {
+  const real = await importOriginal<typeof import('@/components/ResultadoFinal')>()
+  return {
+    ...real,
+    ResultadoFinal: (p: Parameters<typeof real.ResultadoFinal>[0]) => {
+      capturado.onContinuar = p.onContinuar
+      return <real.ResultadoFinal {...p} />
+    },
+  }
+})
 
 const inicial = afirmacoesValidas.map(semLado)
 // Segunda rodada: 6 itens novos, clonados da rodada de seis com ids diferentes.
@@ -57,7 +70,10 @@ async function jogar(user: ReturnType<typeof userEvent.setup>, total: number) {
   }
 }
 
-beforeEach(() => vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: true })))
+beforeEach(() => {
+  capturado.onContinuar = null
+  vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: true }))
+})
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -129,7 +145,7 @@ describe('Partida', () => {
     expect(screen.getByRole('button', { name: 'Continuar jogando' })).toBeEnabled()
   })
 
-  it('dois cliques rápidos em Continuar geram um pedido', async () => {
+  it('botão Continuar desabilita no primeiro clique: o segundo clique não gera outro pedido', async () => {
     let liberar: () => void = () => {}
     const fetchMock = mockFetch(
       () => new Promise(r => (liberar = () => r(ok({ afirmacoes: segunda, erroPorAfirmacao: null })))),
@@ -138,11 +154,36 @@ describe('Partida', () => {
     const user = userEvent.setup()
     await jogar(user, 12)
     const botao = await screen.findByRole('button', { name: 'Continuar jogando' })
-    // Dois cliques no mesmo tick, antes de o botão desabilitar.
     botao.click()
     botao.click()
     liberar()
     expect(await screen.findByText('Afirmação 1 de 6')).toBeInTheDocument()
     expect(pedidosDeRodada(fetchMock)).toHaveLength(1)
+  })
+
+  it('pedido em andamento: duas chamadas de continuar devolvem a mesma promessa e um só fetch', async () => {
+    let liberar: () => void = () => {}
+    const fetchMock = mockFetch(
+      () => new Promise(r => (liberar = () => r(ok({ afirmacoes: segunda, erroPorAfirmacao: null })))),
+    )
+    render(<Partida inicial={inicial} erroPorAfirmacao={null} />)
+    const user = userEvent.setup()
+    await jogar(user, 12)
+    await screen.findByRole('button', { name: 'Continuar jogando' })
+    const continuar = capturado.onContinuar!
+    // Direto no guard, sem passar pelo botão (que desabilita sozinho).
+    let primeira!: Promise<'ok' | 'fim' | 'falha'>
+    let segundaChamada!: Promise<'ok' | 'fim' | 'falha'>
+    act(() => {
+      primeira = continuar()
+      segundaChamada = continuar()
+    })
+    expect(segundaChamada).toBe(primeira)
+    expect(pedidosDeRodada(fetchMock)).toHaveLength(1)
+    await act(async () => {
+      liberar()
+      expect(await primeira).toBe('ok')
+    })
+    expect(await screen.findByText('Afirmação 1 de 6')).toBeInTheDocument()
   })
 })

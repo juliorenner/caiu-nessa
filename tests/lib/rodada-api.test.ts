@@ -1,5 +1,6 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Db } from '@/db/client'
+import { limparCacheEstatisticas } from '@/lib/estatisticas'
 import { processarRodada } from '@/lib/rodada-api'
 import { afirmacoesValidas } from '../fixtures/afirmacoes-validas'
 import { criarDbTeste } from '../helpers/db'
@@ -8,6 +9,8 @@ const deps = async () => ({ db: await criarDbTeste(), pool: afirmacoesValidas })
 const porId = new Map(afirmacoesValidas.map(a => [a.id, a]))
 
 describe('processarRodada', () => {
+  beforeEach(() => limparCacheEstatisticas())
+
   afterEach(() => {
     vi.restoreAllMocks()
   })

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import type { Db } from '@/db/client'
 import { type Afirmacao, type AfirmacaoNoQuiz, POR_PAR_EXTRA, semLado, sortearRodada } from '@/lib/afirmacoes'
-import { obterEstatisticas } from '@/lib/estatisticas'
+import { obterEstatisticasComCache } from '@/lib/estatisticas'
 
 // Ids desconhecidos em `vistas` são simplesmente ignorados pelo sorteio.
 export const corpoRodadaSchema = z.object({ vistas: z.array(z.string().min(1)).max(500) })
@@ -21,7 +21,7 @@ export interface DepsRodada {
 
 async function erroPorAfirmacao(db: Db, pool: Afirmacao[]): Promise<Record<string, number> | null> {
   try {
-    return (await obterEstatisticas(db, pool))?.erroPorAfirmacao ?? null
+    return (await obterEstatisticasComCache(db, pool))?.erroPorAfirmacao ?? null
   } catch (erro) {
     console.error('rodada: estatísticas indisponíveis', erro instanceof Error ? erro.message : String(erro))
     return null

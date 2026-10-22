@@ -4,7 +4,7 @@ Data: 2026-10-22. Ticket de rodadas no Linear. Decisão do dono em 2026-10-22: "
 
 ## O que muda para quem joga
 
-- Cada visita a `/quiz` sorteia 12 afirmações do pool inteiro, sempre 2 de cada veredito por lado. Duas pessoas (ou a mesma pessoa duas vezes) veem conjuntos diferentes.
+- Cada visita a `/quiz` sorteia 12 afirmações do pool inteiro, sempre 2 de cada veredito por lado. Duas pessoas (ou a mesma pessoa duas vezes) podem ver conjuntos diferentes.
 - No resultado aparece **Continuar jogando**. Cada rodada seguinte tem 6 afirmações (1 de cada veredito por lado) que a pessoa ainda não viu nesta partida. A rodada extra termina com o seu próprio resultado: acertos da rodada, a faixa (Imune etc.), o acumulado da partida e de novo **Continuar jogando**.
 - Quando o pool não consegue fechar mais uma rodada balanceada, o botão dá lugar a "Acabaram as afirmações por enquanto. Volte depois: a lista cresce." e fica **Jogar de novo**.
 - A comparação com os outros jogadores ("Você acertou mais que X%") só aparece na primeira rodada: é a única com 12 e a única que entra no ranking.
