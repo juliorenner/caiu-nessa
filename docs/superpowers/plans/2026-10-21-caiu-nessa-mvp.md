@@ -24,7 +24,7 @@
 - Agency labels that map to `enganoso`: Enganoso, Exagerado, Distorcido, Fora de contexto, Impreciso, "Não é bem assim". Excluded from the game entirely: Insustentável, Contraditório, "Ainda é cedo pra dizer". If two agencies disagree at the three-bucket level (one says falso, another enganoso), the statement is excluded from the live set.
 - Player answer = same enum. Buttons: `VERDADE` → verdadeiro, `MENTIRA` → falso, `ISSO ME CHEIRA MAL 🤔` → enganoso. An answer is correct only when it equals the verdict; `falso`↔`enganoso` confusion is wrong but acknowledged as "quase" in the feedback copy.
 - "Acreditou" (for bias) = answered `verdadeiro` on a `falso` or `enganoso` statement.
-- Every statement's `fonte_url` is on one of: `aosfatos.org`, `lupa.uol.com.br`, `projetocomprova.com.br`, `g1.globo.com` (path starting `/fato-ou-fake`), `estadao.com.br` (path containing `estadao-verifica`). No other source.
+- Every statement's `fonte_url` is on one of: `aosfatos.org`, `lupa.uol.com.br`, `agencialupa.org`, `projetocomprova.com.br`, `g1.globo.com` (path starting `/fato-ou-fake`), `estadao.com.br` (path containing `estadao-verifica`). No other source.
 - Copy never supports or attacks a candidate. Verdicts and explanations paraphrase the fact-check only.
 - No personal data: the only per-player columns are `respostas`, `acertos`, `total`, `acertos_esquerda`, `acertos_direita`, `created_at`, `ip_hash`. `ip_hash` is SHA-256 of salt + IP and is nulled after 1 hour.
 - Rate limit: max 5 games per `ip_hash` per rolling 60 s (spec says "N"; 5 is the chosen value, change in one constant).
@@ -336,7 +336,7 @@ it('porcentagem(0, 0) é 0', () => expect(porcentagem(0, 0)).toBe(0))
   export const jogadas = pgTable('jogadas', {...})  // columns below
   // src/db/client.ts
   export type Db = PgDatabase<PgQueryResultHKT, typeof schema>
-  export function getDb(): Db   // neon-http drizzle on process.env.DATABASE_URL, memoized; throws if unset
+  export function getDb(): Promise<Db>   // (async since Task 7b) neon-http drizzle on process.env.DATABASE_URL, memoized; throws if unset
   // tests/helpers/db.ts
   export async function criarDbTeste(): Promise<Db>  // fresh in-memory PGlite + drizzle migrate from ./drizzle
   ```
@@ -555,6 +555,22 @@ Validation after Zod: the set of keys of `respostas` must equal the set of afirm
 - [ ] **Step 4: Commit** — `git add src/app/api src/lib/resultado-api.ts tests && git commit -m "feat: POST /api/resultado"`
 
 ---
+
+### Task 7b: Local database mode (added 2026-10-21)
+
+Added so the app runs fully functional on a laptop with no external services: the author wants to play it locally before deploying.
+
+**Files:**
+- Modify: `src/db/client.ts`, `.env.example`, `.gitignore`
+- Test: `tests/db/client.test.ts`
+
+**Interfaces:**
+- Produces: `getDb(): Db` now picks the driver from `DATABASE_URL`: a value starting with `file:` opens a persistent PGlite at that path (relative to the project root) and runs the committed migrations from `./drizzle` once on first use; any other value keeps the neon-http driver. `IP_HASH_SALT` behaviour unchanged.
+
+- [ ] **Step 1: Write the failing test** — `tests/db/client.test.ts`: with `DATABASE_URL=file:<tmpdir>/dev.pglite`, `getDb()` returns a `Db` that can insert and read a `jogadas` row (migrations applied); with `DATABASE_URL` unset it throws `DATABASE_URL não definida`. Reset the memoized instance between tests (export a `resetDbParaTestes()` helper used only by tests, or re-import the module with `vi.resetModules()`).
+- [ ] **Step 2: Implement** the `file:` branch in `getDb()` with `drizzle-orm/pglite` + `migrate` from `drizzle-orm/pglite/migrator`; memoize the promise so concurrent first requests share one instance.
+- [ ] **Step 3:** `.env.example` documents both forms (`DATABASE_URL=file:./.pglite` for local play, a Neon URL for production); add `.pglite/` to `.gitignore`.
+- [ ] **Step 4:** `npm test`, `npm run typecheck`, `npm run build` → all pass. Commit: `feat: local PGlite database mode for development`.
 
 ### Task 8 (JUL-94): UI — landing, quiz, feedback, result, selection criteria page
 

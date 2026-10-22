@@ -16,6 +16,10 @@
 # testing
 /coverage
 
+# local PGlite database
+.pglite/
+*.pglite/
+
 # next.js
 /.next/
 /out/
