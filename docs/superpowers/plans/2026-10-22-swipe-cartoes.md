@@ -6,7 +6,7 @@
 
 **Architecture:** The `Quiz` state machine (`pergunta → feedback → enviando → resultado | erro`) stays; a new `respondendo` sub-phase covers the ~300 ms fly animation. Gesture math is a pure module tested without a DOM; a `useArrasto` hook wires pointer events to it; `CartaoAfirmacao` renders transform + stamp; `PainelVeredito` replaces the inline `Feedback` card with a bottom sheet; theme tokens live in `globals.css` and `rotulos.ts` so every page picks them up.
 
-**Tech Stack:** Next.js 16 App Router, React 19, TypeScript 7, Tailwind 4 (`dark:` follows `prefers-color-scheme` by default), Vitest + Testing Library. No gesture or animation library.
+**Tech Stack:** Next.js 16 App Router, React 19 (`import type { ReactElement } from 'react'`; the global `JSX` namespace is gone), TypeScript 7, Tailwind 4 (`dark:` follows `prefers-color-scheme` by default), Vitest + Testing Library. No gesture or animation library.
 
 **Spec:** `docs/superpowers/specs/2026-10-22-swipe-cartoes-design.md` (approved by the author on 2026-10-22, "qualquer coisa corrigimos depois").
 
@@ -103,7 +103,7 @@ it('botões de resposta têm variante clara e escura', () => {
     selo: Veredito | null          // stamp to show while dragging (dominant direction, or null for baixo/tap)
   }
   ```
-  The hook reads the card size from the event target's `getBoundingClientRect()` on pointer down, calls `setPointerCapture`, and on pointer up calls `onResposta(passouLimiar(...))` when non-null; otherwise resets `dx, dy` to 0. When `ativo` is false, handlers are no-ops.
+  The hook reads the card size from `event.currentTarget.getBoundingClientRect()` on pointer down (the card element, never the touched child), calls `setPointerCapture`, and on pointer up calls `onResposta(passouLimiar(...))` when non-null; otherwise resets `dx, dy` to 0. When `ativo` is false, handlers are no-ops.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -145,9 +145,9 @@ describe('useArrasto', () => {   // renderHook + a div with the handlers, pointe
 - Produces:
   ```tsx
   export type FaseCartao = 'ativo' | 'respondido' | 'saindo'   // ativo: draggable; respondido: tilted+stamped, frozen (panel open); saindo: flying out (300 ms) then unmounted
-  export function CartaoAfirmacao(p: { afirmacao: AfirmacaoNoQuiz; fase: FaseCartao; respostaDada: Veredito | null; onResposta: (v: Veredito) => void; reduzirMovimento: boolean }): JSX.Element
+  export function CartaoAfirmacao(p: { afirmacao: AfirmacaoNoQuiz; fase: FaseCartao; respostaDada: Veredito | null; onResposta: (v: Veredito) => void; reduzirMovimento: boolean }): ReactElement
   export function tamanhoDoTexto(texto: string): 'text-xl' | 'text-lg' | 'text-base'   // ≤ 90 chars → text-xl (20 px); ≤ 160 → text-lg (18); else text-base (16)
-  export function PilhaDeCartoes(p: { atual: AfirmacaoNoQuiz; proxima: AfirmacaoNoQuiz | null; fase: FaseCartao; respostaDada: Veredito | null; onResposta: (v: Veredito) => void; reduzirMovimento: boolean }): JSX.Element
+  export function PilhaDeCartoes(p: { atual: AfirmacaoNoQuiz; proxima: AfirmacaoNoQuiz | null; fase: FaseCartao; respostaDada: Veredito | null; onResposta: (v: Veredito) => void; reduzirMovimento: boolean }): ReactElement
   ```
   Card: `role="group"`, `aria-label="Afirmação"`, `touch-action: none`, `style.transform = translate(dx, dy) rotate(inclinacao)` while dragging; stamp `<span data-selo={veredito}>` with `ROTULO_BOTAO[veredito]` text, opacity from `opacidadeSelo` (1 when `respondido`/`saindo`); `fase === 'saindo'` adds a transition class that translates ±120% on the answered axis unless `reduzirMovimento`. The next card renders behind at `scale-95 opacity-60` with no text (`aria-hidden`).
 
@@ -178,13 +178,13 @@ it('pilha: o próximo cartão está atrás, sem texto e aria-hidden', ...)
 **Interfaces:**
 - Produces:
   ```tsx
-  export function PainelVeredito(p: { afirmacao: AfirmacaoNoQuiz; respostaDada: Veredito; erroPct: number | null; ultima: boolean; onFechar: () => void; reduzirMovimento: boolean }): JSX.Element
+  export function PainelVeredito(p: { afirmacao: AfirmacaoNoQuiz; respostaDada: Veredito; erroPct: number | null; ultima: boolean; onFechar: () => void; reduzirMovimento: boolean }): ReactElement
   // src/components/mensagemVeredito.ts
   export function mensagem(veredito: Veredito, respostaDada: Veredito): string   // moved verbatim from Feedback.tsx
   ```
-  Renders: backdrop `div[data-backdrop]` (click does nothing); sheet `section[role="dialog"][aria-modal="true"][aria-live="polite"]` with handle, `SELO_VEREDITO` badge, `mensagem(...)`, `Quem disse: {autor}`, `“{citacao}”`, `explicacao`, `{erroPct}% das pessoas erraram esta.` when not null, link `Ver a checagem ({fonte_nome})` (`target="_blank" rel="noopener noreferrer"`), button `Próxima` / `Ver meu resultado` (`BOTAO_PRIMARIO`). Focus moves to that advance button on mount, whatever its label. The sheet is `max-h-[85dvh] overflow-y-auto` (internal scroll; the page behind never scrolls); badge, result line and `Quem disse` come first so they are visible without scrolling. Drag-down on the handle beyond 80 px calls `onFechar` (uses `useArrasto`-style pointer handling but only the vertical-down case; implement inline). Enter slides from the bottom (`translate-y-full → 0`, 250 ms) unless `reduzirMovimento`. Escape key does nothing (the panel cannot be skipped).
+  Renders: backdrop `div[data-backdrop]` (click does nothing); sheet `section[role="dialog"][aria-modal="true"][aria-label="Veredito da afirmação"][aria-live="polite"]` with handle, `SELO_VEREDITO` badge, `mensagem(...)`, `Quem disse: {autor}`, `“{citacao}”`, `explicacao`, `{erroPct}% das pessoas erraram esta.` when not null, link `Ver a checagem ({fonte_nome})` (`target="_blank" rel="noopener noreferrer"`), button `Próxima` / `Ver meu resultado` (`BOTAO_PRIMARIO`). Focus moves to that advance button on mount, whatever its label; focus is contained in the sheet (Tab/Shift+Tab cycle inside it) and the quiz content behind gets the `inert` attribute while the sheet is open. The sheet is `max-h-[85dvh] overflow-y-auto` (internal scroll; the page behind never scrolls); badge, result line and `Quem disse` come first so they are visible without scrolling. Drag-down on the handle beyond 80 px calls `onFechar` (uses `useArrasto`-style pointer handling but only the vertical-down case; implement inline). Enter slides from the bottom (`translate-y-full → 0`, 250 ms) unless `reduzirMovimento`. Escape key does nothing (the panel cannot be skipped).
 
-- [ ] **Step 1: Write the failing tests** — `mostra selo, mensagem, autor, citação, explicação, % erraram e link`; `foco vai para o botão de avanço ao abrir (Próxima e Ver meu resultado)`; `painel tem rolagem interna (max-h-[85dvh] overflow-y-auto)`; `Próxima chama onFechar`; `arrastar a alça para baixo além de 80 px fecha`; `Escape não fecha`; `última mostra "Ver meu resultado"`; `reduzirMovimento sem classe de transição`.
+- [ ] **Step 1: Write the failing tests** — `mostra selo, mensagem, autor, citação, explicação, % erraram e link`; `foco vai para o botão de avanço ao abrir (Próxima e Ver meu resultado)`; `painel tem rolagem interna (max-h-[85dvh] overflow-y-auto)`; `painel tem aria-label "Veredito da afirmação"`; `Tab a partir do último elemento volta ao primeiro (foco contido)`; `Próxima chama onFechar`; `arrastar a alça para baixo além de 80 px fecha`; `Escape não fecha`; `última mostra "Ver meu resultado"`; `reduzirMovimento sem classe de transição`.
 - [ ] **Step 2–4:** FAIL → implement → `npm test` PASS, typecheck clean.
 - [ ] **Step 5: Commit** — `feat: verdict bottom sheet`
 
@@ -193,7 +193,7 @@ it('pilha: o próximo cartão está atrás, sem texto e aria-hidden', ...)
 ### Task 5: Integrate into `Quiz`: top bar, counter, no-scroll layout, keyboard, buttons
 
 **Files:**
-- Modify: `src/components/Quiz.tsx`, `src/app/quiz/page.tsx` (wrapper gets `h-dvh overflow-hidden`), `src/components/Feedback.tsx` (delete)
+- Modify: `src/components/Quiz.tsx`, `src/app/quiz/page.tsx` (the page wrapper loses its vertical padding and becomes a plain `main`; only the quiz root sizes itself), `src/components/Feedback.tsx` (delete)
 - Test: `tests/components/Quiz.test.tsx` (update + extend)
 
 **Interfaces:**
@@ -207,7 +207,7 @@ it('pilha: o próximo cartão está atrás, sem texto e aria-hidden', ...)
     | { etapa: 'saindo'; indice: number }          // panel closed, card flying out, then next 'pergunta'
     | { etapa: 'enviando' } | { etapa: 'resultado'; dados: RespostaResultado } | { etapa: 'erro'; motivo: ... }
   ```
-  Layout (quiz screen): `div.flex.h-dvh.flex-col.px-4.pt-4.pb-[max(1rem,env(safe-area-inset-bottom))]` → top row (`Afirmação n de 12` + counter chip `{acertos} de {respondidas} ✔`, chip hidden until `respondidas > 0`) → progress bar (`div[role=progressbar][aria-valuenow=n][aria-valuemax=12]`) → `PilhaDeCartoes` (`flex-1 min-h-0`) → hint line `← mentira · ↑ cheira mal · verdade →` (`TEXTO_SECUNDARIO`, text-sm allowed here: non-essential hint) → three buttons (`BOTAO_RESPOSTA`, `min-h-12`, `destaque` on the chosen one during `respondendo`, `esmaecido` on the others). `acertos` counts `respostas[id] === veredito` over answered ids (client-side, display only; the server still computes the real score).
+  Layout (quiz screen): one sized element only: `div.flex.h-dvh.flex-col.box-border.px-4.pt-4.pb-[max(1rem,env(safe-area-inset-bottom))].overflow-hidden` (the page wrapper has no vertical padding or height of its own); while the sheet is open this root gets `inert` → top row (`Afirmação n de 12` + counter chip `{acertos} de {respondidas} ✔`, chip hidden until `respondidas > 0`) → progress bar (`div[role=progressbar][aria-valuenow=n][aria-valuemax=12]`) → `PilhaDeCartoes` (`flex-1 min-h-0`) → hint line `← mentira · ↑ cheira mal · verdade →` (`TEXTO_SECUNDARIO`, text-sm allowed here: non-essential hint) → three buttons (`BOTAO_RESPOSTA`, `min-h-12`, `destaque` on the chosen one during `respondendo`, `esmaecido` on the others). `acertos` counts `respostas[id] === veredito` over answered ids (client-side, display only; the server still computes the real score).
   Keyboard: a `keydown` listener on the quiz root answers on ArrowLeft/ArrowUp/ArrowRight only in `pergunta`. Reduced motion read once via `matchMedia` in `useEffect` (false during SSR).
 
 - [ ] **Step 1: Update and extend the tests**
@@ -219,7 +219,8 @@ it('contador aparece após a primeira resposta e conta acertos', ...)  // e.g. a
 it('ignora resposta durante a animação', ...)                    // click VERDADE then MENTIRA within the respondendo window; payload has the first only
 it('setas do teclado respondem só na pergunta', ...)
 it('painel é obrigatório: próximo cartão só depois de Próxima', ...)
-it('tela do quiz não excede a viewport (320×568) com a afirmação mais longa', ...)  // jsdom has no layout: assert the root has h-dvh + overflow-hidden and the card text class from tamanhoDoTexto for the longest fixture/live statement; a real-browser check happens in Task 6
+it('tela do quiz não excede a viewport (320×568) com a afirmação mais longa', ...)  // jsdom has no layout: assert the quiz root has h-dvh + overflow-hidden + box-border, the page wrapper has no py-/pt-/pb- class, and the card text class from tamanhoDoTexto for the longest fixture/live statement; a real-browser check happens in Task 6
+it('fundo fica inert enquanto o painel está aberto', ...)
 it('contador some na tela de resultado', ...)
 ```
 
