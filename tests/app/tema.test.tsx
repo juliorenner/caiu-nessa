@@ -49,3 +49,14 @@ it('rótulos dos botões e do carimbo', () => {
   expect(ROTULO_BOTAO).toEqual({ verdadeiro: 'Verdade', falso: 'Mentira', enganoso: 'Cheira mal' })
   expect(ARIA_BOTAO_RESPOSTA.enganoso).toBe('Isso me cheira mal: enganoso')
 })
+
+it('landing: título em letreiro, carimbo, botão Começar e dicas', () => {
+  render(<Landing />)
+  expect(screen.getByRole('heading', { level: 1, name: 'Caiu Nessa?' })).toHaveClass('font-letreiro-sombra')
+  expect(screen.getByRole('link', { name: 'Começar' })).toHaveAttribute('href', '/quiz')
+  expect(screen.getByText('← Mentira · ↑ Cheira mal · Verdade →')).toBeInTheDocument()
+  expect(screen.getByText('Arraste o cartão ou toque')).toBeInTheDocument()
+  expect(
+    screen.getByText('Arraste o cartão: direita é verdade, esquerda é mentira, para cima se cheira mal.'),
+  ).toHaveClass('sr-only')
+})
