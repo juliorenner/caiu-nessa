@@ -21,7 +21,8 @@ export async function compartilhar(p: {
       return 'folha'
     } catch (erro) {
       // A pessoa fechou a folha: silêncio. Qualquer outra falha cai para copiar.
-      if (erro instanceof DOMException && erro.name === 'AbortError') return 'cancelado'
+      // Pelo nome, não por instanceof: polyfills e erros embrulhados chegam como Error comum.
+      if ((erro as { name?: unknown } | null)?.name === 'AbortError') return 'cancelado'
     }
   }
   try {

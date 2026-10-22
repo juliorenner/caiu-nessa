@@ -41,6 +41,13 @@ describe('compartilhar', () => {
     expect(writeText).not.toHaveBeenCalled()
   })
 
+  it('AbortError como Error comum (polyfill): também cancelado', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    const share = vi.fn().mockRejectedValue(Object.assign(new Error('fechou'), { name: 'AbortError' }))
+    expect(await compartilhar({ ...base, arquivo: null, nav: navegador({ share, writeText }) })).toBe('cancelado')
+    expect(writeText).not.toHaveBeenCalled()
+  })
+
   it('outra falha do share: copia o texto', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     const share = vi.fn().mockRejectedValue(new DOMException('negado', 'NotAllowedError'))
