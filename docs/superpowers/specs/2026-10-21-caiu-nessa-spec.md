@@ -1,0 +1,50 @@
+# Caiu Nessa? (caiu-nessa)
+
+## O que é
+Quiz web neutro em português. A pessoa vê uma afirmação política e responde
+VERDADE ou MENTIRA. Ao final recebe sua nota, uma avaliação em tom leve
+(ex.: "Abre o olho: você acreditou em X% das afirmações falsas") e a
+comparação com a maioria dos jogadores. Objetivo: informar a população.
+Site anônimo, sem login, zero atrito (vai circular por WhatsApp).
+
+## Conteúdo (regras de neutralidade, inegociáveis)
+- Só afirmações já checadas por agências: Aos Fatos, Lupa, Comprova,
+  G1 Fato ou Fake, Estadão Verifica. Cada item guarda o link da checagem.
+- Primeira versão: 12 afirmações. 6 de cada lado (esquerda/direita),
+  3 verdadeiras e 3 falsas por lado. Mesma proporção sempre.
+- Fontes: os dois candidatos do 2º turno de 2026 e influenciadores de
+  cada lado. Priorizar as fake news mais compartilhadas.
+- Depois de cada resposta: mostrar o veredito, uma explicação curta e o
+  link da checagem, mais "X% das pessoas erraram esta".
+- Nenhuma frase de apoio ou ataque a candidato. Critério de seleção
+  visível numa página "Como escolhemos as afirmações".
+- Resultado final mede a PESSOA, não os partidos: nota geral e viés
+  ("você acreditou em 80% das falsas de um lado e 30% do outro").
+
+## Stack
+- Next.js (App Router) + TypeScript, deploy na Vercel.
+- Postgres via Neon (marketplace da Vercel, free tier) + Drizzle ORM.
+- Afirmações num JSON versionado no repo (não no banco) por enquanto.
+- Rota POST /api/resultado: recebe respostas, grava uma linha, devolve
+  estatísticas agregadas (histograma de notas, % de erro por afirmação,
+  média por lado).
+- Rate limit simples: hash do IP + timestamp na própria tabela, máx N
+  jogadas por minuto. Cloudflare Turnstile como opcional depois.
+- Comparação com a maioria só aparece com >= 100 jogadas. Antes disso:
+  "você é um dos primeiros".
+- Sem dados pessoais (LGPD): só respostas, nota, lado, timestamp e hash
+  do IP com TTL curto.
+
+## Modelo de dados
+afirmacoes (JSON): id, texto, lado (esquerda|direita), autor, veredito
+  (true|false), explicacao, fonte_nome, fonte_url, data_checagem
+jogadas (tabela): id, created_at, respostas jsonb ({id: true|false}),
+  acertos, total, acertos_esquerda, acertos_direita, ip_hash
+
+## Fora do escopo agora
+Login, ranking com nome, painel admin. Login, se vier, só depois do
+resultado e opcional, nunca antes de jogar.
+
+## Domínio
+caiunessa.com.br (registro.br, Vercel não vende .br). Apontar pra Vercel
+via A + CNAME ou nameservers. Checar disponibilidade antes de comprar.
