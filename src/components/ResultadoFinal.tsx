@@ -38,13 +38,22 @@ export function ResultadoFinal(p: {
       <Ficha esquerda="Fim de jogo" direita={`Rodada ${p.rodada}`} />
       <div className="flex flex-col items-center gap-3">
         <p className="font-letreiro text-[13px]">Placar</p>
-        <p data-placar className={NUMERO_PLACAR}>
+        {/* A barra fica só na tela; o leitor de tela ouve "4 de 12", não "4 barra 12". */}
+        <p data-placar aria-hidden className={NUMERO_PLACAR}>
           {resultado.acertos}/{resultado.total}
         </p>
+        <p className="sr-only">
+          {resultado.acertos} de {resultado.total}
+        </p>
         {p.rodada > 1 && (
-          <p className="font-letreiro text-base">
-            Na partida {p.acumulado.acertos}/{p.acumulado.total}
-          </p>
+          <>
+            <p aria-hidden className="font-letreiro text-base">
+              Na partida {p.acumulado.acertos}/{p.acumulado.total}
+            </p>
+            <p className="sr-only">
+              Na partida: {p.acumulado.acertos} de {p.acumulado.total}
+            </p>
+          </>
         )}
       </div>
       <h1>

@@ -268,11 +268,14 @@ describe('Quiz', () => {
     expect(screen.getByRole('button', { name: 'Mentira' })).toHaveAttribute('aria-disabled', 'true')
     // O cartão ainda desliza: o contador só muda quando o painel abre.
     expect(contador(container)).toHaveTextContent('Placar 00')
+    const casas = () => [...container.querySelectorAll('[data-casa]')].map(c => c.getAttribute('data-casa'))
+    expect(casas()[0]).toBe('atual')
     fireEvent.click(screen.getByRole('button', { name: 'Mentira' }))
     fireEvent.keyDown(window, { key: 'ArrowLeft' })
     act(() => vi.advanceTimersByTime(300))
     expect(screen.getByText('Você acertou.')).toBeInTheDocument()
     expect(contador(container)).toHaveTextContent('Placar 01')
+    expect(casas()[0]).toBe('acerto')
     for (let i = 0; i < 12; i++) {
       if (i > 0) {
         fireEvent.click(screen.getByRole('button', { name: 'Verdade' }))
@@ -367,6 +370,8 @@ describe('Quiz', () => {
   it('cabeçalho usa o tamanho da rodada (6)', () => {
     render(<Quiz {...daRodada} rodada={2} afirmacoes={rodadaDeSeis} erroPorAfirmacao={null} embaralharFn={identidade} />)
     expect(screen.getByText('Ficha 01/06')).toBeInTheDocument()
+    // A posição já é lida pelo sr-only "Afirmação 1 de 6": a ficha não a anuncia de novo.
+    expect(screen.getByText('Ficha 01/06')).toHaveAttribute('aria-hidden')
     expect(screen.getByText(/Rodada 2/)).toBeInTheDocument()
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuemax', '6')
   })

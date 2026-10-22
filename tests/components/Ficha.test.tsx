@@ -20,3 +20,15 @@ it('CarimbosDeProgresso marca pendente, atual, acerto e erro', () => {
   expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '3')
   expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuemax', '6')
 })
+
+it('CarimbosDeProgresso: a casa atual difere de um acerto nos dois temas', () => {
+  const { container } = render(<CarimbosDeProgresso total={3} atual={1} estados={['acerto', null, null]} />)
+  const atual = container.querySelector('[data-casa="atual"]')!
+  const acerto = container.querySelector('[data-casa="acerto"]')!
+  // Claro: papel com borda grossa × tinta cheia. Escuro: fundo escuro com borda grossa papel × papel cheio.
+  expect(atual).toHaveClass('bg-papel', 'dark:bg-fundo-escuro', 'border-[3px]', 'dark:border-papel')
+  expect(atual).not.toHaveClass('border-2')
+  expect(atual).not.toHaveClass('dark:bg-papel')
+  expect(acerto).toHaveClass('bg-tinta', 'dark:bg-papel', 'border-2')
+  expect(acerto).not.toHaveClass('border-[3px]')
+})

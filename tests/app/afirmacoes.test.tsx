@@ -118,6 +118,9 @@ describe('ResultadoFinal', () => {
   it('rodada 1 mostra comparação e Continuar jogando', () => {
     render(<ResultadoFinal {...primeira} onContinuar={async () => 'fim'} />)
     expect(screen.getByText('4/12')).toBeInTheDocument()
+    // Leitor de tela ouve "4 de 12", não "4 barra 12".
+    expect(screen.getByText('4/12')).toHaveAttribute('aria-hidden')
+    expect(screen.getByText('4 de 12')).toHaveClass('sr-only')
     expect(screen.getByText('Fim de jogo')).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 1, name: 'Caiu feio' })).toBeInTheDocument()
     expect(screen.getByText(/Você é um dos primeiros a jogar/)).toBeInTheDocument()

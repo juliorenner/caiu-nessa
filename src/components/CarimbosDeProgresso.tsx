@@ -1,11 +1,12 @@
 type Casa = 'pendente' | 'atual' | 'acerto' | 'erro'
 
-// Estados legíveis sem cor: branco, papel com borda grossa, tinta cheia, hachura.
+// Estados legíveis sem cor: branco, borda grossa (papel no claro, fundo escuro no escuro), tinta cheia, hachura.
+// A atual não usa o preenchimento do acerto em nenhum tema; só ela tem a borda grossa.
 const CLASSE_CASA: Record<Casa, string> = {
-  pendente: 'bg-superficie',
-  atual: 'bg-papel border-[3px] motion-safe:animate-pulse',
-  acerto: 'bg-tinta dark:bg-papel',
-  erro: 'bg-superficie bg-[repeating-linear-gradient(135deg,var(--color-tinta)_0_2px,transparent_2px_5px)]',
+  pendente: 'bg-superficie border-2',
+  atual: 'bg-papel border-[3px] border-tinta dark:bg-fundo-escuro dark:border-papel motion-safe:animate-pulse',
+  acerto: 'bg-tinta dark:bg-papel border-2',
+  erro: 'bg-superficie bg-[repeating-linear-gradient(135deg,var(--color-tinta)_0_2px,transparent_2px_5px)] border-2',
 }
 
 // Uma casa por afirmação; `atual` é o índice (0-based) da afirmação em jogo.
@@ -35,7 +36,7 @@ export function CarimbosDeProgresso({
             key={i}
             data-casa={casa}
             aria-hidden
-            className={`h-2.5 border-2 border-tinta dark:border-papel ${CLASSE_CASA[casa]}`}
+            className={`h-2.5 border-tinta dark:border-papel ${CLASSE_CASA[casa]}`}
           />
         )
       })}

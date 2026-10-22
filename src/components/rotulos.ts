@@ -34,7 +34,7 @@ export const FOCO =
   'focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-tinta dark:focus-visible:outline-papel'
 
 // Foco dentro de uma superfície branca (igual nos dois temas).
-export const FOCO_EM_SUPERFICIE = 'focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-tinta'
+const FOCO_EM_SUPERFICIE = 'focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-tinta'
 
 // Letreiro (claro) e Letreiro noite (escuro). As cores ficam em globals.css (@theme).
 export const FUNDO_PAGINA = 'hachura bg-fundo text-tinta dark:bg-fundo-escuro dark:text-papel'
@@ -56,7 +56,7 @@ export const FICHA =
 const APERTAR_CLARO =
   'font-letreiro border-[3px] border-tinta shadow-[0_5px_0_var(--color-tinta)] active:translate-y-[5px] active:shadow-none transition-transform duration-[80ms] motion-reduce:transition-none'
 const APERTAR_ESCURO = 'dark:border-papel dark:shadow-[0_5px_0_var(--color-papel)]'
-export const BOTAO_APERTAR = `${APERTAR_CLARO} ${APERTAR_ESCURO}`
+const BOTAO_APERTAR = `${APERTAR_CLARO} ${APERTAR_ESCURO}`
 
 // Forma dos botões de ação (largura total, conteúdo centralizado).
 const BOTAO_ACAO = 'flex min-h-12 w-full items-center justify-center px-5 py-3 disabled:opacity-60'
