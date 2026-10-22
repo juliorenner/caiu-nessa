@@ -556,6 +556,22 @@ Validation after Zod: the set of keys of `respostas` must equal the set of afirm
 
 ---
 
+### Task 7b: Local database mode (added 2026-10-21)
+
+Added so the app runs fully functional on a laptop with no external services: the author wants to play it locally before deploying.
+
+**Files:**
+- Modify: `src/db/client.ts`, `.env.example`, `.gitignore`
+- Test: `tests/db/client.test.ts`
+
+**Interfaces:**
+- Produces: `getDb(): Db` now picks the driver from `DATABASE_URL`: a value starting with `file:` opens a persistent PGlite at that path (relative to the project root) and runs the committed migrations from `./drizzle` once on first use; any other value keeps the neon-http driver. `IP_HASH_SALT` behaviour unchanged.
+
+- [ ] **Step 1: Write the failing test** — `tests/db/client.test.ts`: with `DATABASE_URL=file:<tmpdir>/dev.pglite`, `getDb()` returns a `Db` that can insert and read a `jogadas` row (migrations applied); with `DATABASE_URL` unset it throws `DATABASE_URL não definida`. Reset the memoized instance between tests (export a `resetDbParaTestes()` helper used only by tests, or re-import the module with `vi.resetModules()`).
+- [ ] **Step 2: Implement** the `file:` branch in `getDb()` with `drizzle-orm/pglite` + `migrate` from `drizzle-orm/pglite/migrator`; memoize the promise so concurrent first requests share one instance.
+- [ ] **Step 3:** `.env.example` documents both forms (`DATABASE_URL=file:./.pglite` for local play, a Neon URL for production); add `.pglite/` to `.gitignore`.
+- [ ] **Step 4:** `npm test`, `npm run typecheck`, `npm run build` → all pass. Commit: `feat: local PGlite database mode for development`.
+
 ### Task 8 (JUL-94): UI — landing, quiz, feedback, result, selection criteria page
 
 **Files:**
