@@ -38,7 +38,13 @@ async function abrirPglite(caminho: string): Promise<Aberto> {
   const { migrate } = await import('drizzle-orm/pglite/migrator')
   const cliente = new PGlite(caminho)
   const instancia = drizzlePglite(cliente, { schema })
-  await migrate(instancia, { migrationsFolder: path.resolve(process.cwd(), 'drizzle') })
+  try {
+    await migrate(instancia, { migrationsFolder: path.resolve(process.cwd(), 'drizzle') })
+  } catch (erro) {
+    // getDb descarta o memo em caso de falha; sem fechar aqui, o cliente ficaria aberto sem dono.
+    await cliente.close().catch(() => undefined)
+    throw erro
+  }
   return { db: instancia, fechar: () => cliente.close() }
 }
 
