@@ -73,6 +73,8 @@ describe('Partida', () => {
     await user.click(await screen.findByRole('button', { name: 'Continuar jogando' }))
     expect(await screen.findByText('Afirmação 1 de 6')).toBeInTheDocument()
     expect(document.querySelector('[data-contador]')).toBeNull()
+    // O botão clicado sumiu: o foco vai para a raiz do quiz, não para o body.
+    expect(document.activeElement).toBe(document.querySelector('.h-dvh'))
     const pedidos = pedidosDeRodada(fetchMock)
     expect(pedidos).toHaveLength(1)
     expect(pedidos[0][1].method).toBe('POST')

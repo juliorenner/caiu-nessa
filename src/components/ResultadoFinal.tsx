@@ -26,7 +26,7 @@ export function ResultadoFinal(p: {
 
   return (
     <section aria-live="polite" className="flex flex-col gap-5 text-center">
-      <p className="text-6xl font-extrabold tracking-tight">
+      <p className={`${p.rodada === 1 ? 'text-6xl' : 'text-5xl'} font-extrabold tracking-tight`}>
         {p.rodada === 1
           ? `${resultado.acertos} de ${resultado.total}`
           : `Rodada ${p.rodada}: ${resultado.acertos} de ${resultado.total}`}

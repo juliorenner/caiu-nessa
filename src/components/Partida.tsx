@@ -1,15 +1,11 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import type { RespostaRodada } from '@/lib/rodada-api'
 import Quiz, { type RodadaFeita } from './Quiz'
 import type { AfirmacaoNoQuiz } from './tipos'
 
 type Desfecho = 'ok' | 'fim' | 'falha'
-
-interface RespostaRodada {
-  afirmacoes: AfirmacaoNoQuiz[] | null
-  erroPorAfirmacao: Record<string, number> | null
-}
 
 // Uma partida: a rodada de 12 que veio do servidor e as rodadas extras pedidas a /api/rodada.
 export default function Partida(p: { inicial: AfirmacaoNoQuiz[]; erroPorAfirmacao: Record<string, number> | null }) {
