@@ -6,79 +6,108 @@ export const ROTULO_VEREDITO: Record<Veredito, string> = {
   enganoso: 'Enganoso',
 }
 
-const COR_SELO: Record<Veredito, string> = {
-  verdadeiro: 'bg-emerald-100 text-emerald-900 ring-emerald-700',
-  falso: 'bg-rose-100 text-rose-900 ring-rose-700',
-  enganoso: 'bg-amber-100 text-amber-900 ring-amber-700',
+// Cor do veredito como borda + texto. Só sobre superfícies brancas (iguais nos dois temas).
+const COR_VEREDITO: Record<Veredito, string> = {
+  verdadeiro: 'border-verdade text-verdade',
+  falso: 'border-mentira text-mentira',
+  enganoso: 'border-cheira text-cheira',
 }
 
-// Selo do veredito: o mesmo no feedback do jogo e na página /afirmacoes.
-export const SELO_VEREDITO = Object.fromEntries(
-  Object.entries(COR_SELO).map(([v, cor]) => [v, `self-start rounded-full px-3 py-1 text-base font-bold ring-1 ${cor}`]),
-) as Record<Veredito, string>
+const POR_VEREDITO = (classes: string) =>
+  Object.fromEntries(Object.entries(COR_VEREDITO).map(([v, cor]) => [v, `${classes} ${cor}`])) as Record<
+    Veredito,
+    string
+  >
 
+// Selo do veredito (carimbo pequeno): o mesmo no painel do jogo e na página /afirmacoes.
+export const SELO_VEREDITO = POR_VEREDITO(
+  'font-letreiro text-[15px] border-[3px] rounded-md -rotate-3 self-start px-2.5 pt-1.5 pb-1',
+)
+
+// Carimbo do cartão: aparece no arrasto e fica depois da resposta.
+export const CARIMBO_CARTAO = POR_VEREDITO(
+  'font-letreiro text-[22px] border-4 rounded-md -rotate-[14deg] bg-white/70 mix-blend-multiply px-2.5 pt-1.5 pb-1',
+)
+
+// Foco sobre o fundo da página: tinta no claro, papel no escuro.
 export const FOCO =
-  'focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-stone-900 dark:focus-visible:outline-stone-100'
+  'focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-tinta dark:focus-visible:outline-papel'
 
-const BOTAO_BASE =
-  'flex min-h-12 w-full items-center justify-center rounded-xl bg-stone-900 px-5 py-3 text-lg font-semibold text-white transition-colors motion-reduce:transition-none hover:bg-stone-700 disabled:opacity-60'
+// Foco dentro de uma superfície branca (igual nos dois temas).
+const FOCO_EM_SUPERFICIE = 'focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-tinta'
 
-export const BOTAO_PRIMARIO = `${BOTAO_BASE} dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-300 ${FOCO}`
+// Letreiro (claro) e Letreiro noite (escuro). As cores ficam em globals.css (@theme).
+export const FUNDO_PAGINA = 'hachura bg-fundo text-tinta dark:bg-fundo-escuro dark:text-papel'
 
-// Ação secundária ao lado do primário: mesma forma, só borda e texto.
-export const BOTAO_SECUNDARIO = `flex min-h-12 w-full items-center justify-center rounded-xl border-2 border-stone-900 bg-transparent px-5 py-3 text-lg font-semibold text-stone-900 transition-colors motion-reduce:transition-none hover:bg-stone-900/10 dark:border-stone-100 dark:text-stone-100 dark:hover:bg-stone-100/10 ${FOCO}`
+// Superfície (cartão, quadro, painel): branca nos dois temas, cantos retos, sombra dura.
+// No escuro a borda e a sombra viram papel; dentro dela nada muda (tinta sobre branco).
+export const SUPERFICIE =
+  'bg-superficie text-tinta border-[3px] border-tinta shadow-[6px_6px_0_var(--color-tinta)] dark:border-papel dark:shadow-[6px_6px_0_var(--color-papel)]'
 
-// Botão dentro de um cartão (claro nos dois temas): corpo e anel de foco sempre escuros.
-export const BOTAO_EM_CARTAO = `${BOTAO_BASE} focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-stone-900`
+// Cartões da lista em /afirmacoes: a mesma superfície com sombra menor.
+export const SUPERFICIE_LISTA =
+  'bg-superficie text-tinta border-[3px] border-tinta shadow-[4px_4px_0_var(--color-tinta)] dark:border-papel dark:shadow-[4px_4px_0_var(--color-papel)]'
 
-// Temas Carimbo (claro) e Noite (escuro). As cores ficam em globals.css (@theme).
-export const FUNDO_PAGINA = 'bg-fundo text-stone-900 dark:bg-fundo-escuro dark:text-stone-100'
+// Ficha: faixa de papel com borda tinta (papel nos dois temas).
+export const FICHA =
+  'relative bg-papel text-tinta border-[3px] border-tinta shadow-[4px_4px_0_var(--color-tinta)] dark:border-papel dark:shadow-[4px_4px_0_var(--color-papel)]'
 
-// O cartão é claro nos dois temas (no Noite ele "salta" do fundo escuro), então o texto dele é sempre escuro.
-export const CARTAO_SUPERFICIE = 'bg-superficie text-stone-900 shadow-sm ring-1 ring-stone-200 dark:bg-superficie-escura dark:ring-0'
+// Botão "de apertar": borda e sombra dura embaixo; ao pressionar, afunda.
+const APERTAR_CLARO =
+  'font-letreiro border-[3px] border-tinta shadow-[0_5px_0_var(--color-tinta)] active:translate-y-[5px] active:shadow-none transition-transform duration-[80ms] motion-reduce:transition-none'
+const APERTAR_ESCURO = 'dark:border-papel dark:shadow-[0_5px_0_var(--color-papel)]'
+const BOTAO_APERTAR = `${APERTAR_CLARO} ${APERTAR_ESCURO}`
 
-// Link dentro de um cartão (claro nos dois temas): texto e anel de foco sempre escuros.
-export const LINK_EM_CARTAO =
-  'rounded font-medium text-stone-900 underline underline-offset-4 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-stone-900'
+// Forma dos botões de ação (largura total, conteúdo centralizado).
+const BOTAO_ACAO = 'flex min-h-12 w-full items-center justify-center px-5 py-3 disabled:opacity-60'
 
-// Link sobre o fundo da página (escuro no tema claro, claro no Noite).
-export const LINK_PAGINA = `rounded font-medium text-stone-900 underline underline-offset-4 dark:text-stone-100 ${FOCO}`
+export const BOTAO_PRIMARIO = `${BOTAO_APERTAR} ${BOTAO_ACAO} bg-tinta text-papel dark:bg-papel dark:text-tinta ${FOCO}`
+
+// Ação secundária ("fantasma") ao lado do primário: mesma forma, fundo branco; no escuro, transparente com papel.
+export const BOTAO_SECUNDARIO = `${BOTAO_APERTAR} ${BOTAO_ACAO} bg-superficie text-tinta dark:bg-transparent dark:text-papel ${FOCO}`
+
+// Botão dentro de um cartão (branco nos dois temas): sem variante escura.
+export const BOTAO_EM_CARTAO = `${APERTAR_CLARO} ${BOTAO_ACAO} bg-tinta text-papel ${FOCO_EM_SUPERFICIE}`
+
+// Link dentro de uma superfície branca: texto e anel de foco sempre tinta.
+export const LINK_EM_CARTAO = `rounded font-medium text-tinta underline underline-offset-4 ${FOCO_EM_SUPERFICIE}`
+
+// Link sobre o fundo da página (tinta no claro, papel no escuro).
+export const LINK_PAGINA = `rounded font-medium text-tinta underline underline-offset-4 dark:text-papel ${FOCO}`
 
 // Texto secundário sobre o fundo da página.
-export const TEXTO_SECUNDARIO = 'text-stone-700 dark:text-stone-300'
+export const TEXTO_SECUNDARIO = 'text-secundario dark:text-secundario-escuro'
 
+// h1/h2 das páginas de texto.
+export const TITULO_LETREIRO = 'font-letreiro text-tinta dark:text-papel'
+
+// Texto no DOM em capitalização normal; a caixa alta vem da fonte Bungee.
 export const ROTULO_BOTAO: Record<Veredito, string> = {
-  verdadeiro: 'VERDADE',
-  falso: 'MENTIRA',
-  enganoso: 'ISSO ME CHEIRA MAL 🤔',
+  verdadeiro: 'Verdade',
+  falso: 'Mentira',
+  enganoso: 'Cheira mal',
 }
 
-// Botões de resposta. Claro: cheios; escuro: só borda e texto na cor do veredito.
-// `destaque` substitui `base` no botão escolhido (cheio nos dois temas, com anel);
+export const ARIA_BOTAO_RESPOSTA: Partial<Record<Veredito, string>> = {
+  enganoso: 'Isso me cheira mal: enganoso',
+}
+
+const PREENCHIMENTO: Record<Veredito, string> = {
+  verdadeiro: 'bg-verdade',
+  falso: 'bg-mentira',
+  enganoso: 'bg-cheira',
+}
+
+// Botões de resposta: cheios na cor do veredito nos dois temas; no escuro, borda e sombra papel.
+// `destaque` substitui `base` no botão escolhido (afundado: sem sombra, deslocado 5 px);
 // `esmaecido` soma-se a `base` nos outros dois.
-export const BOTAO_RESPOSTA: Record<Veredito, { base: string; destaque: string; esmaecido: string }> = {
-  verdadeiro: {
-    base: 'border-2 border-transparent bg-emerald-700 text-white dark:bg-transparent dark:border-2 dark:border-emerald-400 dark:text-emerald-300',
-    destaque:
-      'border-2 border-transparent bg-emerald-700 text-white ring-4 ring-emerald-700/40 dark:ring-emerald-300',
-    esmaecido: 'opacity-40',
-  },
-  falso: {
-    base: 'border-2 border-transparent bg-rose-700 text-white dark:bg-transparent dark:border-2 dark:border-rose-400 dark:text-rose-300',
-    destaque: 'border-2 border-transparent bg-rose-700 text-white ring-4 ring-rose-700/40 dark:ring-rose-300',
-    esmaecido: 'opacity-40',
-  },
-  enganoso: {
-    base: 'border-2 border-transparent bg-amber-500 text-stone-900 dark:bg-transparent dark:border-2 dark:border-amber-400 dark:text-amber-300',
-    destaque: 'border-2 border-transparent bg-amber-500 text-stone-900 ring-4 ring-amber-600/50 dark:ring-amber-300',
-    esmaecido: 'opacity-40',
-  },
-}
-
-// Carimbo do cartão (borda + texto). O cartão é claro nos dois temas, então a cor é a mesma:
-// os tons -400 dariam menos de 3:1 sobre #fdfcf9 e o amber-600 só 3,2:1.
-export const COR_SELO_CARTAO: Record<Veredito, string> = {
-  verdadeiro: 'border-emerald-700 text-emerald-700',
-  falso: 'border-rose-700 text-rose-700',
-  enganoso: 'border-amber-700 text-amber-700',
-}
+export const BOTAO_RESPOSTA = Object.fromEntries(
+  Object.entries(PREENCHIMENTO).map(([v, cor]) => {
+    const base = `${BOTAO_APERTAR} ${cor} text-white`
+    const afundado = base
+      .split(' ')
+      .filter((c) => !c.startsWith('active:') && !/(^|:)shadow-/.test(c))
+      .join(' ')
+    return [v, { base, destaque: `${afundado} translate-y-[5px] shadow-none`, esmaecido: 'opacity-35' }]
+  }),
+) as Record<Veredito, { base: string; destaque: string; esmaecido: string }>

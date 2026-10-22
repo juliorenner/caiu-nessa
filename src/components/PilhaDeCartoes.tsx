@@ -21,12 +21,12 @@ export function PilhaDeCartoes({
   reduzirMovimento: boolean
 }): ReactElement {
   return (
-    <div className="relative">
+    <div className="relative flex flex-1 flex-col">
       {/* O próximo cartão aparece atrás, sem texto: só a pilha, não a próxima pergunta. */}
       {proxima && (
         <div data-verso aria-hidden className={`pointer-events-none absolute inset-0 scale-95 opacity-60 ${CARTAO_BASE}`} />
       )}
-      <div className="relative z-10">
+      <div className="relative z-10 flex flex-1 flex-col">
         <CartaoAfirmacao
           key={atual.id}
           afirmacao={atual}

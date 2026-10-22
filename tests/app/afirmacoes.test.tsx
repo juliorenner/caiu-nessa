@@ -10,6 +10,7 @@ describe('página /afirmacoes', () => {
   it('explica que cada rodada é sorteada do conjunto', () => {
     render(<Afirmacoes />)
     expect(screen.getByRole('heading', { level: 1, name: 'As afirmações do jogo' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1 })).toHaveClass('font-letreiro')
     expect(
       screen.getByText(
         'Cada rodada é sorteada deste conjunto: a primeira tem 12 afirmações, as seguintes 6, sempre com o mesmo número de cada lado e de cada veredito.',
@@ -116,7 +117,12 @@ describe('ResultadoFinal', () => {
 
   it('rodada 1 mostra comparação e Continuar jogando', () => {
     render(<ResultadoFinal {...primeira} onContinuar={async () => 'fim'} />)
-    expect(screen.getByText('4 de 12')).toBeInTheDocument()
+    expect(screen.getByText('4/12')).toBeInTheDocument()
+    // Leitor de tela ouve "4 de 12", não "4 barra 12".
+    expect(screen.getByText('4/12')).toHaveAttribute('aria-hidden')
+    expect(screen.getByText('4 de 12')).toHaveClass('sr-only')
+    expect(screen.getByText('Fim de jogo')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: 'Caiu feio' })).toBeInTheDocument()
     expect(screen.getByText(/Você é um dos primeiros a jogar/)).toBeInTheDocument()
     expect(screen.queryByText(/Na partida/)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Continuar jogando' })).toBeEnabled()

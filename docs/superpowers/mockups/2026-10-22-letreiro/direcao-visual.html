@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Caiu Nessa? em arcade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bungee&family=Bungee+Shade&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;800&display=swap">
+<style>
+/* Layout: a review page. Two directions, each a row of four phone screens, then a pick. */
+:root {
+  --pg-bg: #efeef6; --pg-ink: #1d1a33; --pg-muted: #5e5a7a; --pg-line: #d6d3e6; --pg-card: #ffffff;
+  --pg-display: "Inter", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --pg-bg: #16142a; --pg-ink: #f0eefa; --pg-muted: #a8a3c7; --pg-line: #322e52; --pg-card: #1f1c38; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --pg-bg: #16142a; --pg-ink: #f0eefa; --pg-muted: #a8a3c7; --pg-line: #322e52; --pg-card: #1f1c38; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--pg-bg); color: var(--pg-ink); font-family: var(--pg-display);
+  padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  line-height: 1.5;
+}
+.wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 40px; }
+h1 { font-size: clamp(26px, 4vw, 38px); margin: 0 0 6px; letter-spacing: -0.02em; text-wrap: balance; }
+h2 { font-size: 22px; margin: 0; }
+p { margin: 0; max-width: 68ch; }
+.lead { color: var(--pg-muted); font-size: 17px; }
+.dir { display: grid; gap: 18px; }
+.dir-head { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; }
+.tag { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--pg-muted); }
+.why { display: grid; gap: 6px; padding-left: 18px; margin: 0; color: var(--pg-ink); max-width: 76ch; }
+.why li { padding-left: 2px; }
+.phones { display: flex; gap: 22px; overflow-x: auto; padding: 8px 4px 16px; scroll-snap-type: x proximity; }
+.phone {
+  flex: 0 0 auto; width: 320px; height: 660px; border-radius: 34px; overflow: hidden; position: relative;
+  box-shadow: 0 0 0 7px #0d0b1a, 0 18px 40px rgba(0,0,0,0.35); scroll-snap-align: start;
+  font-family: "Inter", system-ui, sans-serif;
+}
+.cap { font-size: 13px; color: var(--pg-muted); margin-top: 8px; text-align: center; }
+.shot { flex: 0 0 auto; display: grid; }
+.pick { display: grid; gap: 12px; }
+.options { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.option { display: flex; gap: 14px; align-items: flex-start; background: var(--pg-card); border: 2px solid var(--pg-line); border-radius: 14px; padding: 14px 16px; cursor: pointer; }
+.option.selected, .option[aria-pressed="true"] { border-color: #6d5cf5; box-shadow: 0 0 0 3px rgba(109,92,245,0.25); }
+.option:focus-visible { outline: 3px solid #6d5cf5; outline-offset: 2px; }
+.option .letter { font-weight: 800; font-size: 20px; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: var(--pg-line); flex: 0 0 auto; }
+.option h3 { margin: 0 0 2px; font-size: 16px; }
+.option p { font-size: 14px; color: var(--pg-muted); }
+.notes { display: grid; gap: 8px; padding-left: 18px; margin: 0; color: var(--pg-muted); font-size: 14px; max-width: 76ch; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ===================== Direção 1: Fliperama Noite ===================== */
+.o1 {
+  --bg: #14112b; --sf: #221e4a; --sf2: #2c2760; --ink: #f5f2ff; --mut: #b9b2e0; --line: #3b3576; --shadow: #090716;
+  --v: #22d3ee; --m: #f472b6; --c: #fb923c; --ac: #a78bfa;
+  --px: "Press Start 2P", monospace;
+  background: var(--bg); color: var(--ink);
+  background-image: radial-gradient(rgba(167,139,250,0.13) 1px, transparent 1.2px);
+  background-size: 14px 14px;
+}
+.o1 .screen { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 18px 14px 14px; gap: 12px; }
+.o1 .hud { display: flex; justify-content: space-between; align-items: center; font-family: var(--px); font-size: 9px; letter-spacing: 0.02em; }
+.o1 .brand { display: flex; align-items: center; gap: 8px; }
+.o1 .ficha { color: var(--ac); }
+.o1 .pips { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; }
+.o1 .pip { height: 8px; background: var(--sf2); border: 1px solid var(--line); }
+.o1 .pip.ok { background: var(--v); border-color: var(--v); }
+.o1 .pip.no { background: var(--m); border-color: var(--m); }
+.o1 .pip.cur { background: var(--ac); border-color: var(--ac); box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ac); }
+.o1 .streak { align-self: flex-start; font-family: var(--px); font-size: 8px; color: var(--bg); background: var(--c); padding: 5px 8px; border: 2px solid var(--shadow); box-shadow: 3px 3px 0 var(--shadow); }
+.o1 .card {
+  flex: 1; background: var(--sf); border: 3px solid var(--line); box-shadow: 6px 6px 0 var(--shadow);
+  padding: 16px 16px 14px; display: flex; flex-direction: column; justify-content: center; gap: 14px; position: relative;
+}
+.o1 .card .n { position: absolute; top: 10px; left: 14px; font-family: var(--px); font-size: 8px; color: var(--mut); }
+.o1 .card .hint { position: absolute; font-family: var(--px); font-size: 7px; color: var(--mut); }
+.o1 .card .hint.up { top: 10px; left: 50%; transform: translateX(-50%); }
+.o1 .card .hint.l { bottom: 10px; left: 12px; color: var(--m); }
+.o1 .card .hint.r { bottom: 10px; right: 12px; color: var(--v); }
+.o1 .card q { quotes: none; font-size: 21px; line-height: 1.35; font-weight: 600; display: block; }
+.o1 .ctl { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.o1 .btn {
+  font-family: var(--px); font-size: 8px; line-height: 1.3; text-align: center; color: var(--bg);
+  border: 3px solid var(--shadow); box-shadow: 0 5px 0 var(--shadow); padding: 12px 6px 10px; display: grid; gap: 8px; justify-items: center;
+}
+.o1 .btn.m { background: var(--m); } .o1 .btn.c { background: var(--c); } .o1 .btn.v { background: var(--v); }
+.o1 .btn.pressed { transform: translateY(5px); box-shadow: none; }
+.o1 .btn.dim { opacity: 0.35; }
+.o1 .ico { width: 22px; height: 22px; display: block; }
+.o1 .cta {
+  font-family: var(--px); font-size: 11px; color: var(--bg); background: var(--ac); text-align: center;
+  padding: 16px 10px 14px; border: 3px solid var(--shadow); box-shadow: 0 6px 0 var(--shadow);
+}
+.o1 .cta.ghost { background: transparent; color: var(--ink); border-color: var(--line); box-shadow: 0 6px 0 var(--line); }
+/* sheet */
+.o1 .sheet {
+  position: absolute; left: 0; right: 0; bottom: 0; background: var(--sf); border-top: 3px solid var(--line);
+  padding: 16px 16px 16px; display: grid; gap: 10px; box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+}
+.o1 .sheet .word { font-family: var(--px); font-size: 16px; display: flex; align-items: center; gap: 10px; }
+.o1 .sheet .word.m { color: var(--m); }
+.o1 .sheet .res { font-weight: 800; font-size: 15px; }
+.o1 .sheet .who { font-size: 12px; color: var(--mut); }
+.o1 .sheet .q { font-size: 13px; font-style: italic; color: var(--mut); border-left: 3px solid var(--line); padding-left: 10px; }
+.o1 .sheet .ex { font-size: 13px; line-height: 1.45; }
+.o1 .sheet a { color: var(--ink); font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+.o1 .dimmed { filter: brightness(0.45); }
+/* placar */
+.o1 .placar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; }
+.o1 .placar .lbl { font-family: var(--px); font-size: 9px; color: var(--ac); }
+.o1 .placar .big { font-family: var(--px); font-size: 38px; line-height: 1; }
+.o1 .placar .tier { font-family: var(--px); font-size: 12px; color: var(--c); }
+.o1 .placar p { font-size: 13px; color: var(--mut); max-width: 26ch; }
+.o1 .rec { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+.o1 .rec div { background: var(--sf); border: 2px solid var(--line); padding: 10px 8px; font-family: var(--px); font-size: 7px; line-height: 1.6; color: var(--mut); }
+.o1 .rec b { display: block; font-size: 12px; color: var(--ink); }
+/* home */
+.o1 .home { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+.o1 .marquee { border: 3px solid var(--line); background: linear-gradient(180deg, var(--sf2), var(--sf)); padding: 18px 14px; display: grid; gap: 12px; justify-items: center; box-shadow: 6px 6px 0 var(--shadow); }
+.o1 .title { font-family: var(--px); font-size: 20px; line-height: 1.4; text-align: center; color: var(--ink); text-shadow: 3px 3px 0 var(--shadow); }
+.o1 .home p { font-size: 14px; color: var(--mut); text-align: center; }
+.o1 .home .hint2 { font-family: var(--px); font-size: 7px; color: var(--mut); text-align: center; line-height: 1.8; }
+.o1 .home a { color: var(--ink); font-size: 13px; text-align: center; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ===================== Direção 2: Letreiro ===================== */
+.o2 {
+  --bg: #fff3dc; --sf: #ffffff; --ink: #1b1540; --mut: #5a5479; --line: #1b1540;
+  --v: #1d4ed8; --m: #be185d; --c: #c2410c; --ac: #1b1540; --pap: #ffe8b5;
+  --disp: "Bungee", "Impact", sans-serif; --body: "Atkinson Hyperlegible", system-ui, sans-serif;
+  background: var(--bg); color: var(--ink); font-family: var(--body);
+  background-image: repeating-linear-gradient(135deg, rgba(27,21,64,0.045) 0 2px, transparent 2px 12px);
+}
+.o2 .screen { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 16px 14px 14px; gap: 12px; }
+.o2 .ticket {
+  background: var(--pap); border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+  display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; font-family: var(--disp); font-size: 12px;
+  position: relative;
+}
+.o2 .ticket::before, .o2 .ticket::after { content: ""; position: absolute; top: 50%; width: 14px; height: 14px; background: var(--bg); border: 3px solid var(--ink); border-radius: 50%; transform: translateY(-50%); }
+.o2 .ticket::before { left: -10px; } .o2 .ticket::after { right: -10px; }
+.o2 .ticket .num { font-size: 15px; }
+.o2 .ticket small { font-family: var(--body); font-weight: 700; font-size: 11px; letter-spacing: 0.08em; }
+.o2 .stamps { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; }
+.o2 .st { height: 10px; border: 2px solid var(--ink); background: var(--sf); }
+.o2 .st.ok { background: var(--v); } .o2 .st.no { background: var(--m); } .o2 .st.cur { background: var(--ink); }
+.o2 .card {
+  flex: 1; background: var(--sf); border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink);
+  padding: 20px 16px 16px; display: flex; flex-direction: column; justify-content: center; gap: 10px; position: relative; overflow: hidden;
+}
+.o2 .card .qm { position: absolute; top: -18px; left: 8px; font-family: var(--disp); font-size: 72px; color: var(--pap); line-height: 1; }
+.o2 .card q { quotes: none; font-size: 22px; line-height: 1.35; font-weight: 700; display: block; position: relative; }
+.o2 .card .hint { position: absolute; font-family: var(--disp); font-size: 8px; letter-spacing: 0.04em; color: var(--mut); }
+.o2 .card .hint.up { top: 8px; left: 50%; transform: translateX(-50%); }
+.o2 .card .hint.l { bottom: 8px; left: 10px; color: var(--m); }
+.o2 .card .hint.r { bottom: 8px; right: 10px; color: var(--v); }
+.o2 .ctl { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.o2 .btn {
+  font-family: var(--disp); font-size: 10px; line-height: 1.2; text-align: center; color: #fff;
+  border: 3px solid var(--ink); box-shadow: 0 5px 0 var(--ink); padding: 12px 6px 10px; display: grid; gap: 8px; justify-items: center;
+}
+.o2 .btn.m { background: var(--m); } .o2 .btn.c { background: var(--c); } .o2 .btn.v { background: var(--v); }
+.o2 .btn.pressed { transform: translateY(5px); box-shadow: none; }
+.o2 .btn.dim { opacity: 0.35; }
+.o2 .ico { width: 22px; height: 22px; display: block; }
+.o2 .cta { font-family: var(--disp); font-size: 15px; color: var(--bg); background: var(--ink); text-align: center; padding: 15px 10px 13px; border: 3px solid var(--ink); box-shadow: 0 6px 0 #0a0820; }
+.o2 .cta.ghost { background: var(--sf); color: var(--ink); box-shadow: 0 6px 0 var(--ink); }
+/* stamp over the card */
+.o2 .carimbo {
+  position: absolute; right: 12px; top: 14px; transform: rotate(-14deg);
+  font-family: var(--disp); font-size: 22px; color: var(--m); border: 4px solid var(--m); padding: 6px 10px 4px; border-radius: 6px;
+  background: rgba(255,255,255,0.7); mix-blend-mode: multiply;
+}
+.o2 .sheet {
+  position: absolute; left: 0; right: 0; bottom: 0; background: var(--sf); border-top: 3px solid var(--ink);
+  padding: 16px; display: grid; gap: 10px; box-shadow: 0 -8px 0 var(--pap), 0 -12px 0 var(--ink);
+}
+.o2 .sheet .res { font-family: var(--disp); font-size: 17px; }
+.o2 .sheet .who { font-size: 13px; color: var(--mut); }
+.o2 .sheet .q { font-size: 13px; font-style: italic; color: var(--mut); border-left: 3px solid var(--ink); padding-left: 10px; }
+.o2 .sheet .ex { font-size: 13px; line-height: 1.45; }
+.o2 .sheet a { color: var(--ink); font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+.o2 .dimmed { filter: brightness(0.75) saturate(0.6); }
+/* placar */
+.o2 .placar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; }
+.o2 .placar .lbl { font-family: var(--disp); font-size: 13px; letter-spacing: 0.06em; }
+.o2 .placar .big { font-family: var(--disp); font-size: 64px; line-height: 1; color: var(--ink); text-shadow: 4px 4px 0 var(--pap), 6px 6px 0 var(--ink); }
+.o2 .placar .tier { font-family: var(--disp); font-size: 16px; color: var(--m); border: 3px solid var(--m); padding: 6px 12px 4px; transform: rotate(-3deg); border-radius: 6px; }
+.o2 .placar p { font-size: 14px; color: var(--mut); max-width: 28ch; }
+/* home */
+.o2 .home { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+.o2 .board { background: var(--sf); border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); padding: 20px 14px 18px; display: grid; gap: 10px; justify-items: center; }
+.o2 .title { font-family: "Bungee Shade", var(--disp); font-size: 34px; line-height: 1.05; text-align: center; color: var(--ink); }
+.o2 .home p { font-size: 15px; color: var(--mut); text-align: center; }
+.o2 .home .hint2 { font-family: var(--disp); font-size: 8px; color: var(--mut); text-align: center; line-height: 1.9; letter-spacing: 0.04em; }
+.o2 .home a { color: var(--ink); font-size: 14px; text-align: center; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .o1 .pip.cur { animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.55; } }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="tag">Caiu Nessa? · duas direções para reagir</p>
+    <h1>Arcade, sem cara de partido</h1>
+    <p class="lead">As duas direções resolvem o mesmo par de problemas: o cartão deixa de flutuar num vazio (um placar em cima, o cartão ocupa o meio, os três botões viram um painel de comando embaixo, na zona do polegar) e os vereditos saem do verde/vermelho/amarelo. Verdade é azul-ciano, Mentira é magenta, Cheira mal é laranja, sempre com um ícone, para não depender só da cor. Os botões seguem a ordem dos gestos: esquerda, cima, direita.</p>
+  </header>
+
+  <!-- ============ Direção 1 ============ -->
+  <section class="dir" id="d1">
+    <div class="dir-head"><h2>1 · Fliperama Noite</h2><span class="tag">escuro · fonte de fliperama no placar · botões de pressionar</span></div>
+    <ul class="why">
+      <li>O "cabinet": placar fixo no topo com FICHA 03/12 e 12 pinos de progresso, cartão com moldura e sombra dura, painel de três botões.</li>
+      <li>A fonte pixel só aparece em palavras curtas (placar, botões, veredito). A afirmação, a citação e a explicação ficam numa sans legível.</li>
+      <li>Sabor brasileiro pelo vocabulário do fliperama de padaria: FICHA, PLACAR, FIM DE JOGO, RECORDE. Sem bandeira, sem verde-amarelo.</li>
+      <li>O carimbo do logo vira roxo. No tema claro (não mostrado) o fundo é papel e os vereditos escurecem para manter contraste.</li>
+    </ul>
+    <div class="phones">
+      <div class="shot">
+        <div class="phone o1"><div class="screen">
+          <div class="hud"><div class="brand"><svg width="22" height="22" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#a78bfa" stroke-width="5"/><text x="32" y="44" font-family="Inter,sans-serif" font-weight="900" font-size="32" fill="#a78bfa" text-anchor="middle">?</text></svg></div><span class="ficha">1 FICHA</span></div>
+          <div class="home">
+            <div class="marquee">
+              <div class="title">CAIU<br>NESSA?</div>
+              <p>12 afirmações da eleição. Você diz se é verdade, mentira ou se isso cheira mal. No fim, descobre em quantas caiu.</p>
+            </div>
+            <div class="cta">▶ INSIRA A FICHA</div>
+            <div class="hint2">← MENTIRA · ↑ CHEIRA MAL · VERDADE →<br>ARRASTE O CARTÃO OU TOQUE</div>
+            <a>Como escolhemos as afirmações</a>
+          </div>
+        </div></div>
+        <div class="cap">Início</div>
+      </div>
+      <div class="shot">
+        <div class="phone o1"><div class="screen">
+          <div class="hud"><div class="brand"><svg width="18" height="18" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#a78bfa" stroke-width="5"/><text x="32" y="44" font-family="Inter,sans-serif" font-weight="900" font-size="32" fill="#a78bfa" text-anchor="middle">?</text></svg><span>PLACAR 02</span></div><span class="ficha">FICHA 03/12</span></div>
+          <div class="pips"><div class="pip ok"></div><div class="pip ok"></div><div class="pip cur"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+          <div class="streak">SEQUÊNCIA ×2</div>
+          <div class="card">
+            <span class="hint up">↑ CHEIRA MAL</span>
+            <q>Foi Jair Bolsonaro quem elevou o Bolsa Família para no mínimo R$ 600. Antes, era R$ 75 para um, R$ 100 para outro, em média R$ 190: Bolsonaro triplicou esse valor.</q>
+            <span class="hint l">← MENTIRA</span><span class="hint r">VERDADE →</span>
+          </div>
+          <div class="ctl">
+            <div class="btn m"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square"><path d="M5 5l14 14M19 5L5 19"/></svg>MENTIRA</div>
+            <div class="btn c"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square"><path d="M8 9a4 4 0 1 1 6 3.5c-1.5.9-2 1.5-2 3"/><path d="M12 19v.5"/></svg>CHEIRA MAL</div>
+            <div class="btn v"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square"><path d="M4 12l5 5L20 6"/></svg>VERDADE</div>
+          </div>
+        </div></div>
+        <div class="cap">Jogo</div>
+      </div>
+      <div class="shot">
+        <div class="phone o1"><div class="screen dimmed">
+          <div class="hud"><div class="brand"><span>PLACAR 02</span></div><span class="ficha">FICHA 03/12</span></div>
+          <div class="pips"><div class="pip ok"></div><div class="pip ok"></div><div class="pip no"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+          <div class="card"><q>Foi Jair Bolsonaro quem elevou o Bolsa Família para no mínimo R$ 600…</q></div>
+          <div class="ctl"><div class="btn m dim">MENTIRA</div><div class="btn c dim">CHEIRA MAL</div><div class="btn v pressed">VERDADE</div></div>
+        </div>
+        <div class="sheet">
+          <div class="word m"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square"><path d="M5 5l14 14M19 5L5 19"/></svg>MENTIRA</div>
+          <div class="res">Você caiu nessa.</div>
+          <div class="who">Quem disse: Flávio Bolsonaro (PL), em entrevista à Globo</div>
+          <div class="q">"Foi Jair Bolsonaro quem elevou o Bolsa Família para no mínimo R$ 600…"</div>
+          <div class="ex">O piso de R$ 600 foi criado pelo Auxílio Brasil em 2022, ano eleitoral, com validade até dezembro; o valor médio anterior citado mistura programas diferentes. O Bolsa Família atual manteve o piso e somou adicionais por criança.</div>
+          <a>Ver a checagem (Aos Fatos, 16/10)</a>
+          <div class="cta">PRÓXIMA ▶</div>
+        </div></div>
+        <div class="cap">Veredito</div>
+      </div>
+      <div class="shot">
+        <div class="phone o1"><div class="screen">
+          <div class="hud"><div class="brand"><span>FIM DE JOGO</span></div><span class="ficha">12/12</span></div>
+          <div class="placar">
+            <div class="lbl">PLACAR</div>
+            <div class="big">7/12</div>
+            <div class="tier">ABRE O OLHO</div>
+            <p>Você percebeu o que não era verdade, mas errou o grau em 3: trocou mentira por enganoso, ou o contrário.</p>
+            <div class="rec"><div>ESQUERDA<b>4/6</b></div><div>DIREITA<b>3/6</b></div></div>
+            <p>A comparação com outros jogadores aparece a partir de 100 jogadas.</p>
+          </div>
+          <div class="cta">▶ NOVA FICHA · CONTINUAR</div>
+          <div class="cta ghost">COMPARTILHAR PLACAR</div>
+        </div></div>
+        <div class="cap">Placar</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Direção 2 ============ -->
+  <section class="dir" id="d2">
+    <div class="dir-head"><h2>2 · Letreiro</h2><span class="tag">claro · letras de letreiro · carimbo como marca</span></div>
+    <ul class="why">
+      <li>Papel quente, contorno preto grosso e sombra deslocada, como letreiro pintado à mão e cartaz de rua. Os botões de pressionar são os mesmos do fliperama.</li>
+      <li>O carimbo vira o gesto da marca: o veredito é carimbado em cima do cartão, e o placar é uma ficha de fliperama com furos nas laterais.</li>
+      <li>A fonte de letreiro (Bungee) só em títulos e rótulos; o corpo é Atkinson Hyperlegible, feita para legibilidade. Acentos cobertos.</li>
+      <li>O logo passa de vermelho para tinta escura. É a direção que fica melhor no tema claro; o escuro vira tinta sobre papel-escuro.</li>
+    </ul>
+    <div class="phones">
+      <div class="shot">
+        <div class="phone o2"><div class="screen">
+          <div class="ticket"><span>CAIU NESSA?</span><small>INSIRA A FICHA</small></div>
+          <div class="home">
+            <div class="board">
+              <svg width="54" height="54" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#1b1540" stroke-width="5"/><circle cx="32" cy="32" r="19" fill="none" stroke="#1b1540" stroke-width="2"/><text x="32" y="43" font-family="Bungee,Impact,sans-serif" font-size="26" fill="#1b1540" text-anchor="middle">?</text></svg>
+              <div class="title">CAIU NESSA?</div>
+              <p>12 afirmações da eleição. Você diz se é verdade, mentira ou se isso cheira mal. No fim, descobre em quantas caiu.</p>
+            </div>
+            <div class="cta">COMEÇAR</div>
+            <div class="hint2">← MENTIRA · ↑ CHEIRA MAL · VERDADE →<br>ARRASTE O CARTÃO OU TOQUE</div>
+            <a>Como escolhemos as afirmações</a>
+          </div>
+        </div></div>
+        <div class="cap">Início</div>
+      </div>
+      <div class="shot">
+        <div class="phone o2"><div class="screen">
+          <div class="ticket"><span class="num">FICHA 03<span style="font-size:11px">/12</span></span><small>PLACAR 02</small></div>
+          <div class="stamps"><div class="st ok"></div><div class="st ok"></div><div class="st cur"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div></div>
+          <div class="card">
+            <span class="hint up">↑ CHEIRA MAL</span>
+            <q>Foi Jair Bolsonaro quem elevou o Bolsa Família para no mínimo R$ 600. Antes, era R$ 75 para um, R$ 100 para outro, em média R$ 190: Bolsonaro triplicou esse valor.</q>
+            <span class="hint l">← MENTIRA</span><span class="hint r">VERDADE →</span>
+          </div>
+          <div class="ctl">
+            <div class="btn m"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square"><path d="M5 5l14 14M19 5L5 19"/></svg>MENTIRA</div>
+            <div class="btn c"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square"><path d="M8 9a4 4 0 1 1 6 3.5c-1.5.9-2 1.5-2 3"/><path d="M12 19v.5"/></svg>CHEIRA MAL</div>
+            <div class="btn v"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square"><path d="M4 12l5 5L20 6"/></svg>VERDADE</div>
+          </div>
+        </div></div>
+        <div class="cap">Jogo</div>
+      </div>
+      <div class="shot">
+        <div class="phone o2"><div class="screen dimmed">
+          <div class="ticket"><span class="num">FICHA 03<span style="font-size:11px">/12</span></span><small>PLACAR 02</small></div>
+          <div class="stamps"><div class="st ok"></div><div class="st ok"></div><div class="st no"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div><div class="st"></div></div>
+          <div class="card"><div class="carimbo">MENTIRA</div><q>Foi Jair Bolsonaro quem elevou o Bolsa Família para no mínimo R$ 600…</q></div>
+          <div class="ctl"><div class="btn m dim">MENTIRA</div><div class="btn c dim">CHEIRA MAL</div><div class="btn v pressed">VERDADE</div></div>
+        </div>
+        <div class="sheet">
+          <div class="res">Você caiu nessa.</div>
+          <div class="who">Quem disse: Flávio Bolsonaro (PL), em entrevista à Globo</div>
+          <div class="q">"Foi Jair Bolsonaro quem elevou o Bolsa Família para no mínimo R$ 600…"</div>
+          <div class="ex">O piso de R$ 600 foi criado pelo Auxílio Brasil em 2022, ano eleitoral, com validade até dezembro; o valor médio anterior citado mistura programas diferentes. O Bolsa Família atual manteve o piso e somou adicionais por criança.</div>
+          <a>Ver a checagem (Aos Fatos, 16/10)</a>
+          <div class="cta">PRÓXIMA</div>
+        </div></div>
+        <div class="cap">Veredito</div>
+      </div>
+      <div class="shot">
+        <div class="phone o2"><div class="screen">
+          <div class="ticket"><span>FIM DE JOGO</span><small>12 DE 12</small></div>
+          <div class="placar">
+            <div class="lbl">PLACAR</div>
+            <div class="big">7/12</div>
+            <div class="tier">ABRE O OLHO</div>
+            <p>Você percebeu o que não era verdade, mas errou o grau em 3: trocou mentira por enganoso, ou o contrário.</p>
+            <p>Errou 2 da esquerda e 3 da direita. A comparação com outros jogadores aparece a partir de 100 jogadas.</p>
+          </div>
+          <div class="cta">NOVA FICHA · CONTINUAR</div>
+          <div class="cta ghost">COMPARTILHAR PLACAR</div>
+        </div></div>
+        <div class="cap">Placar</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pick">
+    <h2>Qual direção seguimos?</h2>
+    <p class="lead">Clique numa opção. Dá para misturar: por exemplo, o layout e a ficha da 2 com as cores da 1.</p>
+    <div class="options">
+      <div class="option" role="button" tabindex="0" data-choice="fliperama" onclick="if(typeof toggleSelect==='function')toggleSelect(this);else this.classList.toggle('selected')"><div class="letter">1</div><div><h3>Fliperama Noite</h3><p>Escuro, fonte pixel no placar, painel de botões. Mais "jogo".</p></div></div>
+      <div class="option" role="button" tabindex="0" data-choice="letreiro" onclick="if(typeof toggleSelect==='function')toggleSelect(this);else this.classList.toggle('selected')"><div class="letter">2</div><div><h3>Letreiro</h3><p>Claro, letras de letreiro, carimbo como marca. Mais "Brasil".</p></div></div>
+      <div class="option" role="button" tabindex="0" data-choice="mistura" onclick="if(typeof toggleSelect==='function')toggleSelect(this);else this.classList.toggle('selected')"><div class="letter">+</div><div><h3>Misturar</h3><p>Diga no terminal o que pegar de cada uma.</p></div></div>
+    </div>
+    <ul class="notes">
+      <li>O que as duas mudam de verdade: layout em três zonas (placar, cartão, painel), vereditos ciano/magenta/laranja com ícone, botões na ordem dos gestos, cópia de fliperama, logo sem vermelho.</li>
+      <li>O que as duas evitam, pela pesquisa: scanlines e brilho neon em texto (ilegível no celular), fonte pixel em texto corrido, vidas ou "perdeu", cores de partido, bandeira e verde-amarelo, marcas de programas de TV.</li>
+      <li>Contraste já conferido: texto acima de 14:1 e cada veredito acima de 4,7:1 nos dois temas.</li>
+    </ul>
+  </section>
+</div>
+</body>
+</html>
