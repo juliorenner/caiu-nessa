@@ -62,6 +62,8 @@ const esquemaAfirmacao = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/, { error: 'data_checagem deve estar no formato YYYY-MM-DD' }),
 })
 
+export const afirmacaoSchema = esquemaAfirmacao
+
 const esquemaAfirmacoes = z
   .array(esquemaAfirmacao)
   .length(TOTAL_AFIRMACOES, { error: `devem existir exatamente ${TOTAL_AFIRMACOES} afirmações` })

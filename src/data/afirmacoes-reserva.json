@@ -1,0 +1,145 @@
+[
+  {
+    "id": "e7",
+    "texto": "O governo de Lula criou o MEI, e há 17,5 milhões de MEIs no Brasil.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), no debate da Band",
+    "veredito": true,
+    "explicacao": "Segundo o governo federal, há 17,56 milhões de microempreendedores individuais ativos. A figura do MEI foi criada em 2008, no segundo mandato de Lula, que sancionou um projeto do deputado Antônio Carlos de Mendes Thame (PV).",
+    "fonte_nome": "Estadão Verifica",
+    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "data_checagem": "2026-10-18"
+  },
+  {
+    "id": "e8",
+    "texto": "O governo já devolveu R$ 3,5 bilhões aos afetados por descontos irregulares no INSS.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), no debate da Band",
+    "veredito": true,
+    "explicacao": "Dados da Dataprev, confirmados pelo INSS, indicam que o governo já pagou R$ 3,52 bilhões a 5 milhões de aposentados e pensionistas que tiveram descontos indevidos em seus benefícios.",
+    "fonte_nome": "Estadão Verifica",
+    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "data_checagem": "2026-10-18"
+  },
+  {
+    "id": "e9",
+    "texto": "A economia, você lembra, que nós tivemos que fazer uma PEC da transição para começar governando antes de eu tomar posse, porque não tinha dinheiro para nada.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), em entrevista à TV Globo",
+    "veredito": true,
+    "explicacao": "O Congresso aprovou a PEC da Transição em dezembro de 2022, antes da posse de Lula, ampliando o teto de gastos em R$ 145 bilhões para 2023. A medida financiou despesas que não estavam integralmente previstas no Orçamento enviado pelo governo anterior, como o Bolsa Família de R$ 600.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
+    "data_checagem": "2026-10-15"
+  },
+  {
+    "id": "e10",
+    "texto": "Quando eu tomei posse, nós tínhamos 78% da população endividada.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), em entrevista à TV Globo",
+    "veredito": true,
+    "explicacao": "Segundo a pesquisa da CNC, 77,9% das famílias se declararam endividadas em dezembro de 2022. A agência ressalva que o percentual subiu durante o atual mandato e chegou a 81,7% em setembro de 2026.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
+    "data_checagem": "2026-10-15"
+  },
+  {
+    "id": "e11",
+    "texto": "A inflação é a menor inflação acumulada em quatro anos.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), em entrevista ao podcast Flow",
+    "veredito": true,
+    "explicacao": "Segundo o IBGE, a inflação acumulada entre janeiro de 2023 e agosto de 2026 foi de 17,9%, o menor percentual para o período equivalente de um mandato presidencial desde o início do Plano Real, em 1994.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-entrevista-lula-ao-flow/",
+    "data_checagem": "2026-10-01"
+  },
+  {
+    "id": "e12",
+    "texto": "Foram dez ministérios desmontados [quando Bolsonaro tomou posse].",
+    "lado": "esquerda",
+    "autor": "Lula (PT), em entrevista à TV Globo",
+    "veredito": true,
+    "explicacao": "Dez pastas foram extintas no início do governo Bolsonaro, em 2019, entre elas Cidades, Cultura, Esportes, Fazenda, Planejamento e Trabalho. Muitas foram incorporadas a outros ministérios.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
+    "data_checagem": "2026-10-15"
+  },
+  {
+    "id": "e13",
+    "texto": "[Quando Bolsonaro aumentou o Auxílio Brasil para R$ 600 antes das eleições] O que eu disse na época? Que estava certo, que tinha que fazer mesmo.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), em entrevista ao podcast Flow",
+    "veredito": false,
+    "explicacao": "Não é verdade que Lula tenha dito em 2022 que o aumento estava certo. Na época, ele e aliados argumentaram que a medida tinha motivação eleitoral, e depois da eleição a campanha petista usou o aumento como argumento em ação no TSE contra Bolsonaro.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-entrevista-lula-ao-flow/",
+    "data_checagem": "2026-10-01"
+  },
+  {
+    "id": "d7",
+    "texto": "Cerca de 32 milhões que não votaram nas últimas eleições.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), em live no YouTube",
+    "veredito": true,
+    "explicacao": "Segundo o TSE, 20,9% do eleitorado não compareceu para votar na eleição presidencial de 2022, cerca de 32 milhões de pessoas. Foi o maior número de abstenções desde 1998.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-live-flavio-bolsonaro/",
+    "data_checagem": "2026-10-02"
+  },
+  {
+    "id": "d8",
+    "texto": "A Polícia Federal até agora não foi atrás do seu filho.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), no debate da Band",
+    "veredito": false,
+    "explicacao": "Fábio Luís Lula da Silva, filho do presidente, é alvo de três inquéritos autorizados pelo STF a pedido da Polícia Federal, abertos entre julho e agosto de 2026, que apuram suspeitas de tráfico de influência e corrupção.",
+    "fonte_nome": "G1 Fato ou Fake",
+    "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
+    "data_checagem": "2026-10-19"
+  },
+  {
+    "id": "d9",
+    "texto": "Você [Lula] que é o pai do tigrinho.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), em live no YouTube",
+    "veredito": false,
+    "explicacao": "As apostas esportivas online foram legalizadas em dezembro de 2018, por lei sancionada por Michel Temer, sem regulamentação. A regulamentação ficou para o governo Lula, que a aprovou em 2023 com a Lei das Bets.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-live-flavio-bolsonaro/",
+    "data_checagem": "2026-10-02"
+  },
+  {
+    "id": "d10",
+    "texto": "Nós estamos no Rio de Janeiro, e fomos impedidos [de ir ao debate] por causa de uma censura e uma interferência do Poder Judiciário.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), em live no YouTube",
+    "veredito": false,
+    "explicacao": "Nenhuma decisão judicial impediu Flávio de participar do debate da TV Globo. Duas decisões alteraram regras do programa, e ele anunciou que não iria; com a desistência, a emissora cancelou o debate.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-live-flavio-bolsonaro/",
+    "data_checagem": "2026-10-02"
+  },
+  {
+    "id": "d11",
+    "texto": "Olha o local onde o ex-ministro da Justiça de Lula entrou sem nenhum policial, sem nenhum segurança, numa favela aqui no Rio de Janeiro, chamada Complexo da Maré.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
+    "veredito": false,
+    "explicacao": "Em março de 2023, Flávio Dino visitou o Complexo da Maré a convite de uma ONG. A Polícia Federal e a Polícia Rodoviária Federal confirmaram ter participado da segurança da comitiva, com apoio das polícias Civil e Militar do Rio.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-flavio-bolsonaro-globo-segundo-turno/",
+    "data_checagem": "2026-10-16"
+  },
+  {
+    "id": "d12",
+    "texto": "[O áudio de Vorcaro sobre o financiamento de um documentário sobre Lula] está confirmado pela Polícia Federal.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
+    "veredito": false,
+    "explicacao": "No dia da publicação do áudio pela revista Veja, a Polícia Federal afirmou que Daniel Vorcaro nunca prestou depoimento com aquele conteúdo nem entregou documentos sobre o assunto. A PGR e a defesa de Vorcaro também contestaram a informação.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-flavio-bolsonaro-globo-segundo-turno/",
+    "data_checagem": "2026-10-16"
+  }
+]
