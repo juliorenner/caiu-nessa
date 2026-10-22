@@ -11,5 +11,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['tests/setup.ts'],
+    // Com paralelismo total, as instâncias de PGlite estouram o timeout de 5 s.
+    maxWorkers: 2,
   },
 })

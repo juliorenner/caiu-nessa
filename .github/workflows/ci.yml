@@ -28,8 +28,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
-      # Os testes com PGlite ficam instáveis com paralelismo total no runner.
-      - run: npm test -- --maxWorkers=2
+      - run: npm test
       - run: npm run build
 
   auditoria:
