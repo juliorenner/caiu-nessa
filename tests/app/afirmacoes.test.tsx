@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import Afirmacoes from '@/app/afirmacoes/page'
 import { ResultadoFinal } from '@/components/ResultadoFinal'
-import { carregarAfirmacoes } from '@/lib/afirmacoes'
+import { carregarAfirmacoes, carregarReserva } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
 
 describe('página /afirmacoes', () => {
@@ -11,7 +11,8 @@ describe('página /afirmacoes', () => {
     render(<Afirmacoes />)
 
     expect(screen.getByRole('heading', { level: 1, name: 'As afirmações do jogo' })).toBeInTheDocument()
-    const cards = screen.getAllByRole('article')
+    const secao = screen.getByRole('region', { name: 'Em jogo agora' })
+    const cards = within(secao).getAllByRole('article')
     expect(cards).toHaveLength(12)
 
     cards.forEach((card, i) => {
@@ -37,12 +38,22 @@ describe('página /afirmacoes', () => {
     }
   })
 
-  it('aponta a reserva de afirmações no repositório', () => {
+  it('separa as seções "Em jogo agora" e "Na reserva"', () => {
     render(<Afirmacoes />)
-    expect(screen.getByRole('link', { name: 'repositório' })).toHaveAttribute(
-      'href',
-      'https://github.com/juliorenner/caiu-nessa/blob/main/src/data/afirmacoes-reserva.json',
-    )
+    expect(screen.getByRole('heading', { level: 2, name: 'Em jogo agora' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 2, name: 'Na reserva' })).toBeInTheDocument()
+  })
+
+  it('lista todas as afirmações, em jogo e na reserva, cada uma com o link da sua checagem', () => {
+    const todas = [...carregarAfirmacoes(), ...carregarReserva()]
+    render(<Afirmacoes />)
+
+    const cards = screen.getAllByRole('article')
+    expect(cards).toHaveLength(todas.length)
+    cards.forEach((card, i) => {
+      expect(within(card).getByText(todas[i].texto)).toBeInTheDocument()
+      expect(within(card).getByRole('link')).toHaveAttribute('href', todas[i].fonte_url)
+    })
   })
 })
 

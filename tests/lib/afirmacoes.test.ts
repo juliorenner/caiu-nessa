@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { embaralhar, fonteEhPermitida, validarAfirmacoes } from '@/lib/afirmacoes'
+import reserva from '@/data/afirmacoes-reserva.json'
+import {
+  afirmacaoSchema,
+  carregarAfirmacoes,
+  carregarReserva,
+  embaralhar,
+  fonteEhPermitida,
+  validarAfirmacoes,
+} from '@/lib/afirmacoes'
 import { afirmacoesValidas } from '../fixtures/afirmacoes-validas'
 
 describe('validarAfirmacoes', () => {
@@ -55,5 +63,18 @@ describe('embaralhar', () => {
     const saida = embaralhar(entrada, () => 0.5)
     expect(saida).toEqual([1, 4, 2, 3])
     expect(saida).toHaveLength(4); expect(saida.sort()).toEqual([1, 2, 3, 4]); expect(entrada).toEqual([1, 2, 3, 4])
+  })
+})
+
+describe('carregarReserva', () => {
+  it('devolve a reserva na ordem do JSON, cada item válido pelo esquema', () => {
+    const itens = carregarReserva()
+    expect(itens).toEqual(reserva)
+    for (const a of itens) expect(afirmacaoSchema.safeParse(a).success).toBe(true)
+  })
+
+  it('não repete nenhum id do conjunto em jogo', () => {
+    const emJogo = new Set(carregarAfirmacoes().map((a) => a.id))
+    for (const { id } of carregarReserva()) expect(emJogo.has(id)).toBe(false)
   })
 })
