@@ -17,6 +17,7 @@ it('confundir falso com enganoso é erro, não acreditou', () => {
 it('ehQuase só para falso↔enganoso', () => {
   expect(ehQuase('falso', 'enganoso')).toBe(true); expect(ehQuase('enganoso', 'falso')).toBe(true)
   expect(ehQuase('verdadeiro', 'falso')).toBe(false); expect(ehQuase('falso', 'falso')).toBe(false)
+  expect(ehQuase('verdadeiro', 'enganoso')).toBe(false); expect(ehQuase('enganoso', 'verdadeiro')).toBe(false)
 })
 it('resposta ausente conta como erro', () => {
   const { e1: _omitida, ...semE1 } = todasCertas

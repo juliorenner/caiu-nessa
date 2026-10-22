@@ -34,10 +34,12 @@ describe('obterEstatisticas', () => {
 
   it('ignora ids antigos nas respostas e dá 0 para id sem respostas', async () => {
     const db = await criarDbTeste()
-    await inserirJogadas(db, 100, () => ({ respostas: { ...todasCertas, removida: 'falso' } }))
+    const { e1: _, ...semE1 } = todasCertas
+    await inserirJogadas(db, 100, () => ({ respostas: { ...semE1, removida: 'falso' } }))
     const e = (await obterEstatisticas(db, afirmacoesValidas))!
     expect(e.erroPorAfirmacao).not.toHaveProperty('removida')
     expect(Object.keys(e.erroPorAfirmacao)).toHaveLength(12)
+    expect(e.erroPorAfirmacao.e1).toBe(0)
   })
 })
 

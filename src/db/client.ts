@@ -7,6 +7,7 @@ import * as schema from './schema'
 export type Db = PgDatabase<PgQueryResultHKT, typeof schema>
 
 let db: Promise<Db> | undefined
+let fecharPglite: (() => Promise<void>) | undefined
 
 // DATABASE_URL=file:<caminho> abre um PGlite local (desenvolvimento, sem serviços externos);
 // qualquer outro valor usa o Neon. O caminho é relativo ao diretório do projeto.
@@ -29,12 +30,19 @@ async function abrirPglite(caminho: string): Promise<Db> {
   const { PGlite } = await import('@electric-sql/pglite')
   const { drizzle: drizzlePglite } = await import('drizzle-orm/pglite')
   const { migrate } = await import('drizzle-orm/pglite/migrator')
-  const instancia = drizzlePglite(new PGlite(caminho), { schema })
+  const cliente = new PGlite(caminho)
+  fecharPglite = () => cliente.close()
+  const instancia = drizzlePglite(cliente, { schema })
   await migrate(instancia, { migrationsFolder: path.resolve(process.cwd(), 'drizzle') })
   return instancia
 }
 
-/** Somente para testes: descarta a instância memoizada. */
-export function resetDbParaTestes(): void {
+/** Somente para testes: descarta a instância memoizada e fecha o PGlite aberto, se houver. */
+export async function resetDbParaTestes(): Promise<void> {
+  const pendente = db
   db = undefined
+  await pendente?.catch(() => undefined)
+  const fechar = fecharPglite
+  fecharPglite = undefined
+  await fechar?.()
 }

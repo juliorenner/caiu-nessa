@@ -1,4 +1,4 @@
-import { avg, count, sql } from 'drizzle-orm'
+import { sql } from 'drizzle-orm'
 import type { Db } from '@/db/client'
 import { jogadas } from '@/db/schema'
 import type { Afirmacao } from '@/lib/afirmacoes'
@@ -19,33 +19,47 @@ function umaCasa(valor: number): number {
   return Math.round(valor * 10) / 10
 }
 
+interface LinhaAgregada {
+  total: number
+  media_esquerda: string | number | null
+  media_direita: string | number | null
+  histograma: { acertos: number; quantidade: number }[]
+  por_resposta: { chave: string; valor: string; quantidade: number }[]
+}
+
 export async function obterEstatisticas(db: Db, afirmacoes: Afirmacao[]): Promise<Estatisticas | null> {
-  const [resumo] = await db
-    .select({
-      total: count(),
-      mediaEsquerda: avg(jogadas.acertosEsquerda),
-      mediaDireita: avg(jogadas.acertosDireita),
-    })
-    .from(jogadas)
-  const totalJogadas = Number(resumo.total)
+  // Um único statement: todos os agregados leem o mesmo snapshot de jogadas.
+  const resultado = await db.execute(sql`
+    with base as (
+      select acertos, acertos_esquerda, acertos_direita, respostas from ${jogadas}
+    )
+    select
+      (select count(*) from base)::int as total,
+      (select avg(acertos_esquerda) from base) as media_esquerda,
+      (select avg(acertos_direita) from base) as media_direita,
+      (select coalesce(json_agg(json_build_object('acertos', acertos, 'quantidade', quantidade)), '[]'::json)
+        from (select acertos, count(*)::int as quantidade from base group by acertos) h) as histograma,
+      (select coalesce(json_agg(json_build_object('chave', chave, 'valor', valor, 'quantidade', quantidade)), '[]'::json)
+        from (
+          select kv.chave, kv.valor, count(*)::int as quantidade
+          from base, jsonb_each_text(base.respostas) as kv(chave, valor)
+          group by kv.chave, kv.valor
+        ) r) as por_resposta`)
+  // Db é genérico no driver (tipo do resultado desconhecido); neon-http e PGlite devolvem { rows } com json já parseado.
+  const {
+    rows: [linha],
+  } = resultado as { rows: LinhaAgregada[] }
+  const totalJogadas = Number(linha.total)
   if (totalJogadas < MINIMO_JOGADAS) return null
 
-  const porAcertos = await db
-    .select({ acertos: jogadas.acertos, quantidade: count() })
-    .from(jogadas)
-    .groupBy(jogadas.acertos)
   const histograma = Array<number>(MAXIMO_ACERTOS + 1).fill(0)
-  for (const { acertos, quantidade } of porAcertos) {
+  for (const { acertos, quantidade } of linha.histograma) {
     if (acertos >= 0 && acertos <= MAXIMO_ACERTOS) histograma[acertos] = Number(quantidade)
   }
 
-  const porResposta = await db
-    .select({ chave: sql<string>`kv.chave`, valor: sql<string>`kv.valor`, quantidade: count() })
-    .from(sql`${jogadas}, jsonb_each_text(${jogadas.respostas}) as kv(chave, valor)`)
-    .groupBy(sql`kv.chave`, sql`kv.valor`)
   const vereditoPorId = new Map(afirmacoes.map(a => [a.id, a.veredito]))
   const erros = new Map<string, number>()
-  for (const { chave, valor, quantidade } of porResposta) {
+  for (const { chave, valor, quantidade } of linha.por_resposta) {
     const veredito = vereditoPorId.get(chave)
     if (veredito === undefined || valor === veredito) continue
     erros.set(chave, (erros.get(chave) ?? 0) + Number(quantidade))
@@ -58,8 +72,8 @@ export async function obterEstatisticas(db: Db, afirmacoes: Afirmacao[]): Promis
     totalJogadas,
     histograma,
     erroPorAfirmacao,
-    mediaEsquerda: umaCasa(Number(resumo.mediaEsquerda)),
-    mediaDireita: umaCasa(Number(resumo.mediaDireita)),
+    mediaEsquerda: umaCasa(Number(linha.media_esquerda)),
+    mediaDireita: umaCasa(Number(linha.media_direita)),
   }
 }
 

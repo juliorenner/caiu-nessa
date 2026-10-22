@@ -1,3 +1,4 @@
+import { count } from 'drizzle-orm'
 import { describe, expect, it } from 'vitest'
 import { jogadas } from '@/db/schema'
 import { hashIp } from '@/lib/rate-limit'
@@ -44,6 +45,8 @@ describe('processarResultado', () => {
     const d = await deps()
     for (let i = 0; i < 5; i++) expect((await processarResultado({ respostas: todasCertas }, cab, d)).status).toBe(200)
     expect((await processarResultado({ respostas: todasCertas }, cab, d)).status).toBe(429)
+    const [{ linhas }] = await d.db.select({ linhas: count() }).from(jogadas)
+    expect(linhas).toBe(5)
     expect(
       (await processarResultado({ respostas: todasCertas }, new Headers({ 'x-forwarded-for': '8.8.8.8' }), d)).status,
     ).toBe(200)

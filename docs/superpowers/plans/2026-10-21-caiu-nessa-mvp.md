@@ -336,7 +336,7 @@ it('porcentagem(0, 0) é 0', () => expect(porcentagem(0, 0)).toBe(0))
   export const jogadas = pgTable('jogadas', {...})  // columns below
   // src/db/client.ts
   export type Db = PgDatabase<PgQueryResultHKT, typeof schema>
-  export function getDb(): Db   // neon-http drizzle on process.env.DATABASE_URL, memoized; throws if unset
+  export function getDb(): Promise<Db>   // (async since Task 7b) neon-http drizzle on process.env.DATABASE_URL, memoized; throws if unset
   // tests/helpers/db.ts
   export async function criarDbTeste(): Promise<Db>  // fresh in-memory PGlite + drizzle migrate from ./drizzle
   ```

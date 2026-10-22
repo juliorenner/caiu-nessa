@@ -8,13 +8,13 @@ import { jogadas } from '@/db/schema'
 const urlOriginal = process.env.DATABASE_URL
 let dirTemp: string
 
-beforeEach(() => {
-  resetDbParaTestes()
+beforeEach(async () => {
+  await resetDbParaTestes()
   dirTemp = fs.mkdtempSync(path.join(os.tmpdir(), 'caiu-nessa-db-'))
 })
 
-afterEach(() => {
-  resetDbParaTestes()
+afterEach(async () => {
+  await resetDbParaTestes()
   if (urlOriginal === undefined) delete process.env.DATABASE_URL
   else process.env.DATABASE_URL = urlOriginal
   fs.rmSync(dirTemp, { recursive: true, force: true })
@@ -35,6 +35,13 @@ it('com DATABASE_URL file: abre um PGlite persistente com as migrations aplicada
   expect(linhas).toHaveLength(1)
   expect(linhas[0].ipHash).toBe('abc')
   expect(fs.existsSync(path.join(dirTemp, 'dev.pglite'))).toBe(true)
+
+  await resetDbParaTestes()
+  const reaberto = await getDb()
+  expect(reaberto).not.toBe(db)
+  const persistidas = await reaberto.select().from(jogadas)
+  expect(persistidas).toHaveLength(1)
+  expect(persistidas[0].ipHash).toBe('abc')
 })
 
 it('chamadas concorrentes na primeira vez compartilham a mesma instância', async () => {
