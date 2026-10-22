@@ -127,7 +127,6 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
         Afirmação {indice + 1} de {TOTAL_AFIRMACOES}
       </p>
       <blockquote className="mt-3 text-2xl leading-snug font-semibold text-balance">{afirmacao.texto}</blockquote>
-      <p className="mt-3 text-base text-stone-700">Quem disse: {afirmacao.autor}</p>
       <div className="mt-6 flex flex-col gap-3">
         {OPCOES.map(({ valor, rotulo, cor }) => (
           <button

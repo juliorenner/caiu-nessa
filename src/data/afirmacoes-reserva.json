@@ -2,6 +2,7 @@
   {
     "id": "3c13f8ef",
     "texto": "O governo já devolveu R$ 3,5 bilhões aos afetados por descontos irregulares no INSS.",
+    "citacao": "O governo já devolveu R$ 3,5 bilhões aos afetados por descontos irregulares no INSS.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
@@ -12,7 +13,8 @@
   },
   {
     "id": "8b01a7f6",
-    "texto": "A economia, você lembra, que nós tivemos que fazer uma PEC da transição para começar governando antes de eu tomar posse, porque não tinha dinheiro para nada.",
+    "texto": "Lula precisou fazer uma PEC da Transição para começar a governar antes de tomar posse, porque não havia dinheiro para nada.",
+    "citacao": "A economia, você lembra, que nós tivemos que fazer uma PEC da transição para começar governando antes de eu tomar posse, porque não tinha dinheiro para nada.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "verdadeiro",
@@ -23,7 +25,8 @@
   },
   {
     "id": "0d095310",
-    "texto": "Quando eu tomei posse, nós tínhamos 78% da população endividada.",
+    "texto": "Quando Lula tomou posse em 2023, 78% da população estava endividada.",
+    "citacao": "Quando eu tomei posse, nós tínhamos 78% da população endividada.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "verdadeiro",
@@ -35,7 +38,8 @@
   },
   {
     "id": "4372b28f",
-    "texto": "A inflação é a menor inflação acumulada em quatro anos.",
+    "texto": "A inflação acumulada no atual governo Lula é a menor já registrada em quatro anos de mandato.",
+    "citacao": "A inflação é a menor inflação acumulada em quatro anos.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista ao podcast Flow",
     "veredito": "verdadeiro",
@@ -46,7 +50,8 @@
   },
   {
     "id": "cb76e4b6",
-    "texto": "Foram dez ministérios desmontados [quando Bolsonaro tomou posse].",
+    "texto": "Dez ministérios foram desmontados quando Jair Bolsonaro tomou posse.",
+    "citacao": "Foram dez ministérios desmontados [quando Bolsonaro tomou posse].",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "verdadeiro",
@@ -57,7 +62,8 @@
   },
   {
     "id": "b36811f1",
-    "texto": "[Quando Bolsonaro aumentou o Auxílio Brasil para R$ 600 antes das eleições] O que eu disse na época? Que estava certo, que tinha que fazer mesmo.",
+    "texto": "Quando Jair Bolsonaro aumentou o Auxílio Brasil para R$ 600 antes das eleições de 2022, Lula disse na época que a medida estava certa e que tinha que ser feita.",
+    "citacao": "[Quando Bolsonaro aumentou o Auxílio Brasil para R$ 600 antes das eleições] O que eu disse na época? Que estava certo, que tinha que fazer mesmo.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista ao podcast Flow",
     "veredito": "falso",
@@ -68,7 +74,8 @@
   },
   {
     "id": "a88285e0",
-    "texto": "O Brasil só cresceu acima de 3%, depois que eu deixei a Presidência, quando eu voltei.",
+    "texto": "Depois que Lula deixou a Presidência, o Brasil só voltou a crescer acima de 3% quando ele voltou ao cargo.",
+    "citacao": "O Brasil só cresceu acima de 3%, depois que eu deixei a Presidência, quando eu voltei.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista ao podcast Flow",
     "veredito": "falso",
@@ -79,7 +86,8 @@
   },
   {
     "id": "d07912c0",
-    "texto": "[No fim do meu mandato, em 2010,] a gente era a sétima economia do mundo.",
+    "texto": "No fim do segundo mandato de Lula, em 2010, o Brasil era a sétima economia do mundo.",
+    "citacao": "[No fim do meu mandato, em 2010,] a gente era a sétima economia do mundo.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "verdadeiro",
@@ -91,7 +99,8 @@
   },
   {
     "id": "6bf3e590",
-    "texto": "Embora a gente tenha perdido 9% na relação comercial com os Estados Unidos, nós crescemos 20% com a China.",
+    "texto": "Embora tenha perdido 9% na relação comercial com os Estados Unidos, o Brasil cresceu 20% com a China.",
+    "citacao": "Embora a gente tenha perdido 9% na relação comercial com os Estados Unidos, nós crescemos 20% com a China.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "enganoso",
@@ -103,6 +112,7 @@
   {
     "id": "226b7d8c",
     "texto": "Jair Bolsonaro mentia 11 vezes por dia.",
+    "citacao": "Jair Bolsonaro mentia 11 vezes por dia.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "enganoso",
@@ -114,6 +124,7 @@
   {
     "id": "09406cc5",
     "texto": "Quando Lula assumiu a Presidência em 2003, o Brasil devia US$ 30 bilhões ao FMI; ao fim de dois mandatos, o FMI estava pago e o país tinha reservas de US$ 270 bilhões.",
+    "citacao": "Quando Lula assumiu a Presidência em 2003, o Brasil devia US$ 30 bilhões ao FMI; ao fim de dois mandatos, o FMI estava pago e o país tinha reservas de US$ 270 bilhões.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
@@ -125,7 +136,8 @@
   },
   {
     "id": "912298e6",
-    "texto": "Essa dívida que o atual governo está deixando, de R$ 11 trilhões.",
+    "texto": "O governo Lula está deixando uma dívida de R$ 11 trilhões.",
+    "citacao": "Essa dívida que o atual governo está deixando, de R$ 11 trilhões.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "verdadeiro",
@@ -137,7 +149,8 @@
   },
   {
     "id": "068625bc",
-    "texto": "A Polícia Federal até agora não foi atrás do seu filho.",
+    "texto": "A Polícia Federal até agora não foi atrás do filho de Lula.",
+    "citacao": "A Polícia Federal até agora não foi atrás do seu filho.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
@@ -148,7 +161,8 @@
   },
   {
     "id": "6b98ca43",
-    "texto": "Você [Lula] que é o pai do tigrinho.",
+    "texto": "Lula é o responsável pela liberação do \"jogo do tigrinho\".",
+    "citacao": "Você [Lula] que é o pai do tigrinho.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em live no YouTube",
     "veredito": "falso",
@@ -159,7 +173,8 @@
   },
   {
     "id": "d8286620",
-    "texto": "Nós estamos no Rio de Janeiro, e fomos impedidos [de ir ao debate] por causa de uma censura e uma interferência do Poder Judiciário.",
+    "texto": "Flávio Bolsonaro foi impedido de ir ao debate da TV Globo por causa de censura e interferência do Poder Judiciário.",
+    "citacao": "Nós estamos no Rio de Janeiro, e fomos impedidos [de ir ao debate] por causa de uma censura e uma interferência do Poder Judiciário.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em live no YouTube",
     "veredito": "falso",
@@ -170,7 +185,8 @@
   },
   {
     "id": "125e9fc9",
-    "texto": "Olha o local onde o ex-ministro da Justiça de Lula entrou sem nenhum policial, sem nenhum segurança, numa favela aqui no Rio de Janeiro, chamada Complexo da Maré.",
+    "texto": "Flávio Dino, ex-ministro da Justiça de Lula, entrou no Complexo da Maré, favela do Rio de Janeiro, sem nenhum policial e sem nenhum segurança.",
+    "citacao": "Olha o local onde o ex-ministro da Justiça de Lula entrou sem nenhum policial, sem nenhum segurança, numa favela aqui no Rio de Janeiro, chamada Complexo da Maré.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
     "veredito": "falso",
@@ -181,7 +197,8 @@
   },
   {
     "id": "0458cba4",
-    "texto": "[O áudio de Vorcaro sobre o financiamento de um documentário sobre Lula] está confirmado pela Polícia Federal.",
+    "texto": "O áudio de Daniel Vorcaro sobre o financiamento de um documentário sobre Lula foi confirmado pela Polícia Federal.",
+    "citacao": "[O áudio de Vorcaro sobre o financiamento de um documentário sobre Lula] está confirmado pela Polícia Federal.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
     "veredito": "falso",
@@ -192,7 +209,8 @@
   },
   {
     "id": "ce1109ff",
-    "texto": "Só os penduricalhos, dos Três Poderes, se você for botar na ponta do lápis, são R$ 24 bilhões por ano.",
+    "texto": "Só os penduricalhos dos Três Poderes custam R$ 24 bilhões por ano.",
+    "citacao": "Só os penduricalhos, dos Três Poderes, se você for botar na ponta do lápis, são R$ 24 bilhões por ano.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
     "veredito": "verdadeiro",
@@ -204,7 +222,8 @@
   },
   {
     "id": "3715fbb7",
-    "texto": "Um governo que é recordista em criminalidade.",
+    "texto": "O governo Lula é recordista em criminalidade.",
+    "citacao": "Um governo que é recordista em criminalidade.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
     "veredito": "falso",
@@ -216,6 +235,7 @@
   {
     "id": "b96d3fc1",
     "texto": "Com a Lei Antifacção, aprovada no Congresso, os líderes das facções criminosas vão ficar 80 anos presos.",
+    "citacao": "Com a Lei Antifacção, aprovada no Congresso, os líderes das facções criminosas vão ficar 80 anos presos.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "enganoso",
@@ -228,6 +248,7 @@
   {
     "id": "483d6a7b",
     "texto": "O governo de Lula criou o MEI, e há 17,5 milhões de MEIs no Brasil.",
+    "citacao": "O governo de Lula criou o MEI, e há 17,5 milhões de MEIs no Brasil.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
@@ -238,7 +259,8 @@
   },
   {
     "id": "5fc452a2",
-    "texto": "Quando o Alexandre de Moraes foi indicado para ministro do Supremo, [o Flávio] era senador. Ele deve ter votado nele.",
+    "texto": "Flávio Bolsonaro era senador quando Alexandre de Moraes foi indicado ao Supremo e deve ter votado nele.",
+    "citacao": "Quando o Alexandre de Moraes foi indicado para ministro do Supremo, [o Flávio] era senador. Ele deve ter votado nele.",
     "lado": "esquerda",
     "autor": "Lula (PT)",
     "veredito": "falso",
@@ -249,7 +271,8 @@
   },
   {
     "id": "fb1c8e61",
-    "texto": "E tínhamos criado 22 milhões de empregos em oito anos.",
+    "texto": "Os dois primeiros governos de Lula criaram 22 milhões de empregos em oito anos.",
+    "citacao": "E tínhamos criado 22 milhões de empregos em oito anos.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "enganoso",
@@ -261,7 +284,8 @@
   },
   {
     "id": "b8b388ad",
-    "texto": "É por isso que nós conseguimos aprovar tudo [no Congresso].",
+    "texto": "O governo Lula conseguiu aprovar tudo no Congresso.",
+    "citacao": "É por isso que nós conseguimos aprovar tudo [no Congresso].",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "enganoso",
@@ -272,7 +296,8 @@
   },
   {
     "id": "66c41a5f",
-    "texto": "Cerca de 32 milhões que não votaram nas últimas eleições.",
+    "texto": "Cerca de 32 milhões de eleitores não votaram nas últimas eleições.",
+    "citacao": "Cerca de 32 milhões que não votaram nas últimas eleições.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em live no YouTube",
     "veredito": "verdadeiro",
@@ -283,7 +308,8 @@
   },
   {
     "id": "b2d99249",
-    "texto": "[Eu] nunca quis tirar nada disso [o número de identificação das munições].",
+    "texto": "Flávio Bolsonaro nunca quis tirar o número de identificação das munições.",
+    "citacao": "[Eu] nunca quis tirar nada disso [o número de identificação das munições].",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
@@ -295,6 +321,7 @@
   {
     "id": "01702d43",
     "texto": "O PT governou o País em 20 dos últimos 24 anos.",
+    "citacao": "O PT governou o País em 20 dos últimos 24 anos.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "enganoso",
@@ -306,6 +333,7 @@
   {
     "id": "4998ed8f",
     "texto": "8.000 empresas faliram em junho.",
+    "citacao": "8.000 empresas faliram em junho.",
     "lado": "direita",
     "autor": "Posts nas redes amplificados pelo senador Márcio Bittar (PL-AC), segundo o Aos Fatos",
     "veredito": "falso",
@@ -316,7 +344,8 @@
   },
   {
     "id": "bf0bc02b",
-    "texto": "[Lula] está dando emprego para pessoas que foram condenadas no Mensalão.",
+    "texto": "Lula está dando emprego para pessoas que foram condenadas no Mensalão.",
+    "citacao": "[Lula] está dando emprego para pessoas que foram condenadas no Mensalão.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",

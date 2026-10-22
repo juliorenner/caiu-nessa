@@ -41,6 +41,14 @@ describe('validarAfirmacoes', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, data_checagem: '01/10/2026' } : a)
     expect(() => validarAfirmacoes(alterada)).toThrow(/data_checagem/)
   })
+  it('rejeita item sem citacao', () => {
+    const { citacao: _citacao, ...semCitacao } = afirmacoesValidas[0]
+    expect(() => afirmacaoSchema.parse(semCitacao)).toThrow(/citacao/)
+  })
+  it('rejeita citacao com menos de 10 caracteres', () => {
+    const alterada = afirmacoesValidas.map(a => a.id === 'e2' ? { ...a, citacao: 'curta' } : a)
+    expect(() => validarAfirmacoes(alterada)).toThrow(/citacao/)
+  })
   it('rejeita observacao feita só de espaços', () => {
     const item = { ...afirmacoesValidas[0], observacao: ' '.repeat(25) }
     expect(() => afirmacaoSchema.parse(item)).toThrow(/observacao/)

@@ -53,6 +53,19 @@ describe('Quiz', () => {
     expect(screen.getByText('Texto do viés.')).toBeInTheDocument()
   })
 
+  it('esconde autor e citação na pergunta; mostra os dois no feedback', async () => {
+    const [primeira] = afirmacoesValidas
+    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    expect(screen.getByText(primeira.texto)).toBeInTheDocument()
+    expect(screen.queryByText(/Quem disse/)).not.toBeInTheDocument()
+    expect(screen.queryByText(primeira.autor, { exact: false })).not.toBeInTheDocument()
+    expect(screen.queryByText(primeira.citacao, { exact: false })).not.toBeInTheDocument()
+
+    await userEvent.setup().click(screen.getByRole('button', { name: 'VERDADE' }))
+    expect(screen.getByText(`Quem disse: ${primeira.autor}`)).toBeInTheDocument()
+    expect(screen.getByText(`“${primeira.citacao}”`)).toBeInTheDocument()
+  })
+
   it('sem embaralharFn, mostra as afirmações na ordem recebida', async () => {
     const user = userEvent.setup()
     const invertida = [...afirmacoesValidas].reverse()

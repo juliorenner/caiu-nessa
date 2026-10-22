@@ -17,6 +17,7 @@ function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
     <article className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
       <p className="text-lg font-semibold text-stone-900">{a.texto}</p>
       <p className="text-base text-stone-600">Quem disse: {a.autor}</p>
+      <blockquote className="border-l-4 border-stone-200 pl-3 text-base text-stone-600 italic">“{a.citacao}”</blockquote>
       <span className={SELO_VEREDITO[a.veredito]}>{ROTULO_VEREDITO[a.veredito]}</span>
       {a.observacao && <p className="text-base text-stone-600">{a.observacao}</p>}
       <p className="text-base text-stone-700">{a.explicacao}</p>

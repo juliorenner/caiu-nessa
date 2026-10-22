@@ -4,6 +4,7 @@ function criar(id: string, lado: Lado, veredito: Veredito): Afirmacao {
   return {
     id,
     texto: `Afirmação de teste ${id}`,
+    citacao: `Citação original de teste ${id}`,
     lado,
     autor: `Autor de teste ${id}`,
     veredito,
