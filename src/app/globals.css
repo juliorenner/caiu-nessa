@@ -1,16 +1,44 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-atkinson);
+  --font-letreiro: var(--font-bungee);
+  --font-letreiro-sombra: var(--font-bungee-shade);
 }
 
-/* Carimbo (claro) e Noite (escuro). O `dark:` do Tailwind segue prefers-color-scheme. */
+/* Letreiro (claro) e Letreiro noite (escuro). O `dark:` do Tailwind segue prefers-color-scheme. */
 @theme {
-  --color-fundo: #fbf7ef;
-  --color-fundo-escuro: #14121a;
+  --color-fundo: #fff3dc;
+  --color-fundo-escuro: #120f2b;
   --color-superficie: #ffffff;
-  --color-superficie-escura: #fdfcf9;
+  --color-tinta: #1b1540;
+  --color-secundario: #5a5479;
+  --color-secundario-escuro: #c9c2ea;
+  --color-papel: #ffe8b5;
+  --color-verdade: #1d4ed8;
+  --color-mentira: #be185d;
+  --color-cheira: #c2410c;
+  /* Vereditos como texto sobre o fundo escuro. */
+  --color-verdade-claro: #93c5fd;
+  --color-mentira-claro: #f9a8d4;
+  --color-cheira-claro: #fdba74;
+}
+
+/* Hachura diagonal do fundo: traço de 2 px a cada 12 px; tinta no claro, papel no escuro. */
+@utility hachura {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-tinta) 4.5%, transparent) 0 2px,
+    transparent 2px 12px
+  );
+
+  @media (prefers-color-scheme: dark) {
+    background-image: repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-papel) 5%, transparent) 0 2px,
+      transparent 2px 12px
+    );
+  }
 }
 
 :root {

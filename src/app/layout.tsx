@@ -1,16 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Atkinson_Hyperlegible, Bungee, Bungee_Shade } from "next/font/google";
 import { FUNDO_PAGINA } from "@/components/rotulos";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const bungee = Bungee({
+  weight: "400",
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-bungee",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const bungeeShade = Bungee_Shade({
+  weight: "400",
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-bungee-shade",
+});
+
+const atkinson = Atkinson_Hyperlegible({
+  weight: ["400", "700"],
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-atkinson",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${bungee.variable} ${bungeeShade.variable} ${atkinson.variable} h-full antialiased`}
     >
       <body className={`flex min-h-full flex-col font-sans ${FUNDO_PAGINA}`}>{children}</body>
     </html>
