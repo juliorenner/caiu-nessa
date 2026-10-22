@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import type { Respostas, Veredito } from '@/lib/afirmacoes'
+import { ehQuase } from '@/lib/pontuacao'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import type { FaseCartao } from './CartaoAfirmacao'
 import { PainelVeredito } from './PainelVeredito'
@@ -163,6 +164,9 @@ export default function Quiz({
             acertos: acumuladoAnterior.acertos + resultado.acertos,
             total: acumuladoAnterior.total + resultado.total,
           }}
+          casas={ordem.map(a =>
+            respostas[a.id] === a.veredito ? 'acerto' : ehQuase(a.veredito, respostas[a.id]) ? 'quase' : 'erro',
+          )}
           onContinuar={() => onContinuar({ ids: ordem.map(a => a.id), acertos: resultado.acertos, total: resultado.total })}
         />
       </div>

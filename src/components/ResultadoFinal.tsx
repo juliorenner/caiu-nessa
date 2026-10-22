@@ -1,8 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { slugDaFaixa, urlDoCartao, type Casa } from '@/lib/cartao'
+import { NOME_ARQUIVO, textoDeCompartilhar } from '@/lib/compartilhar'
+import { buscarArquivo, compartilhar } from '@/lib/compartilhar-navegador'
 import type { RespostaResultado } from '@/lib/resultado-api'
+import { SITE_URL, TITULO } from '@/lib/site'
 import { Ficha } from './Ficha'
 import { BOTAO_PRIMARIO, BOTAO_SECUNDARIO, LINK_PAGINA, TEXTO_SECUNDARIO } from './rotulos'
 
@@ -20,10 +24,53 @@ export function ResultadoFinal(p: {
   dados: RespostaResultado
   rodada: number
   acumulado: { acertos: number; total: number }
+  // Uma casa por afirmação, na ordem jogada.
+  casas: Casa[]
   onContinuar: () => Promise<'ok' | 'fim' | 'falha'>
 }) {
   const { resultado, avaliacao, estatisticas, percentilAbaixo, estatisticasIndisponiveis } = p.dados
   const [continuar, setContinuar] = useState<EstadoContinuar>('parado')
+  // Números da rodada corrente, não da partida.
+  const placar = {
+    acertos: resultado.acertos,
+    total: resultado.total,
+    caiu: resultado.acreditadasEsquerda + resultado.acreditadasDireita,
+    casas: p.casas,
+  }
+  const texto = textoDeCompartilhar(placar)
+  const urlCartao = urlDoCartao({ ...placar, faixa: slugDaFaixa(avaliacao.titulo) })
+  const [arquivo, setArquivo] = useState<File | null>(null)
+  const [aviso, setAviso] = useState<'copiado' | 'falhou' | null>(null)
+  const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Busca a imagem ao montar, não no toque: esperar um fetch depois do toque faz o share falhar.
+  useEffect(() => {
+    let montado = true
+    void buscarArquivo(urlCartao, NOME_ARQUIVO).then(f => {
+      if (montado) setArquivo(f)
+    })
+    return () => {
+      montado = false
+    }
+  }, [urlCartao])
+
+  useEffect(
+    () => () => {
+      if (temporizador.current) clearTimeout(temporizador.current)
+    },
+    [],
+  )
+
+  // Síncrono até o share: usa a imagem que já chegou, sem esperar a que falta.
+  function aoCompartilhar() {
+    void compartilhar({ texto, url: SITE_URL, titulo: TITULO, arquivo }).then(desfecho => {
+      if (desfecho !== 'copiado' && desfecho !== 'falhou') return
+      if (temporizador.current) clearTimeout(temporizador.current)
+      temporizador.current = null
+      setAviso(desfecho)
+      if (desfecho === 'copiado') temporizador.current = setTimeout(() => setAviso(null), 2000)
+    })
+  }
 
   async function aoContinuar() {
     if (continuar === 'sorteando') return
@@ -71,6 +118,15 @@ export function ResultadoFinal(p: {
             : 'Você é um dos primeiros a jogar. A comparação com os outros aparece a partir de 100 jogadas.'}
         </p>
       )}
+      <button type="button" onClick={aoCompartilhar} className={BOTAO_PRIMARIO}>
+        Compartilhar placar
+      </button>
+      <a download={NOME_ARQUIVO} href={urlCartao} className={`self-center text-base ${LINK_PAGINA}`}>
+        Baixar imagem para os stories
+      </a>
+      <p aria-live="polite" className="text-base">
+        {aviso === 'copiado' ? 'Texto copiado' : aviso === 'falhou' ? 'Não deu para copiar' : ''}
+      </p>
       {continuar === 'falha' && (
         <p role="alert" className="text-base">
           Não deu para sortear. Tente de novo.
@@ -84,18 +140,15 @@ export function ResultadoFinal(p: {
           onClick={aoContinuar}
           disabled={continuar === 'sorteando'}
           aria-busy={continuar === 'sorteando' ? true : undefined}
-          className={BOTAO_PRIMARIO}
+          className={BOTAO_SECUNDARIO}
         >
           {continuar === 'sorteando' ? 'Sorteando…' : 'Continuar jogando'}
         </button>
       )}
       {/* Recarrega a página: nova partida, novo sorteio e estatísticas atualizadas. */}
-      <a href="/quiz" className={BOTAO_SECUNDARIO}>
+      <a href="/quiz" className={`self-center text-base ${LINK_PAGINA}`}>
         Jogar de novo
       </a>
-      <p className={`text-sm ${TEXTO_SECUNDARIO}`}>
-        Acertei {p.acumulado.acertos} de {p.acumulado.total} no Caiu Nessa? caiunessa.com.br
-      </p>
       <Link
         href="/como-escolhemos"
         className={`self-center text-base ${LINK_PAGINA}`}

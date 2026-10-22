@@ -111,7 +111,9 @@ describe('Partida', () => {
     expect(screen.getByText('Placar')).toBeInTheDocument()
     expect(screen.getByText('Na partida 7/18')).toBeInTheDocument()
     expect(screen.queryByText(/Você é um dos primeiros a jogar/)).not.toBeInTheDocument()
-    expect(screen.getByText('Acertei 7 de 18 no Caiu Nessa? caiunessa.com.br')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Compartilhar placar' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
+    expect(screen.queryByText(/Acertei/)).not.toBeInTheDocument()
     const envio = fetchMock.mock.calls.filter(([url]) => url === '/api/resultado')[1] as unknown as [string, RequestInit]
     expect(Object.keys(JSON.parse(envio[1].body as string).respostas).sort()).toEqual(segunda.map(a => a.id).sort())
 

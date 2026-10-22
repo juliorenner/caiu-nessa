@@ -104,7 +104,12 @@ const dados: RespostaResultado = {
   estatisticasIndisponiveis: false,
 }
 
-const primeira = { dados, rodada: 1, acumulado: { acertos: 4, total: 12 } }
+const primeira = {
+  dados,
+  rodada: 1,
+  acumulado: { acertos: 4, total: 12 },
+  casas: [...Array<'acerto'>(4).fill('acerto'), ...Array<'erro'>(8).fill('erro')],
+}
 
 describe('ResultadoFinal', () => {
   it('tem um link para /afirmacoes', () => {
@@ -127,7 +132,8 @@ describe('ResultadoFinal', () => {
     expect(screen.queryByText(/Na partida/)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Continuar jogando' })).toBeEnabled()
     expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
-    expect(screen.getByText('Acertei 4 de 12 no Caiu Nessa? caiunessa.com.br')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Compartilhar placar' })).toBeInTheDocument()
+    expect(screen.queryByText(/Acertei/)).not.toBeInTheDocument()
   })
 
   it('Sorteando… enquanto espera', async () => {

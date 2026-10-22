@@ -76,7 +76,8 @@ describe('Quiz', () => {
       expect(screen.getByRole('link', { name: /Ver a checagem/ })).toHaveAttribute('target', '_blank')
       await user.click(screen.getByRole('button', { name: i === 11 ? 'Ver meu resultado' : 'Próxima' }))
     }
-    expect(fetchMock).toHaveBeenCalledTimes(1)
+    // A tela de placar também busca a imagem dos stories; aqui conta só o envio.
+    expect(fetchMock.mock.calls.filter(([url]) => url === '/api/resultado')).toHaveLength(1)
     expect(fetchMock.mock.calls[0][0]).toBe('/api/resultado')
     const corpo = JSON.parse(fetchMock.mock.calls[0][1].body)
     expect(Object.keys(corpo.respostas).sort()).toEqual(afirmacoesValidas.map(a => a.id).sort())
@@ -84,6 +85,10 @@ describe('Quiz', () => {
     expect(await screen.findByText(/Você é um dos primeiros a jogar/)).toBeInTheDocument()
     expect(screen.getByText('4/12')).toBeInTheDocument()
     expect(screen.getByText('Texto do viés.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Compartilhar placar' })).toBeInTheDocument()
+    // Uma casa por afirmação, na ordem jogada: tudo "Verdade" acerta só as verdadeiras.
+    const casas = afirmacoesValidas.map(a => (a.veredito === 'verdadeiro' ? 'a' : 'e')).join('')
+    expect(screen.getByRole('link', { name: 'Baixar imagem para os stories' }).getAttribute('href')).toContain(`g=${casas}`)
   })
 
   it('esconde autor e citação na pergunta; mostra os dois no feedback', async () => {
@@ -170,7 +175,8 @@ describe('Quiz', () => {
     expect(screen.getByRole('alert').className).toMatch(/border-tinta/)
     await user.click(screen.getByRole('button', { name: 'Tentar de novo' }))
     expect(await screen.findByText('Caiu feio')).toBeInTheDocument()
-    expect(fetchMock).toHaveBeenCalledTimes(3)
+    // A tela de placar também busca a imagem dos stories; aqui contam só os envios.
+    expect(fetchMock.mock.calls.filter(([url]) => url === '/api/resultado')).toHaveLength(3)
   })
 
   it('no 400 não oferece repetir o mesmo envio: mostra erro e link para jogar de novo', async () => {
