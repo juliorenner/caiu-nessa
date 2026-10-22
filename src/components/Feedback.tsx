@@ -2,17 +2,8 @@
 
 import { useEffect, useRef } from 'react'
 import type { Afirmacao, Veredito } from '@/lib/afirmacoes'
-import { ehQuase } from '@/lib/pontuacao'
+import { mensagem } from './mensagemVeredito'
 import { BOTAO_PRIMARIO, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
-
-function mensagem(veredito: Veredito, respostaDada: Veredito): string {
-  if (respostaDada === veredito) return 'Você acertou.'
-  if (ehQuase(veredito, respostaDada)) {
-    return `Quase: você desconfiou, mas a checagem classificou como ${ROTULO_VEREDITO[veredito]}.`
-  }
-  if (respostaDada === 'verdadeiro') return 'Você caiu nessa.'
-  return 'Era verdade.'
-}
 
 export function Feedback(p: {
   afirmacao: Omit<Afirmacao, 'lado'>
