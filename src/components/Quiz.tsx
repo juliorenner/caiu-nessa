@@ -260,8 +260,9 @@ export default function Quiz({
           Afirmação {indice + 1} de {ordem.length}
         </p>
         <CarimbosDeProgresso total={ordem.length} atual={indice} estados={estados} />
-        <div className="flex flex-1 items-center">
-          <div className="w-full">
+        {/* O cartão ocupa toda a altura que sobra entre o progresso e os botões: sem vazio em telas altas. */}
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex flex-1 flex-col">
             <PilhaDeCartoes
               atual={afirmacao}
               proxima={ordem[indice + 1] ?? null}

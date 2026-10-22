@@ -73,7 +73,7 @@ export function CartaoAfirmacao({
     <div
       role="group"
       aria-label="Afirmação"
-      className={`relative touch-none select-none ${CARTAO_BASE} ${transicao}`}
+      className={`relative flex flex-1 flex-col justify-center touch-none select-none ${CARTAO_BASE} ${transicao}`}
       style={style}
       {...(ativo ? { ...handlers, onPointerDown } : {})}
     >
