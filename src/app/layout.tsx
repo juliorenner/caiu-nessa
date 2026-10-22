@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Atkinson_Hyperlegible, Bungee, Bungee_Shade } from "next/font/google";
 import { FUNDO_PAGINA } from "@/components/rotulos";
+import { DESCRICAO, SITE_URL, TITULO } from "@/lib/site";
 import "./globals.css";
 
 const bungee = Bungee({
@@ -22,8 +23,18 @@ const atkinson = Atkinson_Hyperlegible({
 });
 
 export const metadata: Metadata = {
-  title: "Caiu Nessa?",
-  description: "12 afirmações da eleição. Verdade, mentira ou enganoso? Descubra em quantas você caiu.",
+  metadataBase: new URL(SITE_URL),
+  title: TITULO,
+  description: DESCRICAO,
+  openGraph: {
+    title: TITULO,
+    description: DESCRICAO,
+    url: "/",
+    siteName: TITULO,
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: { card: "summary_large_image", title: TITULO, description: DESCRICAO },
 };
 
 export const viewport: Viewport = { colorScheme: "light dark", width: "device-width", initialScale: 1 };
