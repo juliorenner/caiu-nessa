@@ -20,11 +20,11 @@ it('ids são únicos dentro da reserva e entre reserva e afirmações ativas', (
 
 // A pergunta mostra só `texto`, neutro e em terceira pessoa (JUL-104); a fala original fica em `citacao`.
 // Regras heurísticas (sem diferenciar maiúsculas): nada de colchetes de glosa, de "você" dirigido a alguém
-// ("Você ...", "você [...]"), de "[Eu]", de frase começando por "eu ", de "nós " ou "a gente ".
+// ("Você ...", "você,", "você [...]"), de "[Eu]", de frase começando por "eu ", de "nós " ou "a gente ".
 const REGRAS_TEXTO_NEUTRO: [string, RegExp][] = [
   ['sem "["', /\[/],
   ['sem "]"', /\]/],
-  ['sem "Você "', /(^|[^\p{L}])você /iu],
+  ['sem "você" como palavra', /(^|[^\p{L}])você([^\p{L}]|$)/iu],
   ['sem "você ["', /você \[/i],
   ['sem "[Eu]"', /\[eu\]/i],
   ['sem "eu " no início de frase', /(^|[.!?…]\s+)eu /i],
