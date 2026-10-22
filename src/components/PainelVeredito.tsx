@@ -4,11 +4,15 @@ import { type KeyboardEvent, type PointerEvent, type ReactElement, useEffect, us
 import { createPortal } from 'react-dom'
 import type { Veredito } from '@/lib/afirmacoes'
 import { mensagem } from './mensagemVeredito'
-import { BOTAO_EM_CARTAO, CARTAO_SUPERFICIE, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
+import { BOTAO_EM_CARTAO, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
 const LIMIAR_FECHAR = 80
 const FOCAVEIS = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+// Superfície branca com borda só em cima e sombra dupla acima (papel, depois tinta), cantos retos.
+// No escuro a sombra fica sobre o fundo da página: inverte (tinta por cima, papel por baixo).
+const SUPERFICIE_PAINEL =
+  'bg-superficie text-tinta border-t-[3px] border-tinta shadow-[0_-8px_0_var(--color-papel),0_-12px_0_var(--color-tinta)] dark:shadow-[0_-8px_0_var(--color-tinta),0_-12px_0_var(--color-papel)] rounded-none'
 
 export function PainelVeredito(p: {
   afirmacao: AfirmacaoNoQuiz
@@ -91,7 +95,7 @@ export function PainelVeredito(p: {
         aria-live="polite"
         aria-describedby={idMensagem}
         onKeyDown={conterFoco}
-        className={`fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[85dvh] w-full max-w-xl flex-col gap-4 overflow-y-auto rounded-t-3xl px-5 pt-1 pb-[max(1rem,env(safe-area-inset-bottom))] ${CARTAO_SUPERFICIE} ${movimento}`}
+        className={`fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[85dvh] w-full max-w-xl flex-col gap-4 overflow-y-auto px-5 pt-1 pb-[max(1rem,env(safe-area-inset-bottom))] ${SUPERFICIE_PAINEL} ${movimento}`}
       >
         <div
           data-alca
@@ -101,14 +105,14 @@ export function PainelVeredito(p: {
           onPointerCancel={aoCancelar}
           className="flex min-h-12 shrink-0 touch-none items-center justify-center"
         >
-          <div className="h-1 w-10 rounded-full bg-stone-300" />
+          <div className="h-1 w-10 rounded-full bg-tinta/30" />
         </div>
         <span className={SELO_VEREDITO[afirmacao.veredito]}>{ROTULO_VEREDITO[afirmacao.veredito]}</span>
-        <p id={idMensagem} className="text-lg font-semibold">{mensagem(afirmacao.veredito, respostaDada)}</p>
-        <p className="text-base text-stone-600">Quem disse: {afirmacao.autor}</p>
-        <blockquote className="border-l-4 border-stone-200 pl-3 text-base text-stone-600 italic">“{afirmacao.citacao}”</blockquote>
-        <p className="text-base leading-relaxed text-stone-700">{afirmacao.explicacao}</p>
-        {erroPct !== null && <p className="text-base text-stone-600">{erroPct}% das pessoas erraram esta.</p>}
+        <p id={idMensagem} className="text-lg font-bold">{mensagem(afirmacao.veredito, respostaDada)}</p>
+        <p className="text-base text-secundario">Quem disse: {afirmacao.autor}</p>
+        <blockquote className="border-l-[3px] border-tinta pl-3 text-base text-secundario italic">“{afirmacao.citacao}”</blockquote>
+        <p className="text-base leading-relaxed text-tinta">{afirmacao.explicacao}</p>
+        {erroPct !== null && <p className="text-base text-secundario">{erroPct}% das pessoas erraram esta.</p>}
         <a
           href={afirmacao.fonte_url}
           target="_blank"

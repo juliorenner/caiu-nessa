@@ -147,6 +147,28 @@ describe('PainelVeredito', () => {
     expect(descricao).toHaveTextContent('Você acertou.')
   })
 
+  it('selo do painel usa a palavra da checagem, em estilo carimbo', () => {
+    render(<PainelVeredito afirmacao={{ ...afirmacao, veredito: 'enganoso' }} respostaDada="enganoso" erroPct={null} ultima={false} onFechar={() => {}} reduzirMovimento />)
+    const selo = screen.getByText('Enganoso')
+    expect(selo).toHaveClass('font-letreiro')
+    expect(selo.className).toMatch(/border-cheira/)
+  })
+
+  it('painel: superfície branca, borda de cima e sombra dupla papel/tinta, cantos retos', () => {
+    renderizar()
+    expect(painel()).toHaveClass(
+      'bg-superficie',
+      'text-tinta',
+      'border-t-[3px]',
+      'border-tinta',
+      'shadow-[0_-8px_0_var(--color-papel),0_-12px_0_var(--color-tinta)]',
+      'rounded-none',
+    )
+    expect(painel()).not.toHaveClass('rounded-t-3xl')
+    expect(screen.getByText('Você acertou.')).toHaveClass('text-lg', 'font-bold')
+    expect(screen.getByText(`“${afirmacao.citacao}”`)).toHaveClass('border-l-[3px]', 'border-tinta')
+  })
+
   it('pointercancel na alça não fecha', () => {
     const { onFechar } = renderizar()
     const alca = document.querySelector('[data-alca]') as HTMLElement
