@@ -1,16 +1,5 @@
 [
   {
-    "id": "e7",
-    "texto": "O governo de Lula criou o MEI, e há 17,5 milhões de MEIs no Brasil.",
-    "lado": "esquerda",
-    "autor": "Lula (PT), no debate da Band",
-    "veredito": "verdadeiro",
-    "explicacao": "Segundo o governo federal, há 17,56 milhões de microempreendedores individuais ativos. A figura do MEI foi criada em 2008, no segundo mandato de Lula, que sancionou um projeto do deputado Antônio Carlos de Mendes Thame (PV).",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
-    "data_checagem": "2026-10-18"
-  },
-  {
     "id": "e8",
     "texto": "O governo já devolveu R$ 3,5 bilhões aos afetados por descontos irregulares no INSS.",
     "lado": "esquerda",
@@ -121,6 +110,17 @@
     "data_checagem": "2026-10-18"
   },
   {
+    "id": "e18",
+    "texto": "Quando Lula assumiu a Presidência em 2003, o Brasil devia US$ 30 bilhões ao FMI; ao fim de dois mandatos, o FMI estava pago e o país tinha reservas de US$ 270 bilhões.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), no debate da Band",
+    "veredito": "verdadeiro",
+    "explicacao": "Em 2002, no governo Fernando Henrique Cardoso, o Brasil contraiu uma dívida de US$ 30,4 bilhões com o FMI, herdada em 2003. O Banco Central registra a quitação antecipada em 2005, e as reservas internacionais chegaram a US$ 270 bilhões em 2010.",
+    "fonte_nome": "Estadão Verifica",
+    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "data_checagem": "2026-10-18"
+  },
+  {
     "id": "d7",
     "texto": "Essa dívida que o atual governo está deixando, de R$ 11 trilhões.",
     "lado": "direita",
@@ -209,12 +209,12 @@
     "data_checagem": "2026-10-16"
   },
   {
-    "id": "d15",
-    "texto": "O PT governou o País em 20 dos últimos 24 anos.",
+    "id": "d16",
+    "texto": "Com a Lei Antifacção, aprovada no Congresso, os líderes das facções criminosas vão ficar 80 anos presos.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "enganoso",
-    "explicacao": "O PT governou com Lula de 2003 a 2010 e com Dilma Rousseff de 2011 até o impeachment em 2016, e voltou com Lula em 2023. Ao todo, são cerca de 17 anos e quatro meses de governo em um período de 24 anos, não 20.",
+    "explicacao": "A Lei Antifacção, proposta pela Presidência e sancionada em março de 2026, elevou a pena por participação em organização criminosa para até 40 anos, e ela pode dobrar para 80 anos no caso de líderes. Mas o Código Penal limita o tempo de cumprimento da pena a 40 anos, então o preso não fica automaticamente 80 anos na cadeia.",
     "fonte_nome": "Estadão Verifica",
     "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
     "data_checagem": "2026-10-18"

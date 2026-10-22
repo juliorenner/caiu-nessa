@@ -19,7 +19,7 @@ describe('validarAfirmacoes', () => {
   })
   it('rejeita veredito fora do enum', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'e1' ? { ...a, veredito: 'parcialmente' } : a)
-    expect(() => validarAfirmacoes(alterada)).toThrow(/veredito/)
+    expect(() => validarAfirmacoes(alterada)).toThrow(/veredito deve ser "verdadeiro", "falso" ou "enganoso"/)
   })
   it('rejeita fonte fora da lista de agências', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, fonte_url: 'https://exemplo.com/x' } : a)
@@ -38,6 +38,8 @@ describe('fonteEhPermitida', () => {
   it.each([
     ['https://www.aosfatos.org/noticias/x', true],
     ['https://lupa.uol.com.br/jornalismo/2026/x', true],
+    ['https://www.agencialupa.org/checagem/2026/10/18/x/', true],
+    ['https://agencialupa.org.evil.com/x', false],
     ['https://projetocomprova.com.br/publicacoes/x', true],
     ['https://g1.globo.com/fato-ou-fake/noticia/2026/x.ghtml', true],
     ['https://g1.globo.com/politica/noticia/x.ghtml', false],

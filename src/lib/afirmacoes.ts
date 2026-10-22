@@ -44,6 +44,7 @@ export function fonteEhPermitida(url: string): boolean {
   if (hostEhDominio(host, 'aosfatos.org')) return true
   if (hostEhDominio(host, 'projetocomprova.com.br')) return true
   if (host === 'lupa.uol.com.br') return true
+  if (hostEhDominio(host, 'agencialupa.org')) return true
   if (host === 'g1.globo.com') return caminho === '/fato-ou-fake' || caminho.startsWith('/fato-ou-fake/')
   if (hostEhDominio(host, 'estadao.com.br')) return caminho.includes('estadao-verifica')
   return false
