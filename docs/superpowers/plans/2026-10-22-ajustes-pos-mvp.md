@@ -10,7 +10,7 @@ Documento de transparência: cada mudança feita depois do plano do MVP (`2026-1
 **Pedido:** listar publicamente as afirmações e de onde vêm.
 **Decisão:** página gerada do JSON com texto, quem disse ou espalhou, veredito, agência, data e link da checagem. Linkada em "Como escolhemos" e no resultado, não na landing (para não entregar as respostas). Depois do PR #5 o autor pediu a lista completa: a página passa a ter "Em jogo agora" e "Na reserva".
 
-## 2026-10-22 — Re-curadoria "viral" (JUL-106)
+## 2026-10-22 — Re-curadoria "viral" (JUL-106, branch jul-106-curadoria-viral, PR em revisão)
 **Problema:** parte das 12 afirmações era morna ("aprovamos tudo no Congresso", "32 milhões não votaram"); as que mais circulam vêm de posts e influenciadores, não da boca dos candidatos, e a regra "lado = quem disse" as deixava de fora.
 **Decisões:** (1) lado = quem disse **ou espalhou**, conforme a agência atribui; posts sem atribuição ficam de fora. (2) Prioridade ao que mais circula e é concreto (número, nome, lugar, dinheiro, emprego, crime, benefício). (3) "Falso" e "enganoso" não divergem entre si; só divergem de "verdadeiro" ou de rótulos excluídos. Entre falso e enganoso vale a maioria das agências (empate: falso), e a explicação diz que as agências divergem e por quê. Casos assim recebem revisão com todas as checagens abertas.
 

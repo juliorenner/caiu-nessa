@@ -51,8 +51,9 @@ export default function Afirmacoes() {
       </Link>
       <h1 className="mt-6 text-3xl font-bold text-stone-900">As afirmações do jogo</h1>
       <p className="mt-4">
-        Estas são todas as afirmações que já checamos: as 12 em jogo agora e as que estão na reserva para rodadas
-        futuras. Cada uma traz o veredito da agência que a checou e o link da checagem.
+        Estas são todas as afirmações que já checamos: as 12 em jogo agora e as que estão na reserva. Parte da
+        reserva pode entrar em rodadas futuras; outra parte ficou de fora porque agências diferentes deram vereditos
+        diferentes. Cada uma traz o veredito da agência que a checou e o link da checagem.
       </p>
 
       <Secao id="em-jogo" titulo="Em jogo agora" afirmacoes={carregarAfirmacoes()} />
