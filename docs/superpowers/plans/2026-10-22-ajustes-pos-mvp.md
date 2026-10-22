@@ -31,5 +31,9 @@ Documento de transparência: cada mudança feita depois do plano do MVP (`2026-1
 - A tela do quiz cabe sem rolagem nos celulares em pé (320×568 para cima). Em telas baixas ou deitadas (por exemplo 667×375) a tela rola em vez de cortar o cartão; o cartão continua com `touch-action: none`, então arrastar para cima não briga com a rolagem. (Ajuste depois da revisão do PR; o documento de design dizia "sem rolagem" sem prever o modo deitado.)
 **Verificação em browser (controlador, Chrome, tema escuro, 2026-10-22):** em 320×568, 375×667 e 430×932 a tela do quiz não rola (`scrollHeight == innerHeight`) e o cartão cabe acima dos botões mesmo com um texto de 258 caracteres; um jogo completo de 12 afirmações por swipe nas três direções, setas e botões abriu o painel 12 vezes, com foco no botão de avanço, conteúdo atrás inerte, contador correto e respostas duplicadas ignoradas; sem erros no console. O tema claro foi verificado pelos testes de tokens, não em browser.
 
+## 2026-10-22 — Contexto nas afirmações sem referência (ticket de contexto no Linear)
+**Problema (dono, jogando a v2):** "Eu não conheço essa moça [Roberta Luchsinger]" não diz nada para quem não sabe quem ela é.
+**Decisão:** o `texto` neutro ganha o contexto mínimo para a afirmação ser entendida sozinha (quem é a pessoa, que caso é esse, o que é o termo). O contexto vem só da checagem citada em `fonte_url` e não pode entregar o veredito nem julgar; `citacao`, ids e vereditos não mudam. Vale para as afirmações em jogo e para a reserva, porque todas vão entrar na roda com as rodadas. Oito textos mudaram (Roberta Luchsinger, saidinha, BRB/Banco Master, fraude dos descontos do INSS ×2, recorde de mulheres espancadas, filho de Lula, áudio de Vorcaro); "8.000 empresas faliram em junho" fica sem ano porque a checagem não o informa.
+
 ## Pendentes (ainda em desenho)
 - Rodadas: "Continuar jogando" no resultado com as próximas afirmações do pool (JUL-108).
