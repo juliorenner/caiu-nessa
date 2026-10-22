@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { type Afirmacao, embaralhar, type Respostas, TOTAL_AFIRMACOES, type Veredito } from '@/lib/afirmacoes'
+import { type Afirmacao, type Respostas, TOTAL_AFIRMACOES, type Veredito } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { Feedback } from './Feedback'
 import { ResultadoFinal } from './ResultadoFinal'
@@ -13,6 +13,7 @@ export type AfirmacaoNoQuiz = Omit<Afirmacao, 'lado'>
 export interface QuizProps {
   afirmacoes: AfirmacaoNoQuiz[]
   erroPorAfirmacao: Record<string, number> | null
+  // A ordem vem embaralhada do servidor; embaralhar aqui geraria hydration mismatch.
   embaralharFn?: (itens: AfirmacaoNoQuiz[]) => AfirmacaoNoQuiz[]
 }
 
@@ -31,10 +32,10 @@ const OPCOES: { valor: Veredito; rotulo: string; cor: string }[] = [
 const SELECIONADA: Record<Veredito, string> = {
   verdadeiro: 'bg-emerald-700 text-white',
   falso: 'bg-rose-700 text-white',
-  enganoso: 'bg-amber-600 text-white',
+  enganoso: 'bg-amber-700 text-white',
 }
 
-export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = embaralhar }: QuizProps) {
+export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x => x }: QuizProps) {
   const [ordem] = useState(() => embaralharFn(afirmacoes))
   const [estado, setEstado] = useState<Estado>({ etapa: 'pergunta', indice: 0 })
   const [respostas, setRespostas] = useState<Respostas>({})

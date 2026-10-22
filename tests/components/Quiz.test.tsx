@@ -47,6 +47,17 @@ describe('Quiz', () => {
     expect(screen.getByText('4 de 12')).toBeInTheDocument()
   })
 
+  it('sem embaralharFn, mostra as afirmações na ordem recebida', async () => {
+    const user = userEvent.setup()
+    const invertida = [...afirmacoesValidas].reverse()
+    render(<Quiz afirmacoes={invertida} erroPorAfirmacao={null} />)
+    for (const a of invertida.slice(0, 3)) {
+      expect(screen.getByText(a.texto)).toBeInTheDocument()
+      await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+      await user.click(screen.getByRole('button', { name: 'Próxima' }))
+    }
+  })
+
   it('mostra "Quase" quando o jogador confunde mentira com enganoso', async () => {
     const enganosaPrimeiro = [...afirmacoesValidas].sort((a, b) => (a.id === 'e5' ? -1 : b.id === 'e5' ? 1 : 0))
     expect(enganosaPrimeiro[0].veredito).toBe('enganoso')

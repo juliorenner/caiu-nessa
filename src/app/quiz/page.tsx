@@ -1,6 +1,6 @@
 import Quiz from '@/components/Quiz'
 import { getDb } from '@/db/client'
-import { carregarAfirmacoes } from '@/lib/afirmacoes'
+import { carregarAfirmacoes, embaralhar } from '@/lib/afirmacoes'
 import { obterEstatisticas } from '@/lib/estatisticas'
 
 export const dynamic = 'force-dynamic'
@@ -21,7 +21,7 @@ export default async function QuizPage() {
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
       <Quiz
-        afirmacoes={afirmacoes.map(({ lado: _lado, ...semLado }) => semLado)}
+        afirmacoes={embaralhar(afirmacoes.map(({ lado: _lado, ...semLado }) => semLado))}
         erroPorAfirmacao={await erroPorAfirmacao(afirmacoes)}
       />
     </main>
