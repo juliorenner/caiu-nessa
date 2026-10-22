@@ -3,13 +3,7 @@
 import { useEffect, useRef } from 'react'
 import type { Afirmacao, Veredito } from '@/lib/afirmacoes'
 import { ehQuase } from '@/lib/pontuacao'
-import { BOTAO_PRIMARIO, FOCO, ROTULO_VEREDITO } from './rotulos'
-
-const COR_SELO: Record<Veredito, string> = {
-  verdadeiro: 'bg-emerald-100 text-emerald-900 ring-emerald-700',
-  falso: 'bg-rose-100 text-rose-900 ring-rose-700',
-  enganoso: 'bg-amber-100 text-amber-900 ring-amber-700',
-}
+import { BOTAO_PRIMARIO, FOCO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
 
 function mensagem(veredito: Veredito, respostaDada: Veredito): string {
   if (respostaDada === veredito) return 'Você acertou.'
@@ -37,11 +31,7 @@ export function Feedback(p: {
 
   return (
     <section ref={ref} aria-live="polite" className="mt-6 flex scroll-mt-4 flex-col gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
-      <span
-        className={`self-start rounded-full px-3 py-1 text-base font-bold ring-1 ${COR_SELO[afirmacao.veredito]}`}
-      >
-        {ROTULO_VEREDITO[afirmacao.veredito]}
-      </span>
+      <span className={SELO_VEREDITO[afirmacao.veredito]}>{ROTULO_VEREDITO[afirmacao.veredito]}</span>
       <p className="text-lg font-semibold">{mensagem(afirmacao.veredito, respostaDada)}</p>
       <p className="text-base leading-relaxed text-stone-700">{afirmacao.explicacao}</p>
       <a

@@ -33,6 +33,12 @@ export function ResultadoFinal(p: { dados: RespostaResultado }) {
       >
         Como escolhemos as afirmações
       </Link>
+      <Link
+        href="/afirmacoes"
+        className={`self-center rounded text-base font-medium underline underline-offset-4 ${FOCO}`}
+      >
+        Ver todas as afirmações e suas fontes
+      </Link>
     </section>
   )
 }

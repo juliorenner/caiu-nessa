@@ -59,6 +59,12 @@ export default function ComoEscolhemos() {
       </p>
 
       <p className="mt-10">
+        <Link href="/afirmacoes" className={LINK}>
+          Ver todas as afirmações e suas fontes
+        </Link>
+      </p>
+
+      <p className="mt-4">
         O código, as afirmações e os planos de desenvolvimento são públicos.{' '}
         <a href="https://github.com/juliorenner/caiu-nessa" className={LINK}>
           github.com/juliorenner/caiu-nessa
