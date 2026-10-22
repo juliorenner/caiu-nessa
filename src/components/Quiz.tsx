@@ -47,6 +47,7 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
   const enviando = useRef(false)
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null)
   const responderRef = useRef<(v: Veredito) => void>(() => {})
+  const raiz = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setReduzirMovimento(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false)
@@ -54,6 +55,11 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
       if (temporizador.current) clearTimeout(temporizador.current)
     }
   }, [])
+
+  // Sem dependências: depois de cada render, a tecla usa o responder com o estado atual.
+  useEffect(() => {
+    responderRef.current = responder
+  })
 
   const naPergunta = estado.etapa === 'pergunta'
   useEffect(() => {
@@ -161,10 +167,11 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
     setEstado({ etapa: 'respondendo', indice })
     depois(() => setEstado({ etapa: 'feedback', indice }))
   }
-  responderRef.current = responder
 
   function fechar() {
     if (etapa !== 'feedback') return
+    // O botão do painel vai sumir: o foco volta para o quiz em vez de cair no body.
+    raiz.current?.focus({ preventScroll: true })
     const seguir = () => (ultima ? void enviar(respostas) : setEstado({ etapa: 'pergunta', indice: indice + 1 }))
     if (reduzirMovimento) {
       seguir()
@@ -182,6 +189,7 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
 
   return (
     <div
+      ref={raiz}
       tabIndex={-1}
       className="box-border flex h-dvh flex-col overflow-hidden px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
     >

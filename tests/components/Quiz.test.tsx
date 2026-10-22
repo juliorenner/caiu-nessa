@@ -313,6 +313,16 @@ describe('Quiz', () => {
     expect(conteudo).not.toHaveAttribute('inert')
   })
 
+  it('foco volta para a raiz do quiz quando o painel fecha', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+    await user.click(screen.getByRole('button', { name: 'Próxima' }))
+    const raiz = container.firstElementChild as HTMLElement
+    expect(document.activeElement).toBe(raiz)
+    expect(raiz).toHaveAttribute('tabindex', '-1')
+  })
+
   it('botão escolhido ganha destaque e os outros esmaecem enquanto o painel está aberto', async () => {
     vi.useFakeTimers()
     movimentoReduzido(false)
