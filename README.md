@@ -40,11 +40,23 @@ Abra http://localhost:3000. Com `DATABASE_URL=file:...` o app usa um Postgres lo
 ## Testes e verificações
 
 ```bash
+npm run lint                          # ESLint
 npm test                              # testes (Vitest)
 npm run typecheck                     # tipos
 npm run build                         # build de produção
 npx tsx scripts/verificar-fontes.ts   # acessa cada link de checagem
 ```
+
+## Pipeline
+
+GitHub Actions, em `.github/workflows/`:
+
+- **Em cada PR** (`ci.yml`): lint, tipos, testes e build; `npm audit` das dependências de produção; actionlint e zizmor nos workflows; gitleaks procurando segredos. O check `ci` só passa com tudo verde. O CodeQL (`codeql.yml`) roda no PR, em `main` e toda semana.
+- **Deploy** (`deploy.yml`): a cada push em `main` (ou manual), roda o mesmo CI e, se passar, aplica as migrações do banco e publica na Vercel. Esse é o único caminho para produção; a Vercel não está ligada ao GitHub.
+- **Segredos**, no environment `production` do GitHub (Settings → Environments): `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` e `DATABASE_URL`. Enquanto `VERCEL_PROJECT_ID` não estiver cadastrado, o deploy é pulado com um aviso, sem falhar.
+- **Links de checagem** (`fontes.yml`): toda segunda o script `verificar-fontes` acessa cada link; se algum quebrar, abre ou atualiza a issue "Link de checagem quebrado".
+- O ESLint ainda não roda com o TypeScript 7, então o pacote `typescript` aponta para o TS 6 (`@typescript/typescript6`): é ele que o ESLint e a checagem de tipos do `next build` usam. O `tsc` do `npm run typecheck` vem do TS 7 (`@typescript/native`). Quando o typescript-eslint suportar o TS 7, o alias sai.
+- O Dependabot propõe atualizações semanais de pacotes npm e de actions.
 
 ## Produção
 
@@ -52,7 +64,7 @@ Vercel + Neon.
 
 - `DATABASE_URL`: vem da integração do Neon na Vercel.
 - `IP_HASH_SALT`: gere com `openssl rand -hex 32` e cadastre como variável de ambiente na Vercel.
-- Aplique as migrações uma vez: `DATABASE_URL=... npx drizzle-kit migrate`.
+- As migrações são aplicadas pelo workflow de deploy antes de publicar (manualmente: `DATABASE_URL=... npx drizzle-kit migrate`).
 - Domínio `caiunessa.com.br`, registrado no Registro.br e apontado para a Vercel.
 
 ## Dados e privacidade (LGPD)

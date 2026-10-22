@@ -26,6 +26,7 @@ export function PainelVeredito(p: {
   const idMensagem = useId()
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- o portal usa document.body, que só existe no cliente; montar no render divergiria da hidratação
     setMontado(true)
     const anterior = document.body.style.overflow
     document.body.style.overflow = 'hidden'

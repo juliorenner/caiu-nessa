@@ -1,0 +1,58 @@
+name: fontes
+
+on:
+  schedule:
+    # Segunda, 09:00 em São Paulo.
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fontes
+  cancel-in-progress: true
+
+jobs:
+  verificar-fontes:
+    runs-on: ubuntu-latest
+    # 41 links em sequência com timeout de 30 s cada = até ~20,5 min, mais npm ci e a issue.
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      issues: write # abre ou comenta a issue de link quebrado
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Acessar cada link de checagem
+        id: verificar
+        run: |
+          set -o pipefail
+          npx tsx scripts/verificar-fontes.ts 2>&1 | tee saida.txt
+      - name: Abrir ou atualizar a issue
+        if: failure() && steps.verificar.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITULO: Link de checagem quebrado
+        run: |
+          {
+            echo "Execução: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo
+            echo '```'
+            cat saida.txt
+            echo '```'
+          } > corpo.md
+          numero=$(gh issue list --state open --search "\"$TITULO\" in:title" --json number,title \
+            --jq "map(select(.title == \"$TITULO\")) | .[0].number // empty")
+          if [ -n "$numero" ]; then
+            gh issue comment "$numero" --body-file corpo.md
+          else
+            gh issue create --title "$TITULO" --body-file corpo.md
+          fi
