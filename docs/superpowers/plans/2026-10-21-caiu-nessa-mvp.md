@@ -24,7 +24,7 @@
 - Agency labels that map to `enganoso`: Enganoso, Exagerado, Distorcido, Fora de contexto, Impreciso, "Não é bem assim". Excluded from the game entirely: Insustentável, Contraditório, "Ainda é cedo pra dizer". If two agencies disagree at the three-bucket level (one says falso, another enganoso), the statement is excluded from the live set.
 - Player answer = same enum. Buttons: `VERDADE` → verdadeiro, `MENTIRA` → falso, `ISSO ME CHEIRA MAL 🤔` → enganoso. An answer is correct only when it equals the verdict; `falso`↔`enganoso` confusion is wrong but acknowledged as "quase" in the feedback copy.
 - "Acreditou" (for bias) = answered `verdadeiro` on a `falso` or `enganoso` statement.
-- Every statement's `fonte_url` is on one of: `aosfatos.org`, `lupa.uol.com.br`, `projetocomprova.com.br`, `g1.globo.com` (path starting `/fato-ou-fake`), `estadao.com.br` (path containing `estadao-verifica`). No other source.
+- Every statement's `fonte_url` is on one of: `aosfatos.org`, `lupa.uol.com.br`, `agencialupa.org`, `projetocomprova.com.br`, `g1.globo.com` (path starting `/fato-ou-fake`), `estadao.com.br` (path containing `estadao-verifica`). No other source.
 - Copy never supports or attacks a candidate. Verdicts and explanations paraphrase the fact-check only.
 - No personal data: the only per-player columns are `respostas`, `acertos`, `total`, `acertos_esquerda`, `acertos_direita`, `created_at`, `ip_hash`. `ip_hash` is SHA-256 of salt + IP and is nulled after 1 hour.
 - Rate limit: max 5 games per `ip_hash` per rolling 60 s (spec says "N"; 5 is the chosen value, change in one constant).
