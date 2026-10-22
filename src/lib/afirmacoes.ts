@@ -75,7 +75,12 @@ const esquemaAfirmacao = z.object({
         error: 'data_checagem deve ser uma data de calendário válida',
       },
     ),
-  observacao: z.string().min(20, { error: 'observacao deve ter ao menos 20 caracteres' }).optional(),
+  observacao: z
+    .string()
+    .refine((v) => v.trim().length >= 20, {
+      error: 'observacao deve ter ao menos 20 caracteres (sem contar espaços nas pontas)',
+    })
+    .optional(),
 })
 
 export const afirmacaoSchema = esquemaAfirmacao
