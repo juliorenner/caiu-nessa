@@ -7,7 +7,14 @@ updates:
     groups:
       minor-e-patch:
         update-types: [minor, patch]
+    ignore:
+      # Os tipos acompanham o Node que roda em produção e no CI (.nvmrc).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    groups:
+      acoes:
+        patterns: ["*"]
