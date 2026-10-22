@@ -1,14 +1,14 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { type Afirmacao, type Respostas, TOTAL_AFIRMACOES, type Veredito } from '@/lib/afirmacoes'
+import { type Respostas, TOTAL_AFIRMACOES, type Veredito } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { Feedback } from './Feedback'
 import { ResultadoFinal } from './ResultadoFinal'
 import { BOTAO_PRIMARIO, FOCO } from './rotulos'
+import type { AfirmacaoNoQuiz } from './tipos'
 
-// `lado` fica no servidor: o cliente nunca recebe de que lado é cada afirmação.
-export type AfirmacaoNoQuiz = Omit<Afirmacao, 'lado'>
+export type { AfirmacaoNoQuiz }
 
 export interface QuizProps {
   afirmacoes: AfirmacaoNoQuiz[]
