@@ -47,7 +47,8 @@ O jogo vai circular por WhatsApp e ser jogado no celular, no ônibus, com uma m�
 ### Depois da resposta (layout C)
 - Um **painel sobe de baixo** (bottom sheet) sobre o fundo escurecido, com: selo do veredito (Verdade / Mentira / Enganoso), a frase de resultado (`Você acertou.` / `Quase: ...` / `Você caiu nessa.` / `Era verdade.`, como hoje), `Quem disse: {autor}`, a citação original entre aspas, a explicação, a linha `{X}% das pessoas erraram esta.` quando houver estatística (como hoje), o link `Ver a checagem (...)` e o botão `Próxima` (ou `Ver meu resultado` na 12ª).
 - Fechar o painel = `Próxima` ou arrastar o painel para baixo. Não dá para pular o painel por outro caminho.
-- `aria-live="polite"` no painel; foco vai para o botão `Próxima` ao abrir.
+- `aria-live="polite"` no painel; ao abrir, o foco vai para o botão de avanço, seja `Próxima` ou `Ver meu resultado`.
+- O painel ocupa no máximo ~85% da altura da tela e **rola internamente** quando o conteúdo não cabe (explicações chegam a ~560 caracteres); a página atrás nunca rola. A ordem garante que selo, frase de resultado e `Quem disse` estejam visíveis sem rolar; explicação, link e botão podem exigir rolagem dentro do painel. *(Decisão do controlador após revisão do cubic.)*
 
 ### Topo
 - Linha com `Afirmação {n} de 12` à esquerda e o **contador** à direita: `{acertos} de {respondidas} ✔`, começa oculto até a primeira resposta. Abaixo, uma barra de progresso fina (n/12).
