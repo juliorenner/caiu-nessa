@@ -48,3 +48,20 @@ resultado e opcional, nunca antes de jogar.
 ## Domínio
 caiunessa.com.br (registro.br, Vercel não vende .br). Apontar pra Vercel
 via A + CNAME ou nameservers. Checar disponibilidade antes de comprar.
+
+## Emenda 2026-10-21: veredito em três níveis
+Decisão do autor durante a execução do plano MVP (depois da curadoria inicial).
+
+- `veredito` deixa de ser booleano e passa a ser um enum: `verdadeiro | falso | enganoso`.
+  A ideia é escalar; nunca modelar como boolean, nem temporariamente.
+- O jogador tem três botões: VERDADE, MENTIRA e "ISSO ME CHEIRA MAL 🤔" (= enganoso).
+- Proporção: 12 afirmações, 6 por lado, 2 verdadeiras + 2 falsas + 2 enganosas por lado.
+- Mapeamento dos rótulos das agências para `enganoso`: Enganoso, Exagerado, Distorcido,
+  Fora de contexto, Impreciso, "Não é bem assim". Ficam fora do jogo: Insustentável,
+  Contraditório, "Ainda é cedo pra dizer". A regra de unanimidade continua: se uma agência
+  disse "falso" e outra "enganoso", a afirmação não entra no conjunto ativo.
+- Pontuação: acerto só com a opção exata; nota inteira de 0 a 12. Marcar MENTIRA numa
+  enganosa (ou ENGANOSO numa falsa) é erro, mas o feedback reconhece o "quase".
+- Viés: "acreditou" = marcou VERDADE numa afirmação falsa ou enganosa.
+- Afirmações extras que passam no mesmo critério ficam em `afirmacoes-reserva.json`
+  (sem regra de proporção) para escolha ou sorteio futuro.
