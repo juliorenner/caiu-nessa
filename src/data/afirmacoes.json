@@ -1,7 +1,8 @@
 [
   {
     "id": "5fdfac58",
-    "texto": "Nos quatro anos do governo deles, a inflação de alimentos estava em 56,17%. Agora, nos meus quatro anos, está em 13%.",
+    "texto": "Nos quatro anos do governo Bolsonaro, a inflação de alimentos estava em 56,17%; nos quatro anos do governo Lula, está em 13%.",
+    "citacao": "Nos quatro anos do governo deles, a inflação de alimentos estava em 56,17%. Agora, nos meus quatro anos, está em 13%.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
@@ -12,7 +13,8 @@
   },
   {
     "id": "9ffc66a8",
-    "texto": "Em 2009, você [Flávio Bolsonaro], como deputado estadual… Tinha uma discussão na Assembleia [Legislativa do Rio de Janeiro] para ampliar a licença de maternidade das funcionárias. E, de 49 deputados, você foi o único que votou contra.",
+    "texto": "Em 2009, na Assembleia Legislativa do Rio de Janeiro, Flávio Bolsonaro, então deputado estadual, foi o único de 49 deputados a votar contra a ampliação da licença-maternidade das funcionárias.",
+    "citacao": "Em 2009, você [Flávio Bolsonaro], como deputado estadual… Tinha uma discussão na Assembleia [Legislativa do Rio de Janeiro] para ampliar a licença de maternidade das funcionárias. E, de 49 deputados, você foi o único que votou contra.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
@@ -23,7 +25,8 @@
   },
   {
     "id": "aa857dcd",
-    "texto": "A gente fez essa maior demarcação de terras indígenas nesse país.",
+    "texto": "Os governos de Lula fizeram a maior demarcação de terras indígenas do país.",
+    "citacao": "A gente fez essa maior demarcação de terras indígenas nesse país.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "falso",
@@ -34,7 +37,8 @@
   },
   {
     "id": "ad602974",
-    "texto": "Eu não conheço essa moça [Roberta Luchsinger], nunca vi essa moça na minha vida.",
+    "texto": "Lula não conhece Roberta Luchsinger e nunca a viu na vida.",
+    "citacao": "Eu não conheço essa moça [Roberta Luchsinger], nunca vi essa moça na minha vida.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "falso",
@@ -45,7 +49,8 @@
   },
   {
     "id": "3d13028f",
-    "texto": "[Flávio Bolsonaro] comprou uma casa de 10 milhões e pagou à vista uma parte dela com dinheiro do BRB que está metido no caso do banco do Vorcaro.",
+    "texto": "Flávio Bolsonaro comprou uma casa de R$ 10 milhões e pagou uma parte dela à vista com dinheiro do BRB, banco envolvido no caso de Daniel Vorcaro.",
+    "citacao": "[Flávio Bolsonaro] comprou uma casa de 10 milhões e pagou à vista uma parte dela com dinheiro do BRB que está metido no caso do banco do Vorcaro.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "enganoso",
@@ -56,7 +61,8 @@
   },
   {
     "id": "392ba64f",
-    "texto": "Não tem um aposentado que foi vítima da fraude no INSS que não foi ressarcido pelo governo.",
+    "texto": "Todos os aposentados vítimas da fraude no INSS foram ressarcidos pelo governo.",
+    "citacao": "Não tem um aposentado que foi vítima da fraude no INSS que não foi ressarcido pelo governo.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista ao Jornal Nacional, da TV Globo",
     "veredito": "enganoso",
@@ -67,7 +73,8 @@
   },
   {
     "id": "0e702aab",
-    "texto": "[Lula deixa] recorde de mulher espancada.",
+    "texto": "O governo Lula deixa um recorde de mulheres espancadas.",
+    "citacao": "[Lula deixa] recorde de mulher espancada.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "verdadeiro",
@@ -78,7 +85,8 @@
   },
   {
     "id": "fbf784ba",
-    "texto": "[Lula] vetou o fim da saidinha, a gente teve que derrubar o veto no Congresso Nacional.",
+    "texto": "Lula vetou o fim da saidinha, e o Congresso Nacional teve que derrubar o veto.",
+    "citacao": "[Lula] vetou o fim da saidinha, a gente teve que derrubar o veto no Congresso Nacional.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "verdadeiro",
@@ -89,7 +97,8 @@
   },
   {
     "id": "9f37b191",
-    "texto": "[Lula tem] um governo que é recordista em indústrias que deixam o Brasil e vão para o Paraguai.",
+    "texto": "O governo Lula é recordista em indústrias que deixam o Brasil e vão para o Paraguai.",
+    "citacao": "[Lula tem] um governo que é recordista em indústrias que deixam o Brasil e vão para o Paraguai.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
     "veredito": "falso",
@@ -100,7 +109,8 @@
   },
   {
     "id": "523042a9",
-    "texto": "[Os] 7 bilhões de reais que você [Lula] gastou com a Janja [em viagens].",
+    "texto": "Lula gastou R$ 7 bilhões em viagens com a primeira-dama Janja.",
+    "citacao": "[Os] 7 bilhões de reais que você [Lula] gastou com a Janja [em viagens].",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
@@ -111,7 +121,8 @@
   },
   {
     "id": "b430643c",
-    "texto": "Foi o presidente [Jair] Bolsonaro que passou para no mínimo R$ 600 do Bolsa Família. [...] Era R$ 75 para um, R$ 100 para outro, em média R$ 190. O Bolsonaro triplicou esse valor.",
+    "texto": "Foi Jair Bolsonaro quem elevou o Bolsa Família para no mínimo R$ 600. Antes, era R$ 75 para um, R$ 100 para outro, em média R$ 190: Bolsonaro triplicou esse valor.",
+    "citacao": "Foi o presidente [Jair] Bolsonaro que passou para no mínimo R$ 600 do Bolsa Família. [...] Era R$ 75 para um, R$ 100 para outro, em média R$ 190. O Bolsonaro triplicou esse valor.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "enganoso",
@@ -122,7 +133,8 @@
   },
   {
     "id": "0386e511",
-    "texto": "Você [Lula] não poupou nem os aposentados velhinhos do INSS.",
+    "texto": "Lula esteve envolvido na fraude dos descontos do INSS que atingiu aposentados idosos.",
+    "citacao": "Você [Lula] não poupou nem os aposentados velhinhos do INSS.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "enganoso",

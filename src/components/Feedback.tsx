@@ -33,6 +33,8 @@ export function Feedback(p: {
     <section ref={ref} aria-live="polite" className="mt-6 flex scroll-mt-4 flex-col gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
       <span className={SELO_VEREDITO[afirmacao.veredito]}>{ROTULO_VEREDITO[afirmacao.veredito]}</span>
       <p className="text-lg font-semibold">{mensagem(afirmacao.veredito, respostaDada)}</p>
+      <p className="text-base text-stone-600">Quem disse: {afirmacao.autor}</p>
+      <blockquote className="border-l-4 border-stone-200 pl-3 text-base text-stone-600 italic">“{afirmacao.citacao}”</blockquote>
       <p className="text-base leading-relaxed text-stone-700">{afirmacao.explicacao}</p>
       <a
         href={afirmacao.fonte_url}

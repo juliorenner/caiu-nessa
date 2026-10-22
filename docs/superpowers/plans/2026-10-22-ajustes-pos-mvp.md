@@ -14,7 +14,10 @@ Documento de transparência: cada mudança feita depois do plano do MVP (`2026-1
 **Problema:** parte das 12 afirmações era morna ("aprovamos tudo no Congresso", "32 milhões não votaram"); as que mais circulam vêm de posts e influenciadores, não da boca dos candidatos, e a regra "lado = quem disse" as deixava de fora.
 **Decisões:** (1) lado = quem disse **ou espalhou**, conforme a agência atribui; posts sem atribuição ficam de fora. (2) Prioridade ao que mais circula e é concreto (número, nome, lugar, dinheiro, emprego, crime, benefício). (3) "Falso" e "enganoso" não divergem entre si; só divergem de "verdadeiro" ou de rótulos excluídos. Entre falso e enganoso vale a maioria das agências (empate: falso), e a explicação diz que as agências divergem e por quê. Casos assim recebem revisão com todas as checagens abertas.
 
+## 2026-10-22 — Afirmação neutra na pergunta (JUL-104)
+**Decisão (dono, 2026-10-22):** durante a pergunta o jogador vê só a afirmação, reescrita em terceira pessoa e sem indicar quem a disse; autor e fala original aparecem só no feedback. O jogo deve testar "isso é verdade?", não "confio nessa pessoa?".
+**Campos:** `texto` passa a ser a versão neutra (mesmos números, mesmo alcance e mesma alegação que a agência checou); o novo campo obrigatório `citacao` guarda a fala como a agência a citou, com colchetes e `[...]`. Os ids não mudam. A página /afirmacoes mostra os dois.
+
 ## Pendentes (ainda em desenho)
 - Redesign com cartões e swipe (direita = verdade, esquerda = mentira, cima = cheira mal; botões continuam).
 - Rodadas: "Continuar jogando" no resultado com as próximas afirmações do pool (JUL-108).
-- Esconder "Quem disse" até o feedback como experimento (JUL-104).

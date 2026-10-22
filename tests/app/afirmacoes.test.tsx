@@ -52,6 +52,8 @@ describe('página /afirmacoes', () => {
     expect(cards).toHaveLength(todas.length)
     cards.forEach((card, i) => {
       expect(within(card).getByText(todas[i].texto)).toBeInTheDocument()
+      expect(within(card).getByText(`Quem disse: ${todas[i].autor}`)).toBeInTheDocument()
+      expect(within(card).getByText(`“${todas[i].citacao}”`)).toBeInTheDocument()
       expect(within(card).getByRole('link')).toHaveAttribute('href', todas[i].fonte_url)
     })
   })

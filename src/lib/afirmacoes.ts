@@ -9,7 +9,8 @@ export type Veredito = (typeof VEREDITOS)[number]
 
 export interface Afirmacao {
   id: string
-  texto: string
+  texto: string // neutro, em terceira pessoa: é o que aparece na pergunta
+  citacao: string // a fala como a agência a citou; só aparece no feedback
   lado: Lado
   autor: string
   veredito: Veredito
@@ -55,6 +56,7 @@ export function fonteEhPermitida(url: string): boolean {
 const esquemaAfirmacao = z.object({
   id: z.string().min(1, { error: 'id não pode ser vazio' }),
   texto: z.string(),
+  citacao: z.string({ error: 'citacao é obrigatória' }).min(10, { error: 'citacao deve ter ao menos 10 caracteres' }),
   lado: z.enum(LADOS, { error: 'lado deve ser "esquerda" ou "direita"' }),
   autor: z.string(),
   veredito: z.enum(VEREDITOS, { error: 'veredito deve ser "verdadeiro", "falso" ou "enganoso"' }),
