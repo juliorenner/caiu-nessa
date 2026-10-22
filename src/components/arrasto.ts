@@ -2,8 +2,8 @@ import { useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent, PointerEventHandler } from 'react'
 import type { Veredito } from '@/lib/afirmacoes'
 
-export const LIMIAR_HORIZONTAL = 0.35 // of card width
-export const LIMIAR_VERTICAL = 0.25 // of card height
+export const LIMIAR_HORIZONTAL = 0.35 // da largura do cartão
+export const LIMIAR_VERTICAL = 0.25 // da altura do cartão
 export const TOQUE_MAX_PX = 8
 export const INCLINACAO_MAX_GRAUS = 12
 
@@ -96,7 +96,7 @@ export function useArrasto({ ativo, onResposta }: { ativo: boolean; onResposta: 
     if (veredito) onResposta(veredito)
   }
 
-  // A cancelled gesture (system scroll, incoming call, lost capture) never answers: the card goes back.
+  // Gesto cancelado (rolagem do sistema, ligação, perda da captura) nunca responde: o cartão volta.
   function onPointerCancel() {
     if (!inicio.current) return
     reiniciar()

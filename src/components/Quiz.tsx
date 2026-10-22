@@ -48,6 +48,8 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null)
   const responderRef = useRef<(v: Veredito) => void>(() => {})
   const raiz = useRef<HTMLDivElement>(null)
+  // Trava síncrona: duas entradas no mesmo tick (toque + tecla) não passam ambas pela checagem de etapa.
+  const respondeu = useRef(false)
 
   useEffect(() => {
     setReduzirMovimento(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false)
@@ -62,6 +64,9 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
   })
 
   const naPergunta = estado.etapa === 'pergunta'
+  useEffect(() => {
+    if (naPergunta) respondeu.current = false
+  }, [naPergunta])
   useEffect(() => {
     if (!naPergunta) return
     // Na janela: as setas funcionam sem precisar focar o quiz antes.
@@ -156,13 +161,16 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
   const afirmacao = ordem[indice]
   const respostaDada = respostas[afirmacao.id] ?? null
   const ultima = indice === ordem.length - 1
-  const respondidas = Object.keys(respostas).length
-  const acertos = ordem.filter(a => respostas[a.id] === a.veredito).length
+  // O contador só muda quando o painel revela o veredito, não enquanto o cartão ainda desliza.
+  const contadas = ordem.filter(a => a.id in respostas && !(etapa === 'respondendo' && a.id === afirmacao.id))
+  const respondidas = contadas.length
+  const acertos = contadas.filter(a => respostas[a.id] === a.veredito).length
   const marcada = etapa === 'respondendo' || etapa === 'feedback'
 
   // A resposta entra no mesmo render que muda a fase do cartão: a transição parte de onde o dedo soltou.
   function responder(valor: Veredito) {
-    if (etapa !== 'pergunta') return
+    if (etapa !== 'pergunta' || respondeu.current) return
+    respondeu.current = true
     setRespostas(atual => ({ ...atual, [afirmacao.id]: valor }))
     setEstado({ etapa: 'respondendo', indice })
     depois(() => setEstado({ etapa: 'feedback', indice }))
@@ -235,6 +243,7 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
         <p aria-hidden className={`${TEXTO_SECUNDARIO} text-center text-sm`}>
           ← mentira · ↑ cheira mal · verdade →
         </p>
+        <p className="sr-only">Use as setas: esquerda é mentira, cima é cheira mal, direita é verdade.</p>
         <div className="flex flex-col gap-2">
           {ORDEM_BOTOES.map(v => (
             <button
@@ -242,7 +251,7 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
               type="button"
               aria-disabled={etapa === 'pergunta' ? undefined : true}
               onClick={() => responder(v)}
-              className={`min-h-12 w-full rounded-xl px-4 text-base font-bold transition-[opacity,box-shadow] ${FOCO} ${classeBotao(v)}`}
+              className={`min-h-12 w-full rounded-xl px-4 text-base font-bold transition-[opacity,box-shadow] motion-reduce:transition-none ${FOCO} ${classeBotao(v)}`}
             >
               {ROTULO_BOTAO[v]}
             </button>

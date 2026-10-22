@@ -4,7 +4,7 @@ import { type KeyboardEvent, type PointerEvent, type ReactElement, useEffect, us
 import { createPortal } from 'react-dom'
 import type { Veredito } from '@/lib/afirmacoes'
 import { mensagem } from './mensagemVeredito'
-import { BOTAO_PRIMARIO, CARTAO_SUPERFICIE, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
+import { BOTAO_EM_CARTAO, CARTAO_SUPERFICIE, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
 const LIMIAR_FECHAR = 80
@@ -116,7 +116,7 @@ export function PainelVeredito(p: {
         >
           Ver a checagem ({afirmacao.fonte_nome})
         </a>
-        <button ref={botaoRef} type="button" onClick={onFechar} className={BOTAO_PRIMARIO}>
+        <button ref={botaoRef} type="button" onClick={onFechar} className={BOTAO_EM_CARTAO}>
           {ultima ? 'Ver meu resultado' : 'Próxima'}
         </button>
       </section>

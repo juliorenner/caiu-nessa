@@ -20,7 +20,13 @@ export const SELO_VEREDITO = Object.fromEntries(
 export const FOCO =
   'focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-stone-900 dark:focus-visible:outline-stone-100'
 
-export const BOTAO_PRIMARIO = `flex min-h-12 w-full items-center justify-center rounded-xl bg-stone-900 px-5 py-3 text-lg font-semibold text-white transition-colors hover:bg-stone-700 disabled:opacity-60 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-300 ${FOCO}`
+const BOTAO_BASE =
+  'flex min-h-12 w-full items-center justify-center rounded-xl bg-stone-900 px-5 py-3 text-lg font-semibold text-white transition-colors motion-reduce:transition-none hover:bg-stone-700 disabled:opacity-60'
+
+export const BOTAO_PRIMARIO = `${BOTAO_BASE} dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-300 ${FOCO}`
+
+// Botão dentro de um cartão (claro nos dois temas): corpo e anel de foco sempre escuros.
+export const BOTAO_EM_CARTAO = `${BOTAO_BASE} focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-stone-900`
 
 // Temas Carimbo (claro) e Noite (escuro). As cores ficam em globals.css (@theme).
 export const FUNDO_PAGINA = 'bg-fundo text-stone-900 dark:bg-fundo-escuro dark:text-stone-100'
@@ -31,6 +37,9 @@ export const CARTAO_SUPERFICIE = 'bg-superficie text-stone-900 shadow-sm ring-1 
 // Link dentro de um cartão (claro nos dois temas): texto e anel de foco sempre escuros.
 export const LINK_EM_CARTAO =
   'rounded font-medium text-stone-900 underline underline-offset-4 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-stone-900'
+
+// Link sobre o fundo da página (escuro no tema claro, claro no Noite).
+export const LINK_PAGINA = `rounded font-medium text-stone-900 underline underline-offset-4 dark:text-stone-100 ${FOCO}`
 
 // Texto secundário sobre o fundo da página.
 export const TEXTO_SECUNDARIO = 'text-stone-700 dark:text-stone-300'

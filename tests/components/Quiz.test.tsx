@@ -226,6 +226,8 @@ describe('Quiz', () => {
     const { container } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
     fireEvent.click(screen.getByRole('button', { name: 'VERDADE' }))
     expect(screen.getByRole('button', { name: 'MENTIRA' })).toHaveAttribute('aria-disabled', 'true')
+    // O cartão ainda desliza: o contador só muda quando o painel abre.
+    expect(contador(container)).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: 'MENTIRA' }))
     fireEvent.keyDown(window, { key: 'ArrowLeft' })
     act(() => vi.advanceTimersByTime(300))
@@ -242,6 +244,16 @@ describe('Quiz', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1)
     const corpo = JSON.parse(fetchMock.mock.calls[0][1].body)
     expect(corpo.respostas.e1).toBe('verdadeiro')
+  })
+
+  it('duas entradas no mesmo tick registram só a primeira', () => {
+    movimentoReduzido(true)
+    render(<Quiz afirmacoes={porId(['e1', 'e5'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    act(() => {
+      screen.getByRole('button', { name: 'VERDADE' }).click()
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', cancelable: true }))
+    })
+    expect(screen.getByRole('dialog')).toHaveTextContent('Você acertou.')
   })
 
   it('setas do teclado respondem só na pergunta', async () => {

@@ -1,11 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CARTAO_SUPERFICIE, FOCO, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from '@/components/rotulos'
+import { CARTAO_SUPERFICIE, LINK_EM_CARTAO, LINK_PAGINA, ROTULO_VEREDITO, SELO_VEREDITO } from '@/components/rotulos'
 import { type Afirmacao, carregarAfirmacoes, carregarReserva } from '@/lib/afirmacoes'
 
 export const metadata: Metadata = { title: 'As afirmações do jogo · Caiu Nessa?' }
-
-const LINK = `rounded font-medium text-stone-900 underline underline-offset-4 dark:text-stone-100 ${FOCO}`
 
 function formatarData(iso: string): string {
   const [ano, mes, dia] = iso.split('-')
@@ -48,7 +46,7 @@ function Secao({ id, titulo, afirmacoes }: { id: string; titulo: string; afirmac
 export default function Afirmacoes() {
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 text-base leading-relaxed text-stone-800 dark:text-stone-200">
-      <Link href="/" className={LINK}>
+      <Link href="/" className={LINK_PAGINA}>
         Caiu Nessa?
       </Link>
       <h1 className="mt-6 text-3xl font-bold text-stone-900 dark:text-stone-100">As afirmações do jogo</h1>

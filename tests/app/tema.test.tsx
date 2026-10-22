@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { expect, it, vi } from 'vitest'
 import { viewport } from '@/app/layout'
 import Landing from '@/app/page'
-import { BOTAO_RESPOSTA } from '@/components/rotulos'
+import { BOTAO_EM_CARTAO, BOTAO_PRIMARIO, BOTAO_RESPOSTA } from '@/components/rotulos'
 import { VEREDITOS } from '@/lib/afirmacoes'
 
 // next/font só funciona no compilador do Next; no teste basta a variável CSS.
@@ -27,4 +27,11 @@ it('botões de resposta têm variante clara e escura', () => {
     expect(BOTAO_RESPOSTA[v].base).toMatch(/dark:/)
     expect(BOTAO_RESPOSTA[v].destaque).toMatch(/ring-4/)
   }
+})
+
+it('botão no cartão (claro nos dois temas) não tem variante escura', () => {
+  expect(BOTAO_EM_CARTAO).not.toMatch(/(^|\s)dark:/)
+  expect(BOTAO_EM_CARTAO).toMatch(/focus-visible:outline-stone-900/)
+  expect(BOTAO_EM_CARTAO).toMatch(/motion-reduce:transition-none/)
+  expect(BOTAO_PRIMARIO).toMatch(/motion-reduce:transition-none/)
 })

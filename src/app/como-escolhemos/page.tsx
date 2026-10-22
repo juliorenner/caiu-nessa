@@ -1,15 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { FOCO } from '@/components/rotulos'
+import { LINK_PAGINA } from '@/components/rotulos'
 
 export const metadata: Metadata = { title: 'Como escolhemos as afirmações · Caiu Nessa?' }
-
-const LINK = `rounded font-medium text-stone-900 underline underline-offset-4 dark:text-stone-100 ${FOCO}`
 
 export default function ComoEscolhemos() {
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 text-base leading-relaxed text-stone-800 dark:text-stone-200">
-      <Link href="/" className={LINK}>
+      <Link href="/" className={LINK_PAGINA}>
         Caiu Nessa?
       </Link>
       <h1 className="mt-6 text-3xl font-bold text-stone-900 dark:text-stone-100">Como escolhemos as afirmações</h1>
@@ -60,14 +58,14 @@ export default function ComoEscolhemos() {
       </p>
 
       <p className="mt-10">
-        <Link href="/afirmacoes" className={LINK}>
+        <Link href="/afirmacoes" className={LINK_PAGINA}>
           Ver todas as afirmações e suas fontes
         </Link>
       </p>
 
       <p className="mt-4">
         O código, as afirmações e os planos de desenvolvimento são públicos.{' '}
-        <a href="https://github.com/juliorenner/caiu-nessa" className={LINK}>
+        <a href="https://github.com/juliorenner/caiu-nessa" className={LINK_PAGINA}>
           github.com/juliorenner/caiu-nessa
         </a>
       </p>
