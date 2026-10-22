@@ -4,7 +4,7 @@ import type { RespostaResultado } from '@/lib/resultado-api'
 import { BOTAO_PRIMARIO, FOCO } from './rotulos'
 
 export function ResultadoFinal(p: { dados: RespostaResultado }) {
-  const { resultado, avaliacao, estatisticas, percentilAbaixo } = p.dados
+  const { resultado, avaliacao, estatisticas, percentilAbaixo, estatisticasIndisponiveis } = p.dados
   return (
     <section aria-live="polite" className="flex flex-col gap-5 text-center">
       <p className="text-6xl font-extrabold tracking-tight">
@@ -14,7 +14,9 @@ export function ResultadoFinal(p: { dados: RespostaResultado }) {
       <p className="text-lg leading-relaxed">{avaliacao.texto}</p>
       <p className="text-base leading-relaxed text-stone-700">{avaliacao.vies}</p>
       <p className="rounded-xl bg-stone-100 p-4 text-base text-stone-800">
-        {estatisticas
+        {estatisticasIndisponiveis
+          ? 'A comparação com os outros jogadores não está disponível agora.'
+          : estatisticas
           ? `Você acertou mais que ${percentilAbaixo ?? 0}% das pessoas.`
           : 'Você é um dos primeiros a jogar. A comparação com os outros aparece a partir de 100 jogadas.'}
       </p>

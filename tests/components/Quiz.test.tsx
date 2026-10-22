@@ -19,6 +19,7 @@ const respostaOk: RespostaResultado = {
   avaliacao: { titulo: 'Caiu feio', texto: 'Texto da avaliação.', vies: 'Texto do viés.' },
   estatisticas: null,
   percentilAbaixo: null,
+  estatisticasIndisponiveis: false,
 }
 
 afterEach(() => {
@@ -149,5 +150,24 @@ describe('Quiz', () => {
     }
     // @ts-expect-error jsdom não implementa scrollIntoView
     delete Element.prototype.scrollIntoView
+  })
+
+  it('quando as estatísticas falham, diz que a comparação está indisponível em vez de "um dos primeiros"', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ ...respostaOk, estatisticasIndisponiveis: true }),
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const user = userEvent.setup()
+    for (let i = 0; i < 12; i++) {
+      await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+      await user.click(screen.getByRole('button', { name: i === 11 ? 'Ver meu resultado' : 'Próxima' }))
+    }
+    expect(
+      await screen.findByText('A comparação com os outros jogadores não está disponível agora.'),
+    ).toBeInTheDocument()
+    expect(screen.queryByText(/Você é um dos primeiros a jogar/)).not.toBeInTheDocument()
   })
 })

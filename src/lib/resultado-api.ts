@@ -13,6 +13,8 @@ export interface RespostaResultado {
   avaliacao: Avaliacao
   estatisticas: Estatisticas | null
   percentilAbaixo: number | null
+  // true só quando a consulta de estatísticas falhou depois de gravar a jogada.
+  estatisticasIndisponiveis: boolean
 }
 
 export interface Deps {
@@ -63,9 +65,11 @@ export async function processarResultado(
 
   // A jogada já foi gravada: se as estatísticas falharem, o jogador não deve ser mandado tentar de novo.
   let estatisticas: Estatisticas | null = null
+  let estatisticasIndisponiveis = false
   try {
     estatisticas = await obterEstatisticas(db, afirmacoes)
   } catch (erro) {
+    estatisticasIndisponiveis = true
     console.error('resultado: estatísticas indisponíveis', erro instanceof Error ? erro.message : String(erro))
   }
   return {
@@ -75,6 +79,7 @@ export async function processarResultado(
       avaliacao: gerarAvaliacao(resultado),
       estatisticas,
       percentilAbaixo: estatisticas ? percentilAbaixo(estatisticas.histograma, resultado.acertos) : null,
+      estatisticasIndisponiveis,
     },
   }
 }
