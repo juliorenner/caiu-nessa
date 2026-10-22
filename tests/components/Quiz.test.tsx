@@ -1,7 +1,10 @@
-import { render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import QuizPage from '@/app/quiz/page'
+import { tamanhoDoTexto } from '@/components/CartaoAfirmacao'
 import Quiz from '@/components/Quiz'
+import { carregarAfirmacoes } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { afirmacoesValidas } from '../fixtures/afirmacoes-validas'
 
@@ -26,9 +29,29 @@ const respostaOk: RespostaResultado = {
   estatisticasIndisponiveis: false,
 }
 
+// A página do quiz busca estatísticas no banco; aqui basta "sem estatísticas".
+vi.mock('@/db/client', () => ({ getDb: async () => ({}) }))
+vi.mock('@/lib/estatisticas', () => ({ obterEstatisticas: async () => null }))
+
+function movimentoReduzido(reduzir: boolean) {
+  vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: reduzir }))
+}
+
+// Por padrão os testes rodam com movimento reduzido: as transições acontecem na hora.
+beforeEach(() => movimentoReduzido(true))
+
 afterEach(() => {
+  vi.useRealTimers()
   vi.unstubAllGlobals()
+  vi.restoreAllMocks()
 })
+
+const ponteiro = (x: number, y: number) => ({ pointerId: 1, button: 0, clientX: x, clientY: y })
+const porId = (ids: string[]) => [
+  ...ids.map(id => afirmacoesValidas.find(a => a.id === id)!),
+  ...afirmacoesValidas.filter(a => !ids.includes(a.id)),
+]
+const contador = (container: HTMLElement) => container.querySelector('[data-contador]')
 
 describe('Quiz', () => {
   it('percorre as 12 afirmações, mostra veredito e link da checagem, e envia todas as respostas', async () => {
@@ -154,20 +177,191 @@ describe('Quiz', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
-  it('o feedback rola suave, exceto com prefers-reduced-motion', async () => {
-    const rolar = vi.fn()
-    Element.prototype.scrollIntoView = rolar
-    for (const reduzir of [false, true]) {
-      vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: reduzir }))
-      const { unmount } = render(
-        <Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />,
-      )
-      await userEvent.setup().click(screen.getByRole('button', { name: 'VERDADE' }))
-      expect(rolar).toHaveBeenLastCalledWith({ behavior: reduzir ? 'auto' : 'smooth', block: 'start' })
-      unmount()
+  it('sem movimento reduzido, o painel abre 300 ms depois da resposta; com movimento reduzido, na hora', () => {
+    vi.useFakeTimers()
+    movimentoReduzido(false)
+    const { unmount } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    fireEvent.click(screen.getByRole('button', { name: 'VERDADE' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    act(() => vi.advanceTimersByTime(300))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    unmount()
+
+    movimentoReduzido(true)
+    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    fireEvent.click(screen.getByRole('button', { name: 'VERDADE' }))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('responde por gesto e abre o painel', () => {
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue({
+      width: 300, height: 400, top: 0, left: 0, right: 300, bottom: 400, x: 0, y: 0, toJSON: () => ({}),
+    } as DOMRect)
+    render(<Quiz afirmacoes={porId(['e3'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const cartao = screen.getByRole('group', { name: 'Afirmação' })
+    fireEvent.pointerDown(cartao, ponteiro(200, 10))
+    fireEvent.pointerMove(cartao, ponteiro(40, 12))
+    fireEvent.pointerUp(cartao, ponteiro(40, 12))
+    const painel = screen.getByRole('dialog')
+    expect(painel).toHaveTextContent('Mentira')
+    expect(painel).toHaveTextContent('Você acertou.')
+  })
+
+  it('contador aparece após a primeira resposta e conta acertos', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<Quiz afirmacoes={porId(['e1', 'e3'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    expect(contador(container)).toBeNull()
+    await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+    expect(contador(container)).toHaveTextContent('1 de 1 ✔')
+    await user.click(screen.getByRole('button', { name: 'Próxima' }))
+    await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+    expect(contador(container)).toHaveTextContent('1 de 2 ✔')
+  })
+
+  it('ignora resposta durante a animação', () => {
+    vi.useFakeTimers()
+    movimentoReduzido(false)
+    const fetchMock = vi.fn().mockReturnValue(new Promise(() => {}))
+    vi.stubGlobal('fetch', fetchMock)
+    const { container } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    fireEvent.click(screen.getByRole('button', { name: 'VERDADE' }))
+    expect(screen.getByRole('button', { name: 'MENTIRA' })).toHaveAttribute('aria-disabled', 'true')
+    // O cartão ainda desliza: o contador só muda quando o painel abre.
+    expect(contador(container)).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'MENTIRA' }))
+    fireEvent.keyDown(window, { key: 'ArrowLeft' })
+    act(() => vi.advanceTimersByTime(300))
+    expect(screen.getByText('Você acertou.')).toBeInTheDocument()
+    expect(contador(container)).toHaveTextContent('1 de 1 ✔')
+    for (let i = 0; i < 12; i++) {
+      if (i > 0) {
+        fireEvent.click(screen.getByRole('button', { name: 'VERDADE' }))
+        act(() => vi.advanceTimersByTime(300))
+      }
+      fireEvent.click(screen.getByRole('button', { name: i === 11 ? 'Ver meu resultado' : 'Próxima' }))
+      act(() => vi.advanceTimersByTime(300))
     }
-    // @ts-expect-error jsdom não implementa scrollIntoView
-    delete Element.prototype.scrollIntoView
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    const corpo = JSON.parse(fetchMock.mock.calls[0][1].body)
+    expect(corpo.respostas.e1).toBe('verdadeiro')
+  })
+
+  it('duas entradas no mesmo tick registram só a primeira', () => {
+    movimentoReduzido(true)
+    render(<Quiz afirmacoes={porId(['e1', 'e5'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    act(() => {
+      screen.getByRole('button', { name: 'VERDADE' }).click()
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', cancelable: true }))
+    })
+    expect(screen.getByRole('dialog')).toHaveTextContent('Você acertou.')
+  })
+
+  it('setas do teclado respondem só na pergunta', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<Quiz afirmacoes={porId(['e1', 'e5'])} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    expect(fireEvent.keyDown(window, { key: 'ArrowDown' })).toBe(true)
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(fireEvent.keyDown(window, { key: 'ArrowLeft' })).toBe(false)
+    expect(screen.getByText('Era verdade.')).toBeInTheDocument()
+    // Painel aberto: setas não respondem de novo.
+    expect(fireEvent.keyDown(window, { key: 'ArrowRight' })).toBe(true)
+    expect(screen.getByText('Era verdade.')).toBeInTheDocument()
+    expect(contador(container)).toHaveTextContent('0 de 1 ✔')
+    await user.click(screen.getByRole('button', { name: 'Próxima' }))
+    fireEvent.keyDown(window, { key: 'ArrowUp' })
+    expect(screen.getByText('Você acertou.')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Próxima' }))
+    fireEvent.keyDown(window, { key: 'ArrowRight' })
+    expect(contador(container)).toHaveTextContent('2 de 3 ✔')
+  })
+
+  it('painel é obrigatório: próximo cartão só depois de Próxima', async () => {
+    const user = userEvent.setup()
+    const [primeira, segunda] = afirmacoesValidas
+    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+    await user.click(screen.getByRole('button', { name: 'MENTIRA' }))
+    fireEvent.keyDown(window, { key: 'ArrowRight' })
+    expect(screen.getByText('Afirmação 1 de 12')).toBeInTheDocument()
+    expect(screen.getByText(primeira.texto)).toBeInTheDocument()
+    expect(screen.queryByText(segunda.texto)).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Próxima' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.getByText('Afirmação 2 de 12')).toBeInTheDocument()
+    expect(screen.getByText(segunda.texto)).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '2')
+  })
+
+  it('tela do quiz não excede a viewport (320×568) com a afirmação mais longa', async () => {
+    const todas = [...carregarAfirmacoes(), ...afirmacoesValidas]
+    const maisLonga = todas.reduce((a, b) => (b.texto.length > a.texto.length ? b : a))
+    const { container } = render(
+      <Quiz afirmacoes={[maisLonga, ...afirmacoesValidas.slice(1)]} erroPorAfirmacao={null} embaralharFn={identidade} />,
+    )
+    const raiz = container.firstElementChild as HTMLElement
+    for (const c of ['flex', 'h-dvh', 'flex-col', 'box-border', 'overflow-y-auto']) expect(raiz).toHaveClass(c)
+    expect(raiz).not.toHaveClass('overflow-hidden')
+    const texto = screen.getByText(maisLonga.texto)
+    expect(texto).toHaveClass(tamanhoDoTexto(maisLonga.texto))
+    expect(['text-lg', 'text-base']).toContain(tamanhoDoTexto(maisLonga.texto))
+    for (const botao of ['VERDADE', 'MENTIRA', 'ISSO ME CHEIRA MAL 🤔'])
+      expect(screen.getByRole('button', { name: botao })).toHaveClass('min-h-12')
+
+    const pagina = render(await QuizPage())
+    const main = pagina.container.querySelector('main')!
+    expect(main.className).not.toMatch(/(^|\s)(py|pt|pb|h|min-h)-/)
+  })
+
+  it('conteúdo do quiz fica inert enquanto o painel está aberto, e o painel não', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const conteudo = container.querySelector('[data-conteudo]')!
+    expect(conteudo).not.toHaveAttribute('inert')
+    await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+    expect(conteudo).toHaveAttribute('inert')
+    const painel = screen.getByRole('dialog')
+    expect(painel.closest('[inert]')).toBeNull()
+    expect(screen.getByRole('button', { name: 'Próxima' })).toHaveFocus()
+    await user.click(screen.getByRole('button', { name: 'Próxima' }))
+    expect(conteudo).not.toHaveAttribute('inert')
+  })
+
+  it('foco volta para a raiz do quiz quando o painel fecha', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+    await user.click(screen.getByRole('button', { name: 'Próxima' }))
+    const raiz = container.firstElementChild as HTMLElement
+    expect(document.activeElement).toBe(raiz)
+    expect(raiz).toHaveAttribute('tabindex', '-1')
+  })
+
+  it('botão escolhido ganha destaque e os outros esmaecem enquanto o painel está aberto', async () => {
+    vi.useFakeTimers()
+    movimentoReduzido(false)
+    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const verdade = screen.getByRole('button', { name: 'VERDADE' })
+    const mentira = screen.getByRole('button', { name: 'MENTIRA' })
+    expect(verdade).not.toHaveClass('ring-4')
+    fireEvent.click(verdade)
+    expect(verdade).toHaveClass('ring-4')
+    expect(verdade).not.toHaveClass('opacity-40')
+    expect(mentira).toHaveClass('opacity-40')
+    act(() => vi.advanceTimersByTime(300))
+    expect(verdade).toHaveClass('ring-4')
+  })
+
+  it('contador some na tela de resultado', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => respostaOk }))
+    const { container } = render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const user = userEvent.setup()
+    for (let i = 0; i < 12; i++) {
+      await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+      await user.click(screen.getByRole('button', { name: i === 11 ? 'Ver meu resultado' : 'Próxima' }))
+    }
+    expect(await screen.findByText('Caiu feio')).toBeInTheDocument()
+    expect(contador(container)).toBeNull()
+    expect(container.querySelector('.h-dvh')).toBeNull()
   })
 
   it('quando as estatísticas falham, diz que a comparação está indisponível em vez de "um dos primeiros"', async () => {

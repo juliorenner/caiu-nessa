@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { TOTAL_AFIRMACOES } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
-import { BOTAO_PRIMARIO, FOCO } from './rotulos'
+import { BOTAO_PRIMARIO, CARTAO_SUPERFICIE, FOCO, TEXTO_SECUNDARIO } from './rotulos'
 
 export function ResultadoFinal(p: { dados: RespostaResultado }) {
   const { resultado, avaliacao, estatisticas, percentilAbaixo, estatisticasIndisponiveis } = p.dados
@@ -12,8 +12,8 @@ export function ResultadoFinal(p: { dados: RespostaResultado }) {
       </p>
       <h1 className="text-3xl font-bold">{avaliacao.titulo}</h1>
       <p className="text-lg leading-relaxed">{avaliacao.texto}</p>
-      {avaliacao.vies !== null && <p className="text-base leading-relaxed text-stone-700">{avaliacao.vies}</p>}
-      <p className="rounded-xl bg-stone-100 p-4 text-base text-stone-800">
+      {avaliacao.vies !== null && <p className={`text-base leading-relaxed ${TEXTO_SECUNDARIO}`}>{avaliacao.vies}</p>}
+      <p className={`rounded-xl p-4 text-base ${CARTAO_SUPERFICIE}`}>
         {estatisticasIndisponiveis
           ? 'A comparação com os outros jogadores não está disponível agora.'
           : estatisticas
@@ -24,7 +24,7 @@ export function ResultadoFinal(p: { dados: RespostaResultado }) {
       <a href="/quiz" className={BOTAO_PRIMARIO}>
         Jogar de novo
       </a>
-      <p className="text-sm text-stone-600">
+      <p className="text-sm text-stone-600 dark:text-stone-400">
         Acertei {resultado.acertos} de {TOTAL_AFIRMACOES} no Caiu Nessa? caiunessa.com.br
       </p>
       <Link

@@ -19,7 +19,7 @@ async function erroPorAfirmacao(afirmacoes: ReturnType<typeof carregarAfirmacoes
 export default async function QuizPage() {
   const afirmacoes = carregarAfirmacoes()
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
+    <main className="mx-auto w-full max-w-2xl flex-1">
       <Quiz
         afirmacoes={embaralhar(afirmacoes.map(({ lado: _lado, ...semLado }) => semLado))}
         erroPorAfirmacao={await erroPorAfirmacao(afirmacoes)}
