@@ -50,5 +50,11 @@ Documento de transparência: cada mudança feita depois do plano do MVP (`2026-1
 **Limite de hoje:** o pool tem 3 verdadeiras e 3 enganosas da direita, então só fecha 1 rodada extra; curadoria da direita é ticket separado.
 **Verificação em browser (controlador, Chrome, 320×568):** rodada de 12 → resultado com "Continuar jogando" → rodada de 6 → "Rodada 2: 2 de 6" e "Na partida: 6 de 18" sem a comparação → "Acabaram as afirmações por enquanto" com "Jogar de novo"; nenhuma afirmação repetida; sem erros no console.
 
+## 2026-10-22 — Virais de outubro no pool (ticket de virais no Linear)
+**Pedido (dono):** varrer as fake news mais faladas em X e Instagram nas últimas ~36 h e incluir as fortes que faltavam.
+**Método:** agente de pesquisa sobre as checagens recentes das cinco agências e reportagens sobre posts virais; candidatos só com checagem de agência, regras de curadoria de sempre (lado = quem disse ou espalhou; posts sem autor identificado ficam de fora).
+**Resultado:** 8 candidatos checados, nenhum no pool; 4 elegíveis, todos direita + falso; 4 fora por não terem autor (entre eles o mais viral da janela, um infográfico sobre o Pisa com mais de 1 milhão de visualizações). Nenhum caso novo de direita verdadeiro ou enganoso, nem da esquerda com checagem de agência.
+**Decisão (dono):** entram as duas verificadas nas páginas das agências: "recorde de empresas fechadas" (Flávio, debate da Band; Aos Fatos, falso) e o vídeo da mulher com droga atribuído ao ato pró-Lula na Paulista (Flávio repostando Rony Gabriel; Lupa, falso). "Cervejinha" e "Lula foi à Justiça pela saidinha" esperam confirmação das checagens originais.
+
 ## Pendentes (ainda em desenho)
 - Nada no momento.

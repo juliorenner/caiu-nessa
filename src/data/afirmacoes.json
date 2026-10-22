@@ -497,5 +497,29 @@
     "fonte_nome": "Estadão Verifica",
     "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
     "data_checagem": "2026-10-18"
+  },
+  {
+    "id": "7bb5f029",
+    "texto": "O governo Lula bateu o recorde de empresas fechadas no Brasil.",
+    "citacao": "[Lula deixa] recorde de empresa fechada.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), no debate da Band",
+    "veredito": "falso",
+    "explicacao": "O recorde de falências foi em 2015, com 1.828 empresas baixadas. Nos últimos anos do governo Lula o número caiu, segundo a Serasa Experian: 862 em 2024, 734 em 2025 e 277 até maio de 2026. Flávio repetiu a afirmação ao menos 25 vezes em 2026, e o Aos Fatos diz que é falso que tenha havido recorde de empresas fechadas no atual governo.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
+    "data_checagem": "2026-10-18"
+  },
+  {
+    "id": "641a29c1",
+    "texto": "Um vídeo de uma mulher com droga mostra militantes do ato em apoio a Lula realizado em 11 de outubro na Avenida Paulista, em São Paulo.",
+    "citacao": "Militantes que participaram de uma manifestação em apoio ao presidente Luiz Inácio Lula da Silva [teriam consumido substâncias ilícitas durante o ato na Avenida Paulista].",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), em post no Instagram, repostando o deputado federal eleito Rony Gabriel, segundo a Lupa",
+    "veredito": "falso",
+    "explicacao": "O vídeo já circulava antes do ato: uma busca reversa encontrou a mesma gravação em um post em espanhol no X de 10 de outubro, véspera da manifestação. A Lupa ressalva que isso não mostra onde nem quando o vídeo foi gravado, só que não é do ato pró-Lula. A legenda no Instagram teve cerca de 30 mil visualizações; Tarcísio de Freitas (Republicanos) também publicou vídeo criticando o ato.",
+    "fonte_nome": "Lupa",
+    "fonte_url": "https://www.agencialupa.org/eleicoes/2026/10/12/video-de-mulher-com-suposta-droga-nao-e-de-ato-pro-lula-em-sp/",
+    "data_checagem": "2026-10-12"
   }
 ]
