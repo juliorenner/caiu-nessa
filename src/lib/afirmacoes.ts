@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import dados from '@/data/afirmacoes.json'
-import dadosReserva from '@/data/afirmacoes-reserva.json'
 
 export type Lado = 'esquerda' | 'direita'
 
@@ -18,16 +17,45 @@ export interface Afirmacao {
   fonte_nome: string
   fonte_url: string
   data_checagem: string // YYYY-MM-DD
-  observacao?: string // só na reserva: por que o item não pode entrar no jogo
+  observacao?: string // por que o item fica fora do jogo; item com observacao nunca é sorteado
 }
 
 export type Respostas = Record<string, Veredito>
 
+// Tamanho da primeira rodada; só rodadas desse tamanho entram no ranking.
 export const TOTAL_AFIRMACOES = 12
-export const POR_LADO = 6
+// Mínimo de itens jogáveis que o pool precisa ter em cada par (lado, veredito).
 export const POR_VEREDITO_POR_LADO = 2
 
 const LADOS: readonly Lado[] = ['esquerda', 'direita']
+
+// Um par é a combinação (lado, veredito); toda rodada tem o mesmo número de itens em cada um dos 6 pares.
+export interface Par {
+  lado: Lado
+  veredito: Veredito
+}
+
+export const PARES: readonly Par[] = LADOS.flatMap((lado) => VEREDITOS.map((veredito) => ({ lado, veredito })))
+
+export const TAMANHOS_DE_RODADA = [12, 6] as const
+export const POR_PAR_PRIMEIRA = 2
+export const POR_PAR_EXTRA = 1
+
+export function contarPorPar(afirmacoes: readonly Afirmacao[]): Map<string, number> {
+  const contagem = new Map<string, number>(PARES.map(({ lado, veredito }) => [`${lado}:${veredito}`, 0]))
+  for (const { lado, veredito } of afirmacoes) {
+    const chave = `${lado}:${veredito}`
+    contagem.set(chave, (contagem.get(chave) ?? 0) + 1)
+  }
+  return contagem
+}
+
+export function ehRodadaBalanceada(afirmacoes: readonly Afirmacao[]): boolean {
+  if (!(TAMANHOS_DE_RODADA as readonly number[]).includes(afirmacoes.length)) return false
+  const porPar = afirmacoes.length / PARES.length
+  const contagem = contarPorPar(afirmacoes)
+  return contagem.size === PARES.length && [...contagem.values()].every((n) => n === porPar)
+}
 
 function hostEhDominio(host: string, dominio: string): boolean {
   return host === dominio || host === `www.${dominio}`
@@ -87,62 +115,72 @@ const esquemaAfirmacao = z.object({
 
 export const afirmacaoSchema = esquemaAfirmacao
 
-const esquemaAfirmacoes = z
-  .array(esquemaAfirmacao)
-  .length(TOTAL_AFIRMACOES, { error: `devem existir exatamente ${TOTAL_AFIRMACOES} afirmações` })
+function descreverProblemas(erro: z.ZodError): string {
+  return erro.issues.map(({ path, message }) => (path.length ? `[${path.join('.')}] ${message}` : message)).join('; ')
+}
 
-export function validarAfirmacoes(dados: unknown): Afirmacao[] {
-  const resultado = esquemaAfirmacoes.safeParse(dados)
-  if (!resultado.success) {
-    const problemas = resultado.error.issues
-      .map(({ path, message }) => (path.length ? `[${path.join('.')}] ${message}` : message))
-      .join('; ')
-    throw new Error(`Afirmações inválidas: ${problemas}`)
-  }
-  const afirmacoes = resultado.data
+// Jogável = item sem `observacao`; os demais aparecem em /afirmacoes e nunca são sorteados.
+export function jogaveis(pool: readonly Afirmacao[]): Afirmacao[] {
+  return pool.filter((a) => a.observacao === undefined)
+}
+
+export function foraDoJogo(pool: readonly Afirmacao[]): Afirmacao[] {
+  return pool.filter((a) => a.observacao !== undefined)
+}
+
+export function validarPool(dados: unknown): Afirmacao[] {
+  const resultado = z.array(esquemaAfirmacao).safeParse(dados)
+  if (!resultado.success) throw new Error(`Afirmações inválidas: ${descreverProblemas(resultado.error)}`)
+  const pool = resultado.data
 
   const ids = new Set<string>()
-  for (const { id } of afirmacoes) {
+  for (const { id } of pool) {
     if (ids.has(id)) throw new Error(`Afirmações inválidas: id duplicado "${id}"`)
     ids.add(id)
   }
 
-  for (const lado of LADOS) {
-    const doLado = afirmacoes.filter((a) => a.lado === lado)
-    const contagens = VEREDITOS.map((v) => doLado.filter((a) => a.veredito === v).length)
-    if (doLado.length !== POR_LADO || contagens.some((n) => n !== POR_VEREDITO_POR_LADO)) {
-      const detalhe = VEREDITOS.map((v, k) => `${contagens[k]} ${v}`).join(', ')
-      throw new Error(
-        `Afirmações inválidas: lado ${lado} deve ter ${POR_VEREDITO_POR_LADO} de cada veredito ` +
-          `(${VEREDITOS.join(', ')}); tem ${detalhe}`,
-      )
-    }
+  // Cada par precisa de itens jogáveis suficientes para a primeira rodada sempre fechar.
+  const faltando = [...contarPorPar(jogaveis(pool))].filter(([, n]) => n < POR_VEREDITO_POR_LADO)
+  if (faltando.length) {
+    const detalhe = faltando.map(([par, n]) => `${par} tem ${n}`).join(', ')
+    throw new Error(
+      `Afirmações inválidas: cada par (lado:veredito) precisa de ao menos ${POR_VEREDITO_POR_LADO} jogáveis; ${detalhe}`,
+    )
   }
 
-  return afirmacoes
+  return pool
 }
 
-let afirmacoesCarregadas: Afirmacao[] | undefined
+let poolCarregado: Afirmacao[] | undefined
 
-export function carregarAfirmacoes(): Afirmacao[] {
-  afirmacoesCarregadas ??= validarAfirmacoes(dados)
-  return afirmacoesCarregadas.map((a) => ({ ...a }))
+export function carregarPool(): Afirmacao[] {
+  poolCarregado ??= validarPool(dados)
+  return poolCarregado.map((a) => ({ ...a }))
 }
 
-let reservaCarregada: Afirmacao[] | undefined
+// `lado` fica no servidor: o cliente nunca recebe de que lado é cada afirmação.
+export type AfirmacaoNoQuiz = Omit<Afirmacao, 'lado'>
 
-export function carregarReserva(): Afirmacao[] {
-  reservaCarregada ??= dadosReserva.map((item, i) => {
-    const resultado = esquemaAfirmacao.safeParse(item)
-    if (!resultado.success) {
-      const problemas = resultado.error.issues
-        .map(({ path, message }) => (path.length ? `[${path.join('.')}] ${message}` : message))
-        .join('; ')
-      throw new Error(`Reserva inválida: [${i}] ${problemas}`)
-    }
-    return resultado.data
-  })
-  return reservaCarregada.map((a) => ({ ...a }))
+export function semLado({ lado: _lado, ...resto }: Afirmacao): AfirmacaoNoQuiz {
+  return resto
+}
+
+// Sorteia `porPar` jogáveis de cada par, fora de `excluir`, e embaralha o resultado; null se algum par não fecha.
+export function sortearRodada(
+  pool: readonly Afirmacao[],
+  porPar: number,
+  excluir: Iterable<string>,
+  aleatorio: () => number = Math.random,
+): Afirmacao[] | null {
+  const excluidos = new Set(excluir)
+  const disponiveis = jogaveis(pool).filter((a) => !excluidos.has(a.id))
+  const sorteadas: Afirmacao[] = []
+  for (const { lado, veredito } of PARES) {
+    const candidatas = disponiveis.filter((a) => a.lado === lado && a.veredito === veredito)
+    if (candidatas.length < porPar) return null
+    sorteadas.push(...embaralhar(candidatas, aleatorio).slice(0, porPar))
+  }
+  return embaralhar(sorteadas, aleatorio)
 }
 
 export function embaralhar<T>(itens: readonly T[], aleatorio: () => number = Math.random): T[] {

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { Db } from '@/db/client'
-import { type Afirmacao, VEREDITOS } from '@/lib/afirmacoes'
+import { type Afirmacao, TOTAL_AFIRMACOES, VEREDITOS, ehRodadaBalanceada } from '@/lib/afirmacoes'
 import { type Avaliacao, gerarAvaliacao } from '@/lib/avaliacao'
 import { type Estatisticas, obterEstatisticas, percentilAbaixo } from '@/lib/estatisticas'
 import { type Resultado, calcularResultado } from '@/lib/pontuacao'
@@ -19,15 +19,19 @@ export interface RespostaResultado {
 
 export interface Deps {
   db: Db
-  afirmacoes: Afirmacao[]
+  // O pool inteiro, jogável ou não; itens com observacao ficam fora do jogo.
+  pool: Afirmacao[]
   salt: string
   agora?: Date
 }
 
-function idsConferem(respostas: Record<string, unknown>, afirmacoes: Afirmacao[]): boolean {
+// Devolve a rodada respondida (itens do pool na ordem do pool) ou null se as chaves não formam uma rodada válida.
+function rodadaRespondida(respostas: Record<string, unknown>, pool: Afirmacao[]): Afirmacao[] | null {
+  const jogaveis = new Set(pool.filter(a => a.observacao === undefined).map(a => a.id))
   const chaves = Object.keys(respostas)
-  const ids = new Set(afirmacoes.map(a => a.id))
-  return chaves.length === ids.size && chaves.every(chave => ids.has(chave))
+  if (!chaves.every(chave => jogaveis.has(chave))) return null
+  const rodada = pool.filter(a => Object.hasOwn(respostas, a.id))
+  return ehRodadaBalanceada(rodada) ? rodada : null
 }
 
 export async function processarResultado(
@@ -38,9 +42,10 @@ export async function processarResultado(
   | { status: 200; body: RespostaResultado }
   | { status: 400 | 429; body: { erro: 'respostas_invalidas' | 'muitas_jogadas' } }
 > {
-  const { db, afirmacoes, salt, agora = new Date() } = deps
+  const { db, pool, salt, agora = new Date() } = deps
   const validacao = corpoSchema.safeParse(corpo)
-  if (!validacao.success || !idsConferem(validacao.data.respostas, afirmacoes)) {
+  const rodada = validacao.success ? rodadaRespondida(validacao.data.respostas, pool) : null
+  if (!validacao.success || !rodada) {
     return { status: 400, body: { erro: 'respostas_invalidas' } }
   }
   const { respostas } = validacao.data
@@ -48,7 +53,7 @@ export async function processarResultado(
   const ipHash = hashIp(extrairIp(headers), salt)
   await limparIpHashesExpirados(db, agora)
 
-  const resultado = calcularResultado(afirmacoes, respostas)
+  const resultado = calcularResultado(rodada, respostas)
   const gravada = await inserirDentroDoLimite(
     db,
     {
@@ -67,7 +72,7 @@ export async function processarResultado(
   let estatisticas: Estatisticas | null = null
   let estatisticasIndisponiveis = false
   try {
-    estatisticas = await obterEstatisticas(db, afirmacoes)
+    estatisticas = await obterEstatisticas(db, pool)
   } catch (erro) {
     estatisticasIndisponiveis = true
     console.error('resultado: estatísticas indisponíveis', erro instanceof Error ? erro.message : String(erro))
@@ -78,7 +83,11 @@ export async function processarResultado(
       resultado,
       avaliacao: gerarAvaliacao(resultado),
       estatisticas,
-      percentilAbaixo: estatisticas ? percentilAbaixo(estatisticas.histograma, resultado.acertos) : null,
+      // O ranking só compara rodadas de 12.
+      percentilAbaixo:
+        estatisticas && resultado.total === TOTAL_AFIRMACOES
+          ? percentilAbaixo(estatisticas.histograma, resultado.acertos)
+          : null,
       estatisticasIndisponiveis,
     },
   }

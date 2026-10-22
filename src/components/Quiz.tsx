@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { type Respostas, TOTAL_AFIRMACOES, type Veredito } from '@/lib/afirmacoes'
+import type { Respostas, Veredito } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import type { FaseCartao } from './CartaoAfirmacao'
 import { PainelVeredito } from './PainelVeredito'
@@ -12,11 +12,21 @@ import type { AfirmacaoNoQuiz } from './tipos'
 
 export type { AfirmacaoNoQuiz }
 
+export interface RodadaFeita {
+  ids: string[]
+  acertos: number
+  total: number
+}
+
 export interface QuizProps {
   afirmacoes: AfirmacaoNoQuiz[]
   erroPorAfirmacao: Record<string, number> | null
   // A ordem vem embaralhada do servidor; embaralhar aqui geraria hydration mismatch.
   embaralharFn?: (itens: AfirmacaoNoQuiz[]) => AfirmacaoNoQuiz[]
+  rodada: number
+  // Placar das rodadas anteriores desta partida.
+  acumuladoAnterior: { acertos: number; total: number }
+  onContinuar: (feita: RodadaFeita) => Promise<'ok' | 'fim' | 'falha'>
 }
 
 // respondendo: o cartão desliza carimbado antes do painel subir; saindo: painel fechado, cartão voando para fora.
@@ -39,7 +49,14 @@ const FASE_CARTAO: Record<'pergunta' | 'respondendo' | 'feedback' | 'saindo', Fa
   saindo: 'saindo',
 }
 
-export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x => x }: QuizProps) {
+export default function Quiz({
+  afirmacoes,
+  erroPorAfirmacao,
+  embaralharFn = x => x,
+  rodada,
+  acumuladoAnterior,
+  onContinuar,
+}: QuizProps) {
   const [ordem] = useState(() => embaralharFn(afirmacoes))
   const [estado, setEstado] = useState<Estado>({ etapa: 'pergunta', indice: 0 })
   const [respostas, setRespostas] = useState<Respostas>({})
@@ -57,6 +74,11 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
       if (temporizador.current) clearTimeout(temporizador.current)
     }
   }, [])
+
+  // Rodada extra: o botão "Continuar jogando" sumiu com a tela de resultado; o foco vem para o quiz em vez de cair no body.
+  useEffect(() => {
+    if (rodada > 1) raiz.current?.focus({ preventScroll: true })
+  }, [rodada])
 
   // Sem dependências: depois de cada render, a tecla usa o responder com o estado atual.
   useEffect(() => {
@@ -124,9 +146,18 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
   }
 
   if (estado.etapa === 'resultado') {
+    const { resultado } = estado.dados
     return (
       <div className="px-4 py-8">
-        <ResultadoFinal dados={estado.dados} />
+        <ResultadoFinal
+          dados={estado.dados}
+          rodada={rodada}
+          acumulado={{
+            acertos: acumuladoAnterior.acertos + resultado.acertos,
+            total: acumuladoAnterior.total + resultado.total,
+          }}
+          onContinuar={() => onContinuar({ ids: ordem.map(a => a.id), acertos: resultado.acertos, total: resultado.total })}
+        />
       </div>
     )
   }
@@ -204,7 +235,7 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
       <div data-conteudo inert={etapa === 'feedback' ? true : undefined} className="flex flex-1 flex-col gap-3">
         <div className="flex items-center justify-between gap-2">
           <p className={`text-base font-medium ${TEXTO_SECUNDARIO}`}>
-            Afirmação {indice + 1} de {TOTAL_AFIRMACOES}
+            Afirmação {indice + 1} de {ordem.length}
           </p>
           {respondidas > 0 && (
             <span
@@ -220,12 +251,12 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
           aria-label="Progresso"
           aria-valuenow={indice + 1}
           aria-valuemin={0}
-          aria-valuemax={TOTAL_AFIRMACOES}
+          aria-valuemax={ordem.length}
           className="h-1.5 w-full overflow-hidden rounded-full bg-stone-300 dark:bg-stone-700"
         >
           <div
             className="h-full rounded-full bg-stone-900 dark:bg-stone-100"
-            style={{ width: `${((indice + 1) / TOTAL_AFIRMACOES) * 100}%` }}
+            style={{ width: `${((indice + 1) / ordem.length) * 100}%` }}
           />
         </div>
         <div className="flex flex-1 items-center">

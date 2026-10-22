@@ -21,8 +21,9 @@ export default function ComoEscolhemos() {
 
       <h2 className="mt-8 text-xl font-semibold text-stone-900 dark:text-stone-100">Mesmo peso para os dois lados</h2>
       <p className="mt-2">
-        São 12 afirmações: 6 ditas por quem está de um lado da disputa e 6 por quem está do outro. Em cada lado há 2
-        verdadeiras, 2 falsas e 2 enganosas. Essa proporção é sempre a mesma. O &quot;lado&quot; de uma afirmação é
+        Cada rodada é sorteada de um conjunto maior e tem o mesmo número de afirmações de cada lado da disputa e, em cada
+        lado, o mesmo número de verdadeiras, falsas e enganosas: a primeira rodada tem 12 afirmações (2 de cada por
+        lado), as seguintes têm 6 (1 de cada por lado). O &quot;lado&quot; de uma afirmação é
         definido por quem a disse ou a espalhou, conforme a agência de checagem atribui, não pelo assunto. Damos
         prioridade às afirmações que mais circularam. Durante o jogo o lado não aparece.
       </p>

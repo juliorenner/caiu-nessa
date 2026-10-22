@@ -35,5 +35,20 @@ Documento de transparência: cada mudança feita depois do plano do MVP (`2026-1
 **Problema (dono, jogando a v2):** "Eu não conheço essa moça [Roberta Luchsinger]" não diz nada para quem não sabe quem ela é.
 **Decisão:** o `texto` neutro ganha o contexto mínimo para a afirmação ser entendida sozinha (quem é a pessoa, que caso é esse, o que é o termo). O contexto vem só da checagem citada em `fonte_url` e não pode entregar o veredito nem julgar; `citacao`, ids e vereditos não mudam. Vale para as afirmações em jogo e para a reserva, porque todas vão entrar na roda com as rodadas. Oito textos mudaram (Roberta Luchsinger, saidinha, BRB/Banco Master, fraude dos descontos do INSS ×2, recorde de mulheres espancadas, filho de Lula, áudio de Vorcaro); "8.000 empresas faliram em junho" fica sem ano porque a checagem não o informa.
 
+## 2026-10-22 — Rodadas: pool único, sorteio e "Continuar jogando" (ticket de rodadas no Linear)
+**Pedido (dono):** "as 12 perguntas eram só pra iniciar, a ideia é que tenhamos mais e depois que randomizemos elas, e que as pessoas possam então continuar jogando".
+**Design:** `docs/superpowers/specs/2026-10-22-rodadas-design.md`; plano `docs/superpowers/plans/2026-10-22-rodadas.md`.
+**Decisões:**
+- Um pool só (`src/data/afirmacoes.json`, 41 itens, 34 jogáveis); itens com `observacao` ficam fora do sorteio e aparecem em /afirmacoes como "Fora do jogo".
+- Cada visita sorteia a primeira rodada: 12 afirmações, 2 de cada veredito por lado. "Continuar jogando" puxa rodadas de 6 (1 de cada por lado) entre as que a pessoa ainda não viu na partida; quando não fecha mais uma rodada balanceada, a tela diz que acabaram por enquanto.
+- Nenhuma rodada desbalanceada é sorteada nem aceita pela API (12 ou 6, iguais por par).
+- Faixas por fração do total: Imune = tudo; Quase imune ≥ 75%; Abre o olho ≥ 40% (12/9/5 como antes; 6/5/3 nas extras).
+- Ranking, histograma e percentil contam só rodadas de 12. "% das pessoas erraram esta" usa as jogadas em que a afirmação apareceu e só aparece com 30 aparições ou mais.
+- Rodadas extras são gravadas com `total = 6` e não entram na comparação com os outros.
+- Nada é lembrado entre visitas (sem login e sem cookie): cada visita recomeça do pool inteiro.
+- O portão de 100 jogadas vale para o objeto inteiro de estatísticas, inclusive "% erraram esta": com o sorteio, cada afirmação aparece em cerca de 35% das partidas, então chega a 30 aparições por volta das 85 jogadas; liberar antes exigiria dividir o tipo de estatísticas e não compensa no tamanho atual do pool.
+**Limite de hoje:** o pool tem 3 verdadeiras e 3 enganosas da direita, então só fecha 1 rodada extra; curadoria da direita é ticket separado.
+**Verificação em browser (controlador, Chrome, 320×568):** rodada de 12 → resultado com "Continuar jogando" → rodada de 6 → "Rodada 2: 2 de 6" e "Na partida: 6 de 18" sem a comparação → "Acabaram as afirmações por enquanto" com "Jogar de novo"; nenhuma afirmação repetida; sem erros no console.
+
 ## Pendentes (ainda em desenho)
-- Rodadas: "Continuar jogando" no resultado com as próximas afirmações do pool (JUL-108).
+- Nada no momento.

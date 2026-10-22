@@ -4,11 +4,11 @@ import { jogadas } from '@/db/schema'
 import * as estatisticas from '@/lib/estatisticas'
 import { hashIp } from '@/lib/rate-limit'
 import { processarResultado } from '@/lib/resultado-api'
-import { afirmacoesValidas, todasCertas } from '../fixtures/afirmacoes-validas'
+import { afirmacoesValidas, rodadaDeSeis, todasCertas } from '../fixtures/afirmacoes-validas'
 import { criarDbTeste } from '../helpers/db'
 import { inserirJogadas } from '../helpers/jogadas'
 
-const deps = async () => ({ db: await criarDbTeste(), afirmacoes: afirmacoesValidas, salt: 's' })
+const deps = async () => ({ db: await criarDbTeste(), pool: afirmacoesValidas, salt: 's' })
 const cab = new Headers({ 'x-forwarded-for': '9.9.9.9' })
 
 describe('processarResultado', () => {
@@ -79,5 +79,51 @@ describe('processarResultado', () => {
     expect(r.body.percentilAbaixo).toBeNull()
     expect(r.body.estatisticasIndisponiveis).toBe(true)
     expect(await d.db.select().from(jogadas)).toHaveLength(1)
+  })
+
+  it('200 para uma rodada de 6 balanceada; grava total 6', async () => {
+    const d = await deps()
+    const respostas = Object.fromEntries(rodadaDeSeis.map(a => [a.id, a.veredito]))
+    const r = await processarResultado({ respostas }, cab, d)
+    expect(r.status).toBe(200)
+    if (r.status !== 200) return
+    expect(r.body.resultado.total).toBe(6)
+    expect(r.body.resultado.acertos).toBe(6)
+    const [linha] = await d.db.select().from(jogadas)
+    expect(linha.total).toBe(6)
+    expect(Object.keys(linha.respostas as object).sort()).toEqual(rodadaDeSeis.map(a => a.id).sort())
+  })
+
+  it('400 para 12 ids válidos mas desbalanceados', async () => {
+    // Pool com um 13º item: troca d6 (direita, enganoso) por e7 (esquerda, verdadeiro), 12 ids todos jogáveis.
+    const pool = [...afirmacoesValidas, { ...afirmacoesValidas[0], id: 'e7' }]
+    const d = { ...(await deps()), pool }
+    const { d6: _, ...semD6 } = todasCertas
+    const r = await processarResultado({ respostas: { ...semD6, e7: 'verdadeiro' } }, cab, d)
+    expect(r.status).toBe(400)
+    expect(await d.db.select().from(jogadas)).toHaveLength(0)
+  })
+
+  it('400 quando um id é de item fora do jogo', async () => {
+    const pool = [
+      ...afirmacoesValidas,
+      { ...afirmacoesValidas[0], id: 'x1', observacao: 'Fora do jogo: agências divergem sobre o veredito.' },
+    ]
+    const d = { ...(await deps()), pool }
+    const { e1: _, ...semE1 } = todasCertas
+    const r = await processarResultado({ respostas: { ...semE1, x1: 'verdadeiro' } }, cab, d)
+    expect(r.status).toBe(400)
+    expect(await d.db.select().from(jogadas)).toHaveLength(0)
+  })
+
+  it('rodada de 6 não devolve percentil', async () => {
+    const d = await deps()
+    await inserirJogadas(d.db, 100, () => ({ acertos: 5 }))
+    const respostas = Object.fromEntries(rodadaDeSeis.map(a => [a.id, a.veredito]))
+    const r = await processarResultado({ respostas }, cab, d)
+    expect(r.status).toBe(200)
+    if (r.status !== 200) return
+    expect(r.body.estatisticas?.totalJogadas).toBe(100)
+    expect(r.body.percentilAbaixo).toBeNull()
   })
 })

@@ -1,15 +1,17 @@
 import { expect, it } from 'vitest'
 import { calcularResultado, ehQuase } from '@/lib/pontuacao'
-import { afirmacoesValidas, todasCertas } from '../fixtures/afirmacoes-validas'
+import { afirmacoesValidas, rodadaDeSeis, todasCertas } from '../fixtures/afirmacoes-validas'
 
 it('12 acertos quando todas as respostas batem com o veredito', () => {
   expect(calcularResultado(afirmacoesValidas, todasCertas)).toEqual({
     acertos: 12, total: 12, acertosEsquerda: 6, acertosDireita: 6, acreditadasEsquerda: 0, acreditadasDireita: 0,
-    desconfiadasEsquerda: 0, desconfiadasDireita: 0, grauErradoEsquerda: 0, grauErradoDireita: 0 })
+    desconfiadasEsquerda: 0, desconfiadasDireita: 0, grauErradoEsquerda: 0, grauErradoDireita: 0,
+    verdadeirasEsquerda: 2, verdadeirasDireita: 2, naoVerdadeirasEsquerda: 4, naoVerdadeirasDireita: 4 })
 })
 it('conta falsas e enganosas acreditadas por lado', () => {
   const r = calcularResultado(afirmacoesValidas, { ...todasCertas, e4: 'verdadeiro', e5: 'verdadeiro', d6: 'verdadeiro' })
   expect(r.acertos).toBe(9); expect(r.acreditadasEsquerda).toBe(2); expect(r.acreditadasDireita).toBe(1)
+  expect(r.verdadeirasEsquerda).toBe(2); expect(r.naoVerdadeirasEsquerda).toBe(4)
 })
 it('confundir falso com enganoso é erro, não acreditou', () => {
   const r = calcularResultado(afirmacoesValidas, { ...todasCertas, e3: 'enganoso', e5: 'falso' })
@@ -36,4 +38,10 @@ it('resposta ausente conta como erro', () => {
   const r = calcularResultado(afirmacoesValidas, semE1)
   expect(r.acertos).toBe(11)
   expect(r.acreditadasEsquerda + r.desconfiadasEsquerda + r.grauErradoEsquerda).toBe(0)
+})
+it('rodada de 6: total 6, composição 1/2 por lado', () => {
+  const r = calcularResultado(rodadaDeSeis, todasCertas)
+  expect(r.total).toBe(6); expect(r.acertos).toBe(6)
+  expect(r.verdadeirasEsquerda).toBe(1); expect(r.naoVerdadeirasEsquerda).toBe(2)
+  expect(r.verdadeirasDireita).toBe(1); expect(r.naoVerdadeirasDireita).toBe(2)
 })

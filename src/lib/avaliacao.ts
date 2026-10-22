@@ -6,11 +6,6 @@ export interface Avaliacao {
   vies: string | null
 }
 
-const NAO_VERDADEIRAS_POR_LADO = 4
-const NAO_VERDADEIRAS = NAO_VERDADEIRAS_POR_LADO * 2
-const VERDADEIRAS_POR_LADO = 2
-const VERDADEIRAS = VERDADEIRAS_POR_LADO * 2
-
 type Eixo = 'acreditou' | 'desconfiou' | 'grau'
 
 export function porcentagem(parte: number, todo: number): number {
@@ -25,13 +20,13 @@ function eixoDominante(a: number, d: number, g: number): Eixo {
   return 'grau'
 }
 
-function textoDoEixo(eixo: Eixo, a: number, d: number, g: number, caiuFeio: boolean): string {
+function textoDoEixo(eixo: Eixo, r: Resultado, a: number, d: number, g: number, caiuFeio: boolean): string {
   if (eixo === 'acreditou') {
-    const texto = `Você acreditou em ${porcentagem(a, NAO_VERDADEIRAS)}% das afirmações falsas ou enganosas.`
+    const texto = `Você acreditou em ${porcentagem(a, r.naoVerdadeirasEsquerda + r.naoVerdadeirasDireita)}% das afirmações falsas ou enganosas.`
     return caiuFeio ? `${texto} Hora de desconfiar mais.` : texto
   }
   if (eixo === 'desconfiou') {
-    const texto = `Você desconfiou de ${porcentagem(d, VERDADEIRAS)}% das verdades.`
+    const texto = `Você desconfiou de ${porcentagem(d, r.verdadeirasEsquerda + r.verdadeirasDireita)}% das verdades.`
     return caiuFeio ? `${texto} Nem tudo é mentira.` : texto
   }
   const texto = `Você percebeu o que não era verdade, mas errou o grau em ${g === 1 ? 'uma' : g} delas: trocou mentira por enganoso, ou o contrário.`
@@ -41,22 +36,23 @@ function textoDoEixo(eixo: Eixo, a: number, d: number, g: number, caiuFeio: bool
 function viesDoEixo(eixo: Eixo, r: Resultado): string | null {
   if (eixo === 'acreditou') {
     if (r.acreditadasEsquerda + r.acreditadasDireita === 0) return null
-    const e = porcentagem(r.acreditadasEsquerda, NAO_VERDADEIRAS_POR_LADO)
-    const d = porcentagem(r.acreditadasDireita, NAO_VERDADEIRAS_POR_LADO)
+    const e = porcentagem(r.acreditadasEsquerda, r.naoVerdadeirasEsquerda)
+    const d = porcentagem(r.acreditadasDireita, r.naoVerdadeirasDireita)
     return `Você acreditou em ${e}% das falsas ou enganosas da esquerda e ${d}% das da direita.`
   }
   if (eixo === 'desconfiou') {
     if (r.desconfiadasEsquerda + r.desconfiadasDireita === 0) return null
-    const e = porcentagem(r.desconfiadasEsquerda, VERDADEIRAS_POR_LADO)
-    const d = porcentagem(r.desconfiadasDireita, VERDADEIRAS_POR_LADO)
+    const e = porcentagem(r.desconfiadasEsquerda, r.verdadeirasEsquerda)
+    const d = porcentagem(r.desconfiadasDireita, r.verdadeirasDireita)
     return `Você desconfiou de ${e}% das verdades da esquerda e ${d}% das da direita.`
   }
   if (r.grauErradoEsquerda + r.grauErradoDireita === 0) return null
   return `Você errou o grau em ${r.grauErradoEsquerda} ${r.grauErradoEsquerda === 1 ? 'afirmação' : 'afirmações'} da esquerda e ${r.grauErradoDireita} da direita.`
 }
 
+// Faixas proporcionais ao tamanho da rodada: 12 → 12/9/5, 6 → 6/5/3.
 export function gerarAvaliacao(r: Resultado): Avaliacao {
-  if (r.acertos === 12) {
+  if (r.acertos === r.total) {
     return { titulo: 'Imune', texto: 'Você não caiu em nenhuma. Nem as falsas te pegaram.', vies: null }
   }
   const a = r.acreditadasEsquerda + r.acreditadasDireita
@@ -65,11 +61,11 @@ export function gerarAvaliacao(r: Resultado): Avaliacao {
   const eixo = eixoDominante(a, d, g)
   const vies = viesDoEixo(eixo, r)
 
-  if (r.acertos >= 9) {
+  if (r.acertos >= Math.ceil(0.75 * r.total)) {
     return { titulo: 'Quase imune', texto: 'Você caiu em poucas, mas caiu. Vale conferir quais.', vies }
   }
-  if (r.acertos >= 5) {
-    return { titulo: 'Abre o olho', texto: textoDoEixo(eixo, a, d, g, false), vies }
+  if (r.acertos >= Math.ceil(0.4 * r.total)) {
+    return { titulo: 'Abre o olho', texto: textoDoEixo(eixo, r, a, d, g, false), vies }
   }
-  return { titulo: 'Caiu feio', texto: textoDoEixo(eixo, a, d, g, true), vies }
+  return { titulo: 'Caiu feio', texto: textoDoEixo(eixo, r, a, d, g, true), vies }
 }

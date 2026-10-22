@@ -1,6 +1,13 @@
-import { describe, expect, it } from 'vitest'
-import { obterEstatisticas, percentilAbaixo } from '@/lib/estatisticas'
-import { afirmacoesValidas, todasCertas } from '../fixtures/afirmacoes-validas'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  CACHE_ESTATISTICAS_MS,
+  limparCacheEstatisticas,
+  MINIMO_POR_AFIRMACAO,
+  obterEstatisticas,
+  obterEstatisticasComCache,
+  percentilAbaixo,
+} from '@/lib/estatisticas'
+import { afirmacoesValidas, rodadaDeSeis, todasCertas } from '../fixtures/afirmacoes-validas'
 import { criarDbTeste } from '../helpers/db'
 import { inserirJogadas } from '../helpers/jogadas'
 
@@ -32,14 +39,120 @@ describe('obterEstatisticas', () => {
     expect(e.mediaDireita).toBe(6)
   })
 
-  it('ignora ids antigos nas respostas e dá 0 para id sem respostas', async () => {
+  it('ignora ids antigos nas respostas e deixa de fora id sem respostas', async () => {
     const db = await criarDbTeste()
     const { e1: _, ...semE1 } = todasCertas
     await inserirJogadas(db, 100, () => ({ respostas: { ...semE1, removida: 'falso' } }))
     const e = (await obterEstatisticas(db, afirmacoesValidas))!
     expect(e.erroPorAfirmacao).not.toHaveProperty('removida')
-    expect(Object.keys(e.erroPorAfirmacao)).toHaveLength(12)
+    expect(e.erroPorAfirmacao).not.toHaveProperty('e1')
+    expect(Object.keys(e.erroPorAfirmacao)).toHaveLength(11)
+  })
+
+  it('ranking e histograma só contam jogadas de 12', async () => {
+    const db = await criarDbTeste()
+    const seis = Object.fromEntries(rodadaDeSeis.map(a => [a.id, a.veredito]))
+    await inserirJogadas(db, 100)
+    await inserirJogadas(db, 50, () => ({
+      respostas: seis,
+      acertos: 2,
+      total: 6,
+      acertosEsquerda: 1,
+      acertosDireita: 1,
+    }))
+    const e = (await obterEstatisticas(db, afirmacoesValidas))!
+    expect(e.totalJogadas).toBe(100)
+    expect(e.histograma.reduce((s, n) => s + n, 0)).toBe(100)
+    expect(e.histograma[12]).toBe(100)
+    expect(e.histograma[2]).toBe(0)
+    expect(e.mediaEsquerda).toBe(6)
+  })
+
+  it('gate de 100 conta só jogadas de 12', async () => {
+    const db = await criarDbTeste()
+    await inserirJogadas(db, 99)
+    await inserirJogadas(db, 50, () => ({
+      respostas: Object.fromEntries(rodadaDeSeis.map(a => [a.id, a.veredito])),
+      acertos: 6,
+      total: 6,
+      acertosEsquerda: 3,
+      acertosDireita: 3,
+    }))
+    expect(await obterEstatisticas(db, afirmacoesValidas)).toBeNull()
+  })
+
+  it('% erraram usa aparições por afirmação', async () => {
+    const db = await criarDbTeste()
+    // e7 (item extra do pool) só aparece em 40 rodadas de 6, errada em 10: 10/40, não 10/140.
+    const pool = [...afirmacoesValidas, { ...afirmacoesValidas[0], id: 'e7' }]
+    const outrosCinco = Object.fromEntries(rodadaDeSeis.slice(1).map(a => [a.id, a.veredito]))
+    await inserirJogadas(db, 100)
+    await inserirJogadas(db, 40, i => ({
+      respostas: { e7: i < 10 ? 'falso' : 'verdadeiro', ...outrosCinco },
+      acertos: i < 10 ? 5 : 6,
+      total: 6,
+    }))
+    const e = (await obterEstatisticas(db, pool))!
+    expect(e.erroPorAfirmacao.e7).toBe(25)
     expect(e.erroPorAfirmacao.e1).toBe(0)
+  })
+
+  it('afirmação com menos de 30 aparições fica fora de erroPorAfirmacao', async () => {
+    expect(MINIMO_POR_AFIRMACAO).toBe(30)
+    const db = await criarDbTeste()
+    const pool = [...afirmacoesValidas, { ...afirmacoesValidas[0], id: 'e7' }, { ...afirmacoesValidas[0], id: 'e8' }]
+    const outrosCinco = Object.fromEntries(rodadaDeSeis.slice(1).map(a => [a.id, a.veredito]))
+    await inserirJogadas(db, 100)
+    await inserirJogadas(db, 29, () => ({ respostas: { e7: 'falso', ...outrosCinco }, acertos: 5, total: 6 }))
+    await inserirJogadas(db, 30, () => ({ respostas: { e8: 'falso', ...outrosCinco }, acertos: 5, total: 6 }))
+    const e = (await obterEstatisticas(db, pool))!
+    expect(e.erroPorAfirmacao).not.toHaveProperty('e7')
+    expect(e.erroPorAfirmacao.e8).toBe(100)
+  })
+
+  it('id "__proto__" vira propriedade própria de erroPorAfirmacao', async () => {
+    const db = await criarDbTeste()
+    const pool = [...afirmacoesValidas, { ...afirmacoesValidas[0], id: '__proto__' }]
+    const outrosCinco = Object.fromEntries(rodadaDeSeis.slice(1).map(a => [a.id, a.veredito]))
+    await inserirJogadas(db, 100)
+    await inserirJogadas(db, 30, () => ({
+      respostas: Object.fromEntries([['__proto__', 'falso'], ...Object.entries(outrosCinco)]),
+      acertos: 5,
+      total: 6,
+    }))
+    const e = (await obterEstatisticas(db, pool))!
+    expect(Object.hasOwn(e.erroPorAfirmacao, '__proto__')).toBe(true)
+    expect(Object.getOwnPropertyDescriptor(e.erroPorAfirmacao, '__proto__')?.value).toBe(100)
+    expect(Object.getPrototypeOf(e.erroPorAfirmacao)).toBe(Object.prototype)
+  })
+})
+
+describe('obterEstatisticasComCache', () => {
+  beforeEach(() => limparCacheEstatisticas())
+
+  it('consulta o banco uma vez por minuto e guarda também o null', async () => {
+    const db = await criarDbTeste()
+    const execute = vi.spyOn(db, 'execute')
+    const t0 = new Date('2026-10-22T12:00:00Z')
+    expect(await obterEstatisticasComCache(db, afirmacoesValidas, t0)).toBeNull()
+    await inserirJogadas(db, 100)
+    // Ainda dentro do minuto: devolve o null guardado, sem consultar.
+    const quaseUmMinuto = new Date(t0.getTime() + CACHE_ESTATISTICAS_MS - 1)
+    expect(await obterEstatisticasComCache(db, afirmacoesValidas, quaseUmMinuto)).toBeNull()
+    expect(execute).toHaveBeenCalledTimes(1)
+    const depois = new Date(t0.getTime() + CACHE_ESTATISTICAS_MS)
+    expect((await obterEstatisticasComCache(db, afirmacoesValidas, depois))?.totalJogadas).toBe(100)
+    expect(execute).toHaveBeenCalledTimes(2)
+  })
+
+  it('limparCacheEstatisticas força nova consulta', async () => {
+    const db = await criarDbTeste()
+    const execute = vi.spyOn(db, 'execute')
+    const t0 = new Date('2026-10-22T12:00:00Z')
+    await obterEstatisticasComCache(db, afirmacoesValidas, t0)
+    limparCacheEstatisticas()
+    await obterEstatisticasComCache(db, afirmacoesValidas, t0)
+    expect(execute).toHaveBeenCalledTimes(2)
   })
 })
 

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import { CARTAO_SUPERFICIE, LINK_EM_CARTAO, LINK_PAGINA, ROTULO_VEREDITO, SELO_VEREDITO } from '@/components/rotulos'
-import { type Afirmacao, carregarAfirmacoes, carregarReserva } from '@/lib/afirmacoes'
+import { type Afirmacao, carregarPool, foraDoJogo, jogaveis } from '@/lib/afirmacoes'
 
 export const metadata: Metadata = { title: 'As afirmações do jogo · Caiu Nessa?' }
 
@@ -26,24 +27,43 @@ function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
   )
 }
 
-function Secao({ id, titulo, afirmacoes }: { id: string; titulo: string; afirmacoes: Afirmacao[] }) {
+function ListaDeCartoes({ afirmacoes }: { afirmacoes: Afirmacao[] }) {
+  return (
+    <ul className="mt-4 flex flex-col gap-4">
+      {afirmacoes.map((a) => (
+        <li key={a.id}>
+          <CartaoAfirmacao afirmacao={a} />
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function Secao({ id, titulo, children }: { id: string; titulo: string; children: ReactNode }) {
   return (
     <section aria-labelledby={id} className="mt-10">
       <h2 id={id} className="text-2xl font-bold text-stone-900 dark:text-stone-100">
         {titulo}
       </h2>
-      <ul className="mt-4 flex flex-col gap-4">
-        {afirmacoes.map((a) => (
-          <li key={a.id}>
-            <CartaoAfirmacao afirmacao={a} />
-          </li>
-        ))}
-      </ul>
+      {children}
+    </section>
+  )
+}
+
+function GrupoPorLado({ id, titulo, afirmacoes }: { id: string; titulo: string; afirmacoes: Afirmacao[] }) {
+  return (
+    <section aria-labelledby={id} className="mt-6">
+      <h3 id={id} className="text-xl font-semibold text-stone-900 dark:text-stone-100">
+        {titulo}
+      </h3>
+      <ListaDeCartoes afirmacoes={afirmacoes} />
     </section>
   )
 }
 
 export default function Afirmacoes() {
+  const pool = carregarPool()
+  const noJogo = jogaveis(pool)
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 text-base leading-relaxed text-stone-800 dark:text-stone-200">
       <Link href="/" className={LINK_PAGINA}>
@@ -51,13 +71,25 @@ export default function Afirmacoes() {
       </Link>
       <h1 className="mt-6 text-3xl font-bold text-stone-900 dark:text-stone-100">As afirmações do jogo</h1>
       <p className="mt-4">
-        Estas são todas as afirmações que já checamos: as 12 em jogo agora e as que estão na reserva. Parte da
-        reserva pode entrar em rodadas futuras; outra parte ficou de fora porque agências diferentes deram vereditos
-        diferentes. Cada uma traz o veredito da agência que a checou e o link da checagem.
+        Cada rodada é sorteada deste conjunto: a primeira tem 12 afirmações, as seguintes 6, sempre com o mesmo número
+        de cada lado e de cada veredito.
       </p>
 
-      <Secao id="em-jogo" titulo="Em jogo agora" afirmacoes={carregarAfirmacoes()} />
-      <Secao id="reserva" titulo="Na reserva" afirmacoes={carregarReserva()} />
+      <Secao id="no-jogo" titulo="No jogo">
+        <GrupoPorLado
+          id="no-jogo-esquerda"
+          titulo="Ditas ou espalhadas pela esquerda"
+          afirmacoes={noJogo.filter((a) => a.lado === 'esquerda')}
+        />
+        <GrupoPorLado
+          id="no-jogo-direita"
+          titulo="Ditas ou espalhadas pela direita"
+          afirmacoes={noJogo.filter((a) => a.lado === 'direita')}
+        />
+      </Secao>
+      <Secao id="fora-do-jogo" titulo="Fora do jogo">
+        <ListaDeCartoes afirmacoes={foraDoJogo(pool)} />
+      </Secao>
     </main>
   )
 }
