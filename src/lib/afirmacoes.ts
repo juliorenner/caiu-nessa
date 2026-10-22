@@ -29,6 +29,34 @@ export const POR_VEREDITO_POR_LADO = 2
 
 const LADOS: readonly Lado[] = ['esquerda', 'direita']
 
+// Um par é a combinação (lado, veredito); toda rodada tem o mesmo número de itens em cada um dos 6 pares.
+export interface Par {
+  lado: Lado
+  veredito: Veredito
+}
+
+export const PARES: readonly Par[] = LADOS.flatMap((lado) => VEREDITOS.map((veredito) => ({ lado, veredito })))
+
+export const TAMANHOS_DE_RODADA = [12, 6] as const
+export const POR_PAR_PRIMEIRA = 2
+export const POR_PAR_EXTRA = 1
+
+export function contarPorPar(afirmacoes: readonly Afirmacao[]): Map<string, number> {
+  const contagem = new Map<string, number>(PARES.map(({ lado, veredito }) => [`${lado}:${veredito}`, 0]))
+  for (const { lado, veredito } of afirmacoes) {
+    const chave = `${lado}:${veredito}`
+    contagem.set(chave, (contagem.get(chave) ?? 0) + 1)
+  }
+  return contagem
+}
+
+export function ehRodadaBalanceada(afirmacoes: readonly Afirmacao[]): boolean {
+  if (!(TAMANHOS_DE_RODADA as readonly number[]).includes(afirmacoes.length)) return false
+  const porPar = afirmacoes.length / PARES.length
+  const contagem = contarPorPar(afirmacoes)
+  return contagem.size === PARES.length && [...contagem.values()].every((n) => n === porPar)
+}
+
 function hostEhDominio(host: string, dominio: string): boolean {
   return host === dominio || host === `www.${dominio}`
 }

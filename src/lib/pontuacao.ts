@@ -11,6 +11,11 @@ export interface Resultado {
   desconfiadasDireita: number
   grauErradoEsquerda: number // confundiu 'falso' com 'enganoso', ou o contrário
   grauErradoDireita: number
+  // composição da rodada, independente das respostas
+  verdadeirasEsquerda: number
+  verdadeirasDireita: number
+  naoVerdadeirasEsquerda: number // falsas ou enganosas
+  naoVerdadeirasDireita: number
 }
 
 export function calcularResultado(afirmacoes: Afirmacao[], respostas: Respostas): Resultado {
@@ -25,10 +30,19 @@ export function calcularResultado(afirmacoes: Afirmacao[], respostas: Respostas)
     desconfiadasDireita: 0,
     grauErradoEsquerda: 0,
     grauErradoDireita: 0,
+    verdadeirasEsquerda: 0,
+    verdadeirasDireita: 0,
+    naoVerdadeirasEsquerda: 0,
+    naoVerdadeirasDireita: 0,
   }
   for (const a of afirmacoes) {
     const resposta = respostas[a.id]
     const daEsquerda = a.lado === 'esquerda'
+    if (a.veredito === 'verdadeiro') {
+      if (daEsquerda) resultado.verdadeirasEsquerda++
+      else resultado.verdadeirasDireita++
+    } else if (daEsquerda) resultado.naoVerdadeirasEsquerda++
+    else resultado.naoVerdadeirasDireita++
     if (resposta === a.veredito) {
       resultado.acertos++
       if (daEsquerda) resultado.acertosEsquerda++

@@ -3,7 +3,8 @@ import { gerarAvaliacao, porcentagem } from '@/lib/avaliacao'
 import type { Resultado } from '@/lib/pontuacao'
 
 const base: Resultado = { acertos: 12, total: 12, acertosEsquerda: 6, acertosDireita: 6, acreditadasEsquerda: 0, acreditadasDireita: 0,
-  desconfiadasEsquerda: 0, desconfiadasDireita: 0, grauErradoEsquerda: 0, grauErradoDireita: 0 }
+  desconfiadasEsquerda: 0, desconfiadasDireita: 0, grauErradoEsquerda: 0, grauErradoDireita: 0,
+  verdadeirasEsquerda: 2, verdadeirasDireita: 2, naoVerdadeirasEsquerda: 4, naoVerdadeirasDireita: 4 }
 it.each([[12, 'Imune'], [9, 'Quase imune'], [11, 'Quase imune'], [8, 'Abre o olho'], [5, 'Abre o olho'], [4, 'Caiu feio'], [0, 'Caiu feio']])(
   'acertos %i -> título %s', (acertos, titulo) => expect(gerarAvaliacao({ ...base, acertos }).titulo).toBe(titulo))
 it('texto do tier "Abre o olho" traz a % de falsas ou enganosas acreditadas', () => {
@@ -61,3 +62,16 @@ it('0–4 sufixo para desconfiadas', () => {
   expect(a.texto).toBe('Você desconfiou de 100% das verdades. Nem tudo é mentira.')
 })
 it('porcentagem(0, 0) é 0', () => expect(porcentagem(0, 0)).toBe(0))
+const baseSeis: Resultado = { ...base, acertos: 6, total: 6, acertosEsquerda: 3, acertosDireita: 3,
+  verdadeirasEsquerda: 1, verdadeirasDireita: 1, naoVerdadeirasEsquerda: 2, naoVerdadeirasDireita: 2 }
+it('faixas para 6: 6 Imune, 5 Quase imune, 3 Abre o olho, 2 Caiu feio', () => {
+  expect(gerarAvaliacao({ ...baseSeis, acertos: 6 }).titulo).toBe('Imune')
+  expect(gerarAvaliacao({ ...baseSeis, acertos: 5 }).titulo).toBe('Quase imune')
+  expect(gerarAvaliacao({ ...baseSeis, acertos: 3 }).titulo).toBe('Abre o olho')
+  expect(gerarAvaliacao({ ...baseSeis, acertos: 2 }).titulo).toBe('Caiu feio')
+})
+it('porcentagens usam a composição da rodada (6: acreditou em 1 de 4 = 25%)', () => {
+  const a = gerarAvaliacao({ ...baseSeis, acertos: 3, acreditadasEsquerda: 1, desconfiadasDireita: 1, grauErradoDireita: 1 })
+  expect(a.texto).toBe('Você acreditou em 25% das afirmações falsas ou enganosas.')
+  expect(a.vies).toBe('Você acreditou em 50% das falsas ou enganosas da esquerda e 0% das da direita.')
+})

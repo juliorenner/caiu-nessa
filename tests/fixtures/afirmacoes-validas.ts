@@ -1,4 +1,4 @@
-import type { Afirmacao, Lado, Respostas, Veredito } from '@/lib/afirmacoes'
+import { PARES, type Afirmacao, type Lado, type Respostas, type Veredito } from '@/lib/afirmacoes'
 
 function criar(id: string, lado: Lado, veredito: Veredito): Afirmacao {
   return {
@@ -32,4 +32,9 @@ export const afirmacoesValidas: Afirmacao[] = [
 
 export const todasCertas: Respostas = Object.fromEntries(
   afirmacoesValidas.map((a) => [a.id, a.veredito]),
+)
+
+// Rodada extra de 6: o primeiro item de cada par (lado, veredito), na ordem de PARES.
+export const rodadaDeSeis: Afirmacao[] = PARES.map(
+  ({ lado, veredito }) => afirmacoesValidas.find((a) => a.lado === lado && a.veredito === veredito)!,
 )
