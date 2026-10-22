@@ -5,7 +5,9 @@ import type { Afirmacao } from '@/lib/afirmacoes'
 import { porcentagem } from '@/lib/avaliacao'
 
 export const MINIMO_JOGADAS = 100
-const MAXIMO_ACERTOS = 12
+export const MAXIMO_ACERTOS = 12
+// Abaixo disso o "% erraram" de uma afirmação é ruído demais para mostrar.
+export const MINIMO_POR_AFIRMACAO = 30
 
 export interface Estatisticas {
   totalJogadas: number
@@ -25,26 +27,37 @@ interface LinhaAgregada {
   media_direita: string | number | null
   histograma: { acertos: number; quantidade: number }[]
   por_resposta: { chave: string; valor: string; quantidade: number }[]
+  aparicoes: { chave: string; quantidade: number }[]
 }
 
-export async function obterEstatisticas(db: Db, afirmacoes: Afirmacao[]): Promise<Estatisticas | null> {
+export async function obterEstatisticas(db: Db, pool: Afirmacao[]): Promise<Estatisticas | null> {
   // Um único statement: todos os agregados leem o mesmo snapshot de jogadas.
+  // Ranking, histograma e médias só comparam rodadas de 12; o erro por afirmação usa todas as rodadas.
   const resultado = await db.execute(sql`
-    with base as (
-      select acertos, acertos_esquerda, acertos_direita, respostas from ${jogadas}
+    with base12 as (
+      select acertos, acertos_esquerda, acertos_direita from ${jogadas} where total = 12
+    ),
+    todas as (
+      select respostas from ${jogadas}
     )
     select
-      (select count(*) from base)::int as total,
-      (select avg(acertos_esquerda) from base) as media_esquerda,
-      (select avg(acertos_direita) from base) as media_direita,
+      (select count(*) from base12)::int as total,
+      (select avg(acertos_esquerda) from base12) as media_esquerda,
+      (select avg(acertos_direita) from base12) as media_direita,
       (select coalesce(json_agg(json_build_object('acertos', acertos, 'quantidade', quantidade)), '[]'::json)
-        from (select acertos, count(*)::int as quantidade from base group by acertos) h) as histograma,
+        from (select acertos, count(*)::int as quantidade from base12 group by acertos) h) as histograma,
       (select coalesce(json_agg(json_build_object('chave', chave, 'valor', valor, 'quantidade', quantidade)), '[]'::json)
         from (
           select kv.chave, kv.valor, count(*)::int as quantidade
-          from base, jsonb_each_text(base.respostas) as kv(chave, valor)
+          from todas, jsonb_each_text(todas.respostas) as kv(chave, valor)
           group by kv.chave, kv.valor
-        ) r) as por_resposta`)
+        ) r) as por_resposta,
+      (select coalesce(json_agg(json_build_object('chave', chave, 'quantidade', quantidade)), '[]'::json)
+        from (
+          select k.chave, count(*)::int as quantidade
+          from todas, jsonb_object_keys(todas.respostas) as k(chave)
+          group by k.chave
+        ) a) as aparicoes`)
   // Db é genérico no driver (tipo do resultado desconhecido); neon-http e PGlite devolvem { rows } com json já parseado.
   const {
     rows: [linha],
@@ -57,16 +70,20 @@ export async function obterEstatisticas(db: Db, afirmacoes: Afirmacao[]): Promis
     if (acertos >= 0 && acertos <= MAXIMO_ACERTOS) histograma[acertos] = Number(quantidade)
   }
 
-  const vereditoPorId = new Map(afirmacoes.map(a => [a.id, a.veredito]))
+  const vereditoPorId = new Map(pool.map(a => [a.id, a.veredito]))
   const erros = new Map<string, number>()
   for (const { chave, valor, quantidade } of linha.por_resposta) {
     const veredito = vereditoPorId.get(chave)
     if (veredito === undefined || valor === veredito) continue
     erros.set(chave, (erros.get(chave) ?? 0) + Number(quantidade))
   }
-  const erroPorAfirmacao = Object.fromEntries(
-    afirmacoes.map(a => [a.id, porcentagem(erros.get(a.id) ?? 0, totalJogadas)]),
-  )
+  const aparicoes = new Map(linha.aparicoes.map(({ chave, quantidade }) => [chave, Number(quantidade)]))
+  // Cada afirmação é medida pelas rodadas em que apareceu; abaixo do mínimo fica de fora.
+  const erroPorAfirmacao: Record<string, number> = {}
+  for (const { id } of pool) {
+    const vezes = aparicoes.get(id) ?? 0
+    if (vezes >= MINIMO_POR_AFIRMACAO) erroPorAfirmacao[id] = porcentagem(erros.get(id) ?? 0, vezes)
+  }
 
   return {
     totalJogadas,

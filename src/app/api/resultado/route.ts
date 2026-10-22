@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   }
   const { status, body } = await processarResultado(corpo, req.headers, {
     db: await getDb(),
-    afirmacoes: carregarAfirmacoes(),
+    pool: carregarAfirmacoes(),
     salt: obterSalt(),
   })
   return Response.json(body, { status })
