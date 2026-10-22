@@ -1,13 +1,13 @@
 [
   {
-    "id": "483d6a7b",
-    "texto": "O governo de Lula criou o MEI, e há 17,5 milhões de MEIs no Brasil.",
+    "id": "5fdfac58",
+    "texto": "Nos quatro anos do governo deles, a inflação de alimentos estava em 56,17%. Agora, nos meus quatro anos, está em 13%.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "Segundo o governo federal, há 17,56 milhões de microempreendedores individuais ativos. A figura do MEI foi criada em 2008, no segundo mandato de Lula, que sancionou um projeto do deputado Antônio Carlos de Mendes Thame (PV).",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "explicacao": "Segundo a Fipe, a inflação de alimentos acumulada no governo Bolsonaro, de 2019 a 2022, foi de 56,6%. No governo Lula, de janeiro de 2023 a agosto de 2026, o acumulado é de 16,19%, cerca de três pontos percentuais acima do citado pelo presidente.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18"
   },
   {
@@ -33,48 +33,48 @@
     "data_checagem": "2026-10-19"
   },
   {
-    "id": "5fc452a2",
-    "texto": "Quando o Alexandre de Moraes foi indicado para ministro do Supremo, [o Flávio] era senador. Ele deve ter votado nele.",
+    "id": "ad602974",
+    "texto": "Eu não conheço essa moça [Roberta Luchsinger], nunca vi essa moça na minha vida.",
     "lado": "esquerda",
-    "autor": "Lula (PT)",
+    "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "falso",
-    "explicacao": "Moraes foi indicado e aprovado pelo Senado em fevereiro de 2017. Na época, Flávio Bolsonaro era deputado estadual no Rio de Janeiro e não participou da sabatina nem da votação.",
+    "explicacao": "Roberta Luchsinger publicou no Instagram ao menos duas fotos com Lula, em 27 de outubro e 3 de novembro de 2022. Ela também tem fotos com ministros e integrantes do governo depois que ele foi eleito para o terceiro mandato.",
     "fonte_nome": "Aos Fatos",
-    "fonte_url": "https://www.aosfatos.org/noticias/lula-flavio-crise-stf/",
-    "data_checagem": "2026-09-17"
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-entrevista-lula-globo/",
+    "data_checagem": "2026-08-27"
   },
   {
-    "id": "fb1c8e61",
-    "texto": "E tínhamos criado 22 milhões de empregos em oito anos.",
+    "id": "3d13028f",
+    "texto": "[Flávio Bolsonaro] comprou uma casa de 10 milhões e pagou à vista uma parte dela com dinheiro do BRB que está metido no caso do banco do Vorcaro.",
     "lado": "esquerda",
-    "autor": "Lula (PT), em entrevista à TV Globo",
+    "autor": "Lula (PT), no debate da Band",
     "veredito": "enganoso",
-    "explicacao": "Entre 2003 e 2010, nos dois primeiros mandatos de Lula, foram criados 15,4 milhões de empregos formais, segundo a Rais. O número só se aproxima de 22 milhões somando os governos de Dilma Rousseff; juntos, os governos petistas criaram cerca de 20 milhões de vagas.",
+    "explicacao": "O BRB (Banco de Brasília) emprestou R$ 3,1 milhões ao senador para comprar uma casa de R$ 6 milhões em Brasília, e não de R$ 10 milhões. O banco é de fato investigado por fraudes na compra de carteiras de crédito do Banco Master.",
     "fonte_nome": "Aos Fatos",
-    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
-    "data_checagem": "2026-10-15"
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
+    "data_checagem": "2026-10-18"
   },
   {
-    "id": "b8b388ad",
-    "texto": "É por isso que nós conseguimos aprovar tudo [no Congresso].",
+    "id": "392ba64f",
+    "texto": "Não tem um aposentado que foi vítima da fraude no INSS que não foi ressarcido pelo governo.",
     "lado": "esquerda",
-    "autor": "Lula (PT), em entrevista à TV Globo",
+    "autor": "Lula (PT), em entrevista ao Jornal Nacional, da TV Globo",
     "veredito": "enganoso",
-    "explicacao": "O governo aprovou pautas que considerava prioritárias, como a reforma tributária, o novo arcabouço fiscal, a ampliação da isenção do IR e o fim da escala 6x1. Mas nem todas as propostas foram acolhidas: o Congresso derrubou vetos de Lula, como o do marco temporal, e o Senado rejeitou a indicação de Jorge Messias ao STF.",
-    "fonte_nome": "Aos Fatos",
-    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
-    "data_checagem": "2026-10-15"
+    "explicacao": "O governo de fato pagou R$ 3,5 bilhões a cerca de 5 milhões de aposentados e pensionistas que tiveram descontos indevidos. Mas cerca de 659.920 aposentados e pensionistas aptos ao ressarcimento ainda não tinham aceitado o acordo para reaver os valores, segundo número informado ao jornal Extra em junho; a adesão depende do segurado.",
+    "fonte_nome": "Estadão Verifica",
+    "fonte_url": "https://www.estadao.com.br/estadao-verifica/entrevista-jn-lula-checagem-verdadeiro-falso/",
+    "data_checagem": "2026-08-27"
   },
   {
-    "id": "66c41a5f",
-    "texto": "Cerca de 32 milhões que não votaram nas últimas eleições.",
+    "id": "3255d9d2",
+    "texto": "[No governo Lula, há] recorde de mulher espancada.",
     "lado": "direita",
-    "autor": "Flávio Bolsonaro (PL), em live no YouTube",
+    "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "Segundo o TSE, 20,9% do eleitorado não compareceu para votar na eleição presidencial de 2022, cerca de 32 milhões de pessoas. Foi o maior número de abstenções desde 1998.",
+    "explicacao": "Segundo o último Anuário Brasileiro de Segurança Pública, 2025 teve o maior número de lesões corporais dolosas contra mulheres da série histórica: 286.270 casos, o que corresponde a 261,7 casos por 100 mil habitantes.",
     "fonte_nome": "Aos Fatos",
-    "fonte_url": "https://www.aosfatos.org/noticias/checamos-live-flavio-bolsonaro/",
-    "data_checagem": "2026-10-02"
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
+    "data_checagem": "2026-10-18"
   },
   {
     "id": "fbf784ba",
@@ -88,25 +88,25 @@
     "data_checagem": "2026-10-19"
   },
   {
-    "id": "b2d99249",
-    "texto": "[Eu] nunca quis tirar nada disso [o número de identificação das munições].",
+    "id": "9f37b191",
+    "texto": "[Lula tem] um governo que é recordista em indústrias que deixam o Brasil e vão para o Paraguai.",
     "lado": "direita",
-    "autor": "Flávio Bolsonaro (PL), no debate da Band",
+    "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
     "veredito": "falso",
-    "explicacao": "Flávio apoiou o projeto de lei 3.723/2019, do governo Bolsonaro, que revogava a exigência de venda de munições em embalagens com código de rastreio. Em 2021, ele escreveu nas redes sociais que era declaradamente a favor do projeto.",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
-    "data_checagem": "2026-10-18"
+    "explicacao": "Não existe levantamento que mostre empresas brasileiras deixando o Brasil para atuar no Paraguai. Desde 2007, 232 empresas brasileiras foram aprovadas no regime de maquila, que dá benefícios fiscais para produzir no Paraguai, e elas continuam em atividade no Brasil, segundo a Câmara de Empresários Brasileiros no Paraguai.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-flavio-bolsonaro-globo-segundo-turno/",
+    "data_checagem": "2026-10-16"
   },
   {
-    "id": "bf0bc02b",
-    "texto": "[Lula] está dando emprego para pessoas que foram condenadas no Mensalão.",
+    "id": "523042a9",
+    "texto": "[Os] 7 bilhões de reais que você [Lula] gastou com a Janja [em viagens].",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
-    "explicacao": "Não há registro de que Lula tenha dado cargos a condenados no Mensalão em seu terceiro mandato. O que a imprensa registrou foi o apoio declarado do presidente a petistas condenados que se candidataram a deputado federal e não foram eleitos.",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "explicacao": "O valor corresponde às despesas com viagens a serviço de diferentes órgãos e servidores do governo federal entre 2023 e 2025, e não só aos deslocamentos de Lula e da primeira-dama; segundo o Portal da Transparência, a Presidência gastou R$ 150,5 milhões com viagens no período. Aos Fatos, Lupa e G1 Fato ou Fake classificam a afirmação como falsa; o Estadão Verifica, como enganosa, porque o valor se refere às viagens de cerca de 475 mil pessoas, entre servidores, militares, empregados públicos e colaboradores eventuais.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18"
   },
   {
@@ -121,14 +121,14 @@
     "data_checagem": "2026-10-19"
   },
   {
-    "id": "01702d43",
-    "texto": "O PT governou o País em 20 dos últimos 24 anos.",
+    "id": "0386e511",
+    "texto": "Você [Lula] não poupou nem os aposentados velhinhos do INSS.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "enganoso",
-    "explicacao": "O PT governou com Lula de 2003 a 2010 e com Dilma Rousseff de 2011 até o impeachment em 2016, e voltou com Lula em 2023. Ao todo, são cerca de 17 anos e quatro meses de governo em um período de 24 anos, não 20.",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "explicacao": "Não há evidências de que Lula tenha participado ou ordenado o esquema de descontos indevidos em aposentadorias e pensões do INSS, cujas fraudes ocorreram nos governos Bolsonaro e Lula. É fato, porém, que o Ministério da Previdência recebeu alertas sobre as irregularidades em 2023 e demorou a adotar medidas.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18"
   }
 ]

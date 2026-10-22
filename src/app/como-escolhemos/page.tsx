@@ -25,7 +25,8 @@ export default function ComoEscolhemos() {
       <p className="mt-2">
         São 12 afirmações: 6 ditas por quem está de um lado da disputa e 6 por quem está do outro. Em cada lado há 2
         verdadeiras, 2 falsas e 2 enganosas. Essa proporção é sempre a mesma. O &quot;lado&quot; de uma afirmação é
-        definido por quem a disse, não pelo assunto. Durante o jogo o lado não aparece.
+        definido por quem a disse ou a espalhou, conforme a agência de checagem atribui, não pelo assunto. Damos
+        prioridade às afirmações que mais circularam. Durante o jogo o lado não aparece.
       </p>
 
       <h2 className="mt-8 text-xl font-semibold text-stone-900">Verdade, mentira ou enganoso</h2>
@@ -48,8 +49,8 @@ export default function ComoEscolhemos() {
         ficam de fora.
       </p>
       <p className="mt-2">
-        Quando agências diferentes discordam sobre a mesma afirmação (por exemplo, uma diz falso e outra diz
-        enganoso), ela não entra no jogo.
+        Quando agências diferentes discordam sobre a mesma afirmação: se uma diz verdadeiro e outra diz falso ou
+        enganoso, ela fica de fora; entre falso e enganoso, vale o rótulo da maioria (no empate, falso).
       </p>
 
       <h2 className="mt-8 text-xl font-semibold text-stone-900">O que o resultado mede</h2>
