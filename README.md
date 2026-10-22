@@ -58,5 +58,5 @@ Vercel + Neon.
 ## Dados e privacidade (LGPD)
 
 - Cada jogada grava uma linha: respostas, nota, nota por lado e data/hora.
-- Para o limite de 5 jogadas por minuto, guardamos um hash SHA-256 do IP com salt, apagado depois de 1 hora. O IP em si não é gravado.
+- Para o limite de 5 jogadas por minuto, guardamos um hash SHA-256 do IP com salt; o IP em si não é gravado. O hash é apagado pela primeira jogada salva depois de 1 hora, então em dias com pouco movimento pode ficar um pouco mais; uma limpeza agendada está prevista.
 - Sem cookies, sem login, sem dados pessoais.
