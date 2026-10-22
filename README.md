@@ -1,16 +1,16 @@
 # Caiu Nessa?
 
-Quiz de checagem de fatos políticos, neutro e em português. São 12 afirmações políticas já checadas por agências de checagem; para cada uma o jogador responde **VERDADE**, **MENTIRA** ou **ISSO ME CHEIRA MAL 🤔** (enganoso), arrastando o cartão (direita, esquerda ou para cima), pelos botões ou pelas setas do teclado. No fim vê a nota, o viés das respostas e como se saiu em comparação com os outros jogadores. É anônimo e não tem login.
+Quiz de checagem de fatos políticos, neutro e em português. A primeira rodada tem 12 afirmações políticas já checadas por agências de checagem, sorteadas de um conjunto maior, e dá para continuar jogando em rodadas de 6; para cada uma o jogador responde **VERDADE**, **MENTIRA** ou **ISSO ME CHEIRA MAL 🤔** (enganoso), arrastando o cartão (direita, esquerda ou para cima), pelos botões ou pelas setas do teclado. No fim vê a nota, o viés das respostas e como se saiu em comparação com os outros jogadores. É anônimo e não tem login.
 
 ## Regras de neutralidade
 
 - Só entram checagens de cinco agências: Aos Fatos, Lupa, Comprova, G1 Fato ou Fake e Estadão Verifica. Toda afirmação tem link para a checagem original.
-- 6 afirmações por lado, cada lado com 2 verdadeiras, 2 falsas e 2 enganosas.
+- Toda rodada tem o mesmo número de afirmações por lado e, em cada lado, de cada veredito: a primeira 2 de cada (12), as seguintes 1 de cada (6). O conjunto precisa ter ao menos 2 jogáveis de cada combinação lado × veredito.
 - Afirmações em que as agências discordam ficam de fora.
 - O lado é o de quem disse a frase, e nunca aparece durante o jogo.
 - Nenhum texto do site apoia ou ataca um lado. O resultado mede a pessoa, não os políticos.
 
-Os critérios completos estão na página `/como-escolhemos`. As afirmações em jogo ficam em `src/data/afirmacoes.json` e as de reserva em `src/data/afirmacoes-reserva.json`.
+Os critérios completos estão na página `/como-escolhemos`. Todas as afirmações ficam em `src/data/afirmacoes.json`; as que têm `observacao` estão fora do jogo e aparecem só em /afirmacoes.
 
 ## Transparência
 

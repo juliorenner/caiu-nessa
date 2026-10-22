@@ -22,7 +22,7 @@ Data: 2026-10-22. Ticket de rodadas no Linear. Decisão do dono em 2026-10-22: "
 
 - Primeira rodada: sorteada no servidor em `/quiz` (como hoje), `porPar = 2`, `excluir = []`.
 - Rodadas extras: `POST /api/rodada` com `{ vistas: string[] }` (ids já respondidos nesta partida, acumulados no cliente) devolve `{ afirmacoes: AfirmacaoNoQuiz[], erroPorAfirmacao }` com `porPar = 1`, ou `{ afirmacoes: null }` quando não fecha. Sem gravação, sem limite de taxa (é leitura).
-- Com o pool de hoje: 1 rodada de 12 e depois até 3 rodadas de 6 (o gargalo são as 3 verdadeiras e 3 enganosas da direita; a quarta falha porque a primeira rodada já usou 2 de cada). Mais rodadas dependem de curadoria (ticket separado).
+- Com o pool de hoje: 1 rodada de 12 e depois 1 rodada de 6 (o gargalo são as 3 verdadeiras e 3 enganosas da direita: a primeira rodada usa 2 de cada, sobra 1 de cada). Mais rodadas dependem de curadoria (ticket de curadoria no Linear).
 
 ## Resultado e nota para qualquer tamanho
 
