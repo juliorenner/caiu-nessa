@@ -34,7 +34,7 @@ jobs:
         id: verificar
         run: |
           set -o pipefail
-          npx tsx scripts/verificar-fontes.ts | tee saida.txt
+          npx tsx scripts/verificar-fontes.ts 2>&1 | tee saida.txt
       - name: Abrir ou atualizar a issue
         if: failure() && steps.verificar.outcome == 'failure'
         env:

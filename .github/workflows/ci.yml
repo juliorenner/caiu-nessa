@@ -7,6 +7,8 @@ on:
 permissions:
   contents: read
 
+# Chamado pelo deploy.yml, um push mais novo em main pode cancelar o CI da execução anterior (vence o commit
+# mais novo); o job deploy em si nunca é cancelado. Comportamento a confirmar nos primeiros pushes.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -26,7 +28,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm test
+      # Os testes com PGlite ficam instáveis com paralelismo total no runner.
+      - run: npm test -- --maxWorkers=2
       - run: npm run build
 
   auditoria:
