@@ -119,10 +119,40 @@ describe('PainelVeredito', () => {
     expect(painel()).toHaveClass('transition-transform')
   })
 
-  it('trava a rolagem da página enquanto aberto', () => {
+  it('trava a rolagem da página enquanto aberto e restaura o valor anterior', () => {
+    document.body.style.overflow = 'auto'
     renderizar()
     expect(document.body.style.overflow).toBe('hidden')
     cleanup()
-    expect(document.body.style.overflow).toBe('')
+    expect(document.body.style.overflow).toBe('auto')
+    document.body.style.overflow = ''
+  })
+
+  it('entra de baixo: começa com translate-y-full', () => {
+    renderizar()
+    expect(painel()).toHaveClass('translate-y-full')
+  })
+
+  it('foco no botão não rola o painel (preventScroll)', () => {
+    const focar = vi.spyOn(HTMLElement.prototype, 'focus')
+    renderizar()
+    expect(focar).toHaveBeenCalledWith({ preventScroll: true })
+    focar.mockRestore()
+  })
+
+  it('a alça tem área de toque de 48 px e o diálogo é descrito pela mensagem', () => {
+    renderizar()
+    expect(document.querySelector('[data-alca]')).toHaveClass('min-h-12', 'touch-none')
+    const descricao = document.getElementById(painel().getAttribute('aria-describedby') ?? '')
+    expect(descricao).toHaveTextContent('Você acertou.')
+  })
+
+  it('pointercancel na alça não fecha', () => {
+    const { onFechar } = renderizar()
+    const alca = document.querySelector('[data-alca]') as HTMLElement
+    fireEvent.pointerDown(alca, { pointerId: 1, clientY: 100 })
+    fireEvent.pointerCancel(alca, { pointerId: 1, clientY: 300 })
+    fireEvent.pointerUp(alca, { pointerId: 1, clientY: 300 })
+    expect(onFechar).not.toHaveBeenCalled()
   })
 })

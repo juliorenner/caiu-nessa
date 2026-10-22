@@ -1,10 +1,10 @@
 'use client'
 
-import { type KeyboardEvent, type PointerEvent, type ReactElement, useEffect, useRef, useState } from 'react'
+import { type KeyboardEvent, type PointerEvent, type ReactElement, useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { Veredito } from '@/lib/afirmacoes'
 import { mensagem } from './mensagemVeredito'
-import { BOTAO_PRIMARIO, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
+import { BOTAO_PRIMARIO, CARTAO_SUPERFICIE, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
 const LIMIAR_FECHAR = 80
@@ -23,21 +23,24 @@ export function PainelVeredito(p: {
   const [entrou, setEntrou] = useState(false)
   const botaoRef = useRef<HTMLButtonElement>(null)
   const inicioY = useRef<number | null>(null)
+  const idMensagem = useId()
 
   useEffect(() => {
     setMontado(true)
     const anterior = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    // Um quadro depois da montagem, para o navegador pintar translate-y-full antes de animar.
-    const quadro = requestAnimationFrame(() => setEntrou(true))
     return () => {
-      cancelAnimationFrame(quadro)
       document.body.style.overflow = anterior
     }
   }, [])
 
   useEffect(() => {
-    if (montado) botaoRef.current?.focus()
+    if (!montado) return
+    // preventScroll: o botão é o último item do painel; sem isso o painel rola até ele e esconde o topo.
+    botaoRef.current?.focus({ preventScroll: true })
+    // Um quadro depois do primeiro paint do painel, para o navegador pintar translate-y-full antes de animar.
+    const quadro = requestAnimationFrame(() => setEntrou(true))
+    return () => cancelAnimationFrame(quadro)
   }, [montado])
 
   function conterFoco(e: KeyboardEvent<HTMLElement>) {
@@ -58,6 +61,10 @@ export function PainelVeredito(p: {
   function aoPressionar(e: PointerEvent<HTMLDivElement>) {
     inicioY.current = e.clientY
     e.currentTarget.setPointerCapture?.(e.pointerId)
+  }
+
+  function aoCancelar() {
+    inicioY.current = null
   }
 
   function aoSoltar(e: PointerEvent<HTMLDivElement>) {
@@ -81,19 +88,22 @@ export function PainelVeredito(p: {
         aria-modal="true"
         aria-label="Veredito da afirmação"
         aria-live="polite"
+        aria-describedby={idMensagem}
         onKeyDown={conterFoco}
-        className={`fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[85dvh] w-full max-w-xl flex-col gap-4 overflow-y-auto rounded-t-3xl bg-white px-5 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] text-stone-900 shadow-lg ${movimento}`}
+        className={`fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[85dvh] w-full max-w-xl flex-col gap-4 overflow-y-auto rounded-t-3xl px-5 pt-1 pb-[max(1rem,env(safe-area-inset-bottom))] ${CARTAO_SUPERFICIE} ${movimento}`}
       >
         <div
           data-alca
           aria-hidden="true"
           onPointerDown={aoPressionar}
           onPointerUp={aoSoltar}
-          onPointerCancel={aoSoltar}
-          className="mx-auto h-1 w-10 shrink-0 touch-none rounded-full bg-stone-300"
-        />
+          onPointerCancel={aoCancelar}
+          className="flex min-h-12 shrink-0 touch-none items-center justify-center"
+        >
+          <div className="h-1 w-10 rounded-full bg-stone-300" />
+        </div>
         <span className={SELO_VEREDITO[afirmacao.veredito]}>{ROTULO_VEREDITO[afirmacao.veredito]}</span>
-        <p className="text-lg font-semibold">{mensagem(afirmacao.veredito, respostaDada)}</p>
+        <p id={idMensagem} className="text-lg font-semibold">{mensagem(afirmacao.veredito, respostaDada)}</p>
         <p className="text-base text-stone-600">Quem disse: {afirmacao.autor}</p>
         <blockquote className="border-l-4 border-stone-200 pl-3 text-base text-stone-600 italic">“{afirmacao.citacao}”</blockquote>
         <p className="text-base leading-relaxed text-stone-700">{afirmacao.explicacao}</p>
