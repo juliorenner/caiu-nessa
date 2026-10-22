@@ -69,6 +69,7 @@ export default function Quiz({
   const respondeu = useRef(false)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- matchMedia só existe no cliente; ler no render divergiria da hidratação
     setReduzirMovimento(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false)
     return () => {
       if (temporizador.current) clearTimeout(temporizador.current)
