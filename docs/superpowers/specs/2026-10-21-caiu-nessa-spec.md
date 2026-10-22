@@ -60,10 +60,17 @@ Decisão do autor durante a execução do plano MVP (depois da curadoria inicial
 - Mapeamento dos rótulos das agências para `enganoso`: Enganoso, Exagerado, Distorcido,
   Fora de contexto, Impreciso, "Não é bem assim". Ficam fora do jogo: Insustentável,
   Contraditório, "Ainda é cedo pra dizer". A regra de unanimidade continua: se uma agência
-  disse "falso" e outra "enganoso", a afirmação não entra no conjunto ativo.
+  disse "falso" e outra "enganoso", a afirmação não entra no conjunto ativo. (substituída pela emenda de 2026-10-22: entre falso e enganoso vale a maioria.)
 - Pontuação: acerto só com a opção exata; nota inteira de 0 a 12. Marcar MENTIRA numa
   enganosa (ou ENGANOSO numa falsa) é erro, mas o feedback reconhece o "quase".
 - Viés: "acreditou" = marcou VERDADE numa afirmação falsa ou enganosa.
 - Afirmações extras que passam no mesmo critério ficam em `afirmacoes-reserva.json`
   (sem regra de proporção) para escolha ou sorteio futuro.
 - O "Modelo de dados" acima foi atualizado para o enum (`veredito` e `respostas`).
+
+## Emenda 2026-10-22: lado = quem espalha e prioridade ao que mais circula
+Decisão do autor na recuradoria das afirmações.
+
+- O `lado` é o de quem disse ou espalhou a afirmação, conforme a agência atribui: o candidato, a campanha, um político ou influenciador de alinhamento conhecido, ou "apoiadores de X" nomeados pela agência. Sem atribuição de lado pela agência, a afirmação não entra. `autor` diz quem, nos termos da agência.
+- Prioridade às afirmações que mais circularam e que são concretas (números, nomes, lugares; dinheiro, emprego, crime, benefícios, família, escândalo). Alegações de bastidor ou procedimento saem do conjunto ativo, mesmo verdadeiras.
+- (2026-10-22) Falso e enganoso não contam como discordância entre si: fica de fora só quando uma agência diz verdadeiro e outra diz falso ou enganoso, ou quando há rótulo excluído; entre falso e enganoso vale o rótulo da maioria das agências que checaram (no empate, falso), e a `explicacao` registra a divisão.

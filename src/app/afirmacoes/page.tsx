@@ -18,6 +18,7 @@ function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
       <p className="text-lg font-semibold text-stone-900">{a.texto}</p>
       <p className="text-base text-stone-600">Quem disse: {a.autor}</p>
       <span className={SELO_VEREDITO[a.veredito]}>{ROTULO_VEREDITO[a.veredito]}</span>
+      {a.observacao && <p className="text-base text-stone-600">{a.observacao}</p>}
       <p className="text-base text-stone-700">{a.explicacao}</p>
       <a href={a.fonte_url} target="_blank" rel="noopener noreferrer" className={`self-start ${LINK}`}>
         Ver a checagem ({a.fonte_nome}, {formatarData(a.data_checagem)})

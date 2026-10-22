@@ -17,6 +17,7 @@ export interface Afirmacao {
   fonte_nome: string
   fonte_url: string
   data_checagem: string // YYYY-MM-DD
+  observacao?: string // só na reserva: por que o item não pode entrar no jogo
 }
 
 export type Respostas = Record<string, Veredito>
@@ -74,6 +75,12 @@ const esquemaAfirmacao = z.object({
         error: 'data_checagem deve ser uma data de calendário válida',
       },
     ),
+  observacao: z
+    .string()
+    .refine((v) => v.trim().length >= 20, {
+      error: 'observacao deve ter ao menos 20 caracteres (sem contar espaços nas pontas)',
+    })
+    .optional(),
 })
 
 export const afirmacaoSchema = esquemaAfirmacao

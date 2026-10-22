@@ -30,7 +30,8 @@
     "explicacao": "Segundo a pesquisa da CNC, 77,9% das famílias se declararam endividadas em dezembro de 2022. A agência ressalva que o percentual subiu durante o atual mandato e chegou a 81,7% em setembro de 2026.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
-    "data_checagem": "2026-10-15"
+    "data_checagem": "2026-10-15",
+    "observacao": "Fora do jogo: Aos Fatos, G1 e Estadão Verifica dizem verdadeiro e a Lupa diz \"falta contexto\"."
   },
   {
     "id": "4372b28f",
@@ -85,7 +86,8 @@
     "explicacao": "Segundo o Banco Mundial, o Brasil registrou em 2010, último ano do segundo mandato de Lula, um PIB de US$ 2,21 trilhões, o que colocou o país como a sétima maior economia do mundo.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
-    "data_checagem": "2026-10-15"
+    "data_checagem": "2026-10-15",
+    "observacao": "Fora do jogo: o Estadão Verifica classifica a fala completa (economia e empregos) como \"verdadeiro em partes\", rótulo que não usamos."
   },
   {
     "id": "6bf3e590",
@@ -118,7 +120,8 @@
     "explicacao": "Em 2002, no governo Fernando Henrique Cardoso, o Brasil contraiu uma dívida de US$ 30,4 bilhões com o FMI, herdada em 2003. O Banco Central registra a quitação antecipada em 2005, e as reservas internacionais chegaram a US$ 270 bilhões em 2010.",
     "fonte_nome": "Estadão Verifica",
     "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
-    "data_checagem": "2026-10-18"
+    "data_checagem": "2026-10-18",
+    "observacao": "Fora do jogo: o Estadão Verifica diz verdadeiro e a Lupa diz \"subestimado\" sobre o valor das reservas."
   },
   {
     "id": "912298e6",
@@ -129,7 +132,8 @@
     "explicacao": "O Banco Central informou que a Dívida Bruta do Governo Geral atingiu R$ 11,1 trilhões em agosto de 2026, 82,9% do PIB. O indicador inclui governo federal, INSS, estados e municípios; no fim de 2022 estava em R$ 7,2 trilhões.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
-    "data_checagem": "2026-10-19"
+    "data_checagem": "2026-10-19",
+    "observacao": "Fora do jogo: G1, Aos Fatos e Lupa dizem verdadeiro e o Estadão Verifica diz \"falta contexto\"."
   },
   {
     "id": "068625bc",
@@ -195,7 +199,8 @@
     "explicacao": "Um estudo citado pelo jornal O Globo, a partir de 25,9 mil contracheques, estimou em ao menos R$ 24,3 bilhões os pagamentos acima do teto constitucional em 2025. Uma comissão técnica criada pelo STF chegou a valor compatível para as carreiras com maior peso.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/16/veja-o-que-e-fato-ou-fake-na-entrevista-de-flavio-bolsonaro-a-globo-no-2o-turno-das-eleicoes-2026.ghtml",
-    "data_checagem": "2026-10-16"
+    "data_checagem": "2026-10-16",
+    "observacao": "Fora do jogo: o G1 diz verdadeiro e o Estadão Verifica diz \"falta contexto\"."
   },
   {
     "id": "3715fbb7",
@@ -215,6 +220,107 @@
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "enganoso",
     "explicacao": "A Lei Antifacção, proposta pela Presidência e sancionada em março de 2026, elevou a pena por participação em organização criminosa para até 40 anos, e ela pode dobrar para 80 anos no caso de líderes. Mas o Código Penal limita o tempo de cumprimento da pena a 40 anos, então o preso não fica automaticamente 80 anos na cadeia.",
+    "fonte_nome": "Estadão Verifica",
+    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "data_checagem": "2026-10-18",
+    "observacao": "Fora do jogo: o Estadão Verifica diz enganoso e a Lupa diz \"falta contexto\"."
+  },
+  {
+    "id": "483d6a7b",
+    "texto": "O governo de Lula criou o MEI, e há 17,5 milhões de MEIs no Brasil.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), no debate da Band",
+    "veredito": "verdadeiro",
+    "explicacao": "Segundo o governo federal, há 17,56 milhões de microempreendedores individuais ativos. A figura do MEI foi criada em 2008, no segundo mandato de Lula, que sancionou um projeto do deputado Antônio Carlos de Mendes Thame (PV).",
+    "fonte_nome": "Estadão Verifica",
+    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "data_checagem": "2026-10-18"
+  },
+  {
+    "id": "5fc452a2",
+    "texto": "Quando o Alexandre de Moraes foi indicado para ministro do Supremo, [o Flávio] era senador. Ele deve ter votado nele.",
+    "lado": "esquerda",
+    "autor": "Lula (PT)",
+    "veredito": "falso",
+    "explicacao": "Moraes foi indicado e aprovado pelo Senado em fevereiro de 2017. Na época, Flávio Bolsonaro era deputado estadual no Rio de Janeiro e não participou da sabatina nem da votação.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/lula-flavio-crise-stf/",
+    "data_checagem": "2026-09-17"
+  },
+  {
+    "id": "fb1c8e61",
+    "texto": "E tínhamos criado 22 milhões de empregos em oito anos.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), em entrevista à TV Globo",
+    "veredito": "enganoso",
+    "explicacao": "Entre 2003 e 2010, nos dois primeiros mandatos de Lula, foram criados 15,4 milhões de empregos formais, segundo a Rais. O número só se aproxima de 22 milhões somando os governos de Dilma Rousseff; juntos, os governos petistas criaram cerca de 20 milhões de vagas.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
+    "data_checagem": "2026-10-15",
+    "observacao": "Fora do jogo: o Estadão Verifica classifica como \"verdadeiro em partes\", rótulo que não usamos."
+  },
+  {
+    "id": "b8b388ad",
+    "texto": "É por isso que nós conseguimos aprovar tudo [no Congresso].",
+    "lado": "esquerda",
+    "autor": "Lula (PT), em entrevista à TV Globo",
+    "veredito": "enganoso",
+    "explicacao": "O governo aprovou pautas que considerava prioritárias, como a reforma tributária, o novo arcabouço fiscal, a ampliação da isenção do IR e o fim da escala 6x1. Mas nem todas as propostas foram acolhidas: o Congresso derrubou vetos de Lula, como o do marco temporal, e o Senado rejeitou a indicação de Jorge Messias ao STF.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
+    "data_checagem": "2026-10-15"
+  },
+  {
+    "id": "66c41a5f",
+    "texto": "Cerca de 32 milhões que não votaram nas últimas eleições.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), em live no YouTube",
+    "veredito": "verdadeiro",
+    "explicacao": "Segundo o TSE, 20,9% do eleitorado não compareceu para votar na eleição presidencial de 2022, cerca de 32 milhões de pessoas. Foi o maior número de abstenções desde 1998.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-live-flavio-bolsonaro/",
+    "data_checagem": "2026-10-02"
+  },
+  {
+    "id": "b2d99249",
+    "texto": "[Eu] nunca quis tirar nada disso [o número de identificação das munições].",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), no debate da Band",
+    "veredito": "falso",
+    "explicacao": "Flávio apoiou o projeto de lei 3.723/2019, do governo Bolsonaro, que revogava a exigência de venda de munições em embalagens com código de rastreio. Em 2021, ele escreveu nas redes sociais que era declaradamente a favor do projeto.",
+    "fonte_nome": "Estadão Verifica",
+    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "data_checagem": "2026-10-18"
+  },
+  {
+    "id": "01702d43",
+    "texto": "O PT governou o País em 20 dos últimos 24 anos.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), no debate da Band",
+    "veredito": "enganoso",
+    "explicacao": "O PT governou com Lula de 2003 a 2010 e com Dilma Rousseff de 2011 até o impeachment em 2016, e voltou com Lula em 2023. Ao todo, são cerca de 17 anos e quatro meses de governo em um período de 24 anos, não 20.",
+    "fonte_nome": "Estadão Verifica",
+    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "data_checagem": "2026-10-18"
+  },
+  {
+    "id": "4998ed8f",
+    "texto": "8.000 empresas faliram em junho.",
+    "lado": "direita",
+    "autor": "Posts nas redes amplificados pelo senador Márcio Bittar (PL-AC), segundo o Aos Fatos",
+    "veredito": "falso",
+    "explicacao": "Os dados mais recentes da Serasa Experian mostram 234 empresas com requerimentos de falência entre janeiro e abril de 2026, e a outra base citada nos posts, o Monitor RGF, nem registra falências. A Serasa disse que a informação não procede.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/8000-empresas-faliram-brasil-junho/",
+    "data_checagem": "2026-08-24"
+  },
+  {
+    "id": "bf0bc02b",
+    "texto": "[Lula] está dando emprego para pessoas que foram condenadas no Mensalão.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), no debate da Band",
+    "veredito": "falso",
+    "explicacao": "Não há registro de que Lula tenha dado cargos a condenados no Mensalão em seu terceiro mandato. O que a imprensa registrou foi o apoio declarado do presidente a petistas condenados que se candidataram a deputado federal e não foram eleitos.",
     "fonte_nome": "Estadão Verifica",
     "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
     "data_checagem": "2026-10-18"
