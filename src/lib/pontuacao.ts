@@ -7,6 +7,10 @@ export interface Resultado {
   acertosDireita: number
   acreditadasEsquerda: number // respondeu 'verdadeiro' numa afirmação falsa ou enganosa
   acreditadasDireita: number
+  desconfiadasEsquerda: number // respondeu 'falso' ou 'enganoso' numa afirmação verdadeira
+  desconfiadasDireita: number
+  grauErradoEsquerda: number // confundiu 'falso' com 'enganoso', ou o contrário
+  grauErradoDireita: number
 }
 
 export function calcularResultado(afirmacoes: Afirmacao[], respostas: Respostas): Resultado {
@@ -17,6 +21,10 @@ export function calcularResultado(afirmacoes: Afirmacao[], respostas: Respostas)
     acertosDireita: 0,
     acreditadasEsquerda: 0,
     acreditadasDireita: 0,
+    desconfiadasEsquerda: 0,
+    desconfiadasDireita: 0,
+    grauErradoEsquerda: 0,
+    grauErradoDireita: 0,
   }
   for (const a of afirmacoes) {
     const resposta = respostas[a.id]
@@ -25,9 +33,17 @@ export function calcularResultado(afirmacoes: Afirmacao[], respostas: Respostas)
       resultado.acertos++
       if (daEsquerda) resultado.acertosEsquerda++
       else resultado.acertosDireita++
+    } else if (resposta === undefined) {
+      // resposta ausente: erro, sem classificação
     } else if (resposta === 'verdadeiro') {
       if (daEsquerda) resultado.acreditadasEsquerda++
       else resultado.acreditadasDireita++
+    } else if (a.veredito === 'verdadeiro') {
+      if (daEsquerda) resultado.desconfiadasEsquerda++
+      else resultado.desconfiadasDireita++
+    } else if (ehQuase(a.veredito, resposta)) {
+      if (daEsquerda) resultado.grauErradoEsquerda++
+      else resultado.grauErradoDireita++
     }
   }
   return resultado

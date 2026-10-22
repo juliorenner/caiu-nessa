@@ -12,7 +12,7 @@ export function ResultadoFinal(p: { dados: RespostaResultado }) {
       </p>
       <h1 className="text-3xl font-bold">{avaliacao.titulo}</h1>
       <p className="text-lg leading-relaxed">{avaliacao.texto}</p>
-      <p className="text-base leading-relaxed text-stone-700">{avaliacao.vies}</p>
+      {avaliacao.vies !== null && <p className="text-base leading-relaxed text-stone-700">{avaliacao.vies}</p>}
       <p className="rounded-xl bg-stone-100 p-4 text-base text-stone-800">
         {estatisticasIndisponiveis
           ? 'A comparação com os outros jogadores não está disponível agora.'

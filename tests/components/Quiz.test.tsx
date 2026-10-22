@@ -15,6 +15,10 @@ const respostaOk: RespostaResultado = {
     acertosDireita: 2,
     acreditadasEsquerda: 4,
     acreditadasDireita: 4,
+    desconfiadasEsquerda: 0,
+    desconfiadasDireita: 0,
+    grauErradoEsquerda: 0,
+    grauErradoDireita: 0,
   },
   avaliacao: { titulo: 'Caiu feio', texto: 'Texto da avaliação.', vies: 'Texto do viés.' },
   estatisticas: null,
@@ -46,6 +50,7 @@ describe('Quiz', () => {
     expect(Object.values(corpo.respostas).every(v => v === 'verdadeiro')).toBe(true)
     expect(await screen.findByText(/Você é um dos primeiros a jogar/)).toBeInTheDocument()
     expect(screen.getByText('4 de 12')).toBeInTheDocument()
+    expect(screen.getByText('Texto do viés.')).toBeInTheDocument()
   })
 
   it('sem embaralharFn, mostra as afirmações na ordem recebida', async () => {
@@ -169,5 +174,19 @@ describe('Quiz', () => {
       await screen.findByText('A comparação com os outros jogadores não está disponível agora.'),
     ).toBeInTheDocument()
     expect(screen.queryByText(/Você é um dos primeiros a jogar/)).not.toBeInTheDocument()
+  })
+
+  it('sem viés (vies null), não mostra o parágrafo do viés', async () => {
+    const semVies: RespostaResultado = { ...respostaOk, avaliacao: { ...respostaOk.avaliacao, vies: null } }
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => semVies }))
+    render(<Quiz afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const user = userEvent.setup()
+    for (let i = 0; i < 12; i++) {
+      await user.click(screen.getByRole('button', { name: 'VERDADE' }))
+      await user.click(screen.getByRole('button', { name: i === 11 ? 'Ver meu resultado' : 'Próxima' }))
+    }
+    const secao = (await screen.findByText('Texto da avaliação.')).closest('section')!
+    expect(secao.querySelectorAll('p.text-stone-700')).toHaveLength(0)
+    expect(screen.queryByText('Texto do viés.')).not.toBeInTheDocument()
   })
 })
