@@ -1,21 +1,18 @@
 // tests/data/afirmacoes-reais.test.ts
 import { expect, it } from 'vitest'
 import dados from '@/data/afirmacoes.json'
-import reserva from '@/data/afirmacoes-reserva.json'
-import { afirmacaoSchema, validarAfirmacoes } from '@/lib/afirmacoes'
+import { contarPorPar, jogaveis, POR_VEREDITO_POR_LADO, validarPool } from '@/lib/afirmacoes'
 
-it('src/data/afirmacoes.json segue as regras de neutralidade', () => {
-  expect(() => validarAfirmacoes(dados)).not.toThrow()
+it('src/data/afirmacoes.json é um pool válido', () => {
+  expect(() => validarPool(dados)).not.toThrow()
 })
 it('nenhuma explicação é vazia ou menor que 40 caracteres', () => {
-  for (const a of validarAfirmacoes(dados)) expect(a.explicacao.length).toBeGreaterThanOrEqual(40)
+  for (const a of validarPool(dados)) expect(a.explicacao.length, a.id).toBeGreaterThanOrEqual(40)
 })
-it('toda afirmação da reserva segue o esquema', () => {
-  for (const item of reserva) expect(() => afirmacaoSchema.parse(item)).not.toThrow()
-})
-it('ids são únicos dentro da reserva e entre reserva e afirmações ativas', () => {
-  const ids = [...validarAfirmacoes(dados), ...reserva.map((item) => afirmacaoSchema.parse(item))].map((a) => a.id)
-  expect(new Set(ids).size).toBe(ids.length)
+it('pool tem ao menos 2 jogáveis por par', () => {
+  for (const [par, n] of contarPorPar(jogaveis(validarPool(dados)))) {
+    expect(n, par).toBeGreaterThanOrEqual(POR_VEREDITO_POR_LADO)
+  }
 })
 
 // A pergunta mostra só `texto`, neutro e em terceira pessoa (JUL-104); a fala original fica em `citacao`.
@@ -32,9 +29,9 @@ const REGRAS_TEXTO_NEUTRO: [string, RegExp][] = [
   ['sem "a gente "', /(^|[^\p{L}])a gente /iu],
 ]
 
-const todasAsAfirmacoes = [...validarAfirmacoes(dados), ...reserva.map((item) => afirmacaoSchema.parse(item))]
+const todasAsAfirmacoes = validarPool(dados)
 
-it('toda afirmação, em jogo e na reserva, tem citacao não vazia', () => {
+it('toda afirmação do pool tem citacao não vazia', () => {
   for (const a of todasAsAfirmacoes) expect(a.citacao.trim(), a.id).not.toBe('')
 })
 it.each(REGRAS_TEXTO_NEUTRO)('texto neutro: %s', (_regra, proibido) => {

@@ -1,14 +1,11 @@
 import { readFileSync } from 'node:fs'
-import { afirmacaoSchema, validarAfirmacoes, type Afirmacao } from '../src/lib/afirmacoes'
+import { validarPool, type Afirmacao } from '../src/lib/afirmacoes'
 
 function lerJson(caminho: string): unknown {
   return JSON.parse(readFileSync(new URL(caminho, import.meta.url), 'utf-8'))
 }
 
-const afirmacoes: Afirmacao[] = [
-  ...validarAfirmacoes(lerJson('../src/data/afirmacoes.json')),
-  ...(lerJson('../src/data/afirmacoes-reserva.json') as unknown[]).map((item) => afirmacaoSchema.parse(item)),
-]
+const afirmacoes: Afirmacao[] = validarPool(lerJson('../src/data/afirmacoes.json'))
 
 let falhou = false
 for (const { id, fonte_url } of afirmacoes) {

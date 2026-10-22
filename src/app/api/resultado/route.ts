@@ -1,5 +1,5 @@
 import { getDb } from '@/db/client'
-import { carregarAfirmacoes } from '@/lib/afirmacoes'
+import { carregarPool } from '@/lib/afirmacoes'
 import { processarResultado } from '@/lib/resultado-api'
 
 export const dynamic = 'force-dynamic'
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   }
   const { status, body } = await processarResultado(corpo, req.headers, {
     db: await getDb(),
-    pool: carregarAfirmacoes(),
+    pool: carregarPool(),
     salt: obterSalt(),
   })
   return Response.json(body, { status })

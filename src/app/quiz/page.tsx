@@ -1,13 +1,13 @@
 import Quiz from '@/components/Quiz'
 import { getDb } from '@/db/client'
-import { carregarAfirmacoes, embaralhar } from '@/lib/afirmacoes'
+import { type Afirmacao, carregarPool, POR_PAR_PRIMEIRA, semLado, sortearRodada } from '@/lib/afirmacoes'
 import { obterEstatisticas } from '@/lib/estatisticas'
 
 export const dynamic = 'force-dynamic'
 
-async function erroPorAfirmacao(afirmacoes: ReturnType<typeof carregarAfirmacoes>) {
+async function erroPorAfirmacao(pool: Afirmacao[]) {
   try {
-    const estatisticas = await obterEstatisticas(await getDb(), afirmacoes)
+    const estatisticas = await obterEstatisticas(await getDb(), pool)
     return estatisticas?.erroPorAfirmacao ?? null
   } catch (erro) {
     // Sem banco o jogo continua jogável, só sem "% das pessoas erraram esta".
@@ -17,13 +17,13 @@ async function erroPorAfirmacao(afirmacoes: ReturnType<typeof carregarAfirmacoes
 }
 
 export default async function QuizPage() {
-  const afirmacoes = carregarAfirmacoes()
+  const pool = carregarPool()
+  // A rodada já sai embaralhada do sorteio.
+  const rodada = sortearRodada(pool, POR_PAR_PRIMEIRA, [])
+  if (!rodada) throw new Error('Pool insuficiente para a primeira rodada')
   return (
     <main className="mx-auto w-full max-w-2xl flex-1">
-      <Quiz
-        afirmacoes={embaralhar(afirmacoes.map(({ lado: _lado, ...semLado }) => semLado))}
-        erroPorAfirmacao={await erroPorAfirmacao(afirmacoes)}
-      />
+      <Quiz afirmacoes={rodada.map(semLado)} erroPorAfirmacao={await erroPorAfirmacao(pool)} />
     </main>
   )
 }

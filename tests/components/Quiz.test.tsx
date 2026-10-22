@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import QuizPage from '@/app/quiz/page'
 import { tamanhoDoTexto } from '@/components/CartaoAfirmacao'
 import Quiz from '@/components/Quiz'
-import { carregarAfirmacoes } from '@/lib/afirmacoes'
+import { carregarPool, ehRodadaBalanceada, jogaveis } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { afirmacoesValidas } from '../fixtures/afirmacoes-validas'
 
@@ -297,7 +297,7 @@ describe('Quiz', () => {
   })
 
   it('tela do quiz não excede a viewport (320×568) com a afirmação mais longa', async () => {
-    const todas = [...carregarAfirmacoes(), ...afirmacoesValidas]
+    const todas = [...carregarPool(), ...afirmacoesValidas]
     const maisLonga = todas.reduce((a, b) => (b.texto.length > a.texto.length ? b : a))
     const { container } = render(
       <Quiz afirmacoes={[maisLonga, ...afirmacoesValidas.slice(1)]} erroPorAfirmacao={null} embaralharFn={identidade} />,
@@ -314,6 +314,18 @@ describe('Quiz', () => {
     const pagina = render(await QuizPage())
     const main = pagina.container.querySelector('main')!
     expect(main.className).not.toMatch(/(^|\s)(py|pt|pb|h|min-h)-/)
+  })
+
+  it('QuizPage entrega 12 afirmações jogáveis, sem lado, balanceadas por par', async () => {
+    const pagina = await QuizPage()
+    const { afirmacoes } = pagina.props.children.props as { afirmacoes: Record<string, unknown>[] }
+    expect(afirmacoes).toHaveLength(12)
+    expect(afirmacoes.every((a) => !('lado' in a))).toBe(true)
+    const porId = new Map(jogaveis(carregarPool()).map((a) => [a.id, a]))
+    const completas = afirmacoes.map((a) => porId.get(a.id as string)!)
+    expect(completas.every(Boolean)).toBe(true)
+    expect(new Set(completas.map((a) => a.id)).size).toBe(12)
+    expect(ehRodadaBalanceada(completas)).toBe(true)
   })
 
   it('conteúdo do quiz fica inert enquanto o painel está aberto, e o painel não', async () => {
