@@ -199,7 +199,7 @@ export default function Quiz({ afirmacoes, erroPorAfirmacao, embaralharFn = x =>
     <div
       ref={raiz}
       tabIndex={-1}
-      className="box-border flex h-dvh flex-col overflow-y-auto overscroll-contain px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
+      className="box-border flex h-dvh flex-col overflow-x-hidden overflow-y-auto overscroll-contain px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
     >
       <div data-conteudo inert={etapa === 'feedback' ? true : undefined} className="flex flex-1 flex-col gap-3">
         <div className="flex items-center justify-between gap-2">

@@ -28,6 +28,7 @@ Documento de transparência: cada mudança feita depois do plano do MVP (`2026-1
 - Temas claro ("Carimbo") e escuro ("Noite") seguem `prefers-color-scheme`; o cartão é claro nos dois. Nenhuma cor é associada a um lado político: as cores seguem só o veredito.
 - `prefers-reduced-motion` desliga inclinação, voo e transições.
 - Contador "{acertos} de {respondidas} ✔" só aparece depois da primeira resposta e some no resultado; é só exibição, a nota continua sendo calculada no servidor.
+- A tela do quiz cabe sem rolagem nos celulares em pé (320×568 para cima). Em telas baixas ou deitadas (por exemplo 667×375) a tela rola em vez de cortar o cartão; o cartão continua com `touch-action: none`, então arrastar para cima não briga com a rolagem. (Ajuste depois da revisão do PR; o documento de design dizia "sem rolagem" sem prever o modo deitado.)
 **Verificação em browser (controlador, Chrome, tema escuro, 2026-10-22):** em 320×568, 375×667 e 430×932 a tela do quiz não rola (`scrollHeight == innerHeight`) e o cartão cabe acima dos botões mesmo com um texto de 258 caracteres; um jogo completo de 12 afirmações por swipe nas três direções, setas e botões abriu o painel 12 vezes, com foco no botão de avanço, conteúdo atrás inerte, contador correto e respostas duplicadas ignoradas; sem erros no console. O tema claro foi verificado pelos testes de tokens, não em browser.
 
 ## Pendentes (ainda em desenho)
