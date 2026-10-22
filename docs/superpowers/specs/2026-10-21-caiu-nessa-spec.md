@@ -37,8 +37,8 @@ Site anônimo, sem login, zero atrito (vai circular por WhatsApp).
 
 ## Modelo de dados
 afirmacoes (JSON): id, texto, lado (esquerda|direita), autor, veredito
-  (true|false), explicacao, fonte_nome, fonte_url, data_checagem
-jogadas (tabela): id, created_at, respostas jsonb ({id: true|false}),
+  (verdadeiro|falso|enganoso), explicacao, fonte_nome, fonte_url, data_checagem
+jogadas (tabela): id, created_at, respostas jsonb ({id: verdadeiro|falso|enganoso}),
   acertos, total, acertos_esquerda, acertos_direita, ip_hash
 
 ## Fora do escopo agora
@@ -65,3 +65,4 @@ Decisão do autor durante a execução do plano MVP (depois da curadoria inicial
 - Viés: "acreditou" = marcou VERDADE numa afirmação falsa ou enganosa.
 - Afirmações extras que passam no mesmo critério ficam em `afirmacoes-reserva.json`
   (sem regra de proporção) para escolha ou sorteio futuro.
+- O "Modelo de dados" acima foi atualizado para o enum (`veredito` e `respostas`).

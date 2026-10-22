@@ -13,7 +13,11 @@ const afirmacoes: Afirmacao[] = [
 let falhou = false
 for (const { id, fonte_url } of afirmacoes) {
   try {
-    const resposta = await fetch(fonte_url, { method: 'GET', redirect: 'follow' })
+    const resposta = await fetch(fonte_url, {
+      method: 'GET',
+      redirect: 'follow',
+      signal: AbortSignal.timeout(30_000),
+    })
     if (resposta.ok) {
       console.log(`OK ${id}`)
     } else {
@@ -22,8 +26,10 @@ for (const { id, fonte_url } of afirmacoes) {
     }
   } catch (erro) {
     falhou = true
-    console.log(`FALHOU ${id} ${erro instanceof Error ? erro.message : String(erro)}`)
+    const motivo =
+      erro instanceof Error ? (erro.name === 'TimeoutError' ? 'timeout' : erro.name) : String(erro)
+    console.log(`FALHOU ${id} ${motivo}`)
   }
 }
 
-process.exit(falhou ? 1 : 0)
+process.exitCode = falhou ? 1 : 0

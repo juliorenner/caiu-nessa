@@ -44,7 +44,7 @@ export function fonteEhPermitida(url: string): boolean {
   if (hostEhDominio(host, 'aosfatos.org')) return true
   if (hostEhDominio(host, 'projetocomprova.com.br')) return true
   if (host === 'lupa.uol.com.br') return true
-  if (host === 'g1.globo.com') return caminho.startsWith('/fato-ou-fake')
+  if (host === 'g1.globo.com') return caminho === '/fato-ou-fake' || caminho.startsWith('/fato-ou-fake/')
   if (hostEhDominio(host, 'estadao.com.br')) return caminho.includes('estadao-verifica')
   return false
 }
@@ -62,7 +62,16 @@ const esquemaAfirmacao = z.object({
     .refine(fonteEhPermitida, { error: 'fonte_url não pertence a uma agência de checagem permitida' }),
   data_checagem: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, { error: 'data_checagem deve estar no formato YYYY-MM-DD' }),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, { error: 'data_checagem deve estar no formato YYYY-MM-DD' })
+    .refine(
+      (v) => {
+        const data = new Date(`${v}T00:00:00Z`)
+        return !Number.isNaN(data.getTime()) && data.toISOString().slice(0, 10) === v
+      },
+      {
+        error: 'data_checagem deve ser uma data de calendário válida',
+      },
+    ),
 })
 
 export const afirmacaoSchema = esquemaAfirmacao
@@ -106,7 +115,7 @@ let afirmacoesCarregadas: Afirmacao[] | undefined
 
 export function carregarAfirmacoes(): Afirmacao[] {
   afirmacoesCarregadas ??= validarAfirmacoes(dados)
-  return afirmacoesCarregadas
+  return afirmacoesCarregadas.map((a) => ({ ...a }))
 }
 
 export function embaralhar<T>(itens: readonly T[], aleatorio: () => number = Math.random): T[] {

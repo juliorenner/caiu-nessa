@@ -25,6 +25,10 @@ describe('validarAfirmacoes', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, fonte_url: 'https://exemplo.com/x' } : a)
     expect(() => validarAfirmacoes(alterada)).toThrow(/fonte/)
   })
+  it('rejeita data_checagem impossível (2026-02-31)', () => {
+    const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, data_checagem: '2026-02-31' } : a)
+    expect(() => validarAfirmacoes(alterada)).toThrow(/data_checagem/)
+  })
   it('rejeita data_checagem fora de YYYY-MM-DD', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, data_checagem: '01/10/2026' } : a)
     expect(() => validarAfirmacoes(alterada)).toThrow(/data_checagem/)
@@ -37,6 +41,7 @@ describe('fonteEhPermitida', () => {
     ['https://projetocomprova.com.br/publicacoes/x', true],
     ['https://g1.globo.com/fato-ou-fake/noticia/2026/x.ghtml', true],
     ['https://g1.globo.com/politica/noticia/x.ghtml', false],
+    ['https://g1.globo.com/fato-ou-fakery/x.ghtml', false],
     ['https://www.estadao.com.br/estadao-verifica/x/', true],
     ['https://www.estadao.com.br/politica/x/', false],
     ['http://aosfatos.org/x', false], // https only
@@ -46,6 +51,7 @@ describe('embaralhar', () => {
   it('mantém os mesmos itens e não muta a entrada', () => {
     const entrada = [1, 2, 3, 4]
     const saida = embaralhar(entrada, () => 0.5)
+    expect(saida).toEqual([1, 4, 2, 3])
     expect(saida).toHaveLength(4); expect(saida.sort()).toEqual([1, 2, 3, 4]); expect(entrada).toEqual([1, 2, 3, 4])
   })
 })
