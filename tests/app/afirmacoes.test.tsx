@@ -10,6 +10,7 @@ describe('página /afirmacoes', () => {
   it('explica que cada rodada é sorteada do conjunto', () => {
     render(<Afirmacoes />)
     expect(screen.getByRole('heading', { level: 1, name: 'As afirmações do jogo' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1 })).toHaveClass('font-letreiro')
     expect(
       screen.getByText(
         'Cada rodada é sorteada deste conjunto: a primeira tem 12 afirmações, as seguintes 6, sempre com o mesmo número de cada lado e de cada veredito.',

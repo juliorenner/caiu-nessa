@@ -1,25 +1,25 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { LINK_PAGINA } from '@/components/rotulos'
+import { LINK_PAGINA, TITULO_LETREIRO } from '@/components/rotulos'
 
 export const metadata: Metadata = { title: 'Como escolhemos as afirmações · Caiu Nessa?' }
 
 export default function ComoEscolhemos() {
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 text-base leading-relaxed text-stone-800 dark:text-stone-200">
+    <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 text-[17px] leading-relaxed text-tinta dark:text-papel">
       <Link href="/" className={LINK_PAGINA}>
         Caiu Nessa?
       </Link>
-      <h1 className="mt-6 text-3xl font-bold text-stone-900 dark:text-stone-100">Como escolhemos as afirmações</h1>
+      <h1 className={`mt-6 ${TITULO_LETREIRO} text-[28px]`}>Como escolhemos as afirmações</h1>
 
-      <h2 className="mt-8 text-xl font-semibold text-stone-900 dark:text-stone-100">Só o que já foi checado</h2>
+      <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Só o que já foi checado</h2>
       <p className="mt-2">
         Toda afirmação do jogo já foi verificada por pelo menos uma destas agências de checagem: Aos Fatos, Lupa,
         Comprova, G1 Fato ou Fake e Estadão Verifica. Nós não damos veredito próprio: cada afirmação traz o link da
         checagem original, para você conferir.
       </p>
 
-      <h2 className="mt-8 text-xl font-semibold text-stone-900 dark:text-stone-100">Mesmo peso para os dois lados</h2>
+      <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Mesmo peso para os dois lados</h2>
       <p className="mt-2">
         Cada rodada é sorteada de um conjunto maior e tem o mesmo número de afirmações de cada lado da disputa e, em cada
         lado, o mesmo número de verdadeiras, falsas e enganosas: a primeira rodada tem 12 afirmações (2 de cada por
@@ -28,7 +28,7 @@ export default function ComoEscolhemos() {
         prioridade às afirmações que mais circularam. Durante o jogo o lado não aparece.
       </p>
 
-      <h2 className="mt-8 text-xl font-semibold text-stone-900 dark:text-stone-100">Verdade, mentira ou enganoso</h2>
+      <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Verdade, mentira ou enganoso</h2>
       <p className="mt-2">Cada afirmação tem um destes três vereditos:</p>
       <ul className="mt-2 list-disc space-y-1 pl-6">
         <li>
@@ -38,7 +38,7 @@ export default function ComoEscolhemos() {
           <strong>Mentira</strong>: a checagem concluiu que é falso.
         </li>
         <li>
-          <strong>Enganoso</strong> (o botão &quot;Isso me cheira mal&quot;): tem algo de verdade, mas foi dito de um
+          <strong>Enganoso</strong> (o botão &quot;Cheira mal&quot;): tem algo de verdade, mas foi dito de um
           jeito que leva a uma conclusão errada.
         </li>
       </ul>
@@ -52,7 +52,7 @@ export default function ComoEscolhemos() {
         enganoso, ela fica de fora; entre falso e enganoso, vale o rótulo da maioria (no empate, falso).
       </p>
 
-      <h2 className="mt-8 text-xl font-semibold text-stone-900 dark:text-stone-100">O que o resultado mede</h2>
+      <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>O que o resultado mede</h2>
       <p className="mt-2">
         Nenhum texto do jogo apoia ou ataca candidato. O resultado mede você, não os partidos: quantas você acertou e
         em quantas falsas ou enganosas de cada lado você acreditou.
