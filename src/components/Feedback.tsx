@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import type { Afirmacao, Veredito } from '@/lib/afirmacoes'
 import { ehQuase } from '@/lib/pontuacao'
-import { BOTAO_PRIMARIO, FOCO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
+import { BOTAO_PRIMARIO, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
 
 function mensagem(veredito: Veredito, respostaDada: Veredito): string {
   if (respostaDada === veredito) return 'Você acertou.'
@@ -40,7 +40,7 @@ export function Feedback(p: {
         href={afirmacao.fonte_url}
         target="_blank"
         rel="noopener noreferrer"
-        className={`self-start rounded text-base font-medium text-stone-900 underline underline-offset-4 ${FOCO}`}
+        className={`self-start text-base ${LINK_EM_CARTAO}`}
       >
         Ver a checagem ({afirmacao.fonte_nome})
       </a>

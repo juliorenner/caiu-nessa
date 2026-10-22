@@ -1,15 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CARTAO_SUPERFICIE, FOCO, ROTULO_VEREDITO, SELO_VEREDITO } from '@/components/rotulos'
+import { CARTAO_SUPERFICIE, FOCO, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from '@/components/rotulos'
 import { type Afirmacao, carregarAfirmacoes, carregarReserva } from '@/lib/afirmacoes'
 
 export const metadata: Metadata = { title: 'As afirmações do jogo · Caiu Nessa?' }
 
 const LINK = `rounded font-medium text-stone-900 underline underline-offset-4 dark:text-stone-100 ${FOCO}`
-
-// Dentro do cartão (claro nos dois temas) o link e o foco ficam escuros.
-const LINK_CARTAO =
-  'rounded font-medium text-stone-900 underline underline-offset-4 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-stone-900'
 
 function formatarData(iso: string): string {
   const [ano, mes, dia] = iso.split('-')
@@ -25,7 +21,7 @@ function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
       <span className={SELO_VEREDITO[a.veredito]}>{ROTULO_VEREDITO[a.veredito]}</span>
       {a.observacao && <p className="text-base text-stone-600">{a.observacao}</p>}
       <p className="text-base text-stone-700">{a.explicacao}</p>
-      <a href={a.fonte_url} target="_blank" rel="noopener noreferrer" className={`self-start ${LINK_CARTAO}`}>
+      <a href={a.fonte_url} target="_blank" rel="noopener noreferrer" className={`self-start ${LINK_EM_CARTAO}`}>
         Ver a checagem ({a.fonte_nome}, {formatarData(a.data_checagem)})
       </a>
     </article>

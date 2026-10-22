@@ -28,6 +28,10 @@ export const FUNDO_PAGINA = 'bg-fundo text-stone-900 dark:bg-fundo-escuro dark:t
 // O cartão é claro nos dois temas (no Noite ele "salta" do fundo escuro), então o texto dele é sempre escuro.
 export const CARTAO_SUPERFICIE = 'bg-superficie text-stone-900 shadow-sm ring-1 ring-stone-200 dark:bg-superficie-escura dark:ring-0'
 
+// Link dentro de um cartão (claro nos dois temas): texto e anel de foco sempre escuros.
+export const LINK_EM_CARTAO =
+  'rounded font-medium text-stone-900 underline underline-offset-4 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-stone-900'
+
 // Texto secundário sobre o fundo da página.
 export const TEXTO_SECUNDARIO = 'text-stone-700 dark:text-stone-300'
 
