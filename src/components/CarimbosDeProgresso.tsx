@@ -14,10 +14,12 @@ export function CarimbosDeProgresso({
   total,
   atual,
   estados,
+  className = '',
 }: {
   total: number
   atual: number
   estados: ('acerto' | 'erro' | null)[]
+  className?: string
 }) {
   return (
     <div
@@ -26,7 +28,7 @@ export function CarimbosDeProgresso({
       aria-valuenow={atual + 1}
       aria-valuemin={0}
       aria-valuemax={total}
-      className="grid gap-1"
+      className={`grid gap-1 ${className}`}
       style={{ gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))` }}
     >
       {Array.from({ length: total }, (_, i) => {

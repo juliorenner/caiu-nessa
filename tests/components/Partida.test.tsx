@@ -114,7 +114,7 @@ describe('Partida', () => {
     expect(screen.getByText(`Na partida 7/${TOTAL_AFIRMACOES + segunda.length}`)).toBeInTheDocument()
     expect(screen.queryByText(/Você é um dos primeiros a jogar/)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Mais opções de compartilhar' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
+    expect(screen.getAllByRole('link', { name: 'Jogar de novo' }).map(l => l.getAttribute('href'))).toEqual(['/quiz', '/quiz'])
     expect(screen.queryByText(/Acertei/)).not.toBeInTheDocument()
     const envio = fetchMock.mock.calls.filter(([url]) => url === '/api/resultado')[1] as unknown as [string, RequestInit]
     expect(Object.keys(JSON.parse(envio[1].body as string).respostas).sort()).toEqual(segunda.map(a => a.id).sort())
@@ -135,7 +135,7 @@ describe('Partida', () => {
       await screen.findByText('Acabaram as afirmações por enquanto. Volte depois: a lista cresce.'),
     ).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Continuar jogando' })).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
+    expect(screen.getAllByRole('link', { name: 'Jogar de novo' }).map(l => l.getAttribute('href'))).toEqual(['/quiz', '/quiz'])
     expect(screen.getByText(`4/${TOTAL_AFIRMACOES}`)).toBeInTheDocument()
   })
 

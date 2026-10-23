@@ -144,7 +144,7 @@ describe('ResultadoFinal', () => {
     expect(screen.queryByText(/das pessoas|primeiros a jogar|não está disponível/)).not.toBeInTheDocument()
     expect(screen.queryByText(/Na partida/)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Continuar jogando' })).toBeEnabled()
-    expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
+    expect(screen.getAllByRole('link', { name: 'Jogar de novo' }).map(l => l.getAttribute('href'))).toEqual(['/quiz', '/quiz'])
     expect(screen.getByRole('button', { name: 'Mais opções de compartilhar' })).toBeInTheDocument()
     expect(screen.queryByText(/Acertei/)).not.toBeInTheDocument()
   })

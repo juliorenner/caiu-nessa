@@ -80,9 +80,48 @@ describe('ResultadoFinal: político em marca-d\'água', () => {
       'Mandar no WhatsApp',
       'Baixar imagem para os stories',
       'Jogar de novo',
+      'Jogar de novo',
       'Como escolhemos as afirmações',
       'Ver todas as afirmações e suas fontes',
     ])
+  })
+})
+
+describe('ResultadoFinal: suas respostas', () => {
+  it('sem respostas, não há lista', () => {
+    stubNavegador({})
+    const { container } = renderizar()
+    expect(container.querySelector('details')).toBeNull()
+  })
+
+  it('com respostas, a lista vem depois de "Continuar jogando" no DOM', () => {
+    stubNavegador({})
+    const { container } = render(
+      <ResultadoFinal
+        dados={dados}
+        rodada={1}
+        acumulado={{ acertos: 4, total: 12 }}
+        casas={casas}
+        respostas={[{ id: 'a1', texto: 'Uma afirmação.', veredito: 'falso', casa: 'erro' }]}
+        onContinuar={async () => 'fim'}
+      />,
+    )
+    const details = container.querySelector('details')!
+    expect(details.querySelector('summary')).toHaveTextContent('Suas respostas (4 de 12)')
+    const continuar = screen.getByRole('button', { name: 'Continuar jogando' })
+    expect(continuar.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('"Jogar de novo" e os links de fim de tela aparecem uma vez por tamanho', () => {
+    stubNavegador({})
+    renderizar()
+    const jogar = screen.getAllByRole('link', { name: 'Jogar de novo' })
+    expect(jogar).toHaveLength(2)
+    expect(jogar.filter(l => l.classList.contains('lg:hidden'))).toHaveLength(1)
+    expect(jogar.filter(l => l.classList.contains('max-lg:hidden') && l.classList.contains('lg:border-dashed'))).toHaveLength(1)
+    for (const nome of ['Como escolhemos as afirmações', 'Ver todas as afirmações e suas fontes']) {
+      expect(screen.getByRole('link', { name: nome })).toHaveClass('lg:hidden')
+    }
   })
 })
 
@@ -278,7 +317,7 @@ describe('ResultadoFinal: compartilhar', () => {
     segue(mais, p)
     segue(p, continuar)
     expect(screen.getByText('Compartilhar')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
+    expect(screen.getAllByRole('link', { name: 'Jogar de novo' }).map(l => l.getAttribute('href'))).toEqual(['/quiz', '/quiz'])
     expect(screen.queryByText(/Acertei/)).not.toBeInTheDocument()
   })
 

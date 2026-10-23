@@ -64,3 +64,45 @@ test('/afirmacoes lista cada afirmação do pool com o link da sua checagem', as
   const links = await page.getByRole('link', { name: /Ver a checagem/ }).evaluateAll((as) => as.map((a) => a.getAttribute('href')))
   expect(links.sort()).toEqual(afirmacoes.map((a) => a.fonte_url).sort())
 })
+
+// Telas largas (lg): o "Começar" já tem o foco, o veredito abre ao lado do cartão e o resultado
+// mostra a lista "Suas respostas" aberta.
+test.describe('desktop', () => {
+  test.use({ viewport: { width: 1280, height: 800 } })
+
+  test('na home, o "Começar" tem o foco', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByRole('link', { name: 'Começar' })).toBeFocused()
+  })
+
+  test('no quiz, o veredito aparece ao lado do cartão, sem fundo escurecido', async ({ page }) => {
+    await page.goto('/quiz')
+    await expect(page.locator('[data-casa]')).toHaveCount(TOTAL_AFIRMACOES)
+    await page.getByRole('button', { name: /verdade/i }).click()
+    const texto = page.getByRole('group', { name: 'Afirmação' }).locator('p')
+    const painel = page.getByRole('dialog')
+    await expect(texto).toBeVisible()
+    await expect(painel).toBeVisible()
+    await expect(page.locator('[data-backdrop]')).toBeHidden()
+    // O painel fica à direita do texto, sem cobri-lo (1 px de folga para arredondamento).
+    const caixaTexto = (await texto.boundingBox())!
+    const caixaPainel = (await painel.boundingBox())!
+    expect(caixaTexto.x + caixaTexto.width).toBeLessThanOrEqual(caixaPainel.x + 1)
+  })
+
+  test('no resultado, "Suas respostas" lista cada afirmação da rodada', async ({ page }) => {
+    test.skip(somenteLeitura, 'grava uma jogada')
+
+    await page.goto('/quiz')
+    await expect(page.locator('[data-casa]')).toHaveCount(TOTAL_AFIRMACOES)
+    for (let i = 0; i < TOTAL_AFIRMACOES; i++) {
+      await page.getByRole('button', { name: /verdade/i }).click()
+      await page.getByRole('button', { name: /^(Próxima|Ver meu resultado)$/ }).click()
+    }
+
+    await expect(page.locator('summary', { hasText: 'Suas respostas' })).toBeVisible()
+    await expect(page.locator('details')).toHaveAttribute('open', '')
+    await expect(page.locator('details [data-resposta]')).toHaveCount(TOTAL_AFIRMACOES)
+    await expect(page.locator('details [data-resposta]').first()).toBeVisible()
+  })
+})
