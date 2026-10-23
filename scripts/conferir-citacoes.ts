@@ -6,6 +6,7 @@ import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { type Afirmacao, validarPool } from '../src/lib/afirmacoes'
 import { citacaoAparece, textoDoHtml } from '../src/lib/citacoes'
+import { lerPoolDeAntes } from '../src/lib/revisao-do-pool'
 
 const CAMINHO = 'src/data/afirmacoes.json'
 const todas = process.argv.includes('--todas')
@@ -15,7 +16,7 @@ const pool = validarPool(JSON.parse(readFileSync(new URL(`../${CAMINHO}`, import
 
 function alteradas(): Afirmacao[] {
   const base = process.env.BASE_REF ?? 'origin/main'
-  const antes = validarPool(JSON.parse(execFileSync('git', ['show', `${base}:${CAMINHO}`], { encoding: 'utf-8' })))
+  const antes = lerPoolDeAntes(JSON.parse(execFileSync('git', ['show', `${base}:${CAMINHO}`], { encoding: 'utf-8' })))
   const porId = new Map(antes.map((a) => [a.id, JSON.stringify(a)]))
   return pool.filter((a) => porId.get(a.id) !== JSON.stringify(a))
 }

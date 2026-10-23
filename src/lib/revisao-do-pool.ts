@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { type Afirmacao, type Lado, validarPool } from '@/lib/afirmacoes'
 
 // Limites de volume de uma revisão automática do pool: ficam aqui, não no prompt do agente.
@@ -7,9 +8,23 @@ export type LimitesDaRevisao = { readonly novasPorRodada: number; readonly novas
 const FORMATO_DE_ID = /^[0-9a-f]{8}$/
 const NOME_DO_LADO: Record<Lado, string> = { esquerda: 'à esquerda', direita: 'à direita' }
 
-function validarOuProblema(dados: unknown): { pool: Afirmacao[] } | { problema: string } {
+// O pool de antes (a main) pode ser de um esquema anterior (sem `alcance`, por exemplo): dele só se exigem `id` e `lado`.
+export type ItemDeAntes = { id: string; lado: Lado } & Record<string, unknown>
+const esquemaDeAntes = z.array(z.looseObject({ id: z.string().min(1), lado: z.enum(['esquerda', 'direita']) }))
+
+// Devolve os itens como vieram (sem reordenar campos), para a comparação campo a campo com o pool de depois.
+export function lerPoolDeAntes(dados: unknown): ItemDeAntes[] {
+  const resultado = esquemaDeAntes.safeParse(dados)
+  if (!resultado.success) {
+    const detalhe = resultado.error.issues.map(({ path, message }) => `[${path.join('.')}] ${message}`).join('; ')
+    throw new Error(`Afirmações inválidas: ${detalhe}`)
+  }
+  return dados as ItemDeAntes[]
+}
+
+function validarOuProblema<T>(validar: (dados: unknown) => T[], dados: unknown): { pool: T[] } | { problema: string } {
   try {
-    return { pool: validarPool(dados) }
+    return { pool: validar(dados) }
   } catch (erro) {
     return { problema: erro instanceof Error ? erro.message : String(erro) }
   }
@@ -19,9 +34,9 @@ function validarOuProblema(dados: unknown): { pool: Afirmacao[] } | { problema: 
 // Nenhum item pode sumir (sair do jogo é marcar `observacao`), nenhum muda de lado, ids novos têm 8 hexadecimais
 // e o volume de novas respeita os limites. Outras mudanças em itens existentes passam: quem as julga é a revisão da PR.
 export function compararPools(antes: unknown, depois: unknown, limites: LimitesDaRevisao = LIMITES_DA_REVISAO): string[] {
-  const a = validarOuProblema(antes)
+  const a = validarOuProblema(lerPoolDeAntes, antes)
   if ('problema' in a) return [`pool de antes: ${a.problema}`]
-  const d = validarOuProblema(depois)
+  const d = validarOuProblema(validarPool, depois)
   if ('problema' in d) return [d.problema]
 
   const problemas: string[] = []
@@ -46,7 +61,7 @@ export function compararPools(antes: unknown, depois: unknown, limites: LimitesD
 }
 
 // Quantas novas e quantas existentes mudaram em algum campo: o resumo do script.
-export function resumirRevisao(antes: readonly Afirmacao[], depois: readonly Afirmacao[]): { novas: number; alteradas: number } {
+export function resumirRevisao(antes: readonly { id: string }[], depois: readonly Afirmacao[]): { novas: number; alteradas: number } {
   const porId = new Map(antes.map((x) => [x.id, JSON.stringify(x)]))
   let novas = 0
   let alteradas = 0

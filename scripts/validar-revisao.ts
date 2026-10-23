@@ -3,7 +3,7 @@
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { validarPool } from '../src/lib/afirmacoes'
-import { compararPools, resumirRevisao } from '../src/lib/revisao-do-pool'
+import { compararPools, lerPoolDeAntes, resumirRevisao } from '../src/lib/revisao-do-pool'
 
 const CAMINHO = 'src/data/afirmacoes.json'
 const base = process.env.BASE_REF ?? 'origin/main'
@@ -16,6 +16,6 @@ if (problemas.length) {
   for (const p of problemas) console.log(`PROBLEMA ${p}`)
   process.exitCode = 1
 } else {
-  const { novas, alteradas } = resumirRevisao(validarPool(antes), validarPool(depois))
+  const { novas, alteradas } = resumirRevisao(lerPoolDeAntes(antes), validarPool(depois))
   console.log(`OK: ${novas} novas, ${alteradas} alteradas`)
 }

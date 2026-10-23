@@ -116,3 +116,69 @@ Para cada item alterado passar no `conferir-citacoes`:
 - `npx tsx scripts/verificar-fontes.ts`: 45 OK.
 - `npx tsx scripts/conferir-citacoes.ts --todas`: 43 OK, 2 AVISO (só Estadão, acima). Com `BASE_REF=origin/main` o script quebra: o pool da `main` não tem `alcance` e o esquema novo o recusa; rodei com `--todas` e com `BASE_REF=ea09c6f` (29 alterados, todos OK).
 - `npx tsx scripts/validar-revisao.ts`: com `origin/main`, mesmo problema do esquema; com `BASE_REF=ea09c6f`, "OK: 0 novas, 29 alteradas".
+
+## Task 3: merge da main e lote da varredura (tudo que cabe nas regras)
+
+Decisão do dono: entra tudo o que cabe nas regras publicadas, não só ~30.
+
+### Merge da main (PR #47)
+
+Os 16 virais do lado de Flávio (4 V, 2 E, 10 F) entraram sem `alcance`; todos ficaram com `alcance: 1` (posts, lives e comício; nenhum é debate ou TV nacional; 9c86cda9 e 7a23af63, também checados pelo Aos Fatos, e 50b79160, também pelo Estadão, seguem 1 porque a ocasião não é debate nem TV).
+
+### Lote
+
+Preparado em três frentes, cada uma com a citação conferida, literal, na página da `fonte_url` e o veredito pela regra da maioria. Antes de anexar, conferi de novo `id`, `texto` e `citacao` (normalizados como no teste) contra o pool já com os 16 da PR #47: nenhuma repetição.
+
+| lote | itens | verdadeiro | enganoso | falso | alcance 3 / 2 / 1 |
+|---|---|---|---|---|---|
+| direita (debate, JN, Globo, live, pronunciamento, falas avulsas) | 63 | 5 | 21 | 37 | 28 / 25 / 10 |
+| esquerda (debate, JN, Globo, Flow, falas avulsas) | 46 | 17 | 22 | 7 | 27 / 9 / 10 |
+| esquerda, virais (comício, ONU, posts, anúncio) | 14 | 6 | 6 | 2 | 0 / 1 / 13 |
+| **total** | **123** | 28 | 49 | 46 | 55 / 35 / 33 |
+
+Pela regra nova entraram candidatos que a varredura dava como "fora" ou "duvidoso": na esquerda, as seis linhas "fora" e as duas "duvidosas" (por exemplo 84e1ab92 e 015f50ee, 2 V × 1 E = verdadeiro; 59fbe7ad, 28506065 e 64903478, empate V/E = enganoso; 311499c1, 1 V × 2 E = enganoso); na direita, quatro (8ecc47f3, f0fe3e98, 0aa8cac6 e 76505a59, todos enganoso). Nenhum candidato caiu por citação ausente da página.
+
+### Fora do lote
+
+| candidato | motivo |
+|---|---|
+| "não tinha nada contra ele" (Nóbrega, JN) | já no pool (6938e526) |
+| "Essa homenagem foi feita há mais de 20 anos" (JN; Lupa Verdadeiro) | decisão do dono: o G1 checou essa frase junto com a de 6938e526 numa só citação (#NÃOÉBEMASSIM), mirando a outra; pela regra estrita daria enganoso para uma frase que a Lupa confirma |
+| dívida de R$ 11 trilhões (Globo 16/10) | mesma alegação de 912298e6 (debate) |
+| "O debate da Globo foi censurado" (live, Lupa Falso) | mesma alegação e ocasião de d8286620 |
+| "Eu tenho um irmão exilado" (live); "o único agente público que foi para os EUA" (JN); prontuário eletrônico (Globo); "350 bilhões" (debate e 04/10); "não foi encontrada uma arma" (Globo) | mesma alegação de uma versão que entrou; a `explicacao` da versão escolhida cita as outras |
+| Daniella Marques, "recorde de falência" | fora da seção da varredura; repete o tema de 7bb5f029 |
+| "policial que matou uma criança de 5 anos" (debate) | já no pool (cbfe2cc3) |
+| "só voltou a crescer acima de 3%" (debate, JN) | já no pool na versão do Flow (a88285e0) |
+| déficit de 2,8% na Globo (15/10) | Aos Fatos verdadeiro × Lupa, G1 e Estadão falso: V contra F, fora (a versão do debate, só falsos, entrou) |
+| superávit de 0,1% no debate; perdão de R$ 12,7 bi dos MEIs na Globo | mesma afirmação de uma versão que entrou (Globo e debate, respectivamente) |
+| V1, diplomas no comício (virais da esquerda) | mesma afirmação de 0b57e8ba (JN, alcance 3) |
+| E6, Moraes e Marielle (virais da esquerda) | `citacao` idêntica à de b9ce7b4e |
+
+### Rulings das revisões
+
+- 226b7d8c: a `explicacao` abre com o Estadão Verifica e o rótulo ("exagerado"); continua a única fonte (o Aos Fatos transcreve sem selo).
+- d07912c0: `citacao` sem colchete, a frase literal com selo no Aos Fatos: "A gente era a sétima economia do mundo."
+- 6938e526: a `explicacao` cita o G1 (#NÃOÉBEMASSIM, numa citação que junta esta frase à da homenagem); segue falso pela maioria (Aos Fatos e Lupa falso).
+- 523042a9 (Estadão enganoso) e 7bb5f029 (Estadão falta contexto): a `explicacao` já citava o Estadão e o rótulo desde a Task 2; sem mudança.
+- b96d3fc1: na página da Lupa do debate (baixada em 23/10, HTTP 200), "A Lei Antifacção que nós aprovamos, os líderes dessas organizações vão ficar até 80 anos presos" é atribuída a "Flávio Bolsonaro (PL), candidato à Presidência"; a fala de Lula sobre a lei é outra ("Eu já fiz a Lei Antifacção, ela foi aprovada...", 84e1ab92). Sem mudança.
+
+### Contagem final (184 itens, todos no jogo)
+
+| | verdadeiro | falso | enganoso |
+|---|---|---|---|
+| direita | 13 | 61 | 28 |
+| esquerda | 34 | 14 | 34 |
+
+Alcance: 3 = 82 (41 de cada lado), 2 = 44 (direita 30, esquerda 14), 1 = 58 (direita 31, esquerda 27).
+
+### Base tolerante a mudança de esquema
+
+`compararPools` lê o pool de antes com um esquema que só exige `id` e `lado` (`lerPoolDeAntes`), e `validar-revisao` e `conferir-citacoes` usam o mesmo leitor: com `BASE_REF=origin/main` os dois rodam mesmo com a main sem `alcance`.
+
+### Validação
+
+- `npm run lint`, `npm run typecheck`: limpos. `npm test`: 52 arquivos, 662 testes passando.
+- `npx tsx scripts/verificar-fontes.ts`: 184 OK.
+- `BASE_REF=origin/main npx tsx scripts/validar-revisao.ts`: só os problemas de volume esperados num lote humano ("123 novas, limite 6", "60 novas à esquerda", "63 novas à direita"); nenhum removido, nenhum lado mudou, nenhum id inválido.
+- `BASE_REF=origin/main npx tsx scripts/conferir-citacoes.ts`: 184 conferidas (todas mudaram, porque ganharam `alcance`), 182 OK; AVISO só em 226b7d8c e 01702d43, os dois com o Estadão como única fonte.

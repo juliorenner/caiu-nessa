@@ -25,7 +25,8 @@ export default function ComoEscolhemos() {
       <p className="mt-2">
         Toda afirmação do jogo já foi verificada por pelo menos uma destas agências de checagem: Aos Fatos, Lupa,
         Comprova, G1 Fato ou Fake e Estadão Verifica. Nós não damos veredito próprio: cada afirmação traz o link da
-        checagem original, para você conferir.
+        checagem original, para você conferir. O conjunto de afirmações é revisado todo mês por um agente automatizado,
+        e cada mudança chega como um pull request público no repositório do projeto.
       </p>
 
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Mesmo peso para os dois lados</h2>
@@ -61,7 +62,8 @@ export default function ComoEscolhemos() {
       <p className="mt-2">
         Quando agências diferentes discordam sobre a mesma afirmação: se uma diz verdadeiro e outra diz falso, ela fica
         de fora. Nos outros casos, vale a maioria dos votos; no empate entre verdadeiro e enganoso, vale enganoso; no
-        empate entre falso e enganoso, vale falso.
+        empate entre falso e enganoso, vale falso. As afirmações que ficam fora do jogo aparecem na lista pública, com
+        o motivo.
       </p>
 
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Alcance</h2>

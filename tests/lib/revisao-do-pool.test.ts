@@ -50,6 +50,18 @@ describe('compararPools', () => {
     expect(problemas[0]).toMatch(/^Afirmações inválidas/)
   })
 
+  it('pool de antes de um esquema anterior (sem alcance): sem problema de "pool de antes"', () => {
+    const semAlcance = antes.map(({ alcance: _alcance, ...resto }) => resto)
+    expect(compararPools(semAlcance, antes)).toEqual([])
+  })
+
+  it('pool de antes sem id ou lado: problema de "pool de antes"', () => {
+    const semLado = antes.map(({ lado: _lado, ...resto }) => resto)
+    const problemas = compararPools(semLado, antes)
+    expect(problemas).toHaveLength(1)
+    expect(problemas[0]).toMatch(/^pool de antes: /)
+  })
+
   it('item existente não muda de lado', () => {
     const trocado = antes.map((a) => (a.id === 'e6' ? { ...a, lado: 'direita' as const } : a))
     expect(compararPools(antes, trocado)).toEqual(['lado mudou: e6'])

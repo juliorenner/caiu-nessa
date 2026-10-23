@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Regras de veredito por maioria com rótulos de contexto como enganoso, campo `alcance` com preferência na primeira rodada, os 8 itens de volta ao jogo e ~30 afirmações novas da varredura.
+**Goal:** Regras de veredito por maioria com rótulos de contexto como enganoso, campo `alcance` com preferência na primeira rodada, os 8 itens de volta ao jogo e tudo da varredura que cabe nas regras.
 
 **Architecture:** O esquema ganha `alcance`; `sortearRodada` ganha sorteio ponderado opcional (função pura); os pesos vivem em `rodadas.ts` (única knob). Os dados mudam em dois passos (8 de volta + alcance de todos; depois o lote), cada um validado pelos scripts e testes existentes.
 
@@ -47,9 +47,9 @@
 - [ ] **Step 2:** set `alcance` for all items: 3 for Janja R$ 7 bi, Nóbrega, "mentia 11 vezes", inflação de alimentos, Ana Clara (AF + G1); 1 for Flow, lives, posts, "segundo o Aos Fatos" items; 2 for the rest; any item the sweep shows checked by a second agency on the same occasion → 3 (cite it in `explicacao`).
 - [ ] **Step 3:** `npm test`, `npx tsx scripts/verificar-fontes.ts`, `BASE_REF=origin/main npx tsx scripts/conferir-citacoes.ts` (changed items). **Step 4:** commit `data(afirmacoes): 8 itens de volta pela regra da maioria e alcance de todos`.
 
-### Task 3: Lote da varredura (~30)
+### Task 3: Lote da varredura (tudo que cabe nas regras)
 
 **Files:** `src/data/afirmacoes.json`, the same report.
 
-- [ ] **Step 1:** from `docs/superpowers/notes/2026-10-23-varredura-de-checagens.md`, pick candidates until every (lado, veredito) pair has ≥ 8 playable, max ~32 new, priority: ≥ 2 agencies, debate/TV, then balance. Exclude anything with V vs F disagreement. For each: fetch the agency page, confirm the literal quote, write `texto` (neutral third person, no "você", "eu", "[…]" per `tests/data/afirmacoes-reais.test.ts` rules), `citacao`, `autor`, `veredito` by the new rule, `explicacao` (≥ 40 chars, all agencies named), `fonte_nome`/`fonte_url` (an agency with the literal quote), `data_checagem`, `alcance`, new 8-hex `id`.
+- [ ] **Step 1:** from `docs/superpowers/notes/2026-10-23-varredura-de-checagens.md`, take every candidate that fits the rules (owner's decision; no cap). Exclude anything with V vs F disagreement. For each: fetch the agency page, confirm the literal quote, write `texto` (neutral third person, no "você", "eu", "[…]" per `tests/data/afirmacoes-reais.test.ts` rules), `citacao`, `autor`, `veredito` by the new rule, `explicacao` (≥ 40 chars, all agencies named), `fonte_nome`/`fonte_url` (an agency with the literal quote), `data_checagem`, `alcance`, new 8-hex `id`.
 - [ ] **Step 2:** `npm test`; `npx tsx scripts/verificar-fontes.ts`; `BASE_REF=origin/main LIMITES=lote npx tsx scripts/validar-revisao.ts` is NOT required (human batch): instead run `node -e` to assert no removed ids and all new ids valid; `BASE_REF=origin/main npx tsx scripts/conferir-citacoes.ts` with zero AVISO on new items (Estadão-only sources are not allowed for new items). **Step 3:** append the batch table to the report. **Step 4:** commit `data(afirmacoes): lote de outubro da varredura (N novas)`.

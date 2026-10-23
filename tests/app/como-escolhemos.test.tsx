@@ -43,6 +43,15 @@ describe('página /como-escolhemos', () => {
     expect(texto).toContain('empate entre falso e enganoso, vale falso')
   })
 
+  it('conta como o pool é revisado e onde ficam as afirmações fora do jogo', () => {
+    const { container } = render(<ComoEscolhemos />)
+    const texto = container.textContent!.replace(/\s+/g, ' ')
+    expect(texto).toContain(
+      'revisado todo mês por um agente automatizado, e cada mudança chega como um pull request público no repositório',
+    )
+    expect(texto).toContain('As afirmações que ficam fora do jogo aparecem na lista pública, com o motivo.')
+  })
+
   it('publica o critério de alcance e a preferência da primeira rodada', () => {
     const { container } = render(<ComoEscolhemos />)
     const texto = container.textContent!.replace(/\s+/g, ' ')
