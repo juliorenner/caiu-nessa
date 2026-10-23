@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import afirmacoes from '../../src/data/afirmacoes.json' with { type: 'json' }
 import { TOTAL_AFIRMACOES } from '../../src/lib/rodadas'
 
 // Em produção: só lê. Jogar uma rodada inteira grava uma jogada no placar.
@@ -55,4 +56,11 @@ test('imagens', async ({ request }) => {
 test('API recusa corpo inválido', async ({ request }) => {
   expect((await request.post('/api/resultado', { data: {} })).status()).toBe(400)
   expect((await request.post('/api/evento', { data: { tipo: 'x' } })).status()).toBe(400)
+})
+
+test('/afirmacoes lista cada afirmação do pool com o link da sua checagem', async ({ page }) => {
+  await page.goto('/afirmacoes')
+  await expect(page.locator('article')).toHaveCount(afirmacoes.length)
+  const links = await page.getByRole('link', { name: /Ver a checagem/ }).evaluateAll((as) => as.map((a) => a.getAttribute('href')))
+  expect(links.sort()).toEqual(afirmacoes.map((a) => a.fonte_url).sort())
 })

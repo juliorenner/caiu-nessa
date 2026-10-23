@@ -46,6 +46,7 @@ npm run typecheck                     # tipos
 npm run build                         # build de produção
 npx tsx scripts/verificar-fontes.ts   # acessa cada link de checagem
 npx tsx scripts/validar-revisao.ts    # compara as afirmações com a main (revisão de fatos)
+npx tsx scripts/conferir-citacoes.ts  # procura cada citação na página da agência (aviso; --todas, --estrito)
 ```
 
 ## Pipeline
@@ -56,7 +57,7 @@ GitHub Actions, em `.github/workflows/`:
 - **Deploy** (`deploy.yml`): a cada push em `main` (ou manual), roda o mesmo CI e, se passar, aplica as migrações do banco e publica na Vercel. Esse é o único caminho para produção; a Vercel não está ligada ao GitHub.
 - **Segredos**, no environment `production` do GitHub (Settings → Environments): `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` e `DATABASE_URL`. Enquanto `VERCEL_PROJECT_ID` não estiver cadastrado, o deploy é pulado com um aviso, sem falhar.
 - **Links de checagem** (`fontes.yml`): toda segunda o script `verificar-fontes` acessa cada link; se algum quebrar, abre ou atualiza a issue "Link de checagem quebrado".
-- **Revisão mensal de fatos** (`revisao-de-fatos.yml`): no dia 1 de cada mês (ou manual, em Actions → revisao-de-fatos → Run workflow) um agente (Claude Code no runner, prompt em `.claude/skills/revisao-de-fatos/SKILL.md`) confere cada checagem do banco, acrescenta até 6 afirmações novas das agências aceitas e abre uma PR `bot/revisao-de-fatos-<data>`. Antes da PR ele roda os testes, o verificador de links e `scripts/validar-revisao.ts` (nada removido, ids válidos, limite de novas). A PR nunca é mesclada pelo bot. Autenticação na Anthropic por federação de identidade (sem chave guardada) e no GitHub pelo app "Claude"; o workflow só leva identificadores.
+- **Revisão mensal de fatos** (`revisao-de-fatos.yml`): no dia 1 de cada mês (ou manual, em Actions → revisao-de-fatos → Run workflow) um agente (Claude Code no runner, prompt em `.claude/skills/revisao-de-fatos/SKILL.md`) confere cada checagem do banco, acrescenta até 6 afirmações novas das agências aceitas e abre uma PR `bot/revisao-de-fatos-<data>`. Antes da PR ele roda os testes, o verificador de links e `scripts/validar-revisao.ts` (nada removido, ids válidos, limite de novas). A PR nunca é mesclada pelo bot. Nas PRs do bot o CI ganha o job `revisao`: validador contra a base, links em jogo respondendo e, como aviso no resumo, a citação de cada item novo ou alterado procurada na página da agência. Autenticação na Anthropic por federação de identidade (sem chave guardada) e no GitHub pelo app "Claude"; o workflow só leva identificadores.
 - O ESLint ainda não roda com o TypeScript 7, então o pacote `typescript` aponta para o TS 6 (`@typescript/typescript6`): é ele que o ESLint e a checagem de tipos do `next build` usam. O `tsc` do `npm run typecheck` vem do TS 7 (`@typescript/native`). Quando o typescript-eslint suportar o TS 7, o alias sai.
 - O Dependabot propõe atualizações semanais de pacotes npm e de actions.
 

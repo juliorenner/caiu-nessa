@@ -68,3 +68,42 @@ it('fonte_nome é uma das cinco agências e bate com o domínio de fonte_url', (
     expect(new URL(a.fonte_url).hostname, `${a.id}: ${a.fonte_url}`).toMatch(dominio)
   }
 })
+
+// Limites de tamanho com folga sobre o pool atual (texto 186, citacao 234, explicacao 563, autor 122):
+// um texto muito maior não cabe no cartão nem no painel do celular.
+const TAMANHO_MAXIMO = { texto: 240, citacao: 300, explicacao: 700, autor: 150 } as const
+it.each(Object.entries(TAMANHO_MAXIMO))('%s tem no máximo %i caracteres', (campo, maximo) => {
+  for (const a of todasAsAfirmacoes) expect(a[campo as keyof typeof TAMANHO_MAXIMO].length, a.id).toBeLessThanOrEqual(maximo)
+})
+
+// Datas reais, dentro do período da campanha e nunca no futuro.
+const INICIO_DA_CAMPANHA = '2026-01-01'
+it('data_checagem é uma data real entre o início da campanha e hoje', () => {
+  const hoje = new Date().toISOString().slice(0, 10)
+  for (const a of todasAsAfirmacoes) {
+    const data = new Date(`${a.data_checagem}T00:00:00Z`)
+    expect(data.toISOString().slice(0, 10), a.id).toBe(a.data_checagem)
+    expect(a.data_checagem >= INICIO_DA_CAMPANHA, `${a.id}: ${a.data_checagem}`).toBe(true)
+    expect(a.data_checagem <= hoje, `${a.id}: ${a.data_checagem}`).toBe(true)
+  }
+})
+
+// Sem repetição: a mesma fala ou o mesmo texto duas vezes (ignorando acentos, caixa e espaços).
+const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim()
+it.each(['texto', 'citacao'] as const)('nenhum %s se repete', (campo) => {
+  const vistos = new Map<string, string>()
+  for (const a of todasAsAfirmacoes) {
+    const chave = normalizar(a[campo])
+    expect(vistos.get(chave), `${a.id} repete ${campo} de ${vistos.get(chave)}`).toBeUndefined()
+    vistos.set(chave, a.id)
+  }
+})
+
+// "Lula (PT), no debate da Band" ou "Post nas redes, compartilhado por Flávio Bolsonaro (PL)": partido entre
+// parênteses e uma vírgula separando quem disse de onde ou como.
+it('autor tem o partido entre parênteses e uma vírgula', () => {
+  for (const a of todasAsAfirmacoes) {
+    expect(a.autor, a.id).toMatch(/\([^)]+\)/)
+    expect(a.autor, a.id).toContain(', ')
+  }
+})
