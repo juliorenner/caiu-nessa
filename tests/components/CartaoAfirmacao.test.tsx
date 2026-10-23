@@ -77,7 +77,9 @@ describe('CartaoAfirmacao', () => {
     const selo = container.querySelector<HTMLElement>('span[data-selo]')
     expect(selo).toHaveAttribute('data-selo', 'enganoso')
     expect(selo!.style.opacity).toBe('1')
-    expect(cartao().style.transform).toBe('translateY(-40px) rotate(-6deg)')
+    // Pose parada em variáveis CSS: no celular valem os padrões (40px, 6°); em lg o cartão encolhe o giro.
+    expect(cartao().style.transform).toBe('translateY(calc(-1 * var(--pose-desloc, 40px))) rotate(calc(-1 * var(--pose-giro, 6deg)))')
+    expect(cartao()).toHaveClass('lg:[--pose-giro:2deg]')
     expect(cartao()).toHaveClass('transition-transform')
   })
 

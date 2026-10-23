@@ -25,11 +25,17 @@ export const CARTAO_BASE = `p-5 lg:p-12 ${SUPERFICIE}`
 const DICA = 'pointer-events-none absolute font-letreiro text-[11px] leading-none whitespace-nowrap'
 
 // Posição parada (respondido) ou de saída (saindo) no eixo da resposta.
+// A pose parada usa variáveis CSS para que telas largas (lg) a encolham: ali o cartão é grande e um giro
+// de 8° invadiria o painel ao lado. Os valores padrão (celular) ficam em POSE_PADRAO.
+const POSE_PADRAO = 'lg:[--pose-desloc:12px] lg:[--pose-giro:2deg]'
 function transformFinal(veredito: Veredito, fase: 'respondido' | 'saindo'): string {
   const saindo = fase === 'saindo'
-  if (veredito === 'enganoso') return `translateY(${saindo ? '-120%' : '-40px'}) rotate(-6deg)`
+  if (veredito === 'enganoso') {
+    return saindo ? 'translateY(-120%) rotate(-6deg)' : 'translateY(calc(-1 * var(--pose-desloc, 40px))) rotate(calc(-1 * var(--pose-giro, 6deg)))'
+  }
   const sinal = veredito === 'verdadeiro' ? '' : '-'
-  return `translateX(${sinal}${saindo ? '120%' : '40px'}) rotate(${sinal}8deg)`
+  if (saindo) return `translateX(${sinal}120%) rotate(${sinal}8deg)`
+  return `translateX(calc(${sinal}1 * var(--pose-desloc, 40px))) rotate(calc(${sinal}1 * var(--pose-giro, 8deg)))`
 }
 
 export function CartaoAfirmacao({
@@ -78,7 +84,7 @@ export function CartaoAfirmacao({
     <div
       role="group"
       aria-label="Afirmação"
-      className={`relative flex flex-1 flex-col justify-center touch-none select-none ${CARTAO_BASE} ${transicao}`}
+      className={`relative flex flex-1 flex-col justify-center touch-none select-none ${CARTAO_BASE} ${POSE_PADRAO} ${transicao}`}
       style={style}
       {...(ativo ? { ...handlers, onPointerDown } : {})}
     >
