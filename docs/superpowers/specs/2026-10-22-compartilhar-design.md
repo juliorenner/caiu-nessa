@@ -39,6 +39,7 @@ O jogo vai circular por WhatsApp e Instagram entre amigos. Hoje o link chega "pe
 
 ### 2. Botão de compartilhar
 - Na tela de placar os botões passam a ser: **Compartilhar placar** (primário, tinta), **Continuar jogando** (fantasma), e `Jogar de novo` vira link sublinhado ao lado dos outros dois links. A linha `Acertei X de Y no Caiu Nessa? caiunessa.com.br` sai (o texto agora vai pelo botão).
+- **Revisão 2026-10-22 (tarde da noite):** o autor tirou a grade de emojis ("o texto ficou muito comprido, n ficou legal"). O texto passa a ter duas linhas: `Fiz 4/12 no Caiu Nessa? e caí em 3. E você?` e `caiunessa.com.br`. A grade continua só na imagem dos stories. O que segue é o texto original.
 - Texto compartilhado (função pura `textoDeCompartilhar` em `src/lib/compartilhar.ts`):
   ```
   Fiz 4/12 no Caiu Nessa? e caí em 3. E você?
