@@ -15,10 +15,13 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
 
 # local PGlite database
 .pglite/
 *.pglite/
+.pglite-e2e/
 
 # next.js
 /.next/
