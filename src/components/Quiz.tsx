@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Respostas, Veredito } from '@/lib/afirmacoes'
 import { ehQuase } from '@/lib/pontuacao'
 import type { RespostaResultado } from '@/lib/resultado-api'
+import { somLigado, tocarSomDaUrna } from '@/lib/som-urna'
 import type { FaseCartao } from './CartaoAfirmacao'
 import { PainelVeredito } from './PainelVeredito'
 import { PilhaDeCartoes } from './PilhaDeCartoes'
@@ -11,6 +12,7 @@ import { ResultadoFinal } from './ResultadoFinal'
 import { CarimbosDeProgresso } from './CarimbosDeProgresso'
 import { Ficha } from './Ficha'
 import { IconeVeredito } from './IconeVeredito'
+import { Urna } from './icones/Urna'
 import { ARIA_BOTAO_RESPOSTA, BOTAO_EM_CARTAO, BOTAO_RESPOSTA, FOCO, ROTULO_BOTAO, SUPERFICIE } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
@@ -223,6 +225,8 @@ export default function Quiz({
 
   function fechar() {
     if (etapa !== 'feedback') return
+    // Ainda dentro do gesto: depois do atraso do `depois`, o iOS bloquearia o som.
+    if (ultima && somLigado()) tocarSomDaUrna()
     // O botão do painel vai sumir: o foco volta para o quiz em vez de cair no body.
     raiz.current?.focus({ preventScroll: true })
     const seguir = () => (ultima ? void enviar(respostas) : setEstado({ etapa: 'pergunta', indice: indice + 1 }))
@@ -252,6 +256,7 @@ export default function Quiz({
         className={`flex flex-1 flex-col gap-3 ${etapa === 'feedback' ? '[filter:brightness(.75)_saturate(.6)]' : ''}`}
       >
         <Ficha
+          icone={<Urna className="size-[18px]" />}
           esquerda={
             // A posição é lida pelo sr-only "Afirmação n de N" logo abaixo: aqui não anuncia de novo.
             <>
