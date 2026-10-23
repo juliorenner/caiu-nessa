@@ -60,6 +60,24 @@ afterEach(() => {
   vi.useRealTimers()
 })
 
+describe('ResultadoFinal: político em marca-d\'água', () => {
+  it('desenho decorativo, sem toque, e a ficha sem ícone', () => {
+    stubNavegador({})
+    const { container } = renderizar()
+    const marca = container.querySelector('[aria-hidden].pointer-events-none')
+    expect(marca).not.toBeNull()
+    expect(marca!.querySelector('svg')).not.toBeNull()
+    expect(container.querySelector('[data-ficha] svg')).toBeNull()
+    expect(screen.getAllByRole('button').map(b => b.textContent)).toEqual(['Compartilhar placar', 'Continuar jogando'])
+    expect(screen.getAllByRole('link').map(l => l.textContent)).toEqual([
+      'Baixar imagem para os stories',
+      'Jogar de novo',
+      'Como escolhemos as afirmações',
+      'Ver todas as afirmações e suas fontes',
+    ])
+  })
+})
+
 describe('ResultadoFinal: compartilhar', () => {
   it('busca a imagem dos stories ao montar', async () => {
     stubNavegador({})
