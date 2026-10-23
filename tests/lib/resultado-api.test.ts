@@ -1,10 +1,11 @@
 import { count } from 'drizzle-orm'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
 import { jogadas } from '@/db/schema'
 import * as estatisticas from '@/lib/estatisticas'
 import { hashIp } from '@/lib/rate-limit'
 import { processarResultado } from '@/lib/resultado-api'
-import { afirmacoesValidas, respostasCertas, rodadaDeOito, rodadaDeSeis, todasCertas } from '../fixtures/afirmacoes-validas'
+import { afirmacoesValidas, respostasCertas, rodadaPrimeira, rodadaDeSeis, todasCertas } from '../fixtures/afirmacoes-validas'
 import { criarDbTeste } from '../helpers/db'
 import { inserirJogadas } from '../helpers/jogadas'
 
@@ -61,7 +62,7 @@ describe('processarResultado', () => {
   it('estatisticas e percentil presentes a partir de 100 jogadas (a jogada atual conta)', async () => {
     const d = await deps()
     await inserirJogadas(d.db, 99, () => ({ acertos: 5 }))
-    const r = await processarResultado({ respostas: respostasCertas(rodadaDeOito) }, cab, d)
+    const r = await processarResultado({ respostas: respostasCertas(rodadaPrimeira) }, cab, d)
     expect(r.status).toBe(200)
     if (r.status !== 200) return
     expect(r.body.estatisticas?.totalJogadas).toBe(100)
@@ -94,22 +95,22 @@ describe('processarResultado', () => {
     expect(Object.keys(linha.respostas as object).sort()).toEqual(rodadaDeSeis.map(a => a.id).sort())
   })
 
-  it('200 para a primeira rodada de 8 (1/2/1 por lado); grava total 8', async () => {
+  it('200 para a primeira rodada (COMPOSICAO_PRIMEIRA por lado); grava o total dela', async () => {
     const d = await deps()
-    const r = await processarResultado({ respostas: respostasCertas(rodadaDeOito) }, cab, d)
+    const r = await processarResultado({ respostas: respostasCertas(rodadaPrimeira) }, cab, d)
     expect(r.status).toBe(200)
     if (r.status !== 200) return
-    expect(r.body.resultado.total).toBe(8)
-    expect(r.body.resultado.acertos).toBe(8)
+    expect(r.body.resultado.total).toBe(TOTAL_AFIRMACOES)
+    expect(r.body.resultado.acertos).toBe(TOTAL_AFIRMACOES)
     const [linha] = await d.db.select().from(jogadas)
-    expect(linha.total).toBe(8)
+    expect(linha.total).toBe(TOTAL_AFIRMACOES)
   })
 
-  it('400 para 8 ids válidos mas desbalanceados (3 falsas num lado)', async () => {
+  it('400 para ids válidos no tamanho certo mas desbalanceados (3 falsas num lado)', async () => {
     const d = await deps()
-    // Troca e5 (esquerda, enganoso) por e7, uma 3ª falsa à esquerda: 8 ids jogáveis, composição errada.
+    // Troca e5 (esquerda, enganoso) por e7, uma 3ª falsa à esquerda: mesmo tamanho, composição errada.
     const pool = [...afirmacoesValidas, { ...afirmacoesValidas[2], id: 'e7' }]
-    const { e5: _, ...semE5 } = respostasCertas(rodadaDeOito)
+    const { e5: _, ...semE5 } = respostasCertas(rodadaPrimeira)
     const r = await processarResultado({ respostas: { ...semE5, e7: 'falso' } }, cab, { ...d, pool })
     expect(r.status).toBe(400)
     expect(await d.db.select().from(jogadas)).toHaveLength(0)

@@ -9,7 +9,7 @@ import { carregarPool, ehRodadaBalanceada, jogaveis, type Veredito } from '@/lib
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { somLigado, tocarSomDaUrna } from '@/lib/som-urna'
 import { COMPOSICAO_PRIMEIRA, TOTAL_AFIRMACOES } from '@/lib/rodadas'
-import { afirmacoesValidas, rodadaDeOito, rodadaDeSeis } from '../fixtures/afirmacoes-validas'
+import { afirmacoesValidas, rodadaPrimeira, rodadaDeSeis } from '../fixtures/afirmacoes-validas'
 
 const identidade = <T,>(itens: T[]) => itens
 // Rótulo da ficha na rodada completa: "Ficha 01/08".
@@ -79,7 +79,7 @@ describe('Quiz', () => {
   it('percorre a rodada completa, mostra veredito e link da checagem, e envia todas as respostas', async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => respostaOk })
     vi.stubGlobal('fetch', fetchMock)
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={{ e1: 37 }} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={{ e1: 37 }} />)
     const user = userEvent.setup()
     for (let i = 0; i < TOTAL_AFIRMACOES; i++) {
       expect(screen.getByText(ficha(i + 1))).toBeInTheDocument()
@@ -92,20 +92,20 @@ describe('Quiz', () => {
     expect(fetchMock.mock.calls.filter(([url]) => url === '/api/resultado')).toHaveLength(1)
     expect(fetchMock.mock.calls[0][0]).toBe('/api/resultado')
     const corpo = JSON.parse(fetchMock.mock.calls[0][1].body)
-    expect(Object.keys(corpo.respostas).sort()).toEqual(rodadaDeOito.map(a => a.id).sort())
+    expect(Object.keys(corpo.respostas).sort()).toEqual(rodadaPrimeira.map(a => a.id).sort())
     expect(Object.values(corpo.respostas).every(v => v === 'verdadeiro')).toBe(true)
     expect(await screen.findByText(`4/${TOTAL_AFIRMACOES}`)).toBeInTheDocument()
     expect(screen.queryByText(/primeiros a jogar|das pessoas/)).not.toBeInTheDocument()
     expect(screen.getByText('Texto do viés.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Compartilhar placar' })).toBeInTheDocument()
     // Uma casa por afirmação, na ordem jogada: tudo "Verdade" acerta só as verdadeiras.
-    const casas = rodadaDeOito.map(a => (a.veredito === 'verdadeiro' ? 'a' : 'e')).join('')
+    const casas = rodadaPrimeira.map(a => (a.veredito === 'verdadeiro' ? 'a' : 'e')).join('')
     expect(screen.getByRole('link', { name: 'Baixar imagem para os stories' }).getAttribute('href')).toContain(`g=${casas}`)
   })
 
   it('esconde autor e citação na pergunta; mostra os dois no feedback', async () => {
     const [primeira] = afirmacoesValidas
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     expect(screen.getByText(primeira.texto)).toBeInTheDocument()
     expect(screen.queryByText(/Quem disse/)).not.toBeInTheDocument()
     expect(screen.queryByText(primeira.autor, { exact: false })).not.toBeInTheDocument()
@@ -154,14 +154,14 @@ describe('Quiz', () => {
   it('mostra "% das pessoas erraram esta" só quando há estatística para a afirmação', async () => {
     const user = userEvent.setup()
     const { unmount } = render(
-      <Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />,
+      <Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />,
     )
     await user.click(screen.getByRole('button', { name: 'Verdade' }))
     expect(screen.getByText('Você acertou.')).toBeInTheDocument()
     expect(screen.queryByText(/das pessoas erraram esta/)).not.toBeInTheDocument()
     unmount()
 
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={{ e1: 37 }} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={{ e1: 37 }} embaralharFn={identidade} />)
     await user.click(screen.getByRole('button', { name: 'Verdade' }))
     expect(screen.getByText('37% das pessoas erraram esta.')).toBeInTheDocument()
   })
@@ -173,7 +173,7 @@ describe('Quiz', () => {
       .mockResolvedValueOnce({ ok: false, status: 429, json: async () => ({ erro: 'muitas_jogadas' }) })
       .mockResolvedValueOnce({ ok: true, status: 200, json: async () => respostaOk })
     vi.stubGlobal('fetch', fetchMock)
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     for (let i = 0; i < TOTAL_AFIRMACOES; i++) {
       await user.click(screen.getByRole('button', { name: 'Verdade' }))
@@ -194,7 +194,7 @@ describe('Quiz', () => {
   it('no 400 não oferece repetir o mesmo envio: mostra erro e link para jogar de novo', async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: false, status: 400, json: async () => ({ erro: 'respostas_invalidas' }) })
     vi.stubGlobal('fetch', fetchMock)
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     for (let i = 0; i < TOTAL_AFIRMACOES; i++) {
       await user.click(screen.getByRole('button', { name: 'Verdade' }))
@@ -209,7 +209,7 @@ describe('Quiz', () => {
   it('sem movimento reduzido, o painel abre 300 ms depois da resposta; com movimento reduzido, na hora', () => {
     vi.useFakeTimers()
     movimentoReduzido(false)
-    const { unmount } = render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { unmount } = render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     fireEvent.click(screen.getByRole('button', { name: 'Verdade' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     act(() => vi.advanceTimersByTime(300))
@@ -217,7 +217,7 @@ describe('Quiz', () => {
     unmount()
 
     movimentoReduzido(true)
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     fireEvent.click(screen.getByRole('button', { name: 'Verdade' }))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
   })
@@ -249,14 +249,14 @@ describe('Quiz', () => {
   })
 
   it('botões na ordem dos gestos, com ícone', () => {
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const nomes = screen.getAllByRole('button').map(b => b.getAttribute('aria-label') ?? b.textContent)
     expect(nomes).toEqual(['Mentira', 'Isso me cheira mal: enganoso', 'Verdade'])
     expect(screen.getAllByRole('button').every(b => b.querySelector('svg'))).toBe(true)
   })
 
   it('a ficha do jogo traz a urna, decorativa, sem esconder o rótulo', () => {
-    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const svg = container.querySelector('[data-ficha] svg')
     expect(svg).not.toBeNull()
     expect(svg!.closest('[aria-hidden]')).not.toBeNull()
@@ -266,7 +266,7 @@ describe('Quiz', () => {
   it('ícones do cartão mudam de uma rodada para outra', () => {
     const icones = (rodada: number) => {
       const { container, unmount } = render(
-        <Quiz {...daRodada} rodada={rodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />,
+        <Quiz {...daRodada} rodada={rodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />,
       )
       const html = container.querySelector('[data-icones-cartao]')!.innerHTML
       unmount()
@@ -277,13 +277,13 @@ describe('Quiz', () => {
 
   it('carimbos de progresso acompanham acerto e erro', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const casas = () => [...container.querySelectorAll('[data-casa]')].map(c => c.getAttribute('data-casa'))
-    await user.click(screen.getByRole('button', { name: nomeDoBotao(rodadaDeOito[0].veredito) }))
+    await user.click(screen.getByRole('button', { name: nomeDoBotao(rodadaPrimeira[0].veredito) }))
     await user.click(screen.getByRole('button', { name: 'Próxima' }))
     expect(casas().slice(0, 3)).toEqual(['acerto', 'atual', 'pendente'])
-    // A segunda afirmação (e3) é falsa: "Verdade" erra.
-    await user.click(screen.getByRole('button', { name: 'Verdade' }))
+    // A segunda afirmação (e2) é verdadeira: "Mentira" erra.
+    await user.click(screen.getByRole('button', { name: 'Mentira' }))
     await user.click(screen.getByRole('button', { name: 'Próxima' }))
     expect(casas().slice(0, 4)).toEqual(['acerto', 'erro', 'atual', 'pendente'])
     expect(container.querySelectorAll('[data-casa]')).toHaveLength(TOTAL_AFIRMACOES)
@@ -291,7 +291,7 @@ describe('Quiz', () => {
 
   it('conteúdo escurece enquanto o painel está aberto', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     expect(container.querySelector('[data-conteudo]')!.className).not.toMatch(/brightness/)
     await user.click(screen.getByRole('button', { name: 'Verdade' }))
     expect(container.querySelector('[data-conteudo]')!.className).toMatch(/brightness/)
@@ -302,7 +302,7 @@ describe('Quiz', () => {
     movimentoReduzido(false)
     const fetchMock = vi.fn().mockReturnValue(new Promise(() => {}))
     vi.stubGlobal('fetch', fetchMock)
-    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     fireEvent.click(screen.getByRole('button', { name: 'Verdade' }))
     expect(screen.getByRole('button', { name: 'Mentira' })).toHaveAttribute('aria-disabled', 'true')
     // O cartão ainda desliza: o contador só muda quando o painel abre.
@@ -359,8 +359,8 @@ describe('Quiz', () => {
 
   it('painel é obrigatório: próximo cartão só depois de Próxima', async () => {
     const user = userEvent.setup()
-    const [primeira, segunda] = rodadaDeOito
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const [primeira, segunda] = rodadaPrimeira
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     await user.click(screen.getByRole('button', { name: 'Verdade' }))
     await user.click(screen.getByRole('button', { name: 'Mentira' }))
     fireEvent.keyDown(window, { key: 'ArrowRight' })
@@ -417,7 +417,7 @@ describe('Quiz', () => {
 
   it('conteúdo do quiz fica inert enquanto o painel está aberto, e o painel não', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const conteudo = container.querySelector('[data-conteudo]')!
     expect(conteudo).not.toHaveAttribute('inert')
     await user.click(screen.getByRole('button', { name: 'Verdade' }))
@@ -431,7 +431,7 @@ describe('Quiz', () => {
 
   it('foco volta para a raiz do quiz quando o painel fecha', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     await user.click(screen.getByRole('button', { name: 'Verdade' }))
     await user.click(screen.getByRole('button', { name: 'Próxima' }))
     const raiz = container.firstElementChild as HTMLElement
@@ -442,7 +442,7 @@ describe('Quiz', () => {
   it('botão escolhido ganha destaque e os outros esmaecem enquanto o painel está aberto', async () => {
     vi.useFakeTimers()
     movimentoReduzido(false)
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const verdade = screen.getByRole('button', { name: 'Verdade' })
     const mentira = screen.getByRole('button', { name: 'Mentira' })
     expect(verdade).not.toHaveClass('translate-y-[5px]')
@@ -456,7 +456,7 @@ describe('Quiz', () => {
 
   it('contador some na tela de resultado', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => respostaOk }))
-    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const { container } = render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     for (let i = 0; i < TOTAL_AFIRMACOES; i++) {
       await user.click(screen.getByRole('button', { name: 'Verdade' }))
@@ -474,7 +474,7 @@ describe('Quiz', () => {
       json: async () => ({ ...respostaOk, estatisticasIndisponiveis: true }),
     })
     vi.stubGlobal('fetch', fetchMock)
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     for (let i = 0; i < TOTAL_AFIRMACOES; i++) {
       await user.click(screen.getByRole('button', { name: 'Verdade' }))
@@ -487,7 +487,7 @@ describe('Quiz', () => {
   it('sem viés (vies null), não mostra o parágrafo do viés', async () => {
     const semVies: RespostaResultado = { ...respostaOk, avaliacao: { ...respostaOk.avaliacao, vies: null } }
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => semVies }))
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     for (let i = 0; i < TOTAL_AFIRMACOES; i++) {
       await user.click(screen.getByRole('button', { name: 'Verdade' }))
@@ -516,7 +516,7 @@ describe('Som da urna', () => {
 
   it('toca uma vez ao clicar em "Ver meu resultado", e não antes', async () => {
     respostaFetch()
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     await ateOUltimoPainel(user)
     await user.click(screen.getByRole('button', { name: 'Ver meu resultado' }))
@@ -527,7 +527,7 @@ describe('Som da urna', () => {
 
   it('toca uma vez com Enter no botão "Ver meu resultado" em foco', async () => {
     respostaFetch()
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     await ateOUltimoPainel(user)
     screen.getByRole('button', { name: 'Ver meu resultado' }).focus()
@@ -539,7 +539,7 @@ describe('Som da urna', () => {
   it('com o som desligado, não toca', async () => {
     vi.mocked(somLigado).mockReturnValue(false)
     respostaFetch()
-    render(<Quiz {...daRodada} afirmacoes={rodadaDeOito} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     const user = userEvent.setup()
     await ateOUltimoPainel(user)
     await user.click(screen.getByRole('button', { name: 'Ver meu resultado' }))

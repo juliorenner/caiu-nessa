@@ -27,7 +27,7 @@ describe('validarPool', () => {
   })
   it('rejeita pool sem verdadeira jogável de um lado', () => {
     const alterada = afirmacoesValidas.map(a => ['e1', 'e2'].includes(a.id) ? { ...a, veredito: 'enganoso' as const } : a)
-    expect(() => validarPool(alterada)).toThrow(/esquerda:verdadeiro tem 0, precisa de 1/)
+    expect(() => validarPool(alterada)).toThrow(/esquerda:verdadeiro tem 0, precisa de 2/)
   })
   it('rejeita pool com menos falsas jogáveis do que a primeira rodada pede num lado', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'e3' ? { ...a, veredito: 'enganoso' as const } : a)
@@ -93,16 +93,16 @@ describe('jogaveis e foraDoJogo', () => {
 })
 
 describe('sortearRodada', () => {
-  it('primeira rodada: 8, com 4 por lado e 1/2/1 por lado em 50 sorteios, nenhum fora do jogo', () => {
+  it('primeira rodada: 10, com 5 por lado e 2/2/1 por lado em 50 sorteios, nenhum fora do jogo', () => {
     const pool = criarPool()
     for (let i = 0; i < 50; i++) {
       const rodada = sortearRodada(pool, COMPOSICAO_PRIMEIRA, [])!
-      expect(rodada).toHaveLength(8)
-      expect(new Set(rodada.map(a => a.id)).size).toBe(8)
+      expect(rodada).toHaveLength(10)
+      expect(new Set(rodada.map(a => a.id)).size).toBe(10)
       expect(rodada.every(a => a.observacao === undefined)).toBe(true)
-      expect(rodada.filter(a => a.lado === 'esquerda')).toHaveLength(4)
-      expect(rodada.filter(a => a.lado === 'direita')).toHaveLength(4)
-      expect([...contarPorPar(rodada).values()]).toEqual([1, 2, 1, 1, 2, 1])
+      expect(rodada.filter(a => a.lado === 'esquerda')).toHaveLength(5)
+      expect(rodada.filter(a => a.lado === 'direita')).toHaveLength(5)
+      expect([...contarPorPar(rodada).values()]).toEqual([2, 2, 1, 2, 2, 1])
     }
   })
   it('composição histórica: 2 por par (12)', () => {

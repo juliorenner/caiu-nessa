@@ -5,7 +5,7 @@ import Partida from '@/components/Partida'
 import { semLado } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
-import { rodadaDeOito, rodadaDeSeis } from '../fixtures/afirmacoes-validas'
+import { rodadaPrimeira, rodadaDeSeis } from '../fixtures/afirmacoes-validas'
 
 // Embrulha o ResultadoFinal real só para guardar o onContinuar que ele recebe; a tela continua a de verdade.
 const capturado = vi.hoisted(() => ({ onContinuar: null as null | (() => Promise<'ok' | 'fim' | 'falha'>) }))
@@ -21,7 +21,7 @@ vi.mock('@/components/ResultadoFinal', async importOriginal => {
 })
 
 // Primeira rodada: a rodada completa do tamanho atual.
-const inicial = rodadaDeOito.map(semLado)
+const inicial = rodadaPrimeira.map(semLado)
 // Segunda rodada: 6 itens novos, clonados da rodada de seis com ids diferentes.
 const segunda = rodadaDeSeis.map(a => semLado({ ...a, id: `${a.id}-r2`, texto: `${a.texto} (r2)` }))
 

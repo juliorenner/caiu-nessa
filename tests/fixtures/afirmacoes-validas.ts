@@ -46,8 +46,9 @@ export function respostasCertas(rodada: readonly Afirmacao[]): Respostas {
   return Object.fromEntries(rodada.map((a) => [a.id, a.veredito]))
 }
 
-// Primeira rodada de 8: os primeiros itens de cada par na quantidade de COMPOSICAO_PRIMEIRA (e1, e3, e4, e5, d1, d3, d4, d5).
-export const rodadaDeOito: Afirmacao[] = (['esquerda', 'direita'] as const).flatMap((lado) =>
+// Primeira rodada: os primeiros itens de cada par na quantidade de COMPOSICAO_PRIMEIRA
+// (com 2/2/1: e1, e2, e3, e4, e5, d1, d2, d3, d4, d5).
+export const rodadaPrimeira: Afirmacao[] = (['esquerda', 'direita'] as const).flatMap((lado) =>
   VEREDITOS.flatMap((veredito) =>
     afirmacoesValidas.filter((a) => a.lado === lado && a.veredito === veredito).slice(0, COMPOSICAO_PRIMEIRA[veredito]),
   ),
