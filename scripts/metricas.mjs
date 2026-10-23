@@ -1,11 +1,12 @@
 // Leitura das métricas: `npm run metricas` com DATABASE_URL no ambiente.
 // Mesma regra de src/db/client.ts: `file:<caminho>` abre um PGlite local (caminho relativo ao
-// diretório atual), qualquer outro valor usa o Neon. Script solto, não importa nada de src/.
+// diretório atual), qualquer outro valor usa o Neon. Lê os tamanhos de rodada da configuração
+// (src/lib/rodadas.ts; o Node tira os tipos ao importar), para não haver número copiado à mão.
 import path from 'node:path'
+import { COMPOSICAO_EXTRA, TAMANHOS_ACEITOS, tamanhoDa } from '../src/lib/rodadas.ts'
 
-// Tamanhos de rodada como em src/lib/rodadas.ts: primeira atual (8) e histórica (12); extra (6).
-const TAMANHOS_PRIMEIRA = [8, 12]
-const TAMANHO_EXTRA = 6
+const TAMANHO_EXTRA = tamanhoDa(COMPOSICAO_EXTRA)
+const TAMANHOS_PRIMEIRA = TAMANHOS_ACEITOS.filter((t) => t !== TAMANHO_EXTRA)
 // O navegador só confirma que a folha abriu, o texto foi copiado ou o link de baixar foi tocado.
 const RESULTADOS_QUE_CONTAM = ['folha', 'copiado', 'clique']
 
