@@ -23,7 +23,7 @@ export default async function QuizPage() {
   const rodada = sortearRodada(pool, COMPOSICAO_PRIMEIRA, [], Math.random, PESOS_DA_PRIMEIRA)
   if (!rodada) throw new Error('Pool insuficiente para a primeira rodada')
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 lg:flex lg:max-w-7xl lg:flex-col lg:justify-center lg:px-10">
+    <main className="mx-auto w-full max-w-2xl flex-1 lg:flex lg:max-w-7xl lg:flex-col lg:justify-center lg:px-6">
       <Partida inicial={rodada.map(semLado)} erroPorAfirmacao={await erroPorAfirmacao(pool)} />
     </main>
   )
