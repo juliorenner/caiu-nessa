@@ -76,6 +76,32 @@ export function escolher(semente: number, longo: boolean): { vaga: Vaga; Icone: 
   // No máximo 3 por cartão, e grandes (42–60 px): só as faixas de cima e de baixo (as laterais encostariam no
   // texto a 320 px) e longe do canto do "?". As posições variam pela variação, não pela quantidade.
   const candidatos = itens.filter(({ vaga }) => livreParaGrande(vaga) && (!longo || extrema(vaga)))
+  return espalhar(candidatos)
+}
+
+// Distância mínima entre ícones, em pontos percentuais do cartão (pedido do autor: "mais distribuídos").
+// Tenta a maior distância que ainda rende 3; a menor é garantida pelo teste.
+export const DISTANCIA_MINIMA = 20
+const DISTANCIAS = [40, 30, DISTANCIA_MINIMA] as const
+
+const distancia = (a: Vaga, b: Vaga): number => Math.hypot(a.left - b.left, a.top - b.top)
+const faixa = (v: Vaga): 'cima' | 'baixo' => (v.top < 50 ? 'cima' : 'baixo')
+
+function espalhar<T extends { vaga: Vaga }>(candidatos: T[]): T[] {
+  for (const minimo of DISTANCIAS) {
+    const escolhidos: T[] = []
+    let restantes = candidatos
+    while (escolhidos.length < MAXIMO && restantes.length > 0) {
+      // Depois do primeiro, prefere a outra faixa (cima/baixo) para cobrir o cartão inteiro.
+      const ultimo = escolhidos[escolhidos.length - 1]
+      const ordem = ultimo ? [...restantes].sort((x, y) => Number(faixa(x.vaga) === faixa(ultimo.vaga)) - Number(faixa(y.vaga) === faixa(ultimo.vaga))) : restantes
+      const proximo = ordem.find(c => escolhidos.every(e => distancia(e.vaga, c.vaga) >= minimo))
+      if (!proximo) break
+      escolhidos.push(proximo)
+      restantes = restantes.filter(c => c !== proximo)
+    }
+    if (escolhidos.length === MAXIMO) return escolhidos
+  }
   return candidatos.slice(0, MAXIMO)
 }
 
