@@ -208,7 +208,8 @@ function indicePonderado(itens: readonly { peso: number }[], total: number, alea
     if (itens[i].peso > 0 && alvo < 0) return i
   }
   // Arredondamento: se o alvo sobrar no fim, vale o último com peso.
-  return itens.findLastIndex((r) => r.peso > 0)
+  for (let i = itens.length - 1; i >= 0; i--) if (itens[i].peso > 0) return i
+  return -1
 }
 
 // Sorteio ponderado sem reposição: cada escolha tem probabilidade proporcional ao peso (peso ≤ 0 conta como 0);

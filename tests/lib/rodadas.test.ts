@@ -54,7 +54,7 @@ describe('rodadas', () => {
     expect(descricaoDaComposicao({ verdadeiro: 2, falso: 2, enganoso: 2 })).toBe('2 verdadeiras, 2 falsas e 2 enganosas')
   })
   it('peso por alcance: 1, 2 e 4; a primeira rodada usa esses pesos', () => {
-    expect(PESO_POR_ALCANCE).toEqual({ 1: 1, 2: 2, 3: 4 })
+    expect(PESO_POR_ALCANCE).toEqual({ 1: 1, 2: 2, 3: 3 })
     expect(PESOS_DA_PRIMEIRA).toBe(PESO_POR_ALCANCE)
   })
   it('descricaoDoAlcance descreve o critério de cada nível', () => {

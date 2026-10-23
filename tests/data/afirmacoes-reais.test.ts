@@ -114,6 +114,6 @@ it('alcance é 1, 2 ou 3 e bate com a ocasião descrita no autor', () => {
   for (const a of todasAsAfirmacoes) {
     expect([1, 2, 3], a.id).toContain(a.alcance)
     if (/debate|Jornal Nacional|TV Globo/.test(a.autor)) expect(a.alcance, `${a.id}: ${a.autor}`).toBeGreaterThanOrEqual(2)
-    if (/Flow|live|post/i.test(a.autor)) expect(a.alcance, `${a.id}: ${a.autor}`).toBe(1)
+    if (/\bFlow\b|\blive\b|\bposts?\b/i.test(a.autor)) expect(a.alcance, `${a.id}: ${a.autor}`).toBe(1)
   }
 })

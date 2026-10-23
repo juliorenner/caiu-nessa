@@ -67,7 +67,7 @@ export function descricaoDaComposicao(c: Composicao): string {
 
 // Peso de cada alcance no sorteio da primeira rodada (as extras sorteiam sem peso). Para tirar a preferência,
 // basta trocar os três números por 1.
-export const PESO_POR_ALCANCE: Readonly<Record<Alcance, number>> = { 1: 1, 2: 2, 3: 4 }
+export const PESO_POR_ALCANCE: Readonly<Record<Alcance, number>> = { 1: 1, 2: 2, 3: 3 }
 export const PESOS_DA_PRIMEIRA = PESO_POR_ALCANCE
 
 const CRITERIO_DO_ALCANCE: Record<Alcance, string> = {

@@ -131,10 +131,10 @@ Preparado em três frentes, cada uma com a citação conferida, literal, na pág
 
 | lote | itens | verdadeiro | enganoso | falso | alcance 3 / 2 / 1 |
 |---|---|---|---|---|---|
-| direita (debate, JN, Globo, live, pronunciamento, falas avulsas) | 63 | 5 | 21 | 37 | 28 / 25 / 10 |
-| esquerda (debate, JN, Globo, Flow, falas avulsas) | 45 | 17 | 21 | 7 | 27 / 9 / 9 |
+| direita (debate, JN, Globo, live, pronunciamento, falas avulsas) | 62 | 5 | 21 | 36 | 27 / 25 / 10 |
+| esquerda (debate, JN, Globo, Flow, falas avulsas) | 43 | 17 | 19 | 7 | 25 / 9 / 9 |
 | esquerda, virais (comício, ONU, posts, anúncio) | 14 | 6 | 6 | 2 | 0 / 1 / 13 |
-| **total** | **122** | 28 | 48 | 46 | 55 / 35 / 32 |
+| **total** | **119** | 28 | 46 | 45 | 52 / 35 / 32 |
 
 Pela regra nova entraram candidatos que a varredura dava como "fora" ou "duvidoso": na esquerda, as seis linhas "fora" e as duas "duvidosas" (por exemplo 84e1ab92 e 015f50ee, 2 V × 1 E = verdadeiro; 59fbe7ad, 28506065 e 64903478, empate V/E = enganoso; 311499c1, 1 V × 2 E = enganoso); na direita, quatro (8ecc47f3, f0fe3e98, 0aa8cac6 e 76505a59, todos enganoso). Nenhum candidato caiu por citação ausente da página.
 
@@ -155,6 +155,9 @@ Pela regra nova entraram candidatos que a varredura dava como "fora" ou "duvidos
 | V1, diplomas no comício (virais da esquerda) | mesma afirmação de 0b57e8ba (JN, alcance 3) |
 | E6, Moraes e Marielle (virais da esquerda) | `citacao` idêntica à de b9ce7b4e |
 | ca503f1e, "primeira reforma do Judiciário" (15/09, Aos Fatos não é bem assim) | decisão do dono, depois do lote: afirmação idêntica à de f1011d11 (Globo 15/10, alcance 3); uma ocasião por afirmação quando ela é idêntica. A `explicacao` de f1011d11 cita a ocasião de 15/09 e o rótulo do Aos Fatos |
+| 9c9d8572, Mais Médicos (Globo 15/10; G1 #NÃOÉBEMASSIM, Estadão exagerado) | revisão final: mesma afirmação de 64903478 (debate da Band; 12 mil em 2023, perto de 28 mil hoje), que fica; a `explicacao` de 64903478 cita a ocasião da Globo e os rótulos |
+| 752e0bdc, "acabei com a fome duas vezes" (JN 27/08; Aos Fatos não é bem assim, Lupa exagerado, Estadão verdadeiro) | revisão final: mesma afirmação de eaa6facd (Globo 15/10, fim da fome com a saída do Mapa da Fome), que fica por ter as três agências no mesmo rótulo; a `explicacao` de eaa6facd cita a ocasião do JN e os rótulos |
+| e3ccdaf7, "a criminalidade explodiu" (debate da Band; Aos Fatos, Lupa e G1 falso) | revisão final: mesma alegação de 3715fbb7 (Globo 16/10, item que já estava no pool), que fica; a `explicacao` de 3715fbb7 passa a citar o Aos Fatos e a ocasião da Band com os três rótulos |
 
 ### Rulings das revisões
 
@@ -165,14 +168,14 @@ Pela regra nova entraram candidatos que a varredura dava como "fora" ou "duvidos
 - 01702d43: a `explicacao` abre com o Estadão Verifica e o rótulo ("exagerado", conferido na página do debate); continua a única fonte.
 - b96d3fc1: na página da Lupa do debate (baixada em 23/10, HTTP 200), "A Lei Antifacção que nós aprovamos, os líderes dessas organizações vão ficar até 80 anos presos" é atribuída a "Flávio Bolsonaro (PL), candidato à Presidência"; a fala de Lula sobre a lei é outra ("Eu já fiz a Lei Antifacção, ela foi aprovada...", 84e1ab92). Sem mudança.
 
-### Contagem final (183 itens, todos no jogo)
+### Contagem final (180 itens, todos no jogo)
 
 | | verdadeiro | falso | enganoso |
 |---|---|---|---|
-| direita | 13 | 61 | 28 |
-| esquerda | 34 | 14 | 33 |
+| direita | 13 | 60 | 28 |
+| esquerda | 34 | 14 | 31 |
 
-Alcance: 3 = 82 (41 de cada lado), 2 = 44 (direita 30, esquerda 14), 1 = 57 (direita 31, esquerda 26).
+Alcance: 3 = 79 (direita 40, esquerda 39), 2 = 44 (direita 30, esquerda 14), 1 = 57 (direita 31, esquerda 26).
 
 ### Base tolerante a mudança de esquema
 
@@ -184,3 +187,11 @@ Alcance: 3 = 82 (41 de cada lado), 2 = 44 (direita 30, esquerda 14), 1 = 57 (dir
 - `npx tsx scripts/verificar-fontes.ts`: 184 OK (rodado antes da remoção de ca503f1e; nenhuma fonte nova depois).
 - `BASE_REF=origin/main npx tsx scripts/validar-revisao.ts`: só os problemas de volume esperados num lote humano ("122 novas, limite 6", "59 novas à esquerda", "63 novas à direita"); nenhum removido, nenhum lado mudou, nenhum id inválido.
 - `BASE_REF=origin/main npx tsx scripts/conferir-citacoes.ts`: 183 conferidas (todas mudaram, porque ganharam `alcance`), 181 OK; AVISO só em 226b7d8c e 01702d43, os dois com o Estadão como única fonte.
+
+### Revisão final
+
+- Uma ocasião por afirmação idêntica: saem 9c9d8572, 752e0bdc e e3ccdaf7 (tabela "Fora do lote").
+- Divergência explícita dos dois lados: os itens da esquerda com votos divergentes passam a dizer a regra aplicada, como os da direita: empate V/E = enganoso em 59fbe7ad, 28506065 e 64903478; maioria enganoso em 311499c1, f1011d11 e 87a32e87; maioria verdadeiro em 95640455, 5d6f2d54, 2027f3bc, 84e1ab92 e 015f50ee; empate F/E = falso em 8a2bd74b.
+- `PESO_POR_ALCANCE` passa a { 1: 1, 2: 2, 3: 3 } (preferência mais suave: com pares magros, peso 4 repetia demais os mesmos itens de alcance 3); spec, plano e teste atualizados.
+- Teste de ocasião com limites de palavra (`\bFlow\b|\blive\b|\bposts?\b`); `findLastIndex` trocado por laço (alvo ES2017).
+- Validação desta rodada: `npm run lint`, `npm run typecheck` e `npm test` limpos; `BASE_REF=origin/main npx tsx scripts/validar-revisao.ts` só com os problemas de volume ("119 novas, limite 6", "57 novas à esquerda", "62 novas à direita"); nenhum removido, nenhum lado mudou, nenhum id inválido.
