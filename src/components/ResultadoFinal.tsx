@@ -8,15 +8,14 @@ import { buscarArquivo, compartilhar } from '@/lib/compartilhar-navegador'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { SITE_URL, TITULO } from '@/lib/site'
 import { Ficha } from './Ficha'
-import { BOTAO_PRIMARIO, BOTAO_SECUNDARIO, LINK_PAGINA, TEXTO_SECUNDARIO } from './rotulos'
-
-// Número grande do placar: letreiro com sombra em camadas (papel e tinta; trocam no escuro).
-const NUMERO_PLACAR =
-  'font-letreiro text-[clamp(56px,18vw,72px)] leading-none text-tinta dark:text-papel [text-shadow:4px_4px_0_var(--color-papel),6px_6px_0_var(--color-tinta)] dark:[text-shadow:4px_4px_0_var(--color-tinta),6px_6px_0_var(--color-papel)]'
-
-// Carimbo tinta da avaliação: não é cor de veredito, a faixa não é juízo de valor colorido.
-const CARIMBO_AVALIACAO =
-  'font-letreiro text-base border-[3px] border-tinta dark:border-papel rounded-md -rotate-3 inline-block px-3 pt-1.5 pb-1'
+import {
+  BOTAO_PRIMARIO,
+  BOTAO_SECUNDARIO,
+  CARIMBO_FAIXA,
+  LINK_PAGINA,
+  NUMERO_PLACAR,
+  TEXTO_SECUNDARIO,
+} from './rotulos'
 
 type EstadoContinuar = 'parado' | 'sorteando' | 'fim' | 'falha'
 
@@ -112,7 +111,7 @@ export function ResultadoFinal(p: {
         )}
       </div>
       <h1>
-        <span className={CARIMBO_AVALIACAO}>{avaliacao.titulo}</span>
+        <span className={CARIMBO_FAIXA}>{avaliacao.titulo}</span>
       </h1>
       <p className="text-lg leading-relaxed">{avaliacao.texto}</p>
       {avaliacao.vies !== null && <p className={`text-base leading-relaxed ${TEXTO_SECUNDARIO}`}>{avaliacao.vies}</p>}
