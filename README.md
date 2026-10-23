@@ -80,3 +80,7 @@ Vercel + Neon.
 - Cada jogada grava uma linha: respostas, nota, nota por lado e data/hora.
 - O IP em si nunca é gravado. Para o limite de 5 jogadas por minuto, guardamos um hash SHA-256 do IP com salt. O hash é apagado pela primeira jogada válida recebida depois de 1 hora (mesmo que essa jogada seja recusada pelo limite), então em um site com pouco movimento ele pode ficar mais de 1 hora, até chegar a próxima jogada válida. Uma limpeza agendada está prevista.
 - Não pedimos nome, e-mail nem login, e não usamos cookies. O único identificador é esse hash temporário do IP com salt, usado só para o limite de jogadas.
+
+## Licença
+
+Código sob a [licença MIT](LICENSE). As checagens citadas pertencem às agências; cada afirmação aponta para a página de origem.
