@@ -41,6 +41,7 @@ describe('/r/[codigo]/opengraph-image', () => {
     const res = await Image({ params: Promise.resolve({ codigo: '4-12-3-caiu-feio-aeaqeeaeeqea' }) })
     const png = Buffer.from(await res.arrayBuffer())
     expect(png.readUInt32BE(16)).toBe(1200)
+    mkdirSync('.superpowers/sdd/2026-10-22-link-resultado', { recursive: true })
     writeFileSync('.superpowers/sdd/2026-10-22-link-resultado/og-resultado-12.png', png)
   })
 
