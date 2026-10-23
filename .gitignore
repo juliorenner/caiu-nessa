@@ -53,3 +53,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .claude/settings.local.json
+
+# capturas de tela (scripts/capturas.mjs)
+/capturas/
