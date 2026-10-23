@@ -208,6 +208,8 @@ export function ResultadoFinal(p: {
             Mandar para os stories
           </button>
         )}
+        {/* Lembrete de precisão: a pesquisa (Nature 2021) mostra queda de ~51% no repasse de manchetes falsas. */}
+        <p className={`text-sm ${TEXTO_SECUNDARIO}`}>Antes de repassar no grupo, confira a checagem.</p>
         <a
           download={NOME_ARQUIVO}
           href={urlCartao}

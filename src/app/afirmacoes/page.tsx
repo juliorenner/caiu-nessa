@@ -10,13 +10,9 @@ import {
   TITULO_LETREIRO,
 } from '@/components/rotulos'
 import { type Afirmacao, carregarPool, foraDoJogo, jogaveis } from '@/lib/afirmacoes'
+import { formatarData } from '@/lib/datas'
 
 export const metadata: Metadata = { title: 'As afirmações do jogo · Caiu Nessa?' }
-
-function formatarData(iso: string): string {
-  const [ano, mes, dia] = iso.split('-')
-  return `${dia}/${mes}/${ano}`
-}
 
 function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
   return (
