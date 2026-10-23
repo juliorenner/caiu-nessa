@@ -29,7 +29,7 @@ export function LinhaDeCompartilhar(p: {
   return (
     <div className="flex flex-col gap-3.5">
       <p className="font-letreiro text-[13px]">Compartilhar</p>
-      <div className="flex justify-center gap-1.5 min-[360px]:gap-2.5">
+      <div className="flex justify-center gap-1.5 min-[360px]:gap-2.5 lg:justify-start">
         <a
           href={p.urlWhatsApp}
           target="_blank"

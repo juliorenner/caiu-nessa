@@ -9,6 +9,8 @@ import type { FaseCartao } from './CartaoAfirmacao'
 import { PainelVeredito } from './PainelVeredito'
 import { PilhaDeCartoes } from './PilhaDeCartoes'
 import { ResultadoFinal } from './ResultadoFinal'
+import { Tecla } from './Tecla'
+import { CaixaDeDicas } from './CaixaDeDicas'
 import { CarimbosDeProgresso } from './CarimbosDeProgresso'
 import { Ficha } from './Ficha'
 import { IconeVeredito } from './IconeVeredito'
@@ -46,6 +48,7 @@ const DURACAO_MS = 300
 
 // Na ordem dos gestos: esquerda, cima, direita.
 const ORDEM_BOTOES: Veredito[] = ['falso', 'enganoso', 'verdadeiro']
+const SETA: Record<Veredito, string> = { falso: '←', enganoso: '↑', verdadeiro: '→' }
 
 const doisDigitos = (n: number) => String(n).padStart(2, '0')
 
@@ -157,6 +160,12 @@ export default function Quiz({
 
   if (estado.etapa === 'resultado') {
     const { resultado } = estado.dados
+    const dadas = ordem.map(a => ({
+      id: a.id,
+      texto: a.texto,
+      veredito: a.veredito,
+      casa: respostas[a.id] === a.veredito ? ('acerto' as const) : ehQuase(a.veredito, respostas[a.id]) ? ('quase' as const) : ('erro' as const),
+    }))
     return (
       <div className="px-4 py-8">
         <ResultadoFinal
@@ -166,9 +175,8 @@ export default function Quiz({
             acertos: acumuladoAnterior.acertos + resultado.acertos,
             total: acumuladoAnterior.total + resultado.total,
           }}
-          casas={ordem.map(a =>
-            respostas[a.id] === a.veredito ? 'acerto' : ehQuase(a.veredito, respostas[a.id]) ? 'quase' : 'erro',
-          )}
+          casas={dadas.map(d => d.casa)}
+          respostas={dadas}
           onContinuar={() => onContinuar({ ids: ordem.map(a => a.id), acertos: resultado.acertos, total: resultado.total })}
         />
       </div>
@@ -248,14 +256,17 @@ export default function Quiz({
     <div
       ref={raiz}
       tabIndex={-1}
-      className="box-border flex h-dvh flex-col overflow-x-hidden overflow-y-auto overscroll-contain px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
+      className="box-border flex h-dvh flex-col lg:grid lg:grid-cols-[1fr_420px] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-3 overflow-x-hidden overflow-y-auto overscroll-contain px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
     >
+      {/* Em lg a raiz é a grade de duas colunas (cartão e botões à esquerda; dicas, e depois o veredito, à direita);
+          o conteúdo some como caixa (contents) para que ele e o painel dividam a mesma grade. */}
       <div
         data-conteudo
         inert={etapa === 'feedback' ? true : undefined}
-        className={`flex flex-1 flex-col gap-3 ${etapa === 'feedback' ? '[filter:brightness(.75)_saturate(.6)]' : ''}`}
+        className={`flex flex-1 flex-col gap-3 lg:contents ${etapa === 'feedback' ? '[filter:brightness(.75)_saturate(.6)] lg:[filter:none]' : ''}`}
       >
         <Ficha
+          className="lg:col-start-1"
           icone={<Urna className="size-[18px]" />}
           esquerda={
             // A posição é lida pelo sr-only "Afirmação n de N" logo abaixo: aqui não anuncia de novo.
@@ -269,36 +280,50 @@ export default function Quiz({
         <p className="sr-only">
           Afirmação {indice + 1} de {ordem.length}
         </p>
-        <CarimbosDeProgresso total={ordem.length} atual={indice} estados={estados} />
-        {/* O cartão ocupa toda a altura que sobra entre o progresso e os botões: sem vazio em telas altas. */}
-        <div className="flex min-h-0 flex-1 flex-col">
-          <div className="flex flex-1 flex-col">
-            <PilhaDeCartoes
-              atual={afirmacao}
-              proxima={ordem[indice + 1] ?? null}
-              fase={FASE_CARTAO[etapa]}
-              respostaDada={respostaDada}
-              onResposta={responder}
-              reduzirMovimento={reduzirMovimento}
-              semente={indice + (rodada - 1) * 7}
-            />
+        <CarimbosDeProgresso
+          className="lg:col-start-2 lg:self-center"
+          total={ordem.length}
+          atual={indice}
+          estados={estados}
+        />
+        <div className="flex min-h-0 flex-1 flex-col gap-3 lg:col-start-1 lg:row-start-2">
+          {/* O cartão ocupa toda a altura que sobra entre o progresso e os botões: sem vazio em telas altas. */}
+          <div className="flex min-h-0 flex-1 flex-col">
+            <div className="flex flex-1 flex-col">
+              <PilhaDeCartoes
+                atual={afirmacao}
+                proxima={ordem[indice + 1] ?? null}
+                fase={FASE_CARTAO[etapa]}
+                respostaDada={respostaDada}
+                onResposta={responder}
+                reduzirMovimento={reduzirMovimento}
+                semente={indice + (rodada - 1) * 7}
+              />
+            </div>
+          </div>
+          <p className="sr-only">Use as setas: esquerda é mentira, cima é cheira mal, direita é verdade.</p>
+          <div className="grid grid-cols-3 gap-2.5">
+            {ORDEM_BOTOES.map(v => (
+              <button
+                key={v}
+                type="button"
+                aria-label={ARIA_BOTAO_RESPOSTA[v]}
+                aria-disabled={etapa === 'pergunta' ? undefined : true}
+                onClick={() => responder(v)}
+                className={`flex min-h-14 flex-col items-center justify-center gap-2 px-1 py-2 text-[11px] leading-tight lg:h-[68px] lg:flex-row lg:gap-3 lg:text-sm ${FOCO} ${classeBotao(v)}`}
+              >
+                <Tecla cor="branco">{SETA[v]}</Tecla>
+                <IconeVeredito veredito={v} />
+                {ROTULO_BOTAO[v]}
+              </button>
+            ))}
           </div>
         </div>
-        <p className="sr-only">Use as setas: esquerda é mentira, cima é cheira mal, direita é verdade.</p>
-        <div className="grid grid-cols-3 gap-2.5">
-          {ORDEM_BOTOES.map(v => (
-            <button
-              key={v}
-              type="button"
-              aria-label={ARIA_BOTAO_RESPOSTA[v]}
-              aria-disabled={etapa === 'pergunta' ? undefined : true}
-              onClick={() => responder(v)}
-              className={`flex min-h-14 flex-col items-center justify-center gap-2 px-1 py-2 text-[11px] leading-tight ${FOCO} ${classeBotao(v)}`}
-            >
-              <IconeVeredito veredito={v} />
-              {ROTULO_BOTAO[v]}
-            </button>
-          ))}
+        {/* Célula da direita: as dicas, até o painel do veredito tomar o lugar; sem caixa própria no celular (contents). */}
+        <div
+          className={`contents lg:col-start-2 lg:row-start-2 lg:min-h-0 lg:flex-col ${etapa === 'feedback' ? 'lg:hidden' : 'lg:flex'}`}
+        >
+          <CaixaDeDicas />
         </div>
       </div>
       {etapa === 'feedback' && respostaDada && (

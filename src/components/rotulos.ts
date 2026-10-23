@@ -84,6 +84,10 @@ export const LINK_EM_CARTAO = `rounded font-medium text-tinta underline underlin
 // Link sobre o fundo da página (tinta no claro, papel no escuro).
 export const LINK_PAGINA = `rounded font-medium text-tinta underline underline-offset-4 dark:text-papel ${FOCO}`
 
+// Tecla do teclado (<kbd>): borda na cor do texto, mais grossa embaixo. A visibilidade (display) fica com quem usa.
+export const TECLA_BASE =
+  'min-h-6 min-w-[26px] items-center justify-center rounded-[5px] border-2 border-b-4 border-current px-1.5 font-letreiro text-[12px] leading-none'
+
 // Texto secundário sobre o fundo da página.
 export const TEXTO_SECUNDARIO = 'text-secundario dark:text-secundario-escuro'
 

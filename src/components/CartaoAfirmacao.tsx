@@ -11,15 +11,15 @@ import type { AfirmacaoNoQuiz } from './tipos'
 // ativo: arrastável; respondido: inclinado e carimbado, parado (painel aberto); saindo: voa para fora (300 ms).
 export type FaseCartao = 'ativo' | 'respondido' | 'saindo'
 
-// Com o cartão ocupando a altura, frases curtas ganham um degrau a mais (24 px).
-export function tamanhoDoTexto(texto: string): 'text-2xl' | 'text-xl' | 'text-lg' | 'text-base' {
-  if (texto.length <= 60) return 'text-2xl'
-  if (texto.length <= 90) return 'text-xl'
-  if (texto.length <= 160) return 'text-lg'
-  return 'text-base'
+// Com o cartão ocupando a altura, frases curtas ganham um degrau a mais (24 px); em lg, cada degrau sobe 8 px.
+export function tamanhoDoTexto(texto: string): string {
+  if (texto.length <= 60) return 'text-2xl lg:text-[32px]'
+  if (texto.length <= 90) return 'text-xl lg:text-[28px]'
+  if (texto.length <= 160) return 'text-lg lg:text-2xl'
+  return 'text-base lg:text-xl'
 }
 
-export const CARTAO_BASE = `p-5 ${SUPERFICIE}`
+export const CARTAO_BASE = `p-5 lg:p-12 ${SUPERFICIE}`
 
 // Dentro da superfície branca: secundário sem variante escura (o cartão é branco nos dois temas).
 const DICA = 'pointer-events-none absolute font-letreiro text-[11px] leading-none whitespace-nowrap'
@@ -83,7 +83,7 @@ export function CartaoAfirmacao({
       {...(ativo ? { ...handlers, onPointerDown } : {})}
     >
       {/* Primeiro filho: o ?, as dicas, o texto (relative) e o carimbo vêm depois e pintam por cima. */}
-      <IconesDoCartao semente={semente} longo={tamanhoDoTexto(afirmacao.texto) === 'text-base'} />
+      <IconesDoCartao semente={semente} longo={tamanhoDoTexto(afirmacao.texto).startsWith('text-base')} />
       <span aria-hidden className="absolute -top-4 left-2 font-letreiro text-[72px] leading-none text-papel">
         ?
       </span>
