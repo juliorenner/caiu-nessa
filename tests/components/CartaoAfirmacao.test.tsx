@@ -123,6 +123,8 @@ describe('CartaoAfirmacao', () => {
   })
 
   it('tamanhoDoTexto degrada por comprimento', () => {
+    expect(tamanhoDoTexto('a'.repeat(60))).toBe('text-2xl')
+    expect(tamanhoDoTexto('a'.repeat(61))).toBe('text-xl')
     expect(tamanhoDoTexto('a'.repeat(90))).toBe('text-xl')
     expect(tamanhoDoTexto('a'.repeat(91))).toBe('text-lg')
     expect(tamanhoDoTexto('a'.repeat(160))).toBe('text-lg')

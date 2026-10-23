@@ -11,7 +11,9 @@ import type { AfirmacaoNoQuiz } from './tipos'
 // ativo: arrastável; respondido: inclinado e carimbado, parado (painel aberto); saindo: voa para fora (300 ms).
 export type FaseCartao = 'ativo' | 'respondido' | 'saindo'
 
-export function tamanhoDoTexto(texto: string): 'text-xl' | 'text-lg' | 'text-base' {
+// Com o cartão ocupando a altura, frases curtas ganham um degrau a mais (24 px).
+export function tamanhoDoTexto(texto: string): 'text-2xl' | 'text-xl' | 'text-lg' | 'text-base' {
+  if (texto.length <= 60) return 'text-2xl'
   if (texto.length <= 90) return 'text-xl'
   if (texto.length <= 160) return 'text-lg'
   return 'text-base'
