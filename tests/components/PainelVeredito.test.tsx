@@ -12,7 +12,7 @@ afterEach(cleanup)
 
 function renderizar(extra: Partial<Parameters<typeof PainelVeredito>[0]> = {}) {
   const onFechar = vi.fn()
-  render(
+  const { container } = render(
     <PainelVeredito
       afirmacao={afirmacao}
       respostaDada={afirmacao.veredito}
@@ -23,7 +23,7 @@ function renderizar(extra: Partial<Parameters<typeof PainelVeredito>[0]> = {}) {
       {...extra}
     />,
   )
-  return { onFechar }
+  return { onFechar, container }
 }
 
 const painel = () => screen.getByRole('dialog', { name: 'Veredito da afirmação' })
@@ -171,6 +171,35 @@ describe('PainelVeredito', () => {
     expect(painel()).not.toHaveClass('rounded-t-3xl')
     expect(screen.getByText('Você acertou.')).toHaveClass('text-lg', 'font-bold')
     expect(screen.getByText(`“${afirmacao.citacao}”`)).toHaveClass('border-l-[3px]', 'border-tinta')
+  })
+
+  it('renderiza no lugar (sem portal): o painel fica dentro do container', () => {
+    const { container } = renderizar()
+    expect(container.querySelector('section[role="dialog"]')).toBe(painel())
+  })
+
+  it('em lg: sem véu e sem alça, painel estático na coluna da direita', () => {
+    renderizar()
+    expect(document.querySelector('[data-backdrop]')).toHaveClass('lg:hidden')
+    expect(document.querySelector('[data-alca]')).toHaveClass('lg:hidden')
+    expect(painel()).toHaveClass('lg:static', 'lg:max-h-none', 'lg:col-start-2', 'lg:row-start-2')
+  })
+
+  it('em lg: borda e sombra na cor do veredito', () => {
+    renderizar()
+    expect(painel()).toHaveClass('lg:border-verdade', 'lg:shadow-[6px_6px_0_var(--color-verdade)]')
+    cleanup()
+    render(<PainelVeredito afirmacao={{ ...afirmacao, veredito: 'falso' }} respostaDada="falso" erroPct={null} ultima={false} onFechar={() => {}} reduzirMovimento />)
+    expect(painel()).toHaveClass('lg:border-mentira', 'lg:shadow-[6px_6px_0_var(--color-mentira)]')
+  })
+
+  it('Próxima mostra a tecla Enter e mantém o nome acessível', () => {
+    renderizar()
+    const botao = screen.getByRole('button', { name: 'Próxima' })
+    const tecla = botao.querySelector('kbd')
+    expect(tecla).toHaveTextContent('Enter')
+    expect(tecla).toHaveAttribute('aria-hidden')
+    expect(botao).toHaveClass('lg:mt-auto')
   })
 
   it('pointercancel na alça não fecha', () => {

@@ -123,12 +123,12 @@ describe('CartaoAfirmacao', () => {
   })
 
   it('tamanhoDoTexto degrada por comprimento', () => {
-    expect(tamanhoDoTexto('a'.repeat(60))).toBe('text-2xl')
-    expect(tamanhoDoTexto('a'.repeat(61))).toBe('text-xl')
-    expect(tamanhoDoTexto('a'.repeat(90))).toBe('text-xl')
-    expect(tamanhoDoTexto('a'.repeat(91))).toBe('text-lg')
-    expect(tamanhoDoTexto('a'.repeat(160))).toBe('text-lg')
-    expect(tamanhoDoTexto('a'.repeat(161))).toBe('text-base')
+    expect(tamanhoDoTexto('a'.repeat(60))).toBe('text-2xl lg:text-[32px]')
+    expect(tamanhoDoTexto('a'.repeat(61))).toBe('text-xl lg:text-[28px]')
+    expect(tamanhoDoTexto('a'.repeat(90))).toBe('text-xl lg:text-[28px]')
+    expect(tamanhoDoTexto('a'.repeat(91))).toBe('text-lg lg:text-2xl')
+    expect(tamanhoDoTexto('a'.repeat(160))).toBe('text-lg lg:text-2xl')
+    expect(tamanhoDoTexto('a'.repeat(161))).toBe('text-base lg:text-xl')
   })
 
   it('saindo: classe de transição e voo para fora no eixo da resposta', () => {
@@ -190,7 +190,7 @@ describe('PilhaDeCartoes', () => {
 
 describe('CartaoAfirmacao: ícones', () => {
   it('texto curto: camada com 3 ícones, antes do texto', () => {
-    expect(tamanhoDoTexto(afirmacao.texto)).not.toBe('text-base')
+    expect(tamanhoDoTexto(afirmacao.texto)).not.toBe('text-base lg:text-xl')
     render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={0} />)
     const camada = cartao().querySelector('[data-icones-cartao]')
     expect(camada).not.toBeNull()

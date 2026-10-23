@@ -49,6 +49,7 @@ npm run build                         # build de produção
 npx tsx scripts/verificar-fontes.ts   # acessa cada link de checagem
 npx tsx scripts/validar-revisao.ts    # compara as afirmações com a main (revisão de fatos)
 npx tsx scripts/conferir-citacoes.ts  # procura cada citação na página da agência (aviso; --todas, --estrito)
+node scripts/capturas.mjs             # capturas de home, quiz e resultado (celular e desktop, claro e noite; --saida <dir>)
 ```
 
 ## Pipeline

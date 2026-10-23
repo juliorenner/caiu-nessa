@@ -37,7 +37,7 @@ function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
 
 function ListaDeCartoes({ afirmacoes }: { afirmacoes: Afirmacao[] }) {
   return (
-    <ul className="mt-4 flex flex-col gap-4">
+    <ul className="mt-4 flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-4">
       {afirmacoes.map((a) => (
         <li key={a.id}>
           <CartaoAfirmacao afirmacao={a} />
@@ -73,7 +73,7 @@ export default function Afirmacoes() {
   const pool = carregarPool()
   const noJogo = jogaveis(pool)
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 text-[17px] leading-relaxed text-tinta dark:text-papel">
+    <main className="mx-auto w-full max-w-2xl flex-1 lg:max-w-5xl px-4 py-10 text-[17px] leading-relaxed text-tinta dark:text-papel">
       <Link href="/" className={LINK_PAGINA}>
         Caiu Nessa?
       </Link>

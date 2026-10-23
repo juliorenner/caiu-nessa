@@ -44,3 +44,15 @@
 :root {
   color-scheme: light dark;
 }
+
+/* Entrada do painel do veredito em lg: desliza da direita (o `transform` não briga com o `translate` do Tailwind). */
+@keyframes entrar-da-direita {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

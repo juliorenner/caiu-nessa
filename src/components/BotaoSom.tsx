@@ -20,7 +20,7 @@ export function BotaoSom() {
   }
 
   return (
-    <button type="button" aria-pressed={ligado} onClick={alternar} className={`self-center text-base ${LINK_PAGINA}`}>
+    <button type="button" aria-pressed={ligado} onClick={alternar} className={`self-center text-base lg:self-start ${LINK_PAGINA}`}>
       Som da urna: {ligado ? 'ligado' : 'desligado'}
     </button>
   )
