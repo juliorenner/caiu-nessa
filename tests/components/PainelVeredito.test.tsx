@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { formatarData } from '@/lib/datas'
 import { PainelVeredito } from '@/components/PainelVeredito'
 import type { AfirmacaoNoQuiz } from '@/components/tipos'
 import { afirmacoesValidas } from '../fixtures/afirmacoes-validas'
@@ -37,7 +38,7 @@ describe('PainelVeredito', () => {
     expect(screen.getByText(`“${afirmacao.citacao}”`)).toBeInTheDocument()
     expect(screen.getByText(afirmacao.explicacao)).toBeInTheDocument()
     expect(screen.getByText('42% das pessoas erraram esta.')).toBeInTheDocument()
-    const link = screen.getByRole('link', { name: `Ver a checagem (${afirmacao.fonte_nome})` })
+    const link = screen.getByRole('link', { name: `Ver a checagem (${afirmacao.fonte_nome}, ${formatarData(afirmacao.data_checagem)})` })
     expect(link).toHaveAttribute('href', afirmacao.fonte_url)
     expect(link).toHaveAttribute('target', '_blank')
     expect(link).toHaveAttribute('rel', 'noopener noreferrer')

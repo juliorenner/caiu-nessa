@@ -3,6 +3,7 @@
 import { type KeyboardEvent, type PointerEvent, type ReactElement, useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { Veredito } from '@/lib/afirmacoes'
+import { formatarData } from '@/lib/datas'
 import { mensagem } from './mensagemVeredito'
 import { BOTAO_EM_CARTAO, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
@@ -121,7 +122,7 @@ export function PainelVeredito(p: {
             rel="noopener noreferrer"
             className={`self-start text-base ${LINK_EM_CARTAO}`}
           >
-            Ver a checagem ({afirmacao.fonte_nome})
+            Ver a checagem ({afirmacao.fonte_nome}, {formatarData(afirmacao.data_checagem)})
           </a>
         </div>
         <button ref={botaoRef} type="button" onClick={onFechar} className={`shrink-0 ${BOTAO_EM_CARTAO}`}>
