@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ResultadoFinal } from '@/components/ResultadoFinal'
 import type { Casa } from '@/lib/cartao'
-import { gradeDeCasas, NOME_ARQUIVO } from '@/lib/compartilhar'
+import { NOME_ARQUIVO } from '@/lib/compartilhar'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { SITE_URL, TITULO } from '@/lib/site'
 
@@ -30,7 +30,7 @@ const dados: RespostaResultado = {
 }
 
 const casas: Casa[] = ['acerto', 'erro', 'acerto', 'acerto', 'erro', 'quase', 'erro', 'acerto', 'erro', 'erro', 'quase', 'erro']
-const texto = `Fiz 4/12 no Caiu Nessa? e caí em 3. E você?\n${gradeDeCasas(casas)}\ncaiunessa.com.br`
+const texto = 'Fiz 4/12 no Caiu Nessa? e caí em 3. E você?\ncaiunessa.com.br'
 
 function renderizar() {
   return render(
