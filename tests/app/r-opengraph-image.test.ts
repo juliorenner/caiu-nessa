@@ -8,7 +8,7 @@ vi.mock('next/navigation', () => ({
   },
 }))
 
-import Image, { contentType, generateImageMetadata, size } from '@/app/r/[codigo]/opengraph-image'
+import Image, { alt, contentType, size } from '@/app/r/[codigo]/opengraph-image'
 
 const CODIGO = '4-12-3-caiu-feio-aeaqeeaeeqea'
 
@@ -18,11 +18,8 @@ describe('/r/[codigo]/opengraph-image', () => {
     expect(contentType).toBe('image/png')
   })
 
-  it('gera o alt a partir do placar', async () => {
-    const meta = await generateImageMetadata({ params: Promise.resolve({ codigo: CODIGO }) })
-    expect(meta).toEqual([
-      { id: 'placar', alt: 'Alguém fez 4/12 no Caiu Nessa? E você?', size, contentType },
-    ])
+  it('alt fixo, sem revelar nada', () => {
+    expect(alt).toBe('Placar de um amigo no Caiu Nessa? E você?')
   })
 
   it('gera PNG 1200×630 com cache de um dia no navegador e uma semana na CDN', async () => {
@@ -39,9 +36,6 @@ describe('/r/[codigo]/opengraph-image', () => {
 
   it('código inválido cai no notFound', async () => {
     await expect(Image({ params: Promise.resolve({ codigo: '4-7-3-caiu-feio-aeaqeea' }) })).rejects.toThrow(
-      'NEXT_NOT_FOUND',
-    )
-    await expect(generateImageMetadata({ params: Promise.resolve({ codigo: 'lixo' }) })).rejects.toThrow(
       'NEXT_NOT_FOUND',
     )
   })

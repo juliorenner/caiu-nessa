@@ -19,10 +19,9 @@ async function parametros(params: Props['params']): Promise<Parametros> {
   return p
 }
 
-export async function generateImageMetadata({ params }: Props) {
-  const { a, t } = await parametros(params)
-  return [{ id: 'placar', alt: `Alguém fez ${a}/${t} no Caiu Nessa? E você?`, size, contentType }]
-}
+// Alt fixo: com `generateImageMetadata` o Next serve a imagem em `/opengraph-image/<id>` e o
+// `og:image` que a página anuncia (sem id) respondia 404. O placar em si está na descrição da página.
+export const alt = 'Placar de um amigo no Caiu Nessa? E você?'
 
 export default async function Image({ params }: Props): Promise<ImageResponse> {
   const { a, t, c, f, g } = await parametros(params)
