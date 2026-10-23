@@ -1,10 +1,10 @@
 'use client'
 
 import { type KeyboardEvent, type PointerEvent, type ReactElement, useEffect, useId, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
 import type { Veredito } from '@/lib/afirmacoes'
 import { formatarData } from '@/lib/datas'
 import { mensagem } from './mensagemVeredito'
+import { Tecla } from './Tecla'
 import { BOTAO_EM_CARTAO, LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
@@ -14,6 +14,16 @@ const FOCAVEIS = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"
 // No escuro a sombra fica sobre o fundo da página: inverte (tinta por cima, papel por baixo).
 const SUPERFICIE_PAINEL =
   'bg-superficie text-tinta border-t-[3px] border-tinta shadow-[0_-8px_0_var(--color-papel),0_-12px_0_var(--color-tinta)] dark:shadow-[0_-8px_0_var(--color-tinta),0_-12px_0_var(--color-papel)] rounded-none'
+
+// Em lg o painel vira a coluna da direita do quiz (ao lado do cartão): estático, borda inteira e sombra na cor do veredito.
+// `lg:motion-reduce:` e `lg:dark:` repetem a regra porque, no CSS gerado, `lg:` vem depois de `motion-reduce:` e antes de `dark:`.
+const PAINEL_LG =
+  'lg:static lg:col-start-2 lg:row-start-2 lg:mx-0 lg:max-h-none lg:w-auto lg:max-w-none lg:translate-x-0 lg:translate-y-0 lg:border-[3px] lg:pt-5 lg:pb-5 lg:animate-[entrar-da-direita_200ms_ease-out] motion-reduce:animate-none lg:motion-reduce:animate-none'
+const BORDA_LG: Record<Veredito, string> = {
+  verdadeiro: 'lg:border-verdade lg:shadow-[6px_6px_0_var(--color-verdade)] lg:dark:shadow-[6px_6px_0_var(--color-verdade)]',
+  falso: 'lg:border-mentira lg:shadow-[6px_6px_0_var(--color-mentira)] lg:dark:shadow-[6px_6px_0_var(--color-mentira)]',
+  enganoso: 'lg:border-cheira lg:shadow-[6px_6px_0_var(--color-cheira)] lg:dark:shadow-[6px_6px_0_var(--color-cheira)]',
+}
 
 export function PainelVeredito(p: {
   afirmacao: AfirmacaoNoQuiz
@@ -31,7 +41,7 @@ export function PainelVeredito(p: {
   const idMensagem = useId()
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- o portal usa document.body, que só existe no cliente; montar no render divergiria da hidratação
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- o painel monta num render e anima no seguinte; o primeiro paint precisa sair com translate-y-full
     setMontado(true)
     const anterior = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -86,9 +96,11 @@ export function PainelVeredito(p: {
     ? 'translate-y-0'
     : `transition-transform duration-[250ms] ease-out ${entrou ? 'translate-y-0' : 'translate-y-full'}`
 
-  return createPortal(
+  // Fica dentro da raiz do Quiz (fora do conteúdo com filtro, que quebraria o fixed): no celular, folha de baixo;
+  // em lg, a célula da direita da grade.
+  return (
     <>
-      <div data-backdrop className="fixed inset-0 z-40 bg-black/40" />
+      <div data-backdrop className="fixed inset-0 z-40 bg-black/40 lg:hidden" />
       <section
         role="dialog"
         aria-modal="true"
@@ -96,7 +108,7 @@ export function PainelVeredito(p: {
         aria-live="polite"
         aria-describedby={idMensagem}
         onKeyDown={conterFoco}
-        className={`fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[85dvh] w-full max-w-xl flex-col gap-4 overflow-hidden px-5 pt-1 pb-[max(1rem,env(safe-area-inset-bottom))] ${SUPERFICIE_PAINEL} ${movimento}`}
+        className={`fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[85dvh] w-full max-w-xl flex-col gap-4 overflow-hidden px-5 pt-1 pb-[max(1rem,env(safe-area-inset-bottom))] ${SUPERFICIE_PAINEL} ${PAINEL_LG} ${BORDA_LG[afirmacao.veredito]} ${movimento}`}
       >
         <div
           data-alca
@@ -104,7 +116,7 @@ export function PainelVeredito(p: {
           onPointerDown={aoPressionar}
           onPointerUp={aoSoltar}
           onPointerCancel={aoCancelar}
-          className="flex min-h-12 shrink-0 touch-none items-center justify-center"
+          className="flex min-h-12 shrink-0 touch-none items-center justify-center lg:hidden"
         >
           <div className="h-1 w-10 rounded-full bg-tinta/30" />
         </div>
@@ -125,11 +137,11 @@ export function PainelVeredito(p: {
             Ver a checagem ({afirmacao.fonte_nome}, {formatarData(afirmacao.data_checagem)})
           </a>
         </div>
-        <button ref={botaoRef} type="button" onClick={onFechar} className={`shrink-0 ${BOTAO_EM_CARTAO}`}>
+        <button ref={botaoRef} type="button" onClick={onFechar} className={`shrink-0 lg:mt-auto lg:gap-3 ${BOTAO_EM_CARTAO}`}>
           {ultima ? 'Ver meu resultado' : 'Próxima'}
+          <Tecla cor="papel">Enter</Tecla>
         </button>
       </section>
-    </>,
-    document.body,
+    </>
   )
 }

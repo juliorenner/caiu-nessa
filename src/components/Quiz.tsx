@@ -251,13 +251,14 @@ export default function Quiz({
     <div
       ref={raiz}
       tabIndex={-1}
-      className="box-border flex h-dvh flex-col overflow-x-hidden overflow-y-auto overscroll-contain px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
+      className="box-border flex h-dvh flex-col lg:grid lg:grid-cols-[1fr_420px] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-3 overflow-x-hidden overflow-y-auto overscroll-contain px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
     >
-      {/* Em lg: grade de duas colunas (cartão e botões à esquerda; dicas, e depois o veredito, à direita). */}
+      {/* Em lg a raiz é a grade de duas colunas (cartão e botões à esquerda; dicas, e depois o veredito, à direita);
+          o conteúdo some como caixa (contents) para que ele e o painel dividam a mesma grade. */}
       <div
         data-conteudo
         inert={etapa === 'feedback' ? true : undefined}
-        className={`flex flex-1 flex-col gap-3 lg:grid lg:grid-cols-[1fr_420px] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-3 ${etapa === 'feedback' ? '[filter:brightness(.75)_saturate(.6)] lg:[filter:none]' : ''}`}
+        className={`flex flex-1 flex-col gap-3 lg:contents ${etapa === 'feedback' ? '[filter:brightness(.75)_saturate(.6)] lg:[filter:none]' : ''}`}
       >
         <Ficha
           className="lg:col-start-1"
@@ -313,8 +314,10 @@ export default function Quiz({
             ))}
           </div>
         </div>
-        {/* Célula da direita: hoje só as dicas; sem caixa própria no celular (contents), onde as dicas somem. */}
-        <div className="contents lg:col-start-2 lg:row-start-2 lg:flex lg:min-h-0 lg:flex-col">
+        {/* Célula da direita: as dicas, até o painel do veredito tomar o lugar; sem caixa própria no celular (contents). */}
+        <div
+          className={`contents lg:col-start-2 lg:row-start-2 lg:min-h-0 lg:flex-col ${etapa === 'feedback' ? 'lg:hidden' : 'lg:flex'}`}
+        >
           <CaixaDeDicas />
         </div>
       </div>

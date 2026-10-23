@@ -279,7 +279,25 @@ describe('Quiz', () => {
     expect(caixa).toHaveTextContent('Teclas')
     for (const rotulo of ['Mentira', 'Cheira mal', 'Verdade', 'ou arraste com o mouse']) expect(caixa).toHaveTextContent(rotulo)
     expect([...caixa.querySelectorAll('kbd')].map(k => k.textContent)).toEqual(['←', '↑', '→'])
-    expect(container.querySelector('[data-conteudo]')).toHaveClass('lg:grid', 'lg:grid-cols-[1fr_420px]')
+    // A grade fica na raiz: o painel do veredito (irmão do conteúdo) ocupa a mesma coluna da direita.
+    expect(container.firstElementChild).toHaveClass('lg:grid', 'lg:grid-cols-[1fr_420px]')
+    expect(container.querySelector('[data-conteudo]')).toHaveClass('lg:contents')
+  })
+
+  it('em lg o painel do veredito toma o lugar da caixa de dicas, dentro da raiz do quiz', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />,
+    )
+    const caixa = screen.getByRole('complementary', { name: 'Dicas de teclado' })
+    expect(caixa.parentElement).toHaveClass('lg:flex')
+    await user.click(screen.getByRole('button', { name: 'Verdade' }))
+    const painel = screen.getByRole('dialog')
+    expect(painel.parentElement).toBe(container.firstElementChild)
+    expect(caixa.parentElement).toHaveClass('lg:hidden')
+    expect(caixa.parentElement).not.toHaveClass('lg:flex')
+    await user.click(screen.getByRole('button', { name: 'Próxima' }))
+    expect(caixa.parentElement).toHaveClass('lg:flex')
   })
 
   it('texto do cartão cresce em lg', () => {
