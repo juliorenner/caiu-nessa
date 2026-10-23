@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { Db } from '@/db/client'
-import { type Afirmacao, TOTAL_AFIRMACOES, VEREDITOS, ehRodadaBalanceada } from '@/lib/afirmacoes'
+import { type Afirmacao, VEREDITOS, ehRodadaBalanceada } from '@/lib/afirmacoes'
+import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
 import { type Avaliacao, gerarAvaliacao } from '@/lib/avaliacao'
 import { type Estatisticas, obterEstatisticas, percentilAbaixo } from '@/lib/estatisticas'
 import { type Resultado, calcularResultado } from '@/lib/pontuacao'

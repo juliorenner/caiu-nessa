@@ -23,8 +23,15 @@ export function tamanhoDa(c: Composicao): number {
 // Tamanho da primeira rodada; só rodadas desse tamanho entram no ranking.
 export const TOTAL_AFIRMACOES = tamanhoDa(COMPOSICAO_PRIMEIRA)
 export const MAXIMO_ACERTOS = TOTAL_AFIRMACOES
-export const TAMANHOS_DE_RODADA: readonly number[] = COMPOSICOES_ATUAIS.map(tamanhoDa)
 export const TAMANHOS_ACEITOS: readonly number[] = [...new Set(COMPOSICOES_ACEITAS.map(tamanhoDa))]
+
+// Mínimo de itens jogáveis que o pool precisa ter em cada par (lado, veredito): o bastante para
+// sortear qualquer rodada atual (o maior pedido de cada veredito entre as composições atuais).
+export const MINIMO_POR_PAR: Composicao = {
+  verdadeiro: Math.max(...COMPOSICOES_ATUAIS.map((c) => c.verdadeiro)),
+  falso: Math.max(...COMPOSICOES_ATUAIS.map((c) => c.falso)),
+  enganoso: Math.max(...COMPOSICOES_ATUAIS.map((c) => c.enganoso)),
+}
 
 export function composicaoDoTamanho(
   total: number,

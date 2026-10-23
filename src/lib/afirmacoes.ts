@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import dados from '@/data/afirmacoes.json'
-import { COMPOSICOES_ACEITAS, type Composicao, composicaoDoTamanho } from '@/lib/rodadas'
+import { COMPOSICOES_ACEITAS, type Composicao, composicaoDoTamanho, MINIMO_POR_PAR } from '@/lib/rodadas'
 
 export type Lado = 'esquerda' | 'direita'
 
@@ -23,10 +23,6 @@ export interface Afirmacao {
 
 export type Respostas = Record<string, Veredito>
 
-// Re-exportado para os importadores antigos; a fonte é `rodadas.ts`.
-export { TOTAL_AFIRMACOES } from '@/lib/rodadas'
-// Mínimo de itens jogáveis que o pool precisa ter em cada par (lado, veredito).
-export const POR_VEREDITO_POR_LADO = 2
 
 const LADOS: readonly Lado[] = ['esquerda', 'direita']
 
@@ -38,10 +34,14 @@ export interface Par {
 
 export const PARES: readonly Par[] = LADOS.flatMap((lado) => VEREDITOS.map((veredito) => ({ lado, veredito })))
 
+export function chaveDoPar({ lado, veredito }: Par): string {
+  return `${lado}:${veredito}`
+}
+
 export function contarPorPar(afirmacoes: readonly Afirmacao[]): Map<string, number> {
-  const contagem = new Map<string, number>(PARES.map(({ lado, veredito }) => [`${lado}:${veredito}`, 0]))
-  for (const { lado, veredito } of afirmacoes) {
-    const chave = `${lado}:${veredito}`
+  const contagem = new Map<string, number>(PARES.map((par) => [chaveDoPar(par), 0]))
+  for (const afirmacao of afirmacoes) {
+    const chave = chaveDoPar(afirmacao)
     contagem.set(chave, (contagem.get(chave) ?? 0) + 1)
   }
   return contagem
@@ -143,13 +143,13 @@ export function validarPool(dados: unknown): Afirmacao[] {
     ids.add(id)
   }
 
-  // Cada par precisa de itens jogáveis suficientes para a primeira rodada sempre fechar.
-  const faltando = [...contarPorPar(jogaveis(pool))].filter(([, n]) => n < POR_VEREDITO_POR_LADO)
+  // Cada par precisa de itens jogáveis suficientes para qualquer rodada atual fechar.
+  const contagem = contarPorPar(jogaveis(pool))
+  const faltando = PARES.map((par) => ({ par, tem: contagem.get(chaveDoPar(par)) ?? 0, precisa: MINIMO_POR_PAR[par.veredito] }))
+    .filter(({ tem, precisa }) => tem < precisa)
   if (faltando.length) {
-    const detalhe = faltando.map(([par, n]) => `${par} tem ${n}`).join(', ')
-    throw new Error(
-      `Afirmações inválidas: cada par (lado:veredito) precisa de ao menos ${POR_VEREDITO_POR_LADO} jogáveis; ${detalhe}`,
-    )
+    const detalhe = faltando.map(({ par, tem, precisa }) => `${chaveDoPar(par)} tem ${tem}, precisa de ${precisa}`).join(', ')
+    throw new Error(`Afirmações inválidas: cada par (lado:veredito) precisa de jogáveis para a rodada; ${detalhe}`)
   }
 
   return pool

@@ -50,7 +50,7 @@ function viesDoEixo(eixo: Eixo, r: Resultado): string | null {
   return `Você errou o grau em ${r.grauErradoEsquerda} ${r.grauErradoEsquerda === 1 ? 'afirmação' : 'afirmações'} da esquerda e ${r.grauErradoDireita} da direita.`
 }
 
-// Faixas proporcionais ao tamanho da rodada: 12 → 12/9/5, 6 → 6/5/3.
+// Faixas proporcionais ao tamanho da rodada (Imune / Quase imune / Abre o olho): 8 → 8/6/4, 6 → 6/5/3, 12 → 12/9/5.
 export function gerarAvaliacao(r: Resultado): Avaliacao {
   if (r.acertos === r.total) {
     return { titulo: 'Imune', texto: 'Você não caiu em nenhuma. Nem as falsas te pegaram.', vies: null }

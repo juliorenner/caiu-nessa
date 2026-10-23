@@ -6,9 +6,9 @@ import {
   composicaoDoTamanho,
   descricaoDaComposicao,
   MAXIMO_ACERTOS,
+  MINIMO_POR_PAR,
   porLinha,
   TAMANHOS_ACEITOS,
-  TAMANHOS_DE_RODADA,
   tamanhoDa,
   TOTAL_AFIRMACOES,
 } from '@/lib/rodadas'
@@ -23,8 +23,10 @@ describe('rodadas', () => {
     expect(tamanhoDa(COMPOSICAO_EXTRA)).toBe(6)
     expect(tamanhoDa(COMPOSICOES_HISTORICAS[0])).toBe(12)
   })
-  it('tamanhos atuais e aceitos (atuais + históricos, sem repetição)', () => {
-    expect(TAMANHOS_DE_RODADA).toEqual([8, 6])
+  it('mínimo do pool por par é o maior pedido de cada veredito entre as rodadas atuais', () => {
+    expect(MINIMO_POR_PAR).toEqual({ verdadeiro: 1, falso: 2, enganoso: 1 })
+  })
+  it('tamanhos aceitos (atuais + históricos, sem repetição)', () => {
     expect(TAMANHOS_ACEITOS).toEqual([8, 6, 12])
     expect(new Set(TAMANHOS_ACEITOS).size).toBe(TAMANHOS_ACEITOS.length)
   })

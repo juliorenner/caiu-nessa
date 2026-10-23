@@ -25,13 +25,17 @@ describe('validarPool', () => {
     const extra = { ...afirmacoesValidas[0], id: 'e7' }
     expect(validarPool([...afirmacoesValidas, extra])).toHaveLength(13)
   })
-  it('rejeita pool com só 1 verdadeira jogável de um lado', () => {
-    const alterada = afirmacoesValidas.map(a => a.id === 'e1' ? { ...a, veredito: 'falso' as const } : a)
-    expect(() => validarPool(alterada)).toThrow(/esquerda.*verdadeiro/)
+  it('rejeita pool sem verdadeira jogável de um lado', () => {
+    const alterada = afirmacoesValidas.map(a => ['e1', 'e2'].includes(a.id) ? { ...a, veredito: 'enganoso' as const } : a)
+    expect(() => validarPool(alterada)).toThrow(/esquerda:verdadeiro tem 0, precisa de 1/)
+  })
+  it('rejeita pool com menos falsas jogáveis do que a primeira rodada pede num lado', () => {
+    const alterada = afirmacoesValidas.map(a => a.id === 'e3' ? { ...a, veredito: 'enganoso' as const } : a)
+    expect(() => validarPool(alterada)).toThrow(/esquerda:falso tem 1, precisa de 2/)
   })
   it('item com observacao não conta para o mínimo', () => {
-    const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, observacao: OBSERVACAO } : a)
-    expect(() => validarPool(alterada)).toThrow(/direita.*verdadeiro/)
+    const alterada = afirmacoesValidas.map(a => ['d1', 'd2'].includes(a.id) ? { ...a, observacao: OBSERVACAO } : a)
+    expect(() => validarPool(alterada)).toThrow(/direita:verdadeiro tem 0/)
   })
   it('rejeita id duplicado', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'e2' ? { ...a, id: 'e1' } : a)
