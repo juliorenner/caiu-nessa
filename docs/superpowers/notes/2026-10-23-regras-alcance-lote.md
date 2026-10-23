@@ -132,9 +132,9 @@ Preparado em três frentes, cada uma com a citação conferida, literal, na pág
 | lote | itens | verdadeiro | enganoso | falso | alcance 3 / 2 / 1 |
 |---|---|---|---|---|---|
 | direita (debate, JN, Globo, live, pronunciamento, falas avulsas) | 63 | 5 | 21 | 37 | 28 / 25 / 10 |
-| esquerda (debate, JN, Globo, Flow, falas avulsas) | 46 | 17 | 22 | 7 | 27 / 9 / 10 |
+| esquerda (debate, JN, Globo, Flow, falas avulsas) | 45 | 17 | 21 | 7 | 27 / 9 / 9 |
 | esquerda, virais (comício, ONU, posts, anúncio) | 14 | 6 | 6 | 2 | 0 / 1 / 13 |
-| **total** | **123** | 28 | 49 | 46 | 55 / 35 / 33 |
+| **total** | **122** | 28 | 48 | 46 | 55 / 35 / 32 |
 
 Pela regra nova entraram candidatos que a varredura dava como "fora" ou "duvidoso": na esquerda, as seis linhas "fora" e as duas "duvidosas" (por exemplo 84e1ab92 e 015f50ee, 2 V × 1 E = verdadeiro; 59fbe7ad, 28506065 e 64903478, empate V/E = enganoso; 311499c1, 1 V × 2 E = enganoso); na direita, quatro (8ecc47f3, f0fe3e98, 0aa8cac6 e 76505a59, todos enganoso). Nenhum candidato caiu por citação ausente da página.
 
@@ -154,6 +154,7 @@ Pela regra nova entraram candidatos que a varredura dava como "fora" ou "duvidos
 | superávit de 0,1% no debate; perdão de R$ 12,7 bi dos MEIs na Globo | mesma afirmação de uma versão que entrou (Globo e debate, respectivamente) |
 | V1, diplomas no comício (virais da esquerda) | mesma afirmação de 0b57e8ba (JN, alcance 3) |
 | E6, Moraes e Marielle (virais da esquerda) | `citacao` idêntica à de b9ce7b4e |
+| ca503f1e, "primeira reforma do Judiciário" (15/09, Aos Fatos não é bem assim) | decisão do dono, depois do lote: afirmação idêntica à de f1011d11 (Globo 15/10, alcance 3); uma ocasião por afirmação quando ela é idêntica. A `explicacao` de f1011d11 cita a ocasião de 15/09 e o rótulo do Aos Fatos |
 
 ### Rulings das revisões
 
@@ -161,16 +162,17 @@ Pela regra nova entraram candidatos que a varredura dava como "fora" ou "duvidos
 - d07912c0: `citacao` sem colchete, a frase literal com selo no Aos Fatos: "A gente era a sétima economia do mundo."
 - 6938e526: a `explicacao` cita o G1 (#NÃOÉBEMASSIM, numa citação que junta esta frase à da homenagem); segue falso pela maioria (Aos Fatos e Lupa falso).
 - 523042a9 (Estadão enganoso) e 7bb5f029 (Estadão falta contexto): a `explicacao` já citava o Estadão e o rótulo desde a Task 2; sem mudança.
+- 01702d43: a `explicacao` abre com o Estadão Verifica e o rótulo ("exagerado", conferido na página do debate); continua a única fonte.
 - b96d3fc1: na página da Lupa do debate (baixada em 23/10, HTTP 200), "A Lei Antifacção que nós aprovamos, os líderes dessas organizações vão ficar até 80 anos presos" é atribuída a "Flávio Bolsonaro (PL), candidato à Presidência"; a fala de Lula sobre a lei é outra ("Eu já fiz a Lei Antifacção, ela foi aprovada...", 84e1ab92). Sem mudança.
 
-### Contagem final (184 itens, todos no jogo)
+### Contagem final (183 itens, todos no jogo)
 
 | | verdadeiro | falso | enganoso |
 |---|---|---|---|
 | direita | 13 | 61 | 28 |
-| esquerda | 34 | 14 | 34 |
+| esquerda | 34 | 14 | 33 |
 
-Alcance: 3 = 82 (41 de cada lado), 2 = 44 (direita 30, esquerda 14), 1 = 58 (direita 31, esquerda 27).
+Alcance: 3 = 82 (41 de cada lado), 2 = 44 (direita 30, esquerda 14), 1 = 57 (direita 31, esquerda 26).
 
 ### Base tolerante a mudança de esquema
 
@@ -178,7 +180,7 @@ Alcance: 3 = 82 (41 de cada lado), 2 = 44 (direita 30, esquerda 14), 1 = 58 (dir
 
 ### Validação
 
-- `npm run lint`, `npm run typecheck`: limpos. `npm test`: 52 arquivos, 662 testes passando.
-- `npx tsx scripts/verificar-fontes.ts`: 184 OK.
-- `BASE_REF=origin/main npx tsx scripts/validar-revisao.ts`: só os problemas de volume esperados num lote humano ("123 novas, limite 6", "60 novas à esquerda", "63 novas à direita"); nenhum removido, nenhum lado mudou, nenhum id inválido.
-- `BASE_REF=origin/main npx tsx scripts/conferir-citacoes.ts`: 184 conferidas (todas mudaram, porque ganharam `alcance`), 182 OK; AVISO só em 226b7d8c e 01702d43, os dois com o Estadão como única fonte.
+- `npm run lint`, `npm run typecheck`: limpos. `npm test`: 52 arquivos, 661 testes passando.
+- `npx tsx scripts/verificar-fontes.ts`: 184 OK (rodado antes da remoção de ca503f1e; nenhuma fonte nova depois).
+- `BASE_REF=origin/main npx tsx scripts/validar-revisao.ts`: só os problemas de volume esperados num lote humano ("122 novas, limite 6", "59 novas à esquerda", "63 novas à direita"); nenhum removido, nenhum lado mudou, nenhum id inválido.
+- `BASE_REF=origin/main npx tsx scripts/conferir-citacoes.ts`: 183 conferidas (todas mudaram, porque ganharam `alcance`), 181 OK; AVISO só em 226b7d8c e 01702d43, os dois com o Estadão como única fonte.
