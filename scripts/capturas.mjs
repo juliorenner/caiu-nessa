@@ -4,7 +4,8 @@
 // barraria a última logo depois de um `npm run e2e`. Fotografa home, quiz (cartão e veredito) e resultado
 // no celular (390×844) e no desktop (1280×800), no tema claro e no noite, com movimento reduzido.
 import { spawn } from 'node:child_process'
-import { mkdir, mkdtemp, rm } from 'node:fs/promises'
+import { rmSync } from 'node:fs'
+import { mkdir, mkdtemp } from 'node:fs/promises'
 import net from 'node:net'
 import os from 'node:os'
 import path from 'node:path'
@@ -90,6 +91,29 @@ const servidor = spawn('npx', ['next', 'start', '-p', String(porta)], {
   detached: true,
 })
 
+// detached: o npx abre o next como filho; matar o grupo derruba os dois. ESRCH: o grupo já saiu
+// (o next caiu antes); engolir aqui deixa o erro de verdade aparecer e a limpeza seguir.
+function derrubarServidor() {
+  try {
+    process.kill(-servidor.pid, 'SIGTERM')
+  } catch (erro) {
+    if (erro.code !== 'ESRCH') throw erro
+  }
+}
+
+function limparBanco() {
+  rmSync(banco, { recursive: true, force: true })
+}
+
+// Ctrl+C (ou um kill) no meio das capturas: derruba o servidor e apaga o banco antes de sair.
+for (const sinal of ['SIGINT', 'SIGTERM']) {
+  process.once(sinal, () => {
+    derrubarServidor()
+    limparBanco()
+    process.exit(sinal === 'SIGINT' ? 130 : 143)
+  })
+}
+
 let navegador
 try {
   await esperarNoAr(base, servidor)
@@ -103,9 +127,11 @@ try {
   }
   console.log(`Capturas em ${saida}`)
 } finally {
-  await navegador?.close()
-  // detached: o npx abre o next como filho; matar o grupo derruba os dois.
-  process.kill(-servidor.pid, 'SIGTERM')
-  if (servidor.exitCode === null) await new Promise((r) => servidor.once('exit', r))
-  await rm(banco, { recursive: true, force: true })
+  try {
+    await navegador?.close()
+  } finally {
+    derrubarServidor()
+    if (servidor.exitCode === null && servidor.signalCode === null) await new Promise((r) => servidor.once('exit', r))
+    limparBanco()
+  }
 }

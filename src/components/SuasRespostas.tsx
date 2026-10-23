@@ -44,27 +44,30 @@ export function SuasRespostas({ respostas, acertos, total }: { respostas: Respos
   }, [])
 
   return (
-    <details ref={ref} className={`${SUPERFICIE_LISTA} px-4 py-3 text-left lg:px-6 lg:py-5`}>
-      <summary className="cursor-pointer py-1 font-letreiro text-sm lg:flex lg:justify-between">
-        Suas respostas <span>({acertos} de {total})</span>
-      </summary>
-      <ol className="mt-3">
-        {respostas.map(r => (
-          <li
-            key={r.id}
-            data-resposta={r.casa}
-            className="flex items-start gap-3 border-t-2 border-dashed border-tinta py-3"
-          >
-            <span aria-hidden className={DESENHO_CASA[r.casa]}>
-              {r.casa === 'quase' ? '?' : null}
-            </span>
-            <span className="sr-only">{NOME_CASA[r.casa]}:</span>
-            <p className="min-w-0 flex-1 text-sm leading-snug">{r.texto}</p>
-            <span className={`${SELO_VEREDITO[r.veredito]} shrink-0`}>{ROTULO_VEREDITO[r.veredito]}</span>
-          </li>
-        ))}
-      </ol>
-      <div className="flex flex-col items-start gap-2 border-t-2 border-dashed border-tinta pt-3 text-sm">
+    <div className={`${SUPERFICIE_LISTA} px-4 py-3 text-left lg:px-6 lg:py-5`}>
+      <details ref={ref}>
+        <summary className="cursor-pointer py-1 font-letreiro text-sm lg:flex lg:justify-between">
+          Suas respostas <span>({acertos} de {total})</span>
+        </summary>
+        <ol className="mt-3">
+          {respostas.map(r => (
+            <li
+              key={r.id}
+              data-resposta={r.casa}
+              className="flex items-start gap-3 border-t-2 border-dashed border-tinta py-3"
+            >
+              <span aria-hidden className={DESENHO_CASA[r.casa]}>
+                {r.casa === 'quase' ? '?' : null}
+              </span>
+              <span className="sr-only">{NOME_CASA[r.casa]}:</span>
+              <p className="min-w-0 flex-1 text-sm leading-snug">{r.texto}</p>
+              <span className={`${SELO_VEREDITO[r.veredito]} shrink-0`}>{ROTULO_VEREDITO[r.veredito]}</span>
+            </li>
+          ))}
+        </ol>
+      </details>
+      {/* Fora do details: recolher a lista em lg não esconde os links. No celular eles ficam no fim da tela. */}
+      <div className="hidden flex-col items-start gap-2 border-t-2 border-dashed border-tinta pt-3 text-sm lg:flex">
         <Link href="/como-escolhemos" className={LINK_EM_CARTAO}>
           Como escolhemos
         </Link>
@@ -72,6 +75,6 @@ export function SuasRespostas({ respostas, acertos, total }: { respostas: Respos
           Todas as afirmações e fontes
         </Link>
       </div>
-    </details>
+    </div>
   )
 }

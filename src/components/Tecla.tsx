@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react'
 import { TECLA_BASE } from './rotulos'
 
-type CorTecla = 'tinta' | 'papel' | 'verdade' | 'mentira' | 'cheira'
+type CorTecla = 'tinta' | 'papel' | 'branco' | 'verdade' | 'mentira' | 'cheira'
 
 const COR: Record<CorTecla, string> = {
   tinta: 'text-tinta',
   papel: 'text-papel',
+  branco: 'text-white',
   verdade: 'text-verdade',
   mentira: 'text-mentira',
   cheira: 'text-cheira',

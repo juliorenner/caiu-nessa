@@ -77,10 +77,17 @@ test.describe('desktop', () => {
 
   test('no quiz, o veredito aparece ao lado do cartão, sem fundo escurecido', async ({ page }) => {
     await page.goto('/quiz')
+    await expect(page.locator('[data-casa]')).toHaveCount(TOTAL_AFIRMACOES)
     await page.getByRole('button', { name: /verdade/i }).click()
-    await expect(page.getByRole('group', { name: 'Afirmação' }).locator('p')).toBeVisible()
-    await expect(page.getByRole('dialog')).toBeVisible()
+    const texto = page.getByRole('group', { name: 'Afirmação' }).locator('p')
+    const painel = page.getByRole('dialog')
+    await expect(texto).toBeVisible()
+    await expect(painel).toBeVisible()
     await expect(page.locator('[data-backdrop]')).toBeHidden()
+    // O painel fica à direita do texto, sem cobri-lo (1 px de folga para arredondamento).
+    const caixaTexto = (await texto.boundingBox())!
+    const caixaPainel = (await painel.boundingBox())!
+    expect(caixaTexto.x + caixaTexto.width).toBeLessThanOrEqual(caixaPainel.x + 1)
   })
 
   test('no resultado, "Suas respostas" lista cada afirmação da rodada', async ({ page }) => {
@@ -94,6 +101,8 @@ test.describe('desktop', () => {
     }
 
     await expect(page.locator('summary', { hasText: 'Suas respostas' })).toBeVisible()
+    await expect(page.locator('details')).toHaveAttribute('open', '')
     await expect(page.locator('details [data-resposta]')).toHaveCount(TOTAL_AFIRMACOES)
+    await expect(page.locator('details [data-resposta]').first()).toBeVisible()
   })
 })

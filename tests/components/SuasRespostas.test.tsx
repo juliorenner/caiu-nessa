@@ -37,6 +37,15 @@ it('lista uma linha por resposta, na ordem jogada, com casa, texto e selo', () =
   expect(screen.getByRole('link', { name: 'Todas as afirmações e fontes' })).toHaveAttribute('href', '/afirmacoes')
 })
 
+it('os links ficam fora do details e só aparecem em lg (recolher a lista não os esconde)', () => {
+  const { container } = renderizar()
+  for (const nome of ['Como escolhemos', 'Todas as afirmações e fontes']) {
+    const link = screen.getByRole('link', { name: nome })
+    expect(container.querySelector('details')).not.toContainElement(link)
+    expect(link.parentElement).toHaveClass('hidden', 'lg:flex')
+  }
+})
+
 // MediaQueryList falso: guarda os ouvintes de 'change' para o teste disparar.
 function telaFalsa(largo: boolean) {
   const ouvintes = new Set<(e: { matches: boolean }) => void>()

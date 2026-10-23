@@ -312,7 +312,7 @@ export default function Quiz({
                 onClick={() => responder(v)}
                 className={`flex min-h-14 flex-col items-center justify-center gap-2 px-1 py-2 text-[11px] leading-tight lg:h-[68px] lg:flex-row lg:gap-3 lg:text-sm ${FOCO} ${classeBotao(v)}`}
               >
-                <Tecla cor="papel">{SETA[v]}</Tecla>
+                <Tecla cor="branco">{SETA[v]}</Tecla>
                 <IconeVeredito veredito={v} />
                 {ROTULO_BOTAO[v]}
               </button>

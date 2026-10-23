@@ -26,9 +26,6 @@ import {
   TEXTO_SECUNDARIO,
 } from "./rotulos";
 
-// "Jogar de novo" é link no celular; em lg vira botão secundário tracejado ao lado de "Continuar jogando".
-const JOGAR_DE_NOVO_LG =
-  "lg:flex lg:min-h-12 lg:w-full lg:items-center lg:justify-center lg:rounded-none lg:px-5 lg:py-3 lg:font-letreiro lg:no-underline lg:border-[3px] lg:border-dashed lg:border-tinta lg:bg-superficie lg:shadow-[0_5px_0_var(--color-tinta)] lg:active:translate-y-[5px] lg:active:shadow-none lg:transition-transform lg:duration-[80ms] motion-reduce:transition-none dark:border-papel lg:dark:bg-fundo-escuro lg:dark:shadow-[0_5px_0_var(--color-papel)]";
 
 type EstadoContinuar = "parado" | "sorteando" | "fim" | "falha";
 type Aviso = "copiado" | "falhou" | "carregando" | "imagemFalhou" | "imagemNaoCarregou";
@@ -241,10 +238,14 @@ export function ResultadoFinal(p: {
             <SuasRespostas respostas={respostas} acertos={resultado.acertos} total={resultado.total} />
           </div>
         )}
-        {/* Recarrega a página: nova partida, novo sorteio e estatísticas atualizadas. */}
+        {/* Recarrega a página: nova partida, novo sorteio e estatísticas atualizadas. É link no celular;
+            em lg, botão secundário tracejado ao lado de "Continuar jogando" (um por tamanho). */}
+        <a href="/quiz" className={`self-center text-base ${LINK_PAGINA} lg:hidden`}>
+          Jogar de novo
+        </a>
         <a
           href="/quiz"
-          className={`self-center text-base ${LINK_PAGINA} lg:col-start-2 lg:row-start-2 lg:self-auto ${JOGAR_DE_NOVO_LG}`}
+          className={`${BOTAO_SECUNDARIO} max-lg:hidden lg:col-start-2 lg:row-start-2 lg:border-dashed`}
         >
           Jogar de novo
         </a>
