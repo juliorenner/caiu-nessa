@@ -1,5 +1,6 @@
 import { CarimboImagem } from '@/app/_imagens/CarimboImagem'
 import type { Casa } from '@/lib/cartao'
+import { porLinha } from '@/lib/rodadas'
 import { DOMINIO } from '@/lib/site'
 
 const PAPEL = '#fff3dc'
@@ -13,7 +14,6 @@ const MARGEM_BASE = 300
 const LATERAL = 90
 const CASA = 120
 const BORDA_CASA = 6
-const POR_LINHA = 6
 
 function X() {
   return (
@@ -46,8 +46,9 @@ function Quadrado({ casa }: { casa: Casa }) {
 }
 
 function linhas(casas: Casa[]): Casa[][] {
+  const n = porLinha(casas.length)
   const resultado: Casa[][] = []
-  for (let i = 0; i < casas.length; i += POR_LINHA) resultado.push(casas.slice(i, i + POR_LINHA))
+  for (let i = 0; i < casas.length; i += n) resultado.push(casas.slice(i, i + n))
   return resultado
 }
 

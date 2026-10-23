@@ -5,6 +5,7 @@ import Afirmacoes from '@/app/afirmacoes/page'
 import { ResultadoFinal } from '@/components/ResultadoFinal'
 import { carregarPool, foraDoJogo, jogaveis } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
+import { COMPOSICAO_EXTRA, COMPOSICAO_PRIMEIRA, TOTAL_AFIRMACOES, tamanhoDa } from '@/lib/rodadas'
 
 describe('página /afirmacoes', () => {
   it('explica que cada rodada é sorteada do conjunto', () => {
@@ -13,7 +14,7 @@ describe('página /afirmacoes', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveClass('font-letreiro')
     expect(
       screen.getByText(
-        'Cada rodada é sorteada deste conjunto: a primeira tem 12 afirmações, as seguintes 6, sempre com o mesmo número de cada lado e de cada veredito.',
+        `Cada rodada é sorteada deste conjunto: a primeira tem ${TOTAL_AFIRMACOES} afirmações, as seguintes ${tamanhoDa(COMPOSICAO_EXTRA)}, sempre com o mesmo número de cada lado e o mesmo perfil de vereditos nos dois lados.`,
       ),
     ).toBeInTheDocument()
   })
@@ -81,22 +82,23 @@ describe('página /afirmacoes', () => {
   })
 })
 
+const POR_LADO = TOTAL_AFIRMACOES / 2
 const dados: RespostaResultado = {
   resultado: {
     acertos: 4,
-    total: 12,
+    total: TOTAL_AFIRMACOES,
     acertosEsquerda: 2,
     acertosDireita: 2,
-    acreditadasEsquerda: 4,
-    acreditadasDireita: 4,
+    acreditadasEsquerda: POR_LADO,
+    acreditadasDireita: POR_LADO,
     desconfiadasEsquerda: 0,
     desconfiadasDireita: 0,
     grauErradoEsquerda: 0,
     grauErradoDireita: 0,
-    verdadeirasEsquerda: 2,
-    verdadeirasDireita: 2,
-    naoVerdadeirasEsquerda: 4,
-    naoVerdadeirasDireita: 4,
+    verdadeirasEsquerda: COMPOSICAO_PRIMEIRA.verdadeiro,
+    verdadeirasDireita: COMPOSICAO_PRIMEIRA.verdadeiro,
+    naoVerdadeirasEsquerda: POR_LADO - COMPOSICAO_PRIMEIRA.verdadeiro,
+    naoVerdadeirasDireita: POR_LADO - COMPOSICAO_PRIMEIRA.verdadeiro,
   },
   avaliacao: { titulo: 'Caiu feio', texto: 'Texto.', vies: null },
   estatisticas: null,
@@ -107,8 +109,8 @@ const dados: RespostaResultado = {
 const primeira = {
   dados,
   rodada: 1,
-  acumulado: { acertos: 4, total: 12 },
-  casas: [...Array<'acerto'>(4).fill('acerto'), ...Array<'erro'>(8).fill('erro')],
+  acumulado: { acertos: 4, total: TOTAL_AFIRMACOES },
+  casas: [...Array<'acerto'>(4).fill('acerto'), ...Array<'erro'>(TOTAL_AFIRMACOES - 4).fill('erro')],
 }
 
 describe('ResultadoFinal', () => {
@@ -122,10 +124,10 @@ describe('ResultadoFinal', () => {
 
   it('rodada 1 mostra comparação e Continuar jogando', () => {
     render(<ResultadoFinal {...primeira} onContinuar={async () => 'fim'} />)
-    expect(screen.getByText('4/12')).toBeInTheDocument()
-    // Leitor de tela ouve "4 de 12", não "4 barra 12".
-    expect(screen.getByText('4/12')).toHaveAttribute('aria-hidden')
-    expect(screen.getByText('4 de 12')).toHaveClass('sr-only')
+    expect(screen.getByText(`4/${TOTAL_AFIRMACOES}`)).toBeInTheDocument()
+    // Leitor de tela ouve "4 de N", não "4 barra N".
+    expect(screen.getByText(`4/${TOTAL_AFIRMACOES}`)).toHaveAttribute('aria-hidden')
+    expect(screen.getByText(`4 de ${TOTAL_AFIRMACOES}`)).toHaveClass('sr-only')
     expect(screen.getByText('Fim de jogo')).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 1, name: 'Caiu feio' })).toBeInTheDocument()
     expect(screen.getByText(/Você é um dos primeiros a jogar/)).toBeInTheDocument()

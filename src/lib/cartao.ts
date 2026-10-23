@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { TAMANHOS_ACEITOS } from '@/lib/rodadas'
 
 export type Casa = 'acerto' | 'erro' | 'quase'
 
@@ -34,14 +35,14 @@ export function letrasParaCasas(g: string): Casa[] {
   })
 }
 
-export type Parametros = { a: number; t: 6 | 12; c: number; f: Faixa; g: string }
+export type Parametros = { a: number; t: number; c: number; f: Faixa; g: string }
 
 const inteiro = z.coerce.number().int().min(0)
 
 export const parametrosSchema: z.ZodType<Parametros> = z
   .object({
     a: inteiro,
-    t: z.coerce.number().pipe(z.union([z.literal(6), z.literal(12)])),
+    t: z.coerce.number().int().refine(t => TAMANHOS_ACEITOS.includes(t)),
     c: inteiro,
     f: z.enum(Object.keys(FAIXAS) as [Faixa, ...Faixa[]]),
     g: z.string().regex(/^[aeq]+$/),

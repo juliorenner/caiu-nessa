@@ -2,6 +2,11 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { GET } from '@/app/cartao/route'
+import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
+
+// Rodada completa do tamanho atual: acerto, erro, acerto, quase, em ciclo.
+const G = Array.from({ length: TOTAL_AFIRMACOES }, (_, i) => 'aeaq'[i % 4]).join('')
+const A = [...G].filter(l => l === 'a').length
 
 function pedir(query: string) {
   return GET(new Request(`http://localhost/cartao?${query}`))
@@ -9,7 +14,7 @@ function pedir(query: string) {
 
 describe('GET /cartao', () => {
   it('gera PNG 1080×1920 com cache de um dia no navegador e uma semana na CDN', async () => {
-    const res = await pedir('a=4&t=12&c=3&f=caiu-feio&g=aeaqeeaeeqea')
+    const res = await pedir(`a=${A}&t=${TOTAL_AFIRMACOES}&c=1&f=caiu-feio&g=${G}`)
     expect(res.status).toBe(200)
     expect(res.headers.get('content-type')).toBe('image/png')
     expect(res.headers.get('cache-control')).toBe('public, max-age=86400, s-maxage=604800')
@@ -27,14 +32,23 @@ describe('GET /cartao', () => {
     expect(res.headers.get('content-type')).toBe('image/png')
   })
 
-  it('recusa total fora de 6 ou 12', async () => {
+  it('aceita link antigo de 12 casas (grade 2×6)', async () => {
+    const res = await pedir('a=4&t=12&c=3&f=caiu-feio&g=aeaqeeaeeqea')
+    expect(res.status).toBe(200)
+    expect(res.headers.get('content-type')).toBe('image/png')
+    const png = Buffer.from(await res.arrayBuffer())
+    mkdirSync('.superpowers/sdd/2026-10-22-compartilhar', { recursive: true })
+    writeFileSync('.superpowers/sdd/2026-10-22-compartilhar/cartao-12.png', png)
+  })
+
+  it('recusa total fora dos tamanhos aceitos', async () => {
     const res = await pedir('a=4&t=7&c=3&f=caiu-feio&g=aeaqeea')
     expect(res.status).toBe(400)
     expect(await res.text()).toBe('Parâmetros inválidos')
   })
 
   it('recusa grade com contagem de acertos diferente de a', async () => {
-    const res = await pedir('a=4&t=12&c=3&f=caiu-feio&g=aaaqeeaeeqea')
+    const res = await pedir(`a=${A + 1}&t=${TOTAL_AFIRMACOES}&c=1&f=caiu-feio&g=${G}`)
     expect(res.status).toBe(400)
   })
 })
