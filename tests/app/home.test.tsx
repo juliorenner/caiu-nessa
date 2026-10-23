@@ -45,14 +45,14 @@ describe('home em telas largas', () => {
     expect(emLg[0].parentElement).toHaveClass('hidden', 'lg:flex')
   })
 
-  it('o ícone do GitHub (link com rótulo) aparece uma vez por tamanho, ao lado do "Como escolhemos"', () => {
+  it('o link do GitHub (ícone + texto) aparece uma vez por tamanho, ao lado do "Como escolhemos"', () => {
     render(<Home />)
-    const links = screen.getAllByRole('link', { name: 'Código no GitHub' })
+    const links = screen.getAllByRole('link', { name: 'Código aberto' })
     expect(links).toHaveLength(2)
     for (const l of links) {
       expect(l).toHaveAttribute('href', 'https://github.com/juliorenner/caiu-nessa')
       expect(l.querySelector('svg')).not.toBeNull()
-      expect(l).toHaveTextContent('')
+      expect(l).toHaveTextContent('Código aberto')
     }
     expect(links.filter((l) => l.classList.contains('lg:hidden'))).toHaveLength(1)
     const emLg = links.filter((l) => !l.classList.contains('lg:hidden'))
