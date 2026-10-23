@@ -247,12 +247,6 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(writeText).not.toHaveBeenCalled()
   })
 
-  it('lembrete de precisão sob os botões de compartilhar', async () => {
-    renderizar()
-    await assentar()
-    expect(screen.getByText('Antes de repassar no grupo, confira a checagem.')).toBeInTheDocument()
-  })
-
   it('link Baixar imagem para os stories baixa o cartão', async () => {
     stubNavegador({})
     renderizar()

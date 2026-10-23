@@ -94,8 +94,8 @@ describe('Quiz', () => {
     const corpo = JSON.parse(fetchMock.mock.calls[0][1].body)
     expect(Object.keys(corpo.respostas).sort()).toEqual(rodadaDeOito.map(a => a.id).sort())
     expect(Object.values(corpo.respostas).every(v => v === 'verdadeiro')).toBe(true)
-    expect(await screen.findByText(/Você é um dos primeiros a jogar/)).toBeInTheDocument()
-    expect(screen.getByText(`4/${TOTAL_AFIRMACOES}`)).toBeInTheDocument()
+    expect(await screen.findByText(`4/${TOTAL_AFIRMACOES}`)).toBeInTheDocument()
+    expect(screen.queryByText(/primeiros a jogar|das pessoas/)).not.toBeInTheDocument()
     expect(screen.getByText('Texto do viés.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Compartilhar placar' })).toBeInTheDocument()
     // Uma casa por afirmação, na ordem jogada: tudo "Verdade" acerta só as verdadeiras.
@@ -467,7 +467,7 @@ describe('Quiz', () => {
     expect(container.querySelector('.h-dvh')).toBeNull()
   })
 
-  it('quando as estatísticas falham, diz que a comparação está indisponível em vez de "um dos primeiros"', async () => {
+  it('quando as estatísticas falham, não mostra comparação nem aviso', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
@@ -480,10 +480,8 @@ describe('Quiz', () => {
       await user.click(screen.getByRole('button', { name: 'Verdade' }))
       await user.click(screen.getByRole('button', { name: i === TOTAL_AFIRMACOES - 1 ? 'Ver meu resultado' : 'Próxima' }))
     }
-    expect(
-      await screen.findByText('A comparação com os outros jogadores não está disponível agora.'),
-    ).toBeInTheDocument()
-    expect(screen.queryByText(/Você é um dos primeiros a jogar/)).not.toBeInTheDocument()
+    expect(await screen.findByText(`4/${TOTAL_AFIRMACOES}`)).toBeInTheDocument()
+    expect(screen.queryByText(/não está disponível|primeiros a jogar|das pessoas/)).not.toBeInTheDocument()
   })
 
   it('sem viés (vies null), não mostra o parágrafo do viés', async () => {
