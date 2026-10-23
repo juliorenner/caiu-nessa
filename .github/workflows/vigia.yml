@@ -1,0 +1,86 @@
+name: vigia
+
+# Vigia semanal da produção: roda a fumaça Playwright (só leitura) contra caiunessa.com.br e, se algo
+# falhar, abre ou atualiza a issue "Produção com problema" (a issue gera e-mail para o dono).
+# Entre uma rodada e outra, a fumaça que roda depois de cada deploy (deploy.yml) cobre as publicações.
+on:
+  schedule:
+    # Quarta, 09:00 em São Paulo.
+    - cron: '0 12 * * 3'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: vigia
+  cancel-in-progress: true
+
+jobs:
+  vigiar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write # abre ou comenta a issue de produção com problema
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Site e API respondem
+        id: resposta
+        run: |
+          set -o pipefail
+          {
+            echo "home: $(curl -s -o /dev/null -w '%{http_code}' https://caiunessa.com.br/)"
+            echo "quiz: $(curl -s -o /dev/null -w '%{http_code}' https://caiunessa.com.br/quiz)"
+            echo "api/rodada: $(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'content-type: application/json' -d '{}' https://caiunessa.com.br/api/rodada)"
+          } | tee resposta.txt
+          # A API recusa um corpo vazio com 400: é sinal de que está de pé. 5xx ou sem resposta é problema.
+          if grep -qE ': (5[0-9][0-9]|000)$' resposta.txt; then exit 1; fi
+      - name: Fumaça contra produção
+        id: fumaca
+        env:
+          E2E_BASE_URL: https://caiunessa.com.br
+          E2E_SOMENTE_LEITURA: '1'
+        run: |
+          set -o pipefail
+          npm run e2e 2>&1 | tee fumaca.txt
+      - name: Abrir ou atualizar a issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITULO: Produção com problema
+        run: |
+          {
+            echo "O vigia semanal encontrou problema em https://caiunessa.com.br."
+            echo
+            echo "Execução: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo
+            echo '```'
+            cat resposta.txt 2>/dev/null
+            echo
+            tail -n 60 fumaca.txt 2>/dev/null
+            echo '```'
+          } > corpo.md
+          numero=$(gh issue list --state open --search "\"$TITULO\" in:title" --json number,title \
+            --jq "map(select(.title == \"$TITULO\")) | .[0].number // empty")
+          if [ -n "$numero" ]; then
+            gh issue comment "$numero" --body-file corpo.md
+          else
+            gh issue create --title "$TITULO" --body-file corpo.md
+          fi
+      - name: Guardar o relatório do Playwright
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
