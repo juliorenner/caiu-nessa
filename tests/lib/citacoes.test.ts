@@ -8,8 +8,8 @@ describe('normalizarParaBusca', () => {
 })
 
 describe('textoDoHtml', () => {
-  it('remove tags, scripts e estilos e decodifica entidades comuns', () => {
-    const html = '<html><head><style>p{}</style><script>var x = "y"</script></head><body><p>Inflação de&nbsp;alimentos &quot;caiu&quot; &amp; subiu</p></body></html>'
+  it('remove tags (inclusive com atributos e quebras) e decodifica entidades comuns', () => {
+    const html = '<html><body><p class="x"\n data-a="1">Inflação de&nbsp;alimentos &quot;caiu&quot; &amp; subiu</p><br/></body></html>'
     expect(textoDoHtml(html)).toBe('inflacao de alimentos caiu & subiu')
   })
 })

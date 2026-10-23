@@ -15,11 +15,13 @@ export function normalizarParaBusca(s: string): string {
     .trim()
 }
 
+// Só tira as tags: o conteúdo de <script> e <style> fica como texto, o que não atrapalha uma busca por
+// trecho (e o JSON-LD de muitas páginas até repete o texto da matéria). Filtrar <script> por regex é
+// frágil e o CodeQL aponta (js/bad-tag-filter).
 export function textoDoHtml(html: string): string {
   return normalizarParaBusca(
     html
-      .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, ' ')
-      .replace(/<[^>]+>/g, ' ')
+      .replace(/<[^>]*>/g, ' ')
       .replace(/&nbsp;/g, ' ')
       .replace(/&quot;/g, '"')
       .replace(/&#39;|&apos;/g, "'")
