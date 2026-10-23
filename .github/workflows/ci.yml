@@ -88,17 +88,56 @@ jobs:
           # Comentar no PR exigiria pull-requests: write; o resultado já aparece no job.
           GITLEAKS_ENABLE_COMMENTS: "false"
 
+  # Só nas PRs do bot de revisão de fatos: a revisão respeita os limites, os links em jogo respondem
+  # e (como aviso no resumo) as citações aparecem nas páginas das agências.
+  revisao:
+    if: startsWith(github.head_ref, 'bot/revisao-de-fatos-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Validar a revisão contra a base
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+        run: npx tsx scripts/validar-revisao.ts
+      - name: Acessar cada link de checagem em jogo
+        run: npx tsx scripts/verificar-fontes.ts
+      - name: Conferir as citações nas páginas (aviso)
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+        run: |
+          {
+            echo '## Citações nas páginas das agências (itens novos ou alterados)'
+            echo '```'
+            npx tsx scripts/conferir-citacoes.ts
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
   ci:
     if: always()
-    needs: [verificar, auditoria, workflows, segredos]
+    needs: [verificar, auditoria, workflows, segredos, revisao]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Conferir os jobs
         env:
           RESULTADOS: ${{ join(needs.*.result, ' ') }}
+          REVISAO: ${{ needs.revisao.result }}
         run: |
+          # O job revisao só roda nas PRs do bot: pulado conta como ok, qualquer outro job pulado não.
           for resultado in $RESULTADOS; do
+            if [ "$resultado" = skipped ] && [ "$REVISAO" = skipped ]; then
+              REVISAO=contado
+              continue
+            fi
             if [ "$resultado" != success ]; then
               echo "::error::Um job do CI terminou com: $resultado"
               exit 1
