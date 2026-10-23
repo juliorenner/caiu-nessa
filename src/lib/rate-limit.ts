@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { and, count, eq, gt, isNotNull, lt, sql } from 'drizzle-orm'
 import type { Db } from '@/db/client'
-import { jogadas } from '@/db/schema'
+import { eventos, jogadas } from '@/db/schema'
 import type { Respostas } from '@/lib/afirmacoes'
 
 export const LIMITE_POR_MINUTO = 5
@@ -70,4 +70,12 @@ export async function limparIpHashesExpirados(db: Db, agora: Date = new Date()):
     .update(jogadas)
     .set({ ipHash: null })
     .where(and(isNotNull(jogadas.ipHash), lt(jogadas.createdAt, limite)))
+}
+
+export async function limparIpHashesDeEventosExpirados(db: Db, agora: Date = new Date()): Promise<void> {
+  const limite = new Date(agora.getTime() - TTL_IP_HASH_MS)
+  await db
+    .update(eventos)
+    .set({ ipHash: null })
+    .where(and(isNotNull(eventos.ipHash), lt(eventos.createdAt, limite)))
 }

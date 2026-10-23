@@ -1,5 +1,5 @@
 {
-  "id": "2f1d7e12-7a48-4770-a0ce-99396c108cc1",
+  "id": "81174266-4b8f-4363-b2d0-5f8184063253",
   "prevId": "57e1ccf8-0e75-41d0-a6d7-dfbccda2cf95",
   "version": "7",
   "dialect": "postgresql",
@@ -46,6 +46,27 @@
           "columns": [
             {
               "expression": "tipo",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "eventos_ip_hash_created_at_idx": {
+          "name": "eventos_ip_hash_created_at_idx",
+          "columns": [
+            {
+              "expression": "ip_hash",
               "isExpression": false,
               "asc": true,
               "nulls": "last"

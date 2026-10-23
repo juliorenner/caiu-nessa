@@ -6,4 +6,5 @@ CREATE TABLE "eventos" (
 	"ip_hash" text
 );
 --> statement-breakpoint
-CREATE INDEX "eventos_tipo_created_at_idx" ON "eventos" USING btree ("tipo","created_at");
+CREATE INDEX "eventos_tipo_created_at_idx" ON "eventos" USING btree ("tipo","created_at");--> statement-breakpoint
+CREATE INDEX "eventos_ip_hash_created_at_idx" ON "eventos" USING btree ("ip_hash","created_at");

@@ -2,7 +2,7 @@ import { and, count, eq, gt } from 'drizzle-orm'
 import type { Db } from '@/db/client'
 import { eventos } from '@/db/schema'
 import { eventoSchema } from '@/lib/eventos'
-import { extrairIp, hashIp } from '@/lib/rate-limit'
+import { extrairIp, hashIp, limparIpHashesDeEventosExpirados } from '@/lib/rate-limit'
 
 export const LIMITE_EVENTOS_POR_HORA = 60
 export const JANELA_EVENTOS_MS = 3_600_000
@@ -25,6 +25,7 @@ export async function processarEvento(
 
   const { db, salt, agora = new Date() } = deps
   const ipHash = hashIp(extrairIp(headers), salt)
+  await limparIpHashesDeEventosExpirados(db, agora)
   const inicio = new Date(agora.getTime() - JANELA_EVENTOS_MS)
   const [{ total }] = await db
     .select({ total: count() })
