@@ -522,5 +522,29 @@
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/eleicoes/2026/10/12/video-de-mulher-com-suposta-droga-nao-e-de-ato-pro-lula-em-sp/",
     "data_checagem": "2026-10-12"
+  },
+  {
+    "id": "cbfe2cc3",
+    "texto": "Flávio Bolsonaro interferiu, como advogado, para que um policial que matou uma criança de 5 anos com uma bala de fuzil não fosse preso.",
+    "citacao": "Você era senador da República e foi interferir para que um policial que matou uma criança de 5 anos com uma bala de fuzil não fosse preso.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), no debate da Band",
+    "veredito": "verdadeiro",
+    "explicacao": "O Aos Fatos classifica a afirmação como verdadeira: Flávio Bolsonaro defendeu, como advogado, o policial militar Bruno Dias Delaroli, acusado de matar Ana Clara Machado, de 5 anos, com dois tiros de fuzil em Niterói (RJ), em 2021. Ele passou a integrar a defesa em 2024 e assinou um recurso ao STJ para reverter a decisão de levar o caso a júri popular; o recurso foi negado e o caso ainda aguarda julgamento.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
+    "data_checagem": "2026-10-18"
+  },
+  {
+    "id": "6938e526",
+    "texto": "Quando Flávio Bolsonaro homenageou o policial Adriano da Nóbrega, ele não tinha feito nada de errado nem havia nada contra ele.",
+    "citacao": "Não tinha feito absolutamente nada de errado, não tinha nada contra ele nesta época.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), em entrevista ao Jornal Nacional",
+    "veredito": "falso",
+    "explicacao": "Aos Fatos e Lupa classificam a afirmação como falsa. As duas homenagens de Flávio a Adriano da Nóbrega na Alerj (moção de louvor em outubro de 2003 e Medalha Tiradentes em 2005) vieram depois de o policial já ter problemas com a Justiça: era investigado desde maio de 2003 pela morte de um homem numa operação e foi preso em 2004 pela morte de um flanelinha; recebeu a medalha preso. O Ministério Público o apontou como chefe dos matadores do Escritório do Crime; ele morreu em 2020 numa operação policial na Bahia.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-flavio-bolsonaro-globo/",
+    "data_checagem": "2026-08-28"
   }
 ]
