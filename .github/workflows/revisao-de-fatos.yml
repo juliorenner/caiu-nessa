@@ -70,4 +70,4 @@ jobs:
           claude_args: |
             --model ${{ inputs.modelo || 'claude-sonnet-5-5' }}
             --max-turns 150
-            --allowedTools "WebFetch,WebSearch,Read,Edit(src/data/afirmacoes.json),Write(docs/superpowers/notes/*),Bash(npm test),Bash(npx tsx scripts/verificar-fontes.ts),Bash(npx tsx scripts/validar-revisao.ts),Bash(git diff:*),Bash(git status:*),Bash(git checkout -b:*),Bash(git add:*),Bash(git commit:*),Bash(git push -u origin bot/revisao-de-fatos-:*),Bash(gh pr create:*),Bash(gh pr list:*)"
+            --allowedTools "WebFetch,WebSearch,Read,Edit(src/data/afirmacoes.json),Write(docs/superpowers/notes/*),Bash(npm test),Bash(npx tsx scripts/verificar-fontes.ts),Bash(npx tsx scripts/validar-revisao.ts),Bash(git diff:*),Bash(git status:*),Bash(git checkout -b:*),Bash(git add:*),Bash(git commit:*),Bash(git push -u origin HEAD),Bash(gh pr create:*),Bash(gh pr list:*)"

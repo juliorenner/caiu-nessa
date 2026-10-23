@@ -2,6 +2,8 @@ name: revisao-auto-merge
 
 # Só para as PRs do bot de revisão de fatos (branch bot/revisao-de-fatos-*): liga o auto-merge ao abrir,
 # corrige os apontamentos do cubic com um agente e desliga o automático se um humano pedir mudanças.
+# Os jobs com agente usam o environment `revisao`: é ele que dá ao token OIDC o subject
+# repo:juliorenner/caiu-nessa:environment:revisao, que a regra de federação aceita.
 # Spec: docs/superpowers/specs/2026-10-23-revisao-auto-merge-design.md
 on:
   pull_request:
@@ -15,27 +17,40 @@ concurrency:
   group: revisao-auto-merge-${{ github.event.pull_request.number }}
   cancel-in-progress: false
 
-env:
-  PREFIXO: bot/revisao-de-fatos-
-
 jobs:
   ligar:
+    # O auto-merge é ligado pelo app do GitHub (via agente), não pelo GITHUB_TOKEN: um merge feito pelo
+    # GITHUB_TOKEN não dispararia o deploy nem a fumaça.
     if: >-
       github.event_name == 'pull_request' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       startsWith(github.event.pull_request.head.ref, 'bot/revisao-de-fatos-')
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
+    environment: revisao
     permissions:
       contents: write
       pull-requests: write
+      id-token: write
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Ligar o auto-merge
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          PR: ${{ github.event.pull_request.number }}
-        run: gh pr merge "$PR" --auto --merge
+        uses: anthropics/claude-code-action@c3d45e8e941e1b2ad7b278c57482d9c5bf1f35b3 # v1.0.99
+        with:
+          anthropic_federation_rule_id: fdrl_01J4GZ64w9X2HVSXw7cErxy5
+          anthropic_organization_id: 5b6c432c-71c6-449f-a718-95a0399e141a
+          anthropic_service_account_id: svac_01H4CnUcDXarrhcGVYLgmywd
+          anthropic_workspace_id: wrkspc_013MoxDvUu9zKbN3BMBxPBwY
+          allowed_bots: claude[bot]
+          prompt: |
+            Rode exatamente este comando e nada mais: gh pr merge ${{ github.event.pull_request.number }} --auto --merge
+            Depois responda só "feito" ou a mensagem de erro do comando.
+          claude_args: |
+            --model claude-sonnet-5-5
+            --max-turns 3
+            --allowedTools "Bash(gh pr merge:*)"
 
   desligar:
     if: >-
@@ -65,40 +80,48 @@ jobs:
       startsWith(github.event.pull_request.head.ref, 'bot/revisao-de-fatos-')
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    environment: revisao
     permissions:
       contents: write
       pull-requests: write
       id-token: write
     steps:
+      - name: Teto de rodadas de correção
+        id: teto
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          HEAD: ${{ github.event.pull_request.head.ref }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          # Esta execução inclusa: até 2 rodadas de correção por PR. Passou disso, avisa o dono e para.
+          n=$(gh run list --workflow revisao-auto-merge.yml --event pull_request_review --branch "$HEAD" --json databaseId --jq 'length')
+          echo "rodadas=$n" >> "$GITHUB_OUTPUT"
+          if [ "$n" -gt 2 ]; then
+            echo "Já houve $n rodadas de correção neste branch: teto atingido."
+            gh pr comment "$PR" --body "@juliorenner o agente já corrigiu esta PR 2 vezes e o cubic ainda tem apontamentos; o resto fica com você. _🤖 revisao-auto-merge_"
+          fi
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.teto.outputs.rodadas <= 2
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Teto de rodadas de correção
-        id: teto
-        env:
-          BASE: ${{ github.event.pull_request.base.ref }}
-        run: |
-          # 1 commit da revisão + até 2 de correção. Passou disso, para e deixa para o dono.
-          n=$(git rev-list --count "origin/$BASE..HEAD")
-          echo "commits=$n" >> "$GITHUB_OUTPUT"
-          if [ "$n" -ge 3 ]; then echo "Já há $n commits no branch: teto de correções atingido."; fi
-
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        if: steps.teto.outputs.commits < 3
+        if: steps.teto.outputs.rodadas <= 2
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-        if: steps.teto.outputs.commits < 3
+        if: steps.teto.outputs.rodadas <= 2
 
       - name: Corrigir os apontamentos do cubic
-        if: steps.teto.outputs.commits < 3
+        if: steps.teto.outputs.rodadas <= 2
         uses: anthropics/claude-code-action@c3d45e8e941e1b2ad7b278c57482d9c5bf1f35b3 # v1.0.99
         env:
           BASE_REF: origin/${{ github.event.pull_request.base.ref }}
+          GH_REPO: ${{ github.repository }}
         with:
           anthropic_federation_rule_id: fdrl_01J4GZ64w9X2HVSXw7cErxy5
           anthropic_organization_id: 5b6c432c-71c6-449f-a718-95a0399e141a
@@ -109,7 +132,9 @@ jobs:
           prompt: |
             /corrigir-revisao
             PR: ${{ github.event.pull_request.number }}
+          # Sem gh api: o GitHub só é tocado pelo script de threads (ler, responder, resolver) e pelo push
+          # do branch atual.
           claude_args: |
             --model claude-sonnet-5-5
             --max-turns 80
-            --allowedTools "WebFetch,Read,Edit(src/data/afirmacoes.json),Write(docs/superpowers/notes/*),Bash(npm test),Bash(npx tsx scripts/verificar-fontes.ts),Bash(npx tsx scripts/validar-revisao.ts),Bash(npx tsx scripts/conferir-citacoes.ts:*),Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Bash(git push origin bot/revisao-de-fatos-:*),Bash(gh pr view:*),Bash(gh api graphql:*)"
+            --allowedTools "WebFetch,Read,Edit(src/data/afirmacoes.json),Write(docs/superpowers/notes/*),Bash(npm test),Bash(npx tsx scripts/verificar-fontes.ts),Bash(npx tsx scripts/validar-revisao.ts),Bash(npx tsx scripts/conferir-citacoes.ts:*),Bash(npx tsx scripts/threads-da-revisao.ts:*),Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Bash(git push origin HEAD)"

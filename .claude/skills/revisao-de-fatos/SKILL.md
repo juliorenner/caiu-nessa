@@ -66,7 +66,7 @@ Falha que você não consegue resolver: descarte o item novo que a causou, ou de
 - Caso contrário:
   1. Escreva `docs/superpowers/notes/AAAA-MM-DD-revisao-de-fatos.md` (data de hoje) com: como verificou, a tabela id / lado / veredito / fonte OK? / veredito bate? / mudança, e a lista de novas com fonte.
   2. `git checkout -b bot/revisao-de-fatos-AAAA-MM-DD`, `git add src/data/afirmacoes.json docs/superpowers/notes/AAAA-MM-DD-revisao-de-fatos.md`, um commit com título `revisão de fatos de <mês>/<ano>` e corpo resumindo contagens.
-  3. `git push -u origin bot/revisao-de-fatos-AAAA-MM-DD` (só branches com esse prefixo têm permissão de push).
+  3. Exatamente `git push -u origin HEAD` (o único push permitido; HEAD é o branch recém-criado).
   4. `gh pr create` com título `Revisão de fatos de <mês>/<ano>` e corpo em três listas, **Corrigidas**, **Fora do jogo** (ou de volta) e **Novas**, cada linha com id, lado, veredito e o link da fonte; depois a linha de rodapé: `🤖 PR automática da revisão mensal; revise antes de mesclar.`
 - Antes de abrir, `gh pr list --state open --json headRefName` e procure um `headRefName` começando com `bot/revisao-de-fatos-`: se já houver, não abra outra; diga isso no log.
 
