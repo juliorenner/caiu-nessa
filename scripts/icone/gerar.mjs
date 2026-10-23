@@ -1,4 +1,5 @@
-// Recolore src/app/icon.svg (tinta sobre papel) e renderiza favicon.ico (16/32/48) e apple-icon.png (180) a partir dele.
+// Recolore src/app/icon.svg (tinta sobre papel) e renderiza favicon.ico (16/32/48), apple-icon.png (180) e os ícones
+// do manifesto (public/icone-192.png e icone-512.png) a partir dele.
 // Idempotente: só grava o arquivo quando o conteúdo muda. Uso: node scripts/icone/gerar.mjs
 import { readFileSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
@@ -15,6 +16,7 @@ try {
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
 const APP = join(RAIZ, 'src', 'app')
+const PUBLIC = join(RAIZ, 'public')
 
 const TROCAS = [
   [/#be123c/gi, '#1b1540'], // rosa antigo → tinta
@@ -72,3 +74,5 @@ const svg = Buffer.from(svgTexto)
 const pngs = await Promise.all([16, 32, 48].map(async (tamanho) => ({ tamanho, png: await rasterizar(svg, tamanho) })))
 gravarSeMudou(join(APP, 'favicon.ico'), montarIco(pngs))
 gravarSeMudou(join(APP, 'apple-icon.png'), await rasterizar(svg, 180))
+// Ícones do manifesto (adicionar à tela inicial): o SVG já tem o fundo papel com cantos arredondados.
+for (const tamanho of [192, 512]) gravarSeMudou(join(PUBLIC, `icone-${tamanho}.png`), await rasterizar(svg, tamanho))
