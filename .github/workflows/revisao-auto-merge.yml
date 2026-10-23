@@ -1,0 +1,115 @@
+name: revisao-auto-merge
+
+# Só para as PRs do bot de revisão de fatos (branch bot/revisao-de-fatos-*): liga o auto-merge ao abrir,
+# corrige os apontamentos do cubic com um agente e desliga o automático se um humano pedir mudanças.
+# Spec: docs/superpowers/specs/2026-10-23-revisao-auto-merge-design.md
+on:
+  pull_request:
+    types: [opened, reopened]
+  pull_request_review:
+    types: [submitted]
+
+permissions: {}
+
+concurrency:
+  group: revisao-auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+env:
+  PREFIXO: bot/revisao-de-fatos-
+
+jobs:
+  ligar:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'bot/revisao-de-fatos-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Ligar o auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh pr merge "$PR" --auto --merge
+
+  desligar:
+    if: >-
+      github.event_name == 'pull_request_review' &&
+      github.event.review.state == 'changes_requested' &&
+      github.event.review.user.type != 'Bot' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'bot/revisao-de-fatos-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Desligar o auto-merge (um humano pediu mudanças)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh pr merge "$PR" --disable-auto
+
+  corrigir:
+    if: >-
+      github.event_name == 'pull_request_review' &&
+      github.event.review.user.login == 'cubic-dev-ai[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'bot/revisao-de-fatos-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Teto de rodadas de correção
+        id: teto
+        env:
+          BASE: ${{ github.event.pull_request.base.ref }}
+        run: |
+          # 1 commit da revisão + até 2 de correção. Passou disso, para e deixa para o dono.
+          n=$(git rev-list --count "origin/$BASE..HEAD")
+          echo "commits=$n" >> "$GITHUB_OUTPUT"
+          if [ "$n" -ge 3 ]; then echo "Já há $n commits no branch: teto de correções atingido."; fi
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: steps.teto.outputs.commits < 3
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+        if: steps.teto.outputs.commits < 3
+
+      - name: Corrigir os apontamentos do cubic
+        if: steps.teto.outputs.commits < 3
+        uses: anthropics/claude-code-action@c3d45e8e941e1b2ad7b278c57482d9c5bf1f35b3 # v1.0.99
+        env:
+          BASE_REF: origin/${{ github.event.pull_request.base.ref }}
+        with:
+          anthropic_federation_rule_id: fdrl_01J4GZ64w9X2HVSXw7cErxy5
+          anthropic_organization_id: 5b6c432c-71c6-449f-a718-95a0399e141a
+          anthropic_service_account_id: svac_01H4CnUcDXarrhcGVYLgmywd
+          anthropic_workspace_id: wrkspc_013MoxDvUu9zKbN3BMBxPBwY
+          # O ator do evento é o cubic (bot): sem isto a action recusa rodar.
+          allowed_bots: cubic-dev-ai[bot]
+          prompt: |
+            /corrigir-revisao
+            PR: ${{ github.event.pull_request.number }}
+          claude_args: |
+            --model claude-sonnet-5-5
+            --max-turns 80
+            --allowedTools "WebFetch,Read,Edit(src/data/afirmacoes.json),Write(docs/superpowers/notes/*),Bash(npm test),Bash(npx tsx scripts/verificar-fontes.ts),Bash(npx tsx scripts/validar-revisao.ts),Bash(npx tsx scripts/conferir-citacoes.ts:*),Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Bash(git push origin bot/revisao-de-fatos-:*),Bash(gh pr view:*),Bash(gh api graphql:*)"
