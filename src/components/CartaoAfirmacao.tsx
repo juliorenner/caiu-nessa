@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactElement } from 'react'
 import type { Veredito } from '@/lib/afirmacoes'
 import { inclinacao, opacidadeSelo, useArrasto } from './arrasto'
+import { IconesDoCartao } from './IconesDoCartao'
 import { CARIMBO_CARTAO, ROTULO_BOTAO, SUPERFICIE } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
@@ -35,12 +36,14 @@ export function CartaoAfirmacao({
   respostaDada,
   onResposta,
   reduzirMovimento,
+  semente,
 }: {
   afirmacao: AfirmacaoNoQuiz
   fase: FaseCartao
   respostaDada: Veredito | null
   onResposta: (v: Veredito) => void
   reduzirMovimento: boolean
+  semente: number
 }): ReactElement {
   const ativo = fase === 'ativo'
   const { handlers, dx, dy, arrastando, selo } = useArrasto({ ativo, onResposta })
@@ -77,6 +80,8 @@ export function CartaoAfirmacao({
       style={style}
       {...(ativo ? { ...handlers, onPointerDown } : {})}
     >
+      {/* Primeiro filho: o ?, as dicas, o texto (relative) e o carimbo vêm depois e pintam por cima. */}
+      <IconesDoCartao semente={semente} longo={tamanhoDoTexto(afirmacao.texto) === 'text-base'} />
       <span aria-hidden className="absolute -top-4 left-2 font-letreiro text-[72px] leading-none text-papel">
         ?
       </span>

@@ -12,6 +12,7 @@ export function PilhaDeCartoes({
   respostaDada,
   onResposta,
   reduzirMovimento,
+  semente,
 }: {
   atual: AfirmacaoNoQuiz
   proxima: AfirmacaoNoQuiz | null
@@ -19,6 +20,7 @@ export function PilhaDeCartoes({
   respostaDada: Veredito | null
   onResposta: (v: Veredito) => void
   reduzirMovimento: boolean
+  semente: number
 }): ReactElement {
   return (
     <div className="relative flex flex-1 flex-col">
@@ -34,6 +36,7 @@ export function PilhaDeCartoes({
           respostaDada={respostaDada}
           onResposta={onResposta}
           reduzirMovimento={reduzirMovimento}
+          semente={semente}
         />
       </div>
     </div>
