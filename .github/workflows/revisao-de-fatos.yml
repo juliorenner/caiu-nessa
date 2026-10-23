@@ -1,0 +1,69 @@
+name: revisao-de-fatos
+
+# Revisão mensal do banco de afirmações por um agente (Claude Code no runner): confere as checagens
+# existentes, acrescenta novas das agências aceitas e abre uma PR. Nunca faz merge: o dono revisa.
+# Spec: docs/superpowers/specs/2026-10-23-revisao-de-fatos-design.md
+on:
+  schedule:
+    # Dia 1 de cada mês, 09:00 em São Paulo.
+    - cron: '0 12 1 * *'
+  workflow_dispatch:
+    inputs:
+      modelo:
+        description: Modelo do Claude
+        default: claude-sonnet-5-5
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: revisao-de-fatos
+  cancel-in-progress: false
+
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write # branch e commit da revisão
+      pull-requests: write # a PR
+      id-token: write # token OIDC: federação com a Anthropic e autenticação do app do GitHub
+    steps:
+      - name: Já existe PR do bot aberta?
+        id: pendente
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          n=$(gh pr list --state open --search "head:bot/revisao-de-fatos-" --json number --jq 'length')
+          echo "n=$n" >> "$GITHUB_OUTPUT"
+          if [ "$n" != "0" ]; then echo "Há $n PR aberta de revisão; nada a fazer até ela ser mesclada ou fechada."; fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.pendente.outputs.n == '0'
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: steps.pendente.outputs.n == '0'
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+        if: steps.pendente.outputs.n == '0'
+
+      - name: Revisar as afirmações e abrir a PR
+        if: steps.pendente.outputs.n == '0'
+        uses: anthropics/claude-code-action@12310e4417c3473095c957cb311b3cf59a38d659 # v1.0.99
+        with:
+          # Federação de identidade: identificadores, não segredos. A regra só aceita a main deste repo.
+          anthropic_federation_rule_id: fdrl_01J4GZ64w9X2HVSXw7cErxy5
+          anthropic_organization_id: 5b6c432c-71c6-449f-a718-95a0399e141a
+          anthropic_service_account_id: svac_01H4CnUcDXarrhcGVYLgmywd
+          anthropic_workspace_id: wrkspc_013MoxDvUu9zKbN3BMBxPBwY
+          prompt: /revisao-de-fatos
+          # Lista fechada de ferramentas: ler, buscar na web, editar só o JSON, escrever só a nota,
+          # rodar só as validações e os comandos de git/gh da entrega.
+          claude_args: |
+            --model ${{ inputs.modelo || 'claude-sonnet-5-5' }}
+            --max-turns 150
+            --allowedTools "WebFetch,WebSearch,Read,Edit(src/data/afirmacoes.json),Write(docs/superpowers/notes/*),Bash(npm test),Bash(npx tsx scripts/verificar-fontes.ts),Bash(npx tsx scripts/validar-revisao.ts),Bash(git diff:*),Bash(git status:*),Bash(git checkout -b:*),Bash(git add:*),Bash(git commit:*),Bash(git push:*),Bash(gh pr create:*),Bash(gh pr list:*)"
