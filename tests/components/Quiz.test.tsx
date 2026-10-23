@@ -306,10 +306,10 @@ describe('Quiz', () => {
   })
 
   it('texto do cartão cresce em lg', () => {
-    expect(tamanhoDoTexto('x'.repeat(50))).toBe('text-2xl lg:text-[32px]')
-    expect(tamanhoDoTexto('x'.repeat(80))).toBe('text-xl lg:text-[28px]')
-    expect(tamanhoDoTexto('x'.repeat(120))).toBe('text-lg lg:text-2xl')
-    expect(tamanhoDoTexto('x'.repeat(200))).toBe('text-base lg:text-xl')
+    expect(tamanhoDoTexto('x'.repeat(50))).toBe('text-2xl lg:text-[36px]')
+    expect(tamanhoDoTexto('x'.repeat(80))).toBe('text-xl lg:text-[32px]')
+    expect(tamanhoDoTexto('x'.repeat(120))).toBe('text-lg lg:text-[28px]')
+    expect(tamanhoDoTexto('x'.repeat(200))).toBe('text-base lg:text-2xl')
   })
 
   it('a ficha do jogo traz a urna, decorativa, sem esconder o rótulo', () => {
@@ -444,7 +444,7 @@ describe('Quiz', () => {
     expect(raiz).not.toHaveClass('overflow-hidden')
     const texto = screen.getByText(maisLonga.texto)
     expect(texto).toHaveClass(tamanhoDoTexto(maisLonga.texto))
-    expect(['text-lg lg:text-2xl', 'text-base lg:text-xl']).toContain(tamanhoDoTexto(maisLonga.texto))
+    expect(['text-lg lg:text-[28px]', 'text-base lg:text-2xl']).toContain(tamanhoDoTexto(maisLonga.texto))
     for (const botao of ['Verdade', 'Mentira', 'Isso me cheira mal: enganoso'])
       expect(screen.getByRole('button', { name: botao })).toHaveClass('min-h-14')
 
