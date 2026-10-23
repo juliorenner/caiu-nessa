@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Respostas, Veredito } from '@/lib/afirmacoes'
 import { ehQuase } from '@/lib/pontuacao'
 import type { RespostaResultado } from '@/lib/resultado-api'
+import { somLigado, tocarSomDaUrna } from '@/lib/som-urna'
 import type { FaseCartao } from './CartaoAfirmacao'
 import { PainelVeredito } from './PainelVeredito'
 import { PilhaDeCartoes } from './PilhaDeCartoes'
@@ -224,6 +225,8 @@ export default function Quiz({
 
   function fechar() {
     if (etapa !== 'feedback') return
+    // Ainda dentro do gesto: depois do atraso do `depois`, o iOS bloquearia o som.
+    if (ultima && somLigado()) tocarSomDaUrna()
     // O botão do painel vai sumir: o foco volta para o quiz em vez de cair no body.
     raiz.current?.focus({ preventScroll: true })
     const seguir = () => (ultima ? void enviar(respostas) : setEstado({ etapa: 'pergunta', indice: indice + 1 }))

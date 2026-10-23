@@ -7,6 +7,7 @@ import Quiz from '@/components/Quiz'
 import { ARIA_BOTAO_RESPOSTA, ROTULO_BOTAO } from '@/components/rotulos'
 import { carregarPool, ehRodadaBalanceada, jogaveis, type Veredito } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
+import { somLigado, tocarSomDaUrna } from '@/lib/som-urna'
 import { afirmacoesValidas, rodadaDeSeis } from '../fixtures/afirmacoes-validas'
 
 const identidade = <T,>(itens: T[]) => itens
@@ -40,13 +41,19 @@ const respostaOk: RespostaResultado = {
 // A página do quiz busca estatísticas no banco; aqui basta "sem estatísticas".
 vi.mock('@/db/client', () => ({ getDb: async () => ({}) }))
 vi.mock('@/lib/estatisticas', () => ({ obterEstatisticas: async () => null }))
+// Sem Web Audio no jsdom: o som da urna é observado pelo espião.
+vi.mock('@/lib/som-urna', () => ({ tocarSomDaUrna: vi.fn(), somLigado: vi.fn(() => true) }))
 
 function movimentoReduzido(reduzir: boolean) {
   vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: reduzir }))
 }
 
 // Por padrão os testes rodam com movimento reduzido: as transições acontecem na hora.
-beforeEach(() => movimentoReduzido(true))
+beforeEach(() => {
+  movimentoReduzido(true)
+  vi.mocked(tocarSomDaUrna).mockReset()
+  vi.mocked(somLigado).mockReset().mockReturnValue(true)
+})
 
 afterEach(() => {
   vi.useRealTimers()
@@ -473,5 +480,54 @@ describe('Quiz', () => {
     const secao = (await screen.findByText('Texto da avaliação.')).closest('section')!
     expect(secao.querySelectorAll('p.text-stone-700')).toHaveLength(0)
     expect(screen.queryByText('Texto do viés.')).not.toBeInTheDocument()
+  })
+})
+
+describe('Som da urna', () => {
+  const respostaFetch = () =>
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => respostaOk }))
+
+  async function ateOUltimoPainel(user: ReturnType<typeof userEvent.setup>) {
+    for (let i = 0; i < 11; i++) {
+      await user.click(screen.getByRole('button', { name: 'Verdade' }))
+      expect(tocarSomDaUrna).not.toHaveBeenCalled()
+      await user.click(screen.getByRole('button', { name: 'Próxima' }))
+      expect(tocarSomDaUrna).not.toHaveBeenCalled()
+    }
+    await user.click(screen.getByRole('button', { name: 'Verdade' }))
+    expect(tocarSomDaUrna).not.toHaveBeenCalled()
+  }
+
+  it('toca uma vez ao clicar em "Ver meu resultado", e não antes', async () => {
+    respostaFetch()
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const user = userEvent.setup()
+    await ateOUltimoPainel(user)
+    await user.click(screen.getByRole('button', { name: 'Ver meu resultado' }))
+    expect(tocarSomDaUrna).toHaveBeenCalledTimes(1)
+    expect(await screen.findByText('Caiu feio')).toBeInTheDocument()
+    expect(tocarSomDaUrna).toHaveBeenCalledTimes(1)
+  })
+
+  it('toca uma vez com Enter no botão "Ver meu resultado" em foco', async () => {
+    respostaFetch()
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const user = userEvent.setup()
+    await ateOUltimoPainel(user)
+    screen.getByRole('button', { name: 'Ver meu resultado' }).focus()
+    await user.keyboard('{Enter}')
+    expect(tocarSomDaUrna).toHaveBeenCalledTimes(1)
+    expect(await screen.findByText('Caiu feio')).toBeInTheDocument()
+  })
+
+  it('com o som desligado, não toca', async () => {
+    vi.mocked(somLigado).mockReturnValue(false)
+    respostaFetch()
+    render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const user = userEvent.setup()
+    await ateOUltimoPainel(user)
+    await user.click(screen.getByRole('button', { name: 'Ver meu resultado' }))
+    expect(await screen.findByText('Caiu feio')).toBeInTheDocument()
+    expect(tocarSomDaUrna).not.toHaveBeenCalled()
   })
 })
