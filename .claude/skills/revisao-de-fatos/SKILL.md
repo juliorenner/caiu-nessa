@@ -30,6 +30,8 @@ Mapeamento de rótulos das agências: verdadeiro = Verdadeiro/Fato; falso = Fals
 
 Regras editoriais completas: `src/app/como-escolhemos/page.tsx`. Exemplo de uma revisão anterior: `docs/superpowers/notes/2026-10-23-auditoria-de-fatos.md`.
 
+Faça tudo você mesmo, em sequência: **não use subagentes**. O job termina quando a sua resposta termina, e trabalho delegado em segundo plano se perde (uma execução acabou com "aguardo as notificações dos subagentes" e sem PR).
+
 ## 1. Revisar o que existe
 
 Para cada item (inclusive os com `observacao`):
