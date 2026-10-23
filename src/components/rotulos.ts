@@ -24,6 +24,9 @@ export const SELO_VEREDITO = POR_VEREDITO(
   'font-letreiro text-[15px] border-[3px] rounded-md -rotate-3 self-start px-2.5 pt-1.5 pb-1',
 )
 
+// Selo do alcance em /afirmacoes: mesma forma do selo do veredito, em tinta (alcance não é veredito).
+export const SELO_ALCANCE = 'font-letreiro text-[13px] border-2 border-tinta text-tinta rounded-md self-start px-2 pt-1 pb-0.5'
+
 // Carimbo do cartão: aparece no arrasto e fica depois da resposta.
 export const CARIMBO_CARTAO = POR_VEREDITO(
   'font-letreiro text-[22px] border-4 rounded-md -rotate-[14deg] bg-white/70 mix-blend-multiply px-2.5 pt-1.5 pb-1',

@@ -60,6 +60,15 @@ describe('página /afirmacoes', () => {
     }
   })
 
+  it('mostra o selo de alcance de cada item', () => {
+    const pool = carregarPool()
+    render(<Afirmacoes />)
+    for (const a of pool) {
+      const card = screen.getAllByRole('article').find((c) => within(c).queryByText(a.texto) !== null)!
+      expect(within(card).getByText(`Alcance ${a.alcance}`), a.id).toBeInTheDocument()
+    }
+  })
+
   it('mostra os três rótulos de veredito', () => {
     render(<Afirmacoes />)
     for (const rotulo of ['Verdade', 'Mentira', 'Enganoso']) {
