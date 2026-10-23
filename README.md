@@ -57,7 +57,7 @@ node scripts/capturas.mjs             # capturas de home, quiz e resultado (celu
 GitHub Actions, em `.github/workflows/`:
 
 - **Em cada PR** (`ci.yml`): lint, tipos, testes e build; `npm audit` das dependências de produção; actionlint e zizmor nos workflows; gitleaks procurando segredos. O check `ci` só passa com tudo verde. O CodeQL (`codeql.yml`) roda no PR, em `main` e toda semana.
-- **Deploy** (`deploy.yml`): a cada push em `main` (ou manual), roda o mesmo CI e, se passar, aplica as migrações do banco e publica na Vercel. Esse é o único caminho para produção; a Vercel não está ligada ao GitHub.
+- **Deploy** (`deploy.yml`): a cada push em `main` (ou manual), roda o mesmo CI e, se passar, aplica as migrações do banco e publica na Vercel. Esse é o único caminho para produção: a integração da Vercel com o GitHub serve só para **previews** de PR (`vercel.json` desliga os deploys da `main` pela integração; o Neon cria um ramo do banco por preview, e `IP_HASH_SALT` precisa existir no ambiente Preview).
 - **Segredos**, no environment `production` do GitHub (Settings → Environments): `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` e `DATABASE_URL`. Enquanto `VERCEL_PROJECT_ID` não estiver cadastrado, o deploy é pulado com um aviso, sem falhar.
 - **Vigia semanal** (`vigia.yml`): toda quarta (ou manual) confere que home, quiz e API respondem e roda a fumaça Playwright (só leitura) contra produção; se algo falhar, abre ou atualiza a issue "Produção com problema". Para receber por e-mail também as falhas de qualquer workflow, ligue em GitHub → Settings → Notifications → Actions.
 - **Links de checagem** (`fontes.yml`): toda segunda o script `verificar-fontes` acessa cada link; se algum quebrar, abre ou atualiza a issue "Link de checagem quebrado".
