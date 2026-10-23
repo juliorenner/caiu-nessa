@@ -57,9 +57,12 @@ describe('PainelVeredito', () => {
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Ver meu resultado' }))
   })
 
-  it('painel tem rolagem interna (max-h-[85dvh] overflow-y-auto)', () => {
+  it('painel limita a altura e só o conteúdo rola; o botão fica fora da rolagem', () => {
     renderizar()
-    expect(painel()).toHaveClass('max-h-[85dvh]', 'overflow-y-auto')
+    expect(painel()).toHaveClass('max-h-[85dvh]', 'overflow-hidden')
+    const conteudo = painel().querySelector('[data-conteudo-painel]')!
+    expect(conteudo).toHaveClass('overflow-y-auto', 'min-h-0', 'flex-1')
+    expect(conteudo.contains(screen.getByRole('button', { name: /Próxima|Ver meu resultado/ }))).toBe(false)
   })
 
   it('painel tem aria-label "Veredito da afirmação"', () => {
