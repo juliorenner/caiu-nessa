@@ -82,6 +82,21 @@ describe('PainelVeredito', () => {
     expect(document.activeElement).toBe(botao)
   })
 
+  it('Enter com o foco fora do botão (no corpo ou no texto do painel) chama onFechar', () => {
+    const { onFechar } = renderizar()
+    document.body.focus()
+    fireEvent.keyDown(document.body, { key: 'Enter' })
+    expect(onFechar).toHaveBeenCalledTimes(1)
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Enter' })
+    expect(onFechar).toHaveBeenCalledTimes(2)
+  })
+
+  it('Enter no link da checagem não chama onFechar (o link já tem o seu efeito)', () => {
+    const { onFechar } = renderizar()
+    fireEvent.keyDown(screen.getByRole('link', { name: /ver a checagem/i }), { key: 'Enter' })
+    expect(onFechar).not.toHaveBeenCalled()
+  })
+
   it('Próxima chama onFechar', () => {
     const { onFechar } = renderizar()
     fireEvent.click(screen.getByRole('button', { name: 'Próxima' }))

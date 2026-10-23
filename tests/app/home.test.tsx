@@ -1,4 +1,4 @@
-import { act, cleanup, render, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import Home from '@/app/page'
 import { FocoNoComecar } from '@/components/FocoNoComecar'
@@ -65,5 +65,35 @@ describe('FocoNoComecar', () => {
   it('abaixo de lg não mexe no foco', async () => {
     await act(async () => montar(false))
     expect(document.activeElement).toBe(document.body)
+  })
+
+  it('em lg, Enter com o foco fora do link segue o link mesmo assim', async () => {
+    await act(async () => montar(true))
+    const alvo = document.getElementById('alvo') as HTMLAnchorElement
+    const clique = vi.fn((e: Event) => e.preventDefault())
+    alvo.addEventListener('click', clique)
+    document.body.focus()
+    fireEvent.keyDown(document.body, { key: 'Enter' })
+    expect(clique).toHaveBeenCalledTimes(1)
+  })
+
+  it('em lg, Enter num campo ou botão não dispara o atalho', async () => {
+    await act(async () => montar(true))
+    const alvo = document.getElementById('alvo') as HTMLAnchorElement
+    const clique = vi.fn((e: Event) => e.preventDefault())
+    alvo.addEventListener('click', clique)
+    const botao = document.createElement('button')
+    document.body.appendChild(botao)
+    fireEvent.keyDown(botao, { key: 'Enter' })
+    expect(clique).not.toHaveBeenCalled()
+  })
+
+  it('abaixo de lg, Enter não faz nada', async () => {
+    await act(async () => montar(false))
+    const alvo = document.getElementById('alvo') as HTMLAnchorElement
+    const clique = vi.fn((e: Event) => e.preventDefault())
+    alvo.addEventListener('click', clique)
+    fireEvent.keyDown(document.body, { key: 'Enter' })
+    expect(clique).not.toHaveBeenCalled()
   })
 })
