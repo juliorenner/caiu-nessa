@@ -8,7 +8,7 @@ const ORDEM: Veredito[] = ['falso', 'enganoso', 'verdadeiro']
 // Prévia decorativa da home em telas largas: um cartão de exemplo (não é afirmação do jogo) e os botões desenhados.
 export function PreviaDoCartao() {
   return (
-    <div aria-hidden className="hidden lg:block">
+    <div aria-hidden className="pointer-events-none hidden lg:block">
       <div className="relative">
         <div className={`${SUPERFICIE} absolute inset-0 rotate-[4deg] opacity-60`} />
         <div className={`${SUPERFICIE} relative flex min-h-[340px] -rotate-3 flex-col justify-between gap-4 p-8`}>

@@ -19,7 +19,7 @@ export default function Home() {
       <MarcaDagua posicao="rodape">
         <Congresso className="w-full" />
       </MarcaDagua>
-      <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-1 flex-col justify-center gap-5 px-4 py-8 lg:grid lg:max-w-5xl lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-24">
+      <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-1 flex-col justify-center gap-5 px-4 py-8 lg:grid lg:max-w-6xl lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-16">
         <div className="flex flex-col gap-5">
           <Ficha esquerda="Caiu Nessa?" direita="Insira a ficha" className="lg:max-w-[420px]" />
           <div className={`${SUPERFICIE} flex flex-col items-center gap-3 px-5 py-6`}>
@@ -40,7 +40,7 @@ export default function Home() {
                 Enter
               </Tecla>
             </Link>
-            <Link href="/como-escolhemos" className={`hidden lg:inline ${LINK_COMO_ESCOLHEMOS}`}>
+            <Link href="/como-escolhemos" className={`hidden lg:inline lg:min-w-0 ${LINK_COMO_ESCOLHEMOS}`}>
               Como escolhemos as afirmações
             </Link>
           </div>
