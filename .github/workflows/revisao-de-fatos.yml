@@ -56,6 +56,7 @@ jobs:
         if: steps.pendente.outputs.n == '0'
 
       - name: Revisar as afirmações e abrir a PR
+        id: claude
         if: steps.pendente.outputs.n == '0'
         uses: anthropics/claude-code-action@e4a6faad497d33dbc7144135c75e41f82f0bf6c0 # v1.0.255
         with:
@@ -71,3 +72,11 @@ jobs:
             --model ${{ inputs.modelo || 'claude-sonnet-5-5' }}
             --max-turns 150
             --allowedTools "WebFetch,WebSearch,Read,Edit(src/data/afirmacoes.json),Write(docs/superpowers/notes/*),Bash(npm test),Bash(npx tsx scripts/verificar-fontes.ts),Bash(npx tsx scripts/validar-revisao.ts),Bash(git diff:*),Bash(git status:*),Bash(git checkout -b:*),Bash(git add:*),Bash(git commit:*),Bash(git push -u origin HEAD),Bash(gh pr create:*),Bash(gh pr list:*)"
+
+      # A action esconde a saída do agente; em falha, mostra só a mensagem final (o motivo do erro).
+      - name: Motivo da falha
+        if: failure() && steps.claude.outputs.execution_file != ''
+        env:
+          ARQUIVO: ${{ steps.claude.outputs.execution_file }}
+        run: |
+          jq -r '.[] | select(.type == "result") | .result // (.errors | join("; ")) // "sem mensagem"' "$ARQUIVO" | head -c 2000
