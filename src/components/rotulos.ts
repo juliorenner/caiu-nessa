@@ -66,6 +66,12 @@ export const BOTAO_PRIMARIO = `${BOTAO_APERTAR} ${BOTAO_ACAO} bg-tinta text-pape
 // Ação secundária ("fantasma") ao lado do primário: mesma forma, fundo branco; no escuro, transparente com papel.
 export const BOTAO_SECUNDARIO = `${BOTAO_APERTAR} ${BOTAO_ACAO} bg-superficie text-tinta dark:bg-fundo-escuro dark:text-papel ${FOCO}`
 
+// Botões redondos da linha de compartilhar: só o ícone dentro, o rótulo fica embaixo.
+const BOTAO_ICONE_FORMA = 'flex size-[60px] shrink-0 items-center justify-center rounded-full'
+export const BOTAO_ICONE_PRIMARIO = `${BOTAO_APERTAR} ${BOTAO_ICONE_FORMA} bg-tinta text-papel dark:bg-papel dark:text-tinta ${FOCO}`
+export const BOTAO_ICONE = `${BOTAO_APERTAR} ${BOTAO_ICONE_FORMA} bg-superficie text-tinta dark:bg-fundo-escuro dark:text-papel ${FOCO}`
+export const ROTULO_ICONE = 'text-[13px] font-bold'
+
 // Botão dentro de um cartão (branco nos dois temas): sem variante escura.
 export const BOTAO_EM_CARTAO = `${APERTAR_CLARO} ${BOTAO_ACAO} bg-tinta text-papel ${FOCO_EM_SUPERFICIE}`
 

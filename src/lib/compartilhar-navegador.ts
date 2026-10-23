@@ -1,4 +1,4 @@
-// Fluxo dos botões Compartilhar placar (link) e Mandar para os stories (imagem). Detecção por recurso, não por aparelho.
+// Fluxo dos botões Mais (link, folha do sistema) e Instagram (imagem). Detecção por recurso, não por aparelho.
 export type Desfecho = 'folha' | 'copiado' | 'falhou' | 'cancelado' | 'indisponivel'
 
 // Pelo nome, não por instanceof: polyfills e erros embrulhados chegam como Error comum.
