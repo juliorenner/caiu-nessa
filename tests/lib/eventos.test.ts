@@ -14,6 +14,12 @@ describe('eventoSchema', () => {
     expect(TAMANHO_MAXIMO_DADOS).toBe(500)
   })
 
+  it('aceita inicio sem dados e rejeita dados extras nele', () => {
+    expect(eventoSchema.safeParse({ tipo: 'inicio', dados: {} }).success).toBe(true)
+    expect(eventoSchema.safeParse({ tipo: 'inicio', dados: { rodada: 1 } }).success).toBe(false)
+    expect(eventoSchema.safeParse({ tipo: 'inicio' }).success).toBe(false)
+  })
+
   it('aceita compartilhar com todo modo e resultado da lista', () => {
     for (const modo of MODOS_DE_COMPARTILHAR)
       for (const resultado of RESULTADOS_DE_COMPARTILHAR)

@@ -1,7 +1,8 @@
 import { z } from 'zod'
 
 // Única fonte dos tipos de evento: adicionar um tipo é adicionar uma entrada aqui e em DADOS_POR_TIPO.
-export const TIPOS_DE_EVENTO = ['compartilhar'] as const
+// `inicio`: primeira resposta da primeira rodada (uma partida começada); `compartilhar`: toque num botão do placar.
+export const TIPOS_DE_EVENTO = ['inicio', 'compartilhar'] as const
 export type TipoDeEvento = (typeof TIPOS_DE_EVENTO)[number]
 
 export const MODOS_DE_COMPARTILHAR = ['link', 'imagem', 'baixar', 'whatsapp'] as const
@@ -12,6 +13,7 @@ export const RESULTADOS_DE_COMPARTILHAR = ['folha', 'copiado', 'cancelado', 'fal
 export const TAMANHO_MAXIMO_DADOS = 500
 
 export const DADOS_POR_TIPO = {
+  inicio: z.strictObject({}),
   compartilhar: z.strictObject({ modo: z.enum(MODOS_DE_COMPARTILHAR), resultado: z.enum(RESULTADOS_DE_COMPARTILHAR) }),
 } satisfies Record<TipoDeEvento, z.ZodType>
 

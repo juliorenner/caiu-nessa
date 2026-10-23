@@ -1,0 +1,32 @@
+name: metricas
+
+# Totais do banco de produção (jogadas, compartilhamentos, funil começaram → concluíram → compartilharam)
+# no resumo da execução. Só leitura; o segredo DATABASE_URL é o mesmo do deploy (environment production).
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  metricas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Métricas
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          saida=$(npm run -s metricas)
+          printf '%s\n' "$saida"
+          { echo '## Métricas de produção'; echo; echo '```'; printf '%s\n' "$saida"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"

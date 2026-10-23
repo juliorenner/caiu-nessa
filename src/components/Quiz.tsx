@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import type { Respostas, Veredito } from '@/lib/afirmacoes'
+import { registrarEvento } from '@/lib/eventos-navegador'
 import { ehQuase } from '@/lib/pontuacao'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { somLigado, tocarSomDaUrna } from '@/lib/som-urna'
@@ -226,6 +227,8 @@ export default function Quiz({
   function responder(valor: Veredito) {
     if (etapa !== 'pergunta' || respondeu.current) return
     respondeu.current = true
+    // Funil: a partida conta como começada na primeira resposta da primeira rodada.
+    if (rodada === 1 && indice === 0) registrarEvento({ tipo: 'inicio', dados: {} })
     setRespostas(atual => ({ ...atual, [afirmacao.id]: valor }))
     setEstado({ etapa: 'respondendo', indice })
     depois(() => setEstado({ etapa: 'feedback', indice }))

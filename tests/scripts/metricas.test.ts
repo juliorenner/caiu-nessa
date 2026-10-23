@@ -21,7 +21,7 @@ afterEach(() => {
   fs.rmSync(dirTemp, { recursive: true, force: true })
 })
 
-it('imprime jogadas e compartilhamentos do banco em DATABASE_URL', async () => {
+it('imprime jogadas, compartilhamentos e o funil do banco em DATABASE_URL', async () => {
   const caminho = path.join(dirTemp, 'dev.pglite')
   const cliente = new PGlite(caminho)
   const db = drizzle(cliente, { schema })
@@ -30,6 +30,12 @@ it('imprime jogadas e compartilhamentos do banco em DATABASE_URL', async () => {
   await db.insert(schema.jogadas).values([
     { ...jogada, total: 8 },
     { ...jogada, total: 6 },
+  ])
+  // Dois inícios antes das jogadas: o funil conta a partir do primeiro.
+  const inicio = new Date(Date.now() - 60_000)
+  await db.insert(schema.eventos).values([
+    { tipo: 'inicio', dados: {}, createdAt: inicio },
+    { tipo: 'inicio', dados: {}, createdAt: inicio },
   ])
   await db.insert(schema.eventos).values([
     { tipo: 'compartilhar', dados: { modo: 'link', resultado: 'copiado' } },
@@ -52,5 +58,23 @@ it('imprime jogadas e compartilhamentos do banco em DATABASE_URL', async () => {
     '  imagem / cancelado: 1',
     '  link / copiado: 1',
     'compartilhamentos estimados: 2',
+    `funil desde ${inicio.toISOString().slice(0, 10)}`,
+    '  começaram: 2',
+    '  concluíram a primeira rodada: 1 (50%)',
+    '  compartilharam: 2 (200%)',
   ])
+}, 30_000)
+
+it('sem nenhum início, o funil diz que ainda não há dados', async () => {
+  const caminho = path.join(dirTemp, 'vazio.pglite')
+  const cliente = new PGlite(caminho)
+  await migrate(drizzle(cliente, { schema }), { migrationsFolder: 'drizzle' })
+  await cliente.close()
+
+  const { stdout } = await executar('node', ['scripts/metricas.mjs'], {
+    env: { ...process.env, DATABASE_URL: `file:${caminho}` },
+  })
+
+  expect(stdout).toContain('funil desde sem inícios ainda')
+  expect(stdout).toContain('  começaram: 0')
 }, 30_000)
