@@ -38,6 +38,16 @@ try {
     select dados->>'modo' as modo, dados->>'resultado' as resultado, count(*)::int as n
     from eventos where tipo = 'compartilhar'
     group by 1, 2 order by 1, 2`)
+  // Funil desde o primeiro evento `inicio` (antes dele não há como saber quantas partidas começaram).
+  const [funil] = await banco.consultar(`
+    with desde as (select min(created_at) as t from eventos where tipo = 'inicio')
+    select (select t from desde) as desde,
+           (select count(*)::int from eventos where tipo = 'inicio') as comecaram,
+           (select count(*)::int from jogadas, desde
+             where total in (${TAMANHOS_PRIMEIRA.join(', ')}) and created_at >= desde.t) as concluiram,
+           (select count(*)::int from eventos, desde
+             where tipo = 'compartilhar' and dados->>'resultado' in (${RESULTADOS_QUE_CONTAM.map(r => `'${r}'`).join(', ')})
+               and created_at >= desde.t) as compartilharam`)
   const estimados = compartilhar
     .filter(linha => RESULTADOS_QUE_CONTAM.includes(linha.resultado))
     .reduce((soma, linha) => soma + linha.n, 0)
@@ -49,6 +59,11 @@ try {
   console.log('compartilhar (modo / resultado)')
   for (const linha of compartilhar) console.log(`  ${linha.modo} / ${linha.resultado}: ${linha.n}`)
   console.log(`compartilhamentos estimados: ${estimados}`)
+  const pct = (parte, todo) => (todo ? ` (${Math.round((100 * parte) / todo)}%)` : '')
+  console.log(`funil desde ${funil.desde ? new Date(funil.desde).toISOString().slice(0, 10) : 'sem inícios ainda'}`)
+  console.log(`  começaram: ${funil.comecaram}`)
+  console.log(`  concluíram a primeira rodada: ${funil.concluiram}${pct(funil.concluiram, funil.comecaram)}`)
+  console.log(`  compartilharam: ${funil.compartilharam}${pct(funil.compartilharam, funil.concluiram)}`)
 } finally {
   await banco.fechar()
 }

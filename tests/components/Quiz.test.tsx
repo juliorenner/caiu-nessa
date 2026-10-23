@@ -7,6 +7,7 @@ import Quiz from '@/components/Quiz'
 import { ARIA_BOTAO_RESPOSTA, ROTULO_BOTAO } from '@/components/rotulos'
 import { carregarPool, ehRodadaBalanceada, jogaveis, type Veredito } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
+import { registrarEvento } from '@/lib/eventos-navegador'
 import { somLigado, tocarSomDaUrna } from '@/lib/som-urna'
 import { COMPOSICAO_PRIMEIRA, TOTAL_AFIRMACOES } from '@/lib/rodadas'
 import { afirmacoesValidas, rodadaPrimeira, rodadaDeSeis } from '../fixtures/afirmacoes-validas'
@@ -48,6 +49,7 @@ vi.mock('@/db/client', () => ({ getDb: async () => ({}) }))
 vi.mock('@/lib/estatisticas', () => ({ obterEstatisticas: async () => null }))
 // Sem Web Audio no jsdom: o som da urna é observado pelo espião.
 vi.mock('@/lib/som-urna', () => ({ tocarSomDaUrna: vi.fn(), somLigado: vi.fn(() => true) }))
+vi.mock('@/lib/eventos-navegador', () => ({ registrarEvento: vi.fn() }))
 
 function movimentoReduzido(reduzir: boolean) {
   vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: reduzir }))
@@ -225,6 +227,20 @@ describe('Quiz', () => {
     render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
     fireEvent.click(screen.getByRole('button', { name: 'Verdade' }))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('registra o evento inicio na primeira resposta da primeira rodada, uma vez só, e não nas extras', () => {
+    vi.mocked(registrarEvento).mockClear()
+    const { unmount } = render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    expect(registrarEvento).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: nomeDoBotao('verdadeiro') }))
+    expect(registrarEvento).toHaveBeenCalledTimes(1)
+    expect(registrarEvento).toHaveBeenCalledWith({ tipo: 'inicio', dados: {} })
+    unmount()
+    vi.mocked(registrarEvento).mockClear()
+    render(<Quiz {...daRodada} rodada={2} afirmacoes={rodadaDeSeis} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    fireEvent.click(screen.getByRole('button', { name: nomeDoBotao('verdadeiro') }))
+    expect(registrarEvento).not.toHaveBeenCalled()
   })
 
   it('responde por gesto e abre o painel', () => {
