@@ -1,11 +1,11 @@
 import { sql } from 'drizzle-orm'
 import type { Db } from '@/db/client'
 import { jogadas } from '@/db/schema'
-import { type Afirmacao, TOTAL_AFIRMACOES } from '@/lib/afirmacoes'
+import type { Afirmacao } from '@/lib/afirmacoes'
 import { porcentagem } from '@/lib/avaliacao'
+import { MAXIMO_ACERTOS, TOTAL_AFIRMACOES } from '@/lib/rodadas'
 
 export const MINIMO_JOGADAS = 100
-export const MAXIMO_ACERTOS = 12
 // Abaixo disso o "% erraram" de uma afirmação é ruído demais para mostrar.
 export const MINIMO_POR_AFIRMACAO = 30
 
@@ -32,20 +32,20 @@ interface LinhaAgregada {
 
 export async function obterEstatisticas(db: Db, pool: Afirmacao[]): Promise<Estatisticas | null> {
   // Um único statement: todos os agregados leem o mesmo snapshot de jogadas.
-  // Ranking, histograma e médias só comparam rodadas de 12; o erro por afirmação usa todas as rodadas.
+  // Ranking, histograma e médias só comparam primeiras rodadas (TOTAL_AFIRMACOES); o erro por afirmação usa todas.
   const resultado = await db.execute(sql`
-    with base12 as (
+    with primeiras as (
       select acertos, acertos_esquerda, acertos_direita from ${jogadas} where total = ${TOTAL_AFIRMACOES}
     ),
     todas as (
       select respostas from ${jogadas}
     )
     select
-      (select count(*) from base12)::int as total,
-      (select avg(acertos_esquerda) from base12) as media_esquerda,
-      (select avg(acertos_direita) from base12) as media_direita,
+      (select count(*) from primeiras)::int as total,
+      (select avg(acertos_esquerda) from primeiras) as media_esquerda,
+      (select avg(acertos_direita) from primeiras) as media_direita,
       (select coalesce(json_agg(json_build_object('acertos', acertos, 'quantidade', quantidade)), '[]'::json)
-        from (select acertos, count(*)::int as quantidade from base12 group by acertos) h) as histograma,
+        from (select acertos, count(*)::int as quantidade from primeiras group by acertos) h) as histograma,
       (select coalesce(json_agg(json_build_object('chave', chave, 'valor', valor, 'quantidade', quantidade)), '[]'::json)
         from (
           select kv.chave, kv.valor, count(*)::int as quantidade

@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og'
 import { CarimboImagem } from '@/app/_imagens/CarimboImagem'
 import { carregarFontes, fontesParaImagem } from '@/app/_imagens/fontes'
+import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
 import { DESCRICAO, DOMINIO, TITULO } from '@/lib/site'
 
 export const runtime = 'nodejs'
@@ -75,7 +76,7 @@ export default async function Image(): Promise<ImageResponse> {
                   color: TINTA,
                 }}
               >
-                12 afirmações da eleição. Verdade, mentira ou cheira mal?
+                {`${TOTAL_AFIRMACOES} afirmações da eleição. Verdade, mentira ou cheira mal?`}
               </div>
             </div>
           </div>

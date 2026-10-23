@@ -155,7 +155,7 @@ export function ResultadoFinal(p: {
         <Ficha esquerda="Fim de jogo" direita={`Rodada ${p.rodada}`} />
         <div className="flex flex-col items-center gap-3">
           <p className="font-letreiro text-[13px]">Placar</p>
-          {/* A barra fica só na tela; o leitor de tela ouve "4 de 12", não "4 barra 12". */}
+          {/* A barra fica só na tela; o leitor de tela ouve "4 de N", não "4 barra N". */}
           <p data-placar aria-hidden className={NUMERO_PLACAR}>
             {resultado.acertos}/{resultado.total}
           </p>
@@ -182,7 +182,7 @@ export function ResultadoFinal(p: {
             {avaliacao.vies}
           </p>
         )}
-        {/* A comparação com os outros jogadores só existe para a rodada de 12. Papel é claro nos dois temas. */}
+        {/* A comparação com os outros jogadores só existe para a rodada completa (TOTAL_AFIRMACOES). Papel é claro nos dois temas. */}
         {p.rodada === 1 && (
           <p className="border-[3px] border-tinta bg-papel p-4 text-base text-tinta">
             {estatisticasIndisponiveis

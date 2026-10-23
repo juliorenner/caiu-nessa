@@ -4,7 +4,7 @@ import { jogadas } from '@/db/schema'
 import * as estatisticas from '@/lib/estatisticas'
 import { hashIp } from '@/lib/rate-limit'
 import { processarResultado } from '@/lib/resultado-api'
-import { afirmacoesValidas, rodadaDeSeis, todasCertas } from '../fixtures/afirmacoes-validas'
+import { afirmacoesValidas, respostasCertas, rodadaDeOito, rodadaDeSeis, todasCertas } from '../fixtures/afirmacoes-validas'
 import { criarDbTeste } from '../helpers/db'
 import { inserirJogadas } from '../helpers/jogadas'
 
@@ -61,7 +61,7 @@ describe('processarResultado', () => {
   it('estatisticas e percentil presentes a partir de 100 jogadas (a jogada atual conta)', async () => {
     const d = await deps()
     await inserirJogadas(d.db, 99, () => ({ acertos: 5 }))
-    const r = await processarResultado({ respostas: todasCertas }, cab, d)
+    const r = await processarResultado({ respostas: respostasCertas(rodadaDeOito) }, cab, d)
     expect(r.status).toBe(200)
     if (r.status !== 200) return
     expect(r.body.estatisticas?.totalJogadas).toBe(100)
@@ -92,6 +92,37 @@ describe('processarResultado', () => {
     const [linha] = await d.db.select().from(jogadas)
     expect(linha.total).toBe(6)
     expect(Object.keys(linha.respostas as object).sort()).toEqual(rodadaDeSeis.map(a => a.id).sort())
+  })
+
+  it('200 para a primeira rodada de 8 (1/2/1 por lado); grava total 8', async () => {
+    const d = await deps()
+    const r = await processarResultado({ respostas: respostasCertas(rodadaDeOito) }, cab, d)
+    expect(r.status).toBe(200)
+    if (r.status !== 200) return
+    expect(r.body.resultado.total).toBe(8)
+    expect(r.body.resultado.acertos).toBe(8)
+    const [linha] = await d.db.select().from(jogadas)
+    expect(linha.total).toBe(8)
+  })
+
+  it('400 para 8 ids válidos mas desbalanceados (3 falsas num lado)', async () => {
+    const d = await deps()
+    // Troca e5 (esquerda, enganoso) por e7, uma 3ª falsa à esquerda: 8 ids jogáveis, composição errada.
+    const pool = [...afirmacoesValidas, { ...afirmacoesValidas[2], id: 'e7' }]
+    const { e5: _, ...semE5 } = respostasCertas(rodadaDeOito)
+    const r = await processarResultado({ respostas: { ...semE5, e7: 'falso' } }, cab, { ...d, pool })
+    expect(r.status).toBe(400)
+    expect(await d.db.select().from(jogadas)).toHaveLength(0)
+  })
+
+  it('rodada histórica de 12 é aceita mas não devolve percentil', async () => {
+    const d = await deps()
+    await inserirJogadas(d.db, 100, () => ({ acertos: 5 }))
+    const r = await processarResultado({ respostas: todasCertas }, cab, d)
+    expect(r.status).toBe(200)
+    if (r.status !== 200) return
+    expect(r.body.resultado.total).toBe(12)
+    expect(r.body.percentilAbaixo).toBeNull()
   })
 
   it('400 para 12 ids válidos mas desbalanceados', async () => {

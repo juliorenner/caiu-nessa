@@ -1,4 +1,5 @@
-import { PARES, type Afirmacao, type Lado, type Respostas, type Veredito } from '@/lib/afirmacoes'
+import { PARES, VEREDITOS, type Afirmacao, type Lado, type Respostas, type Veredito } from '@/lib/afirmacoes'
+import { COMPOSICAO_PRIMEIRA } from '@/lib/rodadas'
 
 function criar(id: string, lado: Lado, veredito: Veredito): Afirmacao {
   return {
@@ -15,6 +16,7 @@ function criar(id: string, lado: Lado, veredito: Veredito): Afirmacao {
   }
 }
 
+// Pool mínimo (2 por par); também é uma rodada histórica de 12.
 export const afirmacoesValidas: Afirmacao[] = [
   criar('e1', 'esquerda', 'verdadeiro'),
   criar('e2', 'esquerda', 'verdadeiro'),
@@ -37,4 +39,16 @@ export const todasCertas: Respostas = Object.fromEntries(
 // Rodada extra de 6: o primeiro item de cada par (lado, veredito), na ordem de PARES.
 export const rodadaDeSeis: Afirmacao[] = PARES.map(
   ({ lado, veredito }) => afirmacoesValidas.find((a) => a.lado === lado && a.veredito === veredito)!,
+)
+
+// Respostas todas certas para uma rodada.
+export function respostasCertas(rodada: readonly Afirmacao[]): Respostas {
+  return Object.fromEntries(rodada.map((a) => [a.id, a.veredito]))
+}
+
+// Primeira rodada de 8: os primeiros itens de cada par na quantidade de COMPOSICAO_PRIMEIRA (e1, e3, e4, e5, d1, d3, d4, d5).
+export const rodadaDeOito: Afirmacao[] = (['esquerda', 'direita'] as const).flatMap((lado) =>
+  VEREDITOS.flatMap((veredito) =>
+    afirmacoesValidas.filter((a) => a.lado === lado && a.veredito === veredito).slice(0, COMPOSICAO_PRIMEIRA[veredito]),
+  ),
 )

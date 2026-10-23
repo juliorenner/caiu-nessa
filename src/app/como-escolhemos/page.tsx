@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LINK_PAGINA, TITULO_LETREIRO } from '@/components/rotulos'
+import { COMPOSICAO_EXTRA, COMPOSICAO_PRIMEIRA, TOTAL_AFIRMACOES, descricaoDaComposicao, tamanhoDa } from '@/lib/rodadas'
 
 export const metadata: Metadata = { title: 'Como escolhemos as afirmações · Caiu Nessa?' }
 
@@ -22,8 +23,9 @@ export default function ComoEscolhemos() {
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Mesmo peso para os dois lados</h2>
       <p className="mt-2">
         Cada rodada é sorteada de um conjunto maior e tem o mesmo número de afirmações de cada lado da disputa e, em cada
-        lado, o mesmo número de verdadeiras, falsas e enganosas: a primeira rodada tem 12 afirmações (2 de cada por
-        lado), as seguintes têm 6 (1 de cada por lado). O &quot;lado&quot; de uma afirmação é
+        lado, o mesmo número de verdadeiras, falsas e enganosas: a primeira rodada tem {TOTAL_AFIRMACOES} afirmações: de
+        cada lado, {descricaoDaComposicao(COMPOSICAO_PRIMEIRA)}; as seguintes têm {tamanhoDa(COMPOSICAO_EXTRA)}, de cada
+        lado, {descricaoDaComposicao(COMPOSICAO_EXTRA)}. O &quot;lado&quot; de uma afirmação é
         definido por quem a disse ou a espalhou, conforme a agência de checagem atribui, não pelo assunto. Damos
         prioridade às afirmações que mais circularam. Durante o jogo o lado não aparece.
       </p>

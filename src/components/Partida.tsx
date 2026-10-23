@@ -7,7 +7,7 @@ import type { AfirmacaoNoQuiz } from './tipos'
 
 type Desfecho = 'ok' | 'fim' | 'falha'
 
-// Uma partida: a rodada de 12 que veio do servidor e as rodadas extras pedidas a /api/rodada.
+// Uma partida: a rodada completa (TOTAL_AFIRMACOES) que veio do servidor e as rodadas extras pedidas a /api/rodada.
 export default function Partida(p: { inicial: AfirmacaoNoQuiz[]; erroPorAfirmacao: Record<string, number> | null }) {
   const [rodada, setRodada] = useState(1)
   const [afirmacoes, setAfirmacoes] = useState(p.inicial)

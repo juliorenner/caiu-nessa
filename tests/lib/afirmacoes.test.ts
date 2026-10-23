@@ -12,6 +12,7 @@ import {
   validarPool,
   type Afirmacao,
 } from '@/lib/afirmacoes'
+import { COMPOSICAO_EXTRA, COMPOSICAO_PRIMEIRA } from '@/lib/rodadas'
 import { afirmacoesValidas } from '../fixtures/afirmacoes-validas'
 
 const OBSERVACAO = 'Agências diferentes deram vereditos diferentes para esta fala.'
@@ -24,13 +25,17 @@ describe('validarPool', () => {
     const extra = { ...afirmacoesValidas[0], id: 'e7' }
     expect(validarPool([...afirmacoesValidas, extra])).toHaveLength(13)
   })
-  it('rejeita pool com só 1 verdadeira jogável de um lado', () => {
-    const alterada = afirmacoesValidas.map(a => a.id === 'e1' ? { ...a, veredito: 'falso' as const } : a)
-    expect(() => validarPool(alterada)).toThrow(/esquerda.*verdadeiro/)
+  it('rejeita pool sem verdadeira jogável de um lado', () => {
+    const alterada = afirmacoesValidas.map(a => ['e1', 'e2'].includes(a.id) ? { ...a, veredito: 'enganoso' as const } : a)
+    expect(() => validarPool(alterada)).toThrow(/esquerda:verdadeiro tem 0, precisa de 1/)
+  })
+  it('rejeita pool com menos falsas jogáveis do que a primeira rodada pede num lado', () => {
+    const alterada = afirmacoesValidas.map(a => a.id === 'e3' ? { ...a, veredito: 'enganoso' as const } : a)
+    expect(() => validarPool(alterada)).toThrow(/esquerda:falso tem 1, precisa de 2/)
   })
   it('item com observacao não conta para o mínimo', () => {
-    const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, observacao: OBSERVACAO } : a)
-    expect(() => validarPool(alterada)).toThrow(/direita.*verdadeiro/)
+    const alterada = afirmacoesValidas.map(a => ['d1', 'd2'].includes(a.id) ? { ...a, observacao: OBSERVACAO } : a)
+    expect(() => validarPool(alterada)).toThrow(/direita:verdadeiro tem 0/)
   })
   it('rejeita id duplicado', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'e2' ? { ...a, id: 'e1' } : a)
@@ -88,25 +93,36 @@ describe('jogaveis e foraDoJogo', () => {
 })
 
 describe('sortearRodada', () => {
-  it('sorteia 2 por par (12) e nenhum fora do jogo', () => {
-    const rodada = sortearRodada(criarPool(), 2, [])!
+  it('primeira rodada: 8, com 4 por lado e 1/2/1 por lado em 50 sorteios, nenhum fora do jogo', () => {
+    const pool = criarPool()
+    for (let i = 0; i < 50; i++) {
+      const rodada = sortearRodada(pool, COMPOSICAO_PRIMEIRA, [])!
+      expect(rodada).toHaveLength(8)
+      expect(new Set(rodada.map(a => a.id)).size).toBe(8)
+      expect(rodada.every(a => a.observacao === undefined)).toBe(true)
+      expect(rodada.filter(a => a.lado === 'esquerda')).toHaveLength(4)
+      expect(rodada.filter(a => a.lado === 'direita')).toHaveLength(4)
+      expect([...contarPorPar(rodada).values()]).toEqual([1, 2, 1, 1, 2, 1])
+    }
+  })
+  it('composição histórica: 2 por par (12)', () => {
+    const rodada = sortearRodada(criarPool(), { verdadeiro: 2, falso: 2, enganoso: 2 }, [])!
     expect(rodada).toHaveLength(12)
-    expect(new Set(rodada.map(a => a.id)).size).toBe(12)
-    expect(rodada.every(a => a.observacao === undefined)).toBe(true)
     expect([...contarPorPar(rodada).values()]).toEqual([2, 2, 2, 2, 2, 2])
   })
-  it('sorteia 1 por par (6) excluindo os ids vistos', () => {
+  it('extra: 1 por par (6) excluindo os ids vistos', () => {
     const vistos = PARES.flatMap(({ lado, veredito }) => [`${lado}-${veredito}-0`, `${lado}-${veredito}-1`])
-    const rodada = sortearRodada(criarPool(), 1, vistos)!
+    const rodada = sortearRodada(criarPool(), COMPOSICAO_EXTRA, vistos)!
     expect(rodada.map(a => a.id).sort()).toEqual(PARES.map(({ lado, veredito }) => `${lado}-${veredito}-2`).sort())
   })
-  it('devolve null quando um par não tem itens suficientes (1 sobrando, porPar 2)', () => {
-    expect(sortearRodada(criarPool(), 2, ['direita-enganoso-0', 'direita-enganoso-2'])).toBeNull()
+  it('devolve null quando um par não tem itens suficientes (1 falsa sobrando, composição pede 2)', () => {
+    expect(sortearRodada(criarPool(), COMPOSICAO_PRIMEIRA, ['direita-falso-0', 'direita-falso-2'])).toBeNull()
+    expect(sortearRodada(criarPool(), COMPOSICAO_EXTRA, ['direita-falso-0', 'direita-falso-2'])).not.toBeNull()
   })
   it('é determinístico com aleatorio fixo e embaralhado na saída', () => {
     const pool = criarPool()
-    const a = sortearRodada(pool, 2, [], () => 0.3)!
-    const b = sortearRodada(pool, 2, [], () => 0.3)!
+    const a = sortearRodada(pool, COMPOSICAO_PRIMEIRA, [], () => 0.3)!
+    const b = sortearRodada(pool, COMPOSICAO_PRIMEIRA, [], () => 0.3)!
     expect(a.map(x => x.id)).toEqual(b.map(x => x.id))
     const ordemDosPares = PARES.map(({ lado, veredito }) => `${lado}:${veredito}`)
     const indices = a.map(x => ordemDosPares.indexOf(`${x.lado}:${x.veredito}`))

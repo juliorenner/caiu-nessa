@@ -5,6 +5,7 @@ import { Ficha } from '@/components/Ficha'
 import { Congresso } from '@/components/icones/Congresso'
 import { MarcaDagua } from '@/components/MarcaDagua'
 import { BOTAO_PRIMARIO, LINK_PAGINA, SUPERFICIE, TEXTO_SECUNDARIO } from '@/components/rotulos'
+import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
 
 const DICA = `font-letreiro text-[11px] leading-[1.9] text-center ${TEXTO_SECUNDARIO}`
 
@@ -20,7 +21,7 @@ export default function Home() {
           <Carimbo tamanho={72} />
           <h1 className="font-letreiro-sombra text-center text-[clamp(32px,9vw,40px)]">Caiu Nessa?</h1>
           <p className="text-center text-[17px] leading-relaxed text-secundario">
-            12 afirmações sobre a eleição. Você diz se é verdade, mentira ou se isso cheira mal. No fim, descobre em
+            {TOTAL_AFIRMACOES} afirmações sobre a eleição. Você diz se é verdade, mentira ou se isso cheira mal. No fim, descobre em
             quantas caiu.
           </p>
         </div>

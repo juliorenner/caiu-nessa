@@ -1,7 +1,8 @@
 import Partida from '@/components/Partida'
 import { getDb } from '@/db/client'
-import { type Afirmacao, carregarPool, POR_PAR_PRIMEIRA, semLado, sortearRodada } from '@/lib/afirmacoes'
+import { type Afirmacao, carregarPool, semLado, sortearRodada } from '@/lib/afirmacoes'
 import { obterEstatisticasComCache } from '@/lib/estatisticas'
+import { COMPOSICAO_PRIMEIRA } from '@/lib/rodadas'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,7 +20,7 @@ async function erroPorAfirmacao(pool: Afirmacao[]) {
 export default async function QuizPage() {
   const pool = carregarPool()
   // A rodada já sai embaralhada do sorteio.
-  const rodada = sortearRodada(pool, POR_PAR_PRIMEIRA, [])
+  const rodada = sortearRodada(pool, COMPOSICAO_PRIMEIRA, [])
   if (!rodada) throw new Error('Pool insuficiente para a primeira rodada')
   return (
     <main className="mx-auto w-full max-w-2xl flex-1">

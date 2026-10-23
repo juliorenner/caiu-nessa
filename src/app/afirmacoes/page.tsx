@@ -11,6 +11,7 @@ import {
 } from '@/components/rotulos'
 import { type Afirmacao, carregarPool, foraDoJogo, jogaveis } from '@/lib/afirmacoes'
 import { formatarData } from '@/lib/datas'
+import { COMPOSICAO_EXTRA, TOTAL_AFIRMACOES, tamanhoDa } from '@/lib/rodadas'
 
 export const metadata: Metadata = { title: 'As afirmações do jogo · Caiu Nessa?' }
 
@@ -74,8 +75,8 @@ export default function Afirmacoes() {
       </Link>
       <h1 className={`mt-6 ${TITULO_LETREIRO} text-[28px]`}>As afirmações do jogo</h1>
       <p className="mt-4">
-        Cada rodada é sorteada deste conjunto: a primeira tem 12 afirmações, as seguintes 6, sempre com o mesmo número
-        de cada lado e de cada veredito.
+        Cada rodada é sorteada deste conjunto: a primeira tem {TOTAL_AFIRMACOES} afirmações, as seguintes{' '}
+        {tamanhoDa(COMPOSICAO_EXTRA)}, sempre com o mesmo número de cada lado e o mesmo perfil de vereditos nos dois lados.
       </p>
 
       <Secao id="no-jogo" titulo="No jogo">

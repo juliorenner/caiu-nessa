@@ -10,8 +10,9 @@ import {
   urlDoCartao,
   urlDoResultado,
 } from '@/lib/cartao'
+import { TAMANHOS_ACEITOS, TOTAL_AFIRMACOES } from '@/lib/rodadas'
 
-// 4 letras 'a' em 12.
+// Link antigo de 12 (tamanho histórico, segue aceito): 4 letras 'a' em 12.
 const valido = { a: '4', t: '12', c: '3', f: 'caiu-feio', g: 'aeaeeqeaeeae' }
 
 it('aceita parâmetros válidos e converte números', () => {
@@ -26,8 +27,18 @@ it('rejeita caídas sem nenhum erro em g (só quase)', () => {
 it('aceita rodada de 6', () => {
   expect(parametrosSchema.safeParse({ a: '6', t: '6', c: '0', f: 'imune', g: 'aaaaaa' }).success).toBe(true)
 })
+it.each(TAMANHOS_ACEITOS)('aceita t = %i (tamanho aceito)', t => {
+  const g = 'a'.repeat(t)
+  expect(parametrosSchema.parse({ a: String(t), t: String(t), c: '0', f: 'imune', g })).toMatchObject({ t, g })
+})
+it('aceita a rodada completa atual (TOTAL_AFIRMACOES)', () => {
+  const g = 'e'.repeat(TOTAL_AFIRMACOES)
+  expect(parametrosSchema.safeParse({ a: '0', t: String(TOTAL_AFIRMACOES), c: '1', f: 'caiu-feio', g }).success).toBe(true)
+})
 it.each([
-  ['t fora de {6, 12}', { t: '7' }],
+  ['t fora dos tamanhos aceitos', { t: '7' }],
+  ['t não inteiro', { t: '6.5' }],
+  ['t não numérico', { t: 'doze' }],
   ['g com 5 letras a quando a=4', { g: 'aaaaaeeeeeee' }],
   ['c maior que o número de e em g', { c: '8' }],
   ['c negativo', { c: '-1' }],

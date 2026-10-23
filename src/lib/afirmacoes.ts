@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import dados from '@/data/afirmacoes.json'
+import { COMPOSICOES_ACEITAS, type Composicao, composicaoDoTamanho, MINIMO_POR_PAR } from '@/lib/rodadas'
 
 export type Lado = 'esquerda' | 'direita'
 
@@ -22,14 +23,10 @@ export interface Afirmacao {
 
 export type Respostas = Record<string, Veredito>
 
-// Tamanho da primeira rodada; só rodadas desse tamanho entram no ranking.
-export const TOTAL_AFIRMACOES = 12
-// Mínimo de itens jogáveis que o pool precisa ter em cada par (lado, veredito).
-export const POR_VEREDITO_POR_LADO = 2
 
 const LADOS: readonly Lado[] = ['esquerda', 'direita']
 
-// Um par é a combinação (lado, veredito); toda rodada tem o mesmo número de itens em cada um dos 6 pares.
+// Um par é a combinação (lado, veredito); a composição da rodada diz quantos itens cada par tem.
 export interface Par {
   lado: Lado
   veredito: Veredito
@@ -37,24 +34,31 @@ export interface Par {
 
 export const PARES: readonly Par[] = LADOS.flatMap((lado) => VEREDITOS.map((veredito) => ({ lado, veredito })))
 
-export const TAMANHOS_DE_RODADA = [12, 6] as const
-export const POR_PAR_PRIMEIRA = 2
-export const POR_PAR_EXTRA = 1
+export function chaveDoPar({ lado, veredito }: Par): string {
+  return `${lado}:${veredito}`
+}
 
 export function contarPorPar(afirmacoes: readonly Afirmacao[]): Map<string, number> {
-  const contagem = new Map<string, number>(PARES.map(({ lado, veredito }) => [`${lado}:${veredito}`, 0]))
-  for (const { lado, veredito } of afirmacoes) {
-    const chave = `${lado}:${veredito}`
+  const contagem = new Map<string, number>(PARES.map((par) => [chaveDoPar(par), 0]))
+  for (const afirmacao of afirmacoes) {
+    const chave = chaveDoPar(afirmacao)
     contagem.set(chave, (contagem.get(chave) ?? 0) + 1)
   }
   return contagem
 }
 
-export function ehRodadaBalanceada(afirmacoes: readonly Afirmacao[]): boolean {
-  if (!(TAMANHOS_DE_RODADA as readonly number[]).includes(afirmacoes.length)) return false
-  const porPar = afirmacoes.length / PARES.length
+// Balanceada = a contagem por par bate com a composição aceita de mesmo tamanho.
+export function ehRodadaBalanceada(
+  afirmacoes: readonly Afirmacao[],
+  aceitas: readonly Composicao[] = COMPOSICOES_ACEITAS,
+): boolean {
+  const composicao = composicaoDoTamanho(afirmacoes.length, aceitas)
+  if (!composicao) return false
   const contagem = contarPorPar(afirmacoes)
-  return contagem.size === PARES.length && [...contagem.values()].every((n) => n === porPar)
+  return (
+    contagem.size === PARES.length &&
+    PARES.every(({ lado, veredito }) => contagem.get(`${lado}:${veredito}`) === composicao[veredito])
+  )
 }
 
 function hostEhDominio(host: string, dominio: string): boolean {
@@ -139,13 +143,13 @@ export function validarPool(dados: unknown): Afirmacao[] {
     ids.add(id)
   }
 
-  // Cada par precisa de itens jogáveis suficientes para a primeira rodada sempre fechar.
-  const faltando = [...contarPorPar(jogaveis(pool))].filter(([, n]) => n < POR_VEREDITO_POR_LADO)
+  // Cada par precisa de itens jogáveis suficientes para qualquer rodada atual fechar.
+  const contagem = contarPorPar(jogaveis(pool))
+  const faltando = PARES.map((par) => ({ par, tem: contagem.get(chaveDoPar(par)) ?? 0, precisa: MINIMO_POR_PAR[par.veredito] }))
+    .filter(({ tem, precisa }) => tem < precisa)
   if (faltando.length) {
-    const detalhe = faltando.map(([par, n]) => `${par} tem ${n}`).join(', ')
-    throw new Error(
-      `Afirmações inválidas: cada par (lado:veredito) precisa de ao menos ${POR_VEREDITO_POR_LADO} jogáveis; ${detalhe}`,
-    )
+    const detalhe = faltando.map(({ par, tem, precisa }) => `${chaveDoPar(par)} tem ${tem}, precisa de ${precisa}`).join(', ')
+    throw new Error(`Afirmações inválidas: cada par (lado:veredito) precisa de jogáveis para a rodada; ${detalhe}`)
   }
 
   return pool
@@ -165,10 +169,10 @@ export function semLado({ lado: _lado, ...resto }: Afirmacao): AfirmacaoNoQuiz {
   return resto
 }
 
-// Sorteia `porPar` jogáveis de cada par, fora de `excluir`, e embaralha o resultado; null se algum par não fecha.
+// Sorteia `composicao[veredito]` jogáveis de cada par, fora de `excluir`, e embaralha o resultado; null se algum par não fecha.
 export function sortearRodada(
   pool: readonly Afirmacao[],
-  porPar: number,
+  composicao: Composicao,
   excluir: Iterable<string>,
   aleatorio: () => number = Math.random,
 ): Afirmacao[] | null {
@@ -176,9 +180,10 @@ export function sortearRodada(
   const disponiveis = jogaveis(pool).filter((a) => !excluidos.has(a.id))
   const sorteadas: Afirmacao[] = []
   for (const { lado, veredito } of PARES) {
+    const quantos = composicao[veredito]
     const candidatas = disponiveis.filter((a) => a.lado === lado && a.veredito === veredito)
-    if (candidatas.length < porPar) return null
-    sorteadas.push(...embaralhar(candidatas, aleatorio).slice(0, porPar))
+    if (candidatas.length < quantos) return null
+    sorteadas.push(...embaralhar(candidatas, aleatorio).slice(0, quantos))
   }
   return embaralhar(sorteadas, aleatorio)
 }

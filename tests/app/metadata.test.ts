@@ -1,5 +1,6 @@
 import { afterEach, expect, it, vi } from 'vitest'
 import { metadata } from '@/app/layout'
+import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
 import { DESCRICAO, SITE_URL } from '@/lib/site'
 
 // next/font só funciona no compilador do Next; no teste basta a variável CSS.
@@ -12,6 +13,9 @@ vi.mock('next/font/google', () => ({
 it('metadata tem OG e Twitter com base absoluta', () => {
   expect(metadata.metadataBase?.toString()).toBe(`${SITE_URL}/`)
   expect(metadata.description).toBe(DESCRICAO)
+  expect(DESCRICAO).toBe(
+    `${TOTAL_AFIRMACOES} afirmações da eleição. Verdade, mentira ou cheira mal? Descubra em quantas você caiu.`,
+  )
   expect(metadata.openGraph).toMatchObject({
     title: 'Caiu Nessa?',
     description: DESCRICAO,
