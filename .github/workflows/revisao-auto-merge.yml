@@ -37,9 +37,9 @@ jobs:
         with:
           persist-credentials: false
       - name: Ligar o auto-merge
-        uses: anthropics/claude-code-action@c3d45e8e941e1b2ad7b278c57482d9c5bf1f35b3 # v1.0.99
+        uses: anthropics/claude-code-action@e4a6faad497d33dbc7144135c75e41f82f0bf6c0 # v1.0.255
         with:
-          anthropic_federation_rule_id: fdrl_01J4GZ64w9X2HVSXw7cErxy5
+          anthropic_federation_rule_id: fdrl_012sQ6GfsDLeD93ZXqCzmmar
           anthropic_organization_id: 5b6c432c-71c6-449f-a718-95a0399e141a
           anthropic_service_account_id: svac_01H4CnUcDXarrhcGVYLgmywd
           anthropic_workspace_id: wrkspc_013MoxDvUu9zKbN3BMBxPBwY
@@ -118,12 +118,12 @@ jobs:
 
       - name: Corrigir os apontamentos do cubic
         if: steps.teto.outputs.rodadas <= 2
-        uses: anthropics/claude-code-action@c3d45e8e941e1b2ad7b278c57482d9c5bf1f35b3 # v1.0.99
+        uses: anthropics/claude-code-action@e4a6faad497d33dbc7144135c75e41f82f0bf6c0 # v1.0.255
         env:
           BASE_REF: origin/${{ github.event.pull_request.base.ref }}
           GH_REPO: ${{ github.repository }}
         with:
-          anthropic_federation_rule_id: fdrl_01J4GZ64w9X2HVSXw7cErxy5
+          anthropic_federation_rule_id: fdrl_012sQ6GfsDLeD93ZXqCzmmar
           anthropic_organization_id: 5b6c432c-71c6-449f-a718-95a0399e141a
           anthropic_service_account_id: svac_01H4CnUcDXarrhcGVYLgmywd
           anthropic_workspace_id: wrkspc_013MoxDvUu9zKbN3BMBxPBwY

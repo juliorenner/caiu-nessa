@@ -57,7 +57,7 @@ jobs:
 
       - name: Revisar as afirmações e abrir a PR
         if: steps.pendente.outputs.n == '0'
-        uses: anthropics/claude-code-action@c3d45e8e941e1b2ad7b278c57482d9c5bf1f35b3 # v1.0.99
+        uses: anthropics/claude-code-action@e4a6faad497d33dbc7144135c75e41f82f0bf6c0 # v1.0.255
         with:
           # Federação de identidade: identificadores, não segredos. A regra só aceita a main deste repo.
           anthropic_federation_rule_id: fdrl_01J4GZ64w9X2HVSXw7cErxy5
