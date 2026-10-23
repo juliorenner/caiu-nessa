@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from '@testing-library/react'
+import { act, cleanup, render, screen, within } from '@testing-library/react'
 import { afterEach, expect, it, vi } from 'vitest'
 import { SuasRespostas, type RespostaDada } from '@/components/SuasRespostas'
 
@@ -37,14 +37,40 @@ it('lista uma linha por resposta, na ordem jogada, com casa, texto e selo', () =
   expect(screen.getByRole('link', { name: 'Todas as afirmações e fontes' })).toHaveAttribute('href', '/afirmacoes')
 })
 
+// MediaQueryList falso: guarda os ouvintes de 'change' para o teste disparar.
+function telaFalsa(largo: boolean) {
+  const ouvintes = new Set<(e: { matches: boolean }) => void>()
+  vi.stubGlobal('matchMedia', (q: string) => ({
+    matches: largo && q === '(min-width: 1024px)',
+    media: q,
+    addEventListener: (_: string, f: (e: { matches: boolean }) => void) => ouvintes.add(f),
+    removeEventListener: (_: string, f: (e: { matches: boolean }) => void) => ouvintes.delete(f),
+  }))
+  return { ouvintes, mudar: (matches: boolean) => act(() => ouvintes.forEach(f => f({ matches }))) }
+}
+
 it('começa fechado quando a tela é estreita (sem matchMedia no jsdom)', () => {
   const { container } = renderizar()
   expect(container.querySelector('details')).not.toHaveAttribute('open')
-  expect(container.querySelector('summary')).toHaveClass('lg:pointer-events-none')
+  // O summary continua clicável em qualquer largura.
+  expect(container.querySelector('summary')).not.toHaveClass('lg:pointer-events-none')
 })
 
-it('abre depois de montar quando a tela é larga', () => {
-  vi.stubGlobal('matchMedia', (q: string) => ({ matches: q === '(min-width: 1024px)', media: q }))
+it('abre ao montar quando a tela é larga', () => {
+  telaFalsa(true)
   const { container } = renderizar()
   expect(container.querySelector('details')).toHaveAttribute('open')
+})
+
+it('abre quando a janela cresce até lg, e solta o ouvinte ao desmontar', () => {
+  const tela = telaFalsa(false)
+  const { container, unmount } = renderizar()
+  const details = container.querySelector('details')!
+  expect(details).not.toHaveAttribute('open')
+  tela.mudar(false)
+  expect(details).not.toHaveAttribute('open')
+  tela.mudar(true)
+  expect(details).toHaveAttribute('open')
+  unmount()
+  expect(tela.ouvintes.size).toBe(0)
 })

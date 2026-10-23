@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import type { Veredito } from '@/lib/afirmacoes'
 import type { Casa } from '@/lib/cartao'
 import { LINK_EM_CARTAO, ROTULO_VEREDITO, SELO_VEREDITO, SUPERFICIE_LISTA } from './rotulos'
@@ -20,21 +20,32 @@ const DESENHO_CASA: Record<Casa, string> = {
   erro: `${QUADRADO} bg-white bg-[repeating-linear-gradient(135deg,var(--color-tinta)_0_2px,transparent_2px_5px)]`,
   quase: `${QUADRADO} bg-white font-letreiro text-[14px] leading-none`,
 }
+// No servidor o efeito de layout não roda; useEffect evita o aviso fora do navegador.
+const useEfeitoDeLayout = typeof window === 'undefined' ? useEffect : useLayoutEffect
+
 const NOME_CASA: Record<Casa, string> = { acerto: 'Acertou', erro: 'Errou', quase: 'Quase' }
 
-// Lista das respostas da rodada. No celular fica recolhida; em lg abre ao montar e não fecha
-// (o summary não recebe clique). Superfície branca: dentro dela o texto é tinta nos dois temas.
+// Lista das respostas da rodada. No celular fica recolhida; em lg abre ao montar (e quando a janela
+// cresce até lg). Continua podendo abrir e fechar. Superfície branca: dentro dela o texto é tinta nos dois temas.
 export function SuasRespostas({ respostas, acertos, total }: { respostas: RespostaDada[]; acertos: number; total: number }) {
   const ref = useRef<HTMLDetailsElement>(null)
 
-  // matchMedia só existe no cliente: abrir no render divergiria da hidratação.
-  useEffect(() => {
-    if (window.matchMedia?.('(min-width: 1024px)')?.matches && ref.current) ref.current.open = true
+  // matchMedia só existe no cliente: abrir no render divergiria da hidratação. Efeito de layout:
+  // abre antes da primeira pintura, sem um quadro fechado em telas largas.
+  useEfeitoDeLayout(() => {
+    const largo = window.matchMedia?.('(min-width: 1024px)')
+    if (!largo) return
+    if (largo.matches && ref.current) ref.current.open = true
+    const aoMudar = (e: MediaQueryListEvent) => {
+      if (e.matches && ref.current) ref.current.open = true
+    }
+    largo.addEventListener?.('change', aoMudar)
+    return () => largo.removeEventListener?.('change', aoMudar)
   }, [])
 
   return (
     <details ref={ref} className={`${SUPERFICIE_LISTA} px-4 py-3 text-left lg:px-6 lg:py-5`}>
-      <summary className="cursor-pointer py-1 font-letreiro text-sm lg:pointer-events-none lg:flex lg:justify-between">
+      <summary className="cursor-pointer py-1 font-letreiro text-sm lg:flex lg:justify-between">
         Suas respostas <span>({acertos} de {total})</span>
       </summary>
       <ol className="mt-3">
