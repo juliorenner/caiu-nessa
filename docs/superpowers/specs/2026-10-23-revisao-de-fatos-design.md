@@ -58,3 +58,7 @@ Mensal. Estimativa (não verificada) de alguns dólares por rodada com Sonnet 5.
 ## Deixado ao construtor
 
 Texto exato do prompt (dentro das regras acima), SHA da action, nome das entradas do `workflow_dispatch`. A nota em `docs/` é escrita pelo bot (`Write` restrito à pasta).
+
+## Atualização (2026-10-23, mesmo dia)
+
+A federação de identidade autenticava (regras com o subject imutável do repositório), mas a API recusou com "Credit balance is too low": o crédito mensal da assinatura Max cobre a API e o Agent SDK, não o Claude Code, que é o que a action executa. Os três workflows com agente passaram a usar o token do Claude Code da conta do dono (`claude setup-token`), guardado como secret `CLAUDE_CODE_OAUTH_TOKEN` no ambiente `revisao`; o job mensal também entrou nesse ambiente. As regras de federação ficam no console sem uso.

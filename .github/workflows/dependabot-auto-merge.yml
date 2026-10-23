@@ -53,7 +53,7 @@ jobs:
     if: needs.classificar.outputs.tipo != 'version-update:semver-major'
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # O environment dá ao token OIDC o subject repo:juliorenner/caiu-nessa:environment:revisao (regra de federação "revisao").
+    # O ambiente `revisao` guarda o CLAUDE_CODE_OAUTH_TOKEN.
     environment: revisao
     permissions:
       contents: write
@@ -66,10 +66,8 @@ jobs:
       - name: Revisar a atualização e ligar o auto-merge
         uses: anthropics/claude-code-action@e4a6faad497d33dbc7144135c75e41f82f0bf6c0 # v1.0.255
         with:
-          anthropic_federation_rule_id: fdrl_012sQ6GfsDLeD93ZXqCzmmar
-          anthropic_organization_id: 5b6c432c-71c6-449f-a718-95a0399e141a
-          anthropic_service_account_id: svac_01H4CnUcDXarrhcGVYLgmywd
-          anthropic_workspace_id: wrkspc_013MoxDvUu9zKbN3BMBxPBwY
+          # Token do Claude Code da conta do dono (assinatura Max), guardado no ambiente `revisao`.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           allowed_bots: dependabot[bot]
           prompt: |
             Você revisa a PR ${{ github.event.pull_request.number }} do Dependabot neste repositório (tipo de atualização: ${{ needs.classificar.outputs.tipo }}; pacotes: ${{ needs.classificar.outputs.pacotes }}). Trabalhe em português.

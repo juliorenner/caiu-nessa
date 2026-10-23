@@ -27,10 +27,11 @@ jobs:
   revisar:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    environment: revisao # guarda o CLAUDE_CODE_OAUTH_TOKEN
     permissions:
       contents: write # branch e commit da revisão
       pull-requests: write # a PR
-      id-token: write # token OIDC: federação com a Anthropic e autenticação do app do GitHub
+      id-token: write # token OIDC: autenticação do app do GitHub
     steps:
       - name: Já existe PR do bot aberta?
         id: pendente
@@ -60,11 +61,8 @@ jobs:
         if: steps.pendente.outputs.n == '0'
         uses: anthropics/claude-code-action@e4a6faad497d33dbc7144135c75e41f82f0bf6c0 # v1.0.255
         with:
-          # Federação de identidade: identificadores, não segredos. A regra só aceita a main deste repo.
-          anthropic_federation_rule_id: fdrl_01J4GZ64w9X2HVSXw7cErxy5
-          anthropic_organization_id: 5b6c432c-71c6-449f-a718-95a0399e141a
-          anthropic_service_account_id: svac_01H4CnUcDXarrhcGVYLgmywd
-          anthropic_workspace_id: wrkspc_013MoxDvUu9zKbN3BMBxPBwY
+          # Token do Claude Code da conta do dono (assinatura Max), guardado no ambiente `revisao`.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: /revisao-de-fatos
           # Lista fechada de ferramentas: ler, buscar na web, editar só o JSON, escrever só a nota,
           # rodar só as validações e os comandos de git/gh da entrega.
