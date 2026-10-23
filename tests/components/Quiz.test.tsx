@@ -101,6 +101,11 @@ describe('Quiz', () => {
     // Uma casa por afirmação, na ordem jogada: tudo "Verdade" acerta só as verdadeiras.
     const casas = rodadaPrimeira.map(a => (a.veredito === 'verdadeiro' ? 'a' : 'e')).join('')
     expect(screen.getByRole('link', { name: 'Baixar imagem para os stories' }).getAttribute('href')).toContain(`g=${casas}`)
+    // A lista "Suas respostas" segue a mesma regra das casas.
+    expect(document.querySelector('summary')).toHaveTextContent(`Suas respostas (4 de ${TOTAL_AFIRMACOES})`)
+    expect(
+      [...document.querySelectorAll('[data-resposta]')].map(l => (l.getAttribute('data-resposta') === 'acerto' ? 'a' : 'e')).join(''),
+    ).toBe(casas)
   })
 
   it('esconde autor e citação na pergunta; mostra os dois no feedback', async () => {

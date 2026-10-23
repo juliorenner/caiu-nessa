@@ -160,6 +160,12 @@ export default function Quiz({
 
   if (estado.etapa === 'resultado') {
     const { resultado } = estado.dados
+    const dadas = ordem.map(a => ({
+      id: a.id,
+      texto: a.texto,
+      veredito: a.veredito,
+      casa: respostas[a.id] === a.veredito ? ('acerto' as const) : ehQuase(a.veredito, respostas[a.id]) ? ('quase' as const) : ('erro' as const),
+    }))
     return (
       <div className="px-4 py-8">
         <ResultadoFinal
@@ -169,9 +175,8 @@ export default function Quiz({
             acertos: acumuladoAnterior.acertos + resultado.acertos,
             total: acumuladoAnterior.total + resultado.total,
           }}
-          casas={ordem.map(a =>
-            respostas[a.id] === a.veredito ? 'acerto' : ehQuase(a.veredito, respostas[a.id]) ? 'quase' : 'erro',
-          )}
+          casas={dadas.map(d => d.casa)}
+          respostas={dadas}
           onContinuar={() => onContinuar({ ids: ordem.map(a => a.id), acertos: resultado.acertos, total: resultado.total })}
         />
       </div>

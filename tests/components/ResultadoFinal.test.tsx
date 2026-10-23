@@ -86,6 +86,32 @@ describe('ResultadoFinal: político em marca-d\'água', () => {
   })
 })
 
+describe('ResultadoFinal: suas respostas', () => {
+  it('sem respostas, não há lista', () => {
+    stubNavegador({})
+    const { container } = renderizar()
+    expect(container.querySelector('details')).toBeNull()
+  })
+
+  it('com respostas, a lista vem depois de "Continuar jogando" no DOM', () => {
+    stubNavegador({})
+    const { container } = render(
+      <ResultadoFinal
+        dados={dados}
+        rodada={1}
+        acumulado={{ acertos: 4, total: 12 }}
+        casas={casas}
+        respostas={[{ id: 'a1', texto: 'Uma afirmação.', veredito: 'falso', casa: 'erro' }]}
+        onContinuar={async () => 'fim'}
+      />,
+    )
+    const details = container.querySelector('details')!
+    expect(details.querySelector('summary')).toHaveTextContent('Suas respostas (4 de 12)')
+    const continuar = screen.getByRole('button', { name: 'Continuar jogando' })
+    expect(continuar.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+})
+
 describe('ResultadoFinal: compartilhar', () => {
   it('busca a imagem dos stories ao montar', async () => {
     stubNavegador({})
