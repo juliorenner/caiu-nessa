@@ -13,10 +13,10 @@ export type FaseCartao = 'ativo' | 'respondido' | 'saindo'
 
 // Com o cartão ocupando a altura, frases curtas ganham um degrau a mais (24 px); em lg, cada degrau sobe 8 px.
 export function tamanhoDoTexto(texto: string): string {
-  if (texto.length <= 60) return 'text-2xl lg:text-[32px]'
-  if (texto.length <= 90) return 'text-xl lg:text-[28px]'
-  if (texto.length <= 160) return 'text-lg lg:text-2xl'
-  return 'text-base lg:text-xl'
+  if (texto.length <= 60) return 'text-2xl lg:text-[36px]'
+  if (texto.length <= 90) return 'text-xl lg:text-[32px]'
+  if (texto.length <= 160) return 'text-lg lg:text-[28px]'
+  return 'text-base lg:text-2xl'
 }
 
 export const CARTAO_BASE = `p-5 lg:p-12 ${SUPERFICIE}`
