@@ -10,6 +10,7 @@ import {
 } from "@/lib/cartao";
 import { NOME_ARQUIVO, textoDeCompartilhar } from "@/lib/compartilhar";
 import { buscarArquivo, compartilhar } from "@/lib/compartilhar-navegador";
+import { registrarEvento } from "@/lib/eventos-navegador";
 import type { RespostaResultado } from "@/lib/resultado-api";
 import { SITE_URL, TITULO } from "@/lib/site";
 import { Ficha } from "./Ficha";
@@ -125,6 +126,7 @@ export function ResultadoFinal(p: {
       titulo: TITULO,
       arquivo,
     }).then((desfecho) => {
+      registrarEvento({ tipo: "compartilhar", dados: { modo, resultado: desfecho } });
       // A folha abriu: um aviso de toque anterior já não vale.
       if (desfecho === "folha") mostrar(null);
       else if (desfecho === "copiado") mostrar("copiado");
@@ -213,6 +215,9 @@ export function ResultadoFinal(p: {
         <a
           download={NOME_ARQUIVO}
           href={urlCartao}
+          onClick={() =>
+            registrarEvento({ tipo: "compartilhar", dados: { modo: "baixar", resultado: "clique" } })
+          }
           className={`self-center text-base ${LINK_PAGINA}`}
         >
           Baixar imagem para os stories

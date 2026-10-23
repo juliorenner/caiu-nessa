@@ -280,3 +280,42 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(screen.queryByText(/Acertei/)).not.toBeInTheDocument()
   })
 })
+
+describe('ResultadoFinal: registra cada compartilhar', () => {
+  // Corpos dos POSTs para /api/evento; o fetch da imagem pré-buscada fica de fora.
+  const eventosEnviados = () =>
+    vi
+      .mocked(fetch)
+      .mock.calls.filter(([url]) => url === '/api/evento')
+      .map(([, init]) => JSON.parse(String(init?.body)))
+
+  it('Compartilhar placar copiado: registra link/copiado', async () => {
+    stubNavegador({ writeText: vi.fn().mockResolvedValue(undefined) })
+    renderizar()
+    await assentar()
+    fireEvent.click(botao())
+    await waitFor(() => expect(aviso()).toHaveTextContent('Texto copiado'))
+    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'link', resultado: 'copiado' } }])
+  })
+
+  it('Mandar para os stories cancelado: registra imagem/cancelado e o aviso fica vazio', async () => {
+    stubNavegador({ share: vi.fn().mockRejectedValue(new DOMException('fechou', 'AbortError')), canShare: () => true })
+    renderizar()
+    await assentar()
+    fireEvent.click(stories())
+    await waitFor(() => expect(eventosEnviados()).toHaveLength(1))
+    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'imagem', resultado: 'cancelado' } }])
+    expect(aviso()).toHaveTextContent(/^$/)
+  })
+
+  it('Baixar imagem para os stories: registra baixar/clique', async () => {
+    stubNavegador({})
+    renderizar()
+    await assentar()
+    const link = screen.getByRole('link', { name: 'Baixar imagem para os stories' })
+    // jsdom não navega: o clique só precisa chegar ao handler.
+    link.addEventListener('click', e => e.preventDefault())
+    fireEvent.click(link)
+    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'baixar', resultado: 'clique' } }])
+  })
+})
