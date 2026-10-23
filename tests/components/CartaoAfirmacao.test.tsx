@@ -33,7 +33,7 @@ function cartao() {
 describe('CartaoAfirmacao', () => {
   it('arrastar para a direita além do limiar chama onResposta(verdadeiro)', () => {
     const onResposta = vi.fn()
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={onResposta} reduzirMovimento={false} />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={onResposta} reduzirMovimento={false} semente={0} />)
     fireEvent.pointerDown(cartao(), ponteiro(10, 10))
     fireEvent.pointerMove(cartao(), ponteiro(140, 12))
     fireEvent.pointerUp(cartao(), ponteiro(140, 12))
@@ -42,7 +42,7 @@ describe('CartaoAfirmacao', () => {
 
   it('mostra o selo Mentira enquanto arrasta para a esquerda', () => {
     const { container } = render(
-      <CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} />,
+      <CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={0} />,
     )
     fireEvent.pointerDown(cartao(), ponteiro(200, 10))
     fireEvent.pointerMove(cartao(), ponteiro(120, 10))
@@ -56,7 +56,7 @@ describe('CartaoAfirmacao', () => {
   it('toque sem arrasto não responde e não mostra selo', () => {
     const onResposta = vi.fn()
     const { container } = render(
-      <CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={onResposta} reduzirMovimento={false} />,
+      <CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={onResposta} reduzirMovimento={false} semente={0} />,
     )
     fireEvent.pointerDown(cartao(), ponteiro(10, 10))
     fireEvent.pointerMove(cartao(), ponteiro(13, 12))
@@ -68,7 +68,7 @@ describe('CartaoAfirmacao', () => {
   it('fase respondido ignora gestos e mantém o selo da resposta', () => {
     const onResposta = vi.fn()
     const { container } = render(
-      <CartaoAfirmacao afirmacao={afirmacao} fase="respondido" respostaDada="enganoso" onResposta={onResposta} reduzirMovimento={false} />,
+      <CartaoAfirmacao afirmacao={afirmacao} fase="respondido" respostaDada="enganoso" onResposta={onResposta} reduzirMovimento={false} semente={0} />,
     )
     fireEvent.pointerDown(cartao(), ponteiro(10, 10))
     fireEvent.pointerMove(cartao(), ponteiro(200, 10))
@@ -82,7 +82,7 @@ describe('CartaoAfirmacao', () => {
   })
 
   it('arrasto não tem transição: o cartão segue o dedo', () => {
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={0} />)
     fireEvent.pointerDown(cartao(), ponteiro(10, 10))
     fireEvent.pointerMove(cartao(), ponteiro(60, 10))
     expect(cartao()).not.toHaveClass('transition-transform')
@@ -90,7 +90,7 @@ describe('CartaoAfirmacao', () => {
   })
 
   it('soltar aquém do limiar volta ao centro com mola curta (transição só fora do arrasto)', () => {
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={0} />)
     fireEvent.pointerDown(cartao(), ponteiro(10, 10))
     fireEvent.pointerMove(cartao(), ponteiro(60, 10))
     expect(cartao()).not.toHaveClass('transition-transform')
@@ -100,7 +100,7 @@ describe('CartaoAfirmacao', () => {
   })
 
   it('reduzirMovimento: soltar aquém do limiar não anima', () => {
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento semente={0} />)
     fireEvent.pointerDown(cartao(), ponteiro(10, 10))
     fireEvent.pointerMove(cartao(), ponteiro(60, 10))
     fireEvent.pointerUp(cartao(), ponteiro(60, 10))
@@ -108,17 +108,17 @@ describe('CartaoAfirmacao', () => {
   })
 
   it('enganoso saindo: voa para cima ainda inclinado', () => {
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="saindo" respostaDada="enganoso" onResposta={vi.fn()} reduzirMovimento={false} />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="saindo" respostaDada="enganoso" onResposta={vi.fn()} reduzirMovimento={false} semente={0} />)
     expect(cartao().style.transform).toBe('translateY(-120%) rotate(-6deg)')
   })
 
   it('reduzirMovimento: enganoso respondido sem transform', () => {
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="respondido" respostaDada="enganoso" onResposta={vi.fn()} reduzirMovimento />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="respondido" respostaDada="enganoso" onResposta={vi.fn()} reduzirMovimento semente={0} />)
     expect(cartao().style.transform).toBe('')
   })
 
   it('dicas de gesto ficam nas bordas do cartão, fora da árvore acessível', () => {
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={() => {}} reduzirMovimento />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={() => {}} reduzirMovimento semente={0} />)
     for (const t of ['← Mentira', '↑ Cheira mal', 'Verdade →']) expect(screen.getByText(t)).toHaveAttribute('aria-hidden', 'true')
   })
 
@@ -130,26 +130,26 @@ describe('CartaoAfirmacao', () => {
   })
 
   it('saindo: classe de transição e voo para fora no eixo da resposta', () => {
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="saindo" respostaDada="falso" onResposta={vi.fn()} reduzirMovimento={false} />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="saindo" respostaDada="falso" onResposta={vi.fn()} reduzirMovimento={false} semente={0} />)
     expect(cartao()).toHaveClass('transition-transform')
     expect(cartao().style.transform).toContain('translateX(-120%)')
   })
 
   it('reduzirMovimento: arrasto translada sem rotate', () => {
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento semente={0} />)
     fireEvent.pointerDown(cartao(), ponteiro(10, 10))
     fireEvent.pointerMove(cartao(), ponteiro(60, 10))
     expect(cartao().style.transform).toBe('translate(50px, 0px)')
   })
 
   it('reduzirMovimento: respondido sem transform, sem rotate e sem transição', () => {
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="respondido" respostaDada="verdadeiro" onResposta={vi.fn()} reduzirMovimento />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="respondido" respostaDada="verdadeiro" onResposta={vi.fn()} reduzirMovimento semente={0} />)
     expect(cartao().style.transform).toBe('')
     expect(cartao()).not.toHaveClass('transition-transform')
   })
 
   it('reduzirMovimento: sem classes de transição e sem rotate', () => {
-    render(<CartaoAfirmacao afirmacao={afirmacao} fase="saindo" respostaDada="verdadeiro" onResposta={vi.fn()} reduzirMovimento />)
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="saindo" respostaDada="verdadeiro" onResposta={vi.fn()} reduzirMovimento semente={0} />)
     expect(cartao()).not.toHaveClass('transition-transform')
     expect(cartao().style.transform).not.toContain('rotate(')
   })
@@ -158,7 +158,7 @@ describe('CartaoAfirmacao', () => {
 describe('PilhaDeCartoes', () => {
   it('pilha: o próximo cartão está atrás, sem texto e aria-hidden', () => {
     const { container } = render(
-      <PilhaDeCartoes atual={afirmacao} proxima={proxima} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} />,
+      <PilhaDeCartoes atual={afirmacao} proxima={proxima} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={0} />,
     )
     const fundo = container.querySelector<HTMLElement>('[data-verso]')
     expect(fundo).not.toBeNull()
@@ -170,10 +170,38 @@ describe('PilhaDeCartoes', () => {
     expect(screen.queryByText(proxima.texto)).toBeNull()
   })
 
+  it('pilha: só o cartão atual tem ícones; o verso não', () => {
+    const { container } = render(
+      <PilhaDeCartoes atual={afirmacao} proxima={proxima} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={3} />,
+    )
+    expect(container.querySelector('[data-verso] [data-icones-cartao]')).toBeNull()
+    expect(cartao().querySelector('[data-icones-cartao]')).not.toBeNull()
+  })
+
   it('pilha: sem próxima, sem cartão de fundo', () => {
     const { container } = render(
-      <PilhaDeCartoes atual={afirmacao} proxima={null} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} />,
+      <PilhaDeCartoes atual={afirmacao} proxima={null} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={0} />,
     )
     expect(container.querySelector('[data-verso]')).toBeNull()
+  })
+})
+
+describe('CartaoAfirmacao: ícones', () => {
+  it('texto curto: camada com 4 a 9 ícones, antes do texto', () => {
+    expect(tamanhoDoTexto(afirmacao.texto)).not.toBe('text-base')
+    render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={0} />)
+    const camada = cartao().querySelector('[data-icones-cartao]')
+    expect(camada).not.toBeNull()
+    expect(cartao().firstElementChild).toBe(camada)
+    const n = camada!.querySelectorAll('svg').length
+    expect(n).toBeGreaterThanOrEqual(4)
+    expect(n).toBeLessThanOrEqual(9)
+  })
+
+  it('texto longo (> 160): exatamente 4 ícones', () => {
+    const longa = { ...afirmacao, texto: 'Uma afirmação bem comprida. '.repeat(7) }
+    expect(longa.texto.length).toBeGreaterThan(160)
+    render(<CartaoAfirmacao afirmacao={longa} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={5} />)
+    expect(cartao().querySelectorAll('[data-icones-cartao] svg')).toHaveLength(4)
   })
 })

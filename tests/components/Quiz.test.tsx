@@ -258,6 +258,18 @@ describe('Quiz', () => {
     expect(screen.getByText('Ficha 01/12')).toBeInTheDocument()
   })
 
+  it('ícones do cartão mudam de uma rodada para outra', () => {
+    const icones = (rodada: number) => {
+      const { container, unmount } = render(
+        <Quiz {...daRodada} rodada={rodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />,
+      )
+      const html = container.querySelector('[data-icones-cartao]')!.innerHTML
+      unmount()
+      return html
+    }
+    expect(icones(1)).not.toBe(icones(2))
+  })
+
   it('carimbos de progresso acompanham acerto e erro', async () => {
     const user = userEvent.setup()
     const { container } = render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
