@@ -1,11 +1,12 @@
 import { readFileSync } from 'node:fs'
-import { validarPool, type Afirmacao } from '../src/lib/afirmacoes'
+import { jogaveis, validarPool, type Afirmacao } from '../src/lib/afirmacoes'
 
 function lerJson(caminho: string): unknown {
   return JSON.parse(readFileSync(new URL(caminho, import.meta.url), 'utf-8'))
 }
 
-const afirmacoes: Afirmacao[] = validarPool(lerJson('../src/data/afirmacoes.json'))
+// Só os itens em jogo: um fora do jogo (com `observacao`) pode ter a checagem retirada do ar, e isso não é falha.
+const afirmacoes: Afirmacao[] = jogaveis(validarPool(lerJson('../src/data/afirmacoes.json')))
 
 let falhou = false
 for (const { id, fonte_url } of afirmacoes) {

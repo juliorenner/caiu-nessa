@@ -52,3 +52,19 @@ it.each(REGRAS_TEXTO_NEUTRO)('texto neutro: %s', (_regra, proibido) => {
   const violacoes = todasAsAfirmacoes.filter((a) => proibido.test(a.texto)).map((a) => `${a.id}: ${a.texto}`)
   expect(violacoes).toEqual([])
 })
+
+// A agência declarada é a dona da URL: pega "fonte_nome" trocado numa revisão.
+const DOMINIO_DA_AGENCIA: Record<string, RegExp> = {
+  'Aos Fatos': /(^|\.)aosfatos\.org$/,
+  Lupa: /(^|\.)agencialupa\.org$|^lupa\.uol\.com\.br$/,
+  Comprova: /(^|\.)projetocomprova\.com\.br$/,
+  'G1 Fato ou Fake': /^g1\.globo\.com$/,
+  'Estadão Verifica': /(^|\.)estadao\.com\.br$/,
+}
+it('fonte_nome é uma das cinco agências e bate com o domínio de fonte_url', () => {
+  for (const a of todasAsAfirmacoes) {
+    const dominio = DOMINIO_DA_AGENCIA[a.fonte_nome]
+    expect(dominio, `${a.id}: fonte_nome "${a.fonte_nome}"`).toBeDefined()
+    expect(new URL(a.fonte_url).hostname, `${a.id}: ${a.fonte_url}`).toMatch(dominio)
+  }
+})
