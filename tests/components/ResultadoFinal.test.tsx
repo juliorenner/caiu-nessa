@@ -193,6 +193,20 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(share).not.toHaveBeenCalled()
   })
 
+  it('aviso de carregando some quando a imagem chega', async () => {
+    let resolver: (v: unknown) => void = () => {}
+    vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(r => (resolver = r))))
+    stubNavegador({ share: vi.fn().mockResolvedValue(undefined), canShare: vi.fn().mockReturnValue(true) })
+    renderizar()
+    await assentar()
+    fireEvent.click(stories())
+    await waitFor(() => expect(aviso()).toHaveTextContent('Imagem ainda carregando…'))
+    await act(async () => {
+      resolver({ ok: true, blob: async () => new Blob(['png']) })
+    })
+    await waitFor(() => expect(aviso()).toHaveTextContent(''))
+  })
+
   it('stories recusado: Não deu para mandar a imagem, sem copiar', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     const share = vi.fn().mockRejectedValue(new DOMException('negado', 'NotAllowedError'))

@@ -59,7 +59,10 @@ export function ResultadoFinal(p: {
   useEffect(() => {
     let montado = true
     void buscarArquivo(urlCartao, NOME_ARQUIVO).then(f => {
-      if (montado) setArquivo(f)
+      if (!montado) return
+      setArquivo(f)
+      // Quem tocou em "Mandar para os stories" cedo demais viu "carregando": some quando a imagem chega.
+      if (f) setAviso(atual => (atual === 'carregando' ? null : atual))
     })
     return () => {
       montado = false
