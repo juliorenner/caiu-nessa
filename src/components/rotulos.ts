@@ -78,6 +78,14 @@ export const LINK_PAGINA = `rounded font-medium text-tinta underline underline-o
 // Texto secundário sobre o fundo da página.
 export const TEXTO_SECUNDARIO = 'text-secundario dark:text-secundario-escuro'
 
+// Número grande do placar: letreiro com sombra em camadas (papel e tinta; trocam no escuro).
+export const NUMERO_PLACAR =
+  'font-letreiro text-[clamp(56px,18vw,72px)] leading-none text-tinta dark:text-papel [text-shadow:4px_4px_0_var(--color-papel),6px_6px_0_var(--color-tinta)] dark:[text-shadow:4px_4px_0_var(--color-tinta),6px_6px_0_var(--color-papel)]'
+
+// Carimbo tinta da faixa: não é cor de veredito, a faixa não é juízo de valor colorido.
+export const CARIMBO_FAIXA =
+  'font-letreiro text-base border-[3px] border-tinta dark:border-papel rounded-md -rotate-3 inline-block px-3 pt-1.5 pb-1'
+
 // h1/h2 das páginas de texto.
 export const TITULO_LETREIRO = 'font-letreiro text-tinta dark:text-papel'
 
