@@ -61,12 +61,21 @@ describe('página /afirmacoes', () => {
   })
 
   it('mostra o selo de alcance de cada item', () => {
+    // Uma passada só: com 180 itens, procurar cada texto dentro de cada card estourava o tempo do teste.
     const pool = carregarPool()
     render(<Afirmacoes />)
-    for (const a of pool) {
-      const card = screen.getAllByRole('article').find((c) => within(c).queryByText(a.texto) !== null)!
-      expect(within(card).getByText(`Alcance ${a.alcance}`), a.id).toBeInTheDocument()
+    const cards = screen.getAllByRole('article')
+    expect(cards).toHaveLength(pool.length)
+    const esperado = new Map<number, number>()
+    for (const a of pool) esperado.set(a.alcance, (esperado.get(a.alcance) ?? 0) + 1)
+    const encontrado = new Map<number, number>()
+    for (const card of cards) {
+      const selos = within(card).getAllByText(/^Alcance [123]$/)
+      expect(selos).toHaveLength(1)
+      const n = Number(selos[0].textContent!.replace('Alcance ', ''))
+      encontrado.set(n, (encontrado.get(n) ?? 0) + 1)
     }
+    expect(encontrado).toEqual(esperado)
   })
 
   it('mostra os três rótulos de veredito', () => {
