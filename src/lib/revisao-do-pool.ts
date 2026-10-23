@@ -16,8 +16,8 @@ function validarOuProblema(dados: unknown): { pool: Afirmacao[] } | { problema: 
 }
 
 // Compara o pool de antes (a main) com o de depois (a revisão). Devolve a lista de problemas; vazia = ok.
-// Nenhum item pode sumir (sair do jogo é marcar `observacao`), ids novos têm 8 hexadecimais e o volume
-// de novas respeita os limites. Mudanças em itens existentes passam: quem as julga é a revisão humana da PR.
+// Nenhum item pode sumir (sair do jogo é marcar `observacao`), nenhum muda de lado, ids novos têm 8 hexadecimais
+// e o volume de novas respeita os limites. Outras mudanças em itens existentes passam: quem as julga é a revisão da PR.
 export function compararPools(antes: unknown, depois: unknown, limites: LimitesDaRevisao = LIMITES_DA_REVISAO): string[] {
   const a = validarOuProblema(antes)
   if ('problema' in a) return [`pool de antes: ${a.problema}`]
@@ -28,8 +28,13 @@ export function compararPools(antes: unknown, depois: unknown, limites: LimitesD
   const idsDepois = new Set(d.pool.map((x) => x.id))
   for (const { id } of a.pool) if (!idsDepois.has(id)) problemas.push(`removido: ${id}`)
 
-  const idsAntes = new Set(a.pool.map((x) => x.id))
-  const novas = d.pool.filter((x) => !idsAntes.has(x.id))
+  const ladoAntes = new Map(a.pool.map((x) => [x.id, x.lado]))
+  for (const x of d.pool) {
+    const lado = ladoAntes.get(x.id)
+    if (lado !== undefined && lado !== x.lado) problemas.push(`lado mudou: ${x.id}`)
+  }
+
+  const novas = d.pool.filter((x) => !ladoAntes.has(x.id))
   for (const { id } of novas) if (!FORMATO_DE_ID.test(id)) problemas.push(`id inválido: ${id}`)
 
   if (novas.length > limites.novasPorRodada) problemas.push(`${novas.length} novas, limite ${limites.novasPorRodada}`)

@@ -29,10 +29,12 @@ O Julio quer que o banco de afirmações (`src/data/afirmacoes.json`) seja revis
 - `on: schedule` (`0 12 1 * *`) e `workflow_dispatch` (entrada opcional `modelo`, padrão `claude-sonnet-5-5`).
 - `permissions`: `contents: write`, `pull-requests: write`, `id-token: write`.
 - `concurrency` por workflow, sem cancelar o que está rodando.
-- Passos: checkout (`persist-credentials: false`), Node pelo `.nvmrc`, `npm ci`, e `anthropics/claude-code-action` com SHA fixo, a federação OIDC em vez de `anthropic_api_key`, `prompt: /revisao-de-fatos` e `claude_args` com `--model`, `--max-turns` e a lista fechada de ferramentas: `WebFetch`, `WebSearch`, `Read`, `Edit(src/data/afirmacoes.json)`, `Write(docs/superpowers/notes/*)` (as regras de permissão do Claude Code aceitam caminho entre parênteses: o bot só edita o JSON e só escreve a nota), `Bash(npm test)`, `Bash(npx tsx scripts/verificar-fontes.ts)`, `Bash(npx tsx scripts/validar-revisao.ts)`, `Bash(git diff:*)`, `Bash(git checkout -b:*)`, `Bash(git add:*)`, `Bash(git commit:*)`, `Bash(git push:*)`, `Bash(gh pr create:*)`, `Bash(gh pr list:*)`.
+- Passos: checkout (`persist-credentials: false`), Node pelo `.nvmrc`, `npm ci`, e `anthropics/claude-code-action` com SHA fixo, a federação OIDC em vez de `anthropic_api_key`, `prompt: /revisao-de-fatos` e `claude_args` com `--model`, `--max-turns` e a lista fechada de ferramentas: `WebFetch`, `WebSearch`, `Read`, `Edit(src/data/afirmacoes.json)`, `Write(docs/superpowers/notes/*)` (as regras de permissão do Claude Code aceitam caminho entre parênteses: o bot só edita o JSON e só escreve a nota), `Bash(npm test)`, `Bash(npx tsx scripts/verificar-fontes.ts)`, `Bash(npx tsx scripts/validar-revisao.ts)`, `Bash(git diff:*)`, `Bash(git status:*)`, `Bash(git checkout -b:*)`, `Bash(git add:*)`, `Bash(git commit:*)`, `Bash(git push -u origin bot/revisao-de-fatos-:*)` (só branches do bot), `Bash(gh pr create:*)`, `Bash(gh pr list:*)`.
 - `timeout-minutes: 45`.
 - Antes de chamar o agente, um passo com `gh pr list` procura PR aberta de `bot/revisao-de-fatos-*`; se houver, o job termina sem rodar o agente (guarda fora do prompt). *(Decisão do controlador.)*
 - Autenticação no GitHub: pelo app "Claude" do GitHub instalado no repo, que a action usa por padrão e com o qual configura o `git push` (a PR aberta por ele dispara o CI; com o `GITHUB_TOKEN` padrão não dispara, e os checks obrigatórios da `main` nunca rodariam). O workflow não recebe `github_token`. Se o Julio preferir um token pessoal, é uma linha a mais (`github_token: ${{ secrets.BOT_GITHUB_TOKEN }}`) numa PR futura. *(Decisão do controlador: só o app; o Julio instala.)*
+- O `modelo` do disparo manual é `type: choice` (Sonnet 5.5 ou Opus 5.5): nada de texto livre indo parar nos argumentos do agente.
+- `scripts/verificar-fontes.ts` passa a conferir só os itens em jogo: um item fora do jogo pode ter a checagem retirada do ar sem bloquear a revisão nem a verificação semanal. O validador também recusa mudança de `lado` em item existente.
 - Autenticação na Anthropic: federação de identidade (OIDC do GitHub Actions), sem chave estática, conforme o Julio pediu; os detalhes de configuração (Console e entradas da action) ficam no plano.
 
 **Skill `.claude/skills/revisao-de-fatos/SKILL.md`** (o prompt)
@@ -45,7 +47,7 @@ O Julio quer que o banco de afirmações (`src/data/afirmacoes.json`) seja revis
 
 **Guardas fora do prompt**
 
-- A lista de ferramentas limita o bot a ler, buscar na web, editar e rodar os dois comandos de validação; nada de `rm`, `npm install` ou push na `main` (a proteção da `main` barra push direto de qualquer forma).
+- A lista de ferramentas limita o bot a ler, buscar na web, editar e rodar os três comandos de validação; nada de `rm`, `npm install` ou push na `main` (a proteção da `main` barra push direto de qualquer forma).
 - A PR passa pelo CI normal (lint, testes, build, e2e), pelo CodeQL e pelo cubic.
 - `tests/data/afirmacoes-reais.test.ts` é o contrato: tudo que o bot escrever precisa passar nele.
 

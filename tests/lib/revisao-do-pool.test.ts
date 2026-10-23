@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Afirmacao } from '@/lib/afirmacoes'
-import { compararPools, LIMITES_DA_REVISAO } from '@/lib/revisao-do-pool'
+import { compararPools, LIMITES_DA_REVISAO, resumirRevisao } from '@/lib/revisao-do-pool'
 import { afirmacoesValidas } from '../fixtures/afirmacoes-validas'
 
 const antes = afirmacoesValidas
@@ -48,6 +48,17 @@ describe('compararPools', () => {
     const problemas = compararPools(antes, semVerdadeiras)
     expect(problemas).toHaveLength(1)
     expect(problemas[0]).toMatch(/^Afirmações inválidas/)
+  })
+
+  it('item existente não muda de lado', () => {
+    const trocado = antes.map((a) => (a.id === 'e6' ? { ...a, lado: 'direita' as const } : a))
+    expect(compararPools(antes, trocado)).toEqual(['lado mudou: e6'])
+  })
+
+  it('resumirRevisao conta novas e alteradas', () => {
+    const depois = [...antes.map((a) => (a.id === 'e1' ? { ...a, explicacao: `${a.explicacao} (atualizada)` } : a)), nova('a1b2c3d4', 'direita')]
+    expect(resumirRevisao(antes, depois)).toEqual({ novas: 1, alteradas: 1 })
+    expect(resumirRevisao(antes, antes)).toEqual({ novas: 0, alteradas: 0 })
   })
 
   it('limites podem ser passados', () => {
