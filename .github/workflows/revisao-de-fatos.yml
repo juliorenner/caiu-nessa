@@ -71,10 +71,13 @@ jobs:
             --max-turns 150
             --allowedTools "WebFetch,WebSearch,Read,Edit(src/data/afirmacoes.json),Write(docs/superpowers/notes/*),Bash(npm test),Bash(npx tsx scripts/verificar-fontes.ts),Bash(npx tsx scripts/validar-revisao.ts),Bash(git diff:*),Bash(git status:*),Bash(git checkout -b:*),Bash(git add:*),Bash(git commit:*),Bash(git push -u origin HEAD),Bash(gh pr create:*),Bash(gh pr list:*)"
 
-      # A action esconde a saída do agente; em falha, mostra só a mensagem final (o motivo do erro).
-      - name: Motivo da falha
-        if: failure() && steps.claude.outputs.execution_file != ''
+      # A action esconde a saída do agente; mostra a mensagem final dele (o que fez, ou o motivo do erro)
+      # no log e no resumo da execução.
+      - name: Resumo do agente
+        if: always() && steps.claude.outputs.execution_file != ''
         env:
           ARQUIVO: ${{ steps.claude.outputs.execution_file }}
         run: |
-          jq -r '.[] | select(.type == "result") | .result // (.errors | join("; ")) // "sem mensagem"' "$ARQUIVO" | head -c 2000
+          resumo=$(jq -r '.[] | select(.type == "result") | .result // (.errors | join("; ")) // "sem mensagem"' "$ARQUIVO" | head -c 4000)
+          printf '%s\n' "$resumo"
+          { echo '## Resumo do agente'; echo; printf '%s\n' "$resumo"; } >> "$GITHUB_STEP_SUMMARY"
