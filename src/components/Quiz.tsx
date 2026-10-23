@@ -256,7 +256,7 @@ export default function Quiz({
     <div
       ref={raiz}
       tabIndex={-1}
-      className="box-border flex h-dvh flex-col lg:grid lg:grid-cols-[1fr_420px] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-3 overflow-x-hidden overflow-y-auto overscroll-contain px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
+      className="box-border flex h-dvh flex-col lg:max-h-[48rem] lg:grid lg:grid-cols-[1fr_420px] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-3 overflow-x-hidden overflow-y-auto overscroll-contain px-4 lg:px-8 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] outline-none"
     >
       {/* Em lg a raiz é a grade de duas colunas (cartão e botões à esquerda; dicas, e depois o veredito, à direita);
           o conteúdo some como caixa (contents) para que ele e o painel dividam a mesma grade. */}

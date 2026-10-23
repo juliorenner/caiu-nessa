@@ -77,7 +77,9 @@ describe('CartaoAfirmacao', () => {
     const selo = container.querySelector<HTMLElement>('span[data-selo]')
     expect(selo).toHaveAttribute('data-selo', 'enganoso')
     expect(selo!.style.opacity).toBe('1')
-    expect(cartao().style.transform).toBe('translateY(-40px) rotate(-6deg)')
+    // Pose parada em variáveis CSS: no celular valem os padrões (40px, 6°); em lg o cartão encolhe o giro.
+    expect(cartao().style.transform).toBe('translateY(calc(-1 * var(--pose-desloc, 40px))) rotate(calc(-1 * var(--pose-giro, 6deg)))')
+    expect(cartao()).toHaveClass('lg:[--pose-giro:2deg]')
     expect(cartao()).toHaveClass('transition-transform')
   })
 
@@ -123,12 +125,12 @@ describe('CartaoAfirmacao', () => {
   })
 
   it('tamanhoDoTexto degrada por comprimento', () => {
-    expect(tamanhoDoTexto('a'.repeat(60))).toBe('text-2xl lg:text-[32px]')
-    expect(tamanhoDoTexto('a'.repeat(61))).toBe('text-xl lg:text-[28px]')
-    expect(tamanhoDoTexto('a'.repeat(90))).toBe('text-xl lg:text-[28px]')
-    expect(tamanhoDoTexto('a'.repeat(91))).toBe('text-lg lg:text-2xl')
-    expect(tamanhoDoTexto('a'.repeat(160))).toBe('text-lg lg:text-2xl')
-    expect(tamanhoDoTexto('a'.repeat(161))).toBe('text-base lg:text-xl')
+    expect(tamanhoDoTexto('a'.repeat(60))).toBe('text-2xl lg:text-[36px]')
+    expect(tamanhoDoTexto('a'.repeat(61))).toBe('text-xl lg:text-[32px]')
+    expect(tamanhoDoTexto('a'.repeat(90))).toBe('text-xl lg:text-[32px]')
+    expect(tamanhoDoTexto('a'.repeat(91))).toBe('text-lg lg:text-[28px]')
+    expect(tamanhoDoTexto('a'.repeat(160))).toBe('text-lg lg:text-[28px]')
+    expect(tamanhoDoTexto('a'.repeat(161))).toBe('text-base lg:text-2xl')
   })
 
   it('saindo: classe de transição e voo para fora no eixo da resposta', () => {
@@ -190,7 +192,7 @@ describe('PilhaDeCartoes', () => {
 
 describe('CartaoAfirmacao: ícones', () => {
   it('texto curto: camada com 3 ícones, antes do texto', () => {
-    expect(tamanhoDoTexto(afirmacao.texto)).not.toBe('text-base lg:text-xl')
+    expect(tamanhoDoTexto(afirmacao.texto)).not.toBe('text-base lg:text-2xl')
     render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={0} />)
     const camada = cartao().querySelector('[data-icones-cartao]')
     expect(camada).not.toBeNull()
