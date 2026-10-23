@@ -2,8 +2,7 @@ name: revisao-auto-merge
 
 # Só para as PRs do bot de revisão de fatos (branch bot/revisao-de-fatos-*): liga o auto-merge ao abrir,
 # corrige os apontamentos do cubic com um agente e desliga o automático se um humano pedir mudanças.
-# Os jobs com agente usam o environment `revisao`: é ele que dá ao token OIDC o subject
-# repo:juliorenner/caiu-nessa:environment:revisao, que a regra de federação aceita.
+# Os jobs com agente usam o environment `revisao`, onde fica o CLAUDE_CODE_OAUTH_TOKEN.
 # Spec: docs/superpowers/specs/2026-10-23-revisao-auto-merge-design.md
 on:
   pull_request:
@@ -39,10 +38,8 @@ jobs:
       - name: Ligar o auto-merge
         uses: anthropics/claude-code-action@e4a6faad497d33dbc7144135c75e41f82f0bf6c0 # v1.0.255
         with:
-          anthropic_federation_rule_id: fdrl_012sQ6GfsDLeD93ZXqCzmmar
-          anthropic_organization_id: 5b6c432c-71c6-449f-a718-95a0399e141a
-          anthropic_service_account_id: svac_01H4CnUcDXarrhcGVYLgmywd
-          anthropic_workspace_id: wrkspc_013MoxDvUu9zKbN3BMBxPBwY
+          # Token do Claude Code da conta do dono (assinatura Max), guardado no ambiente `revisao`.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           allowed_bots: claude[bot]
           prompt: |
             Rode exatamente este comando e nada mais: gh pr merge ${{ github.event.pull_request.number }} --auto --merge
@@ -123,10 +120,8 @@ jobs:
           BASE_REF: origin/${{ github.event.pull_request.base.ref }}
           GH_REPO: ${{ github.repository }}
         with:
-          anthropic_federation_rule_id: fdrl_012sQ6GfsDLeD93ZXqCzmmar
-          anthropic_organization_id: 5b6c432c-71c6-449f-a718-95a0399e141a
-          anthropic_service_account_id: svac_01H4CnUcDXarrhcGVYLgmywd
-          anthropic_workspace_id: wrkspc_013MoxDvUu9zKbN3BMBxPBwY
+          # Token do Claude Code da conta do dono (assinatura Max), guardado no ambiente `revisao`.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # O ator do evento é o cubic (bot): sem isto a action recusa rodar.
           allowed_bots: cubic-dev-ai[bot]
           prompt: |
