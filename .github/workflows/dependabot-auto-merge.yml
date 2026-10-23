@@ -45,7 +45,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
-        run: gh pr comment "$PR" --body "Atualização major: fica para revisão humana, sem auto-merge. _🤖 dependabot-auto-merge_"
+        run: |
+          gh pr comment "$PR" --body "Atualização major. Fica para revisão humana, sem auto-merge. _🤖 dependabot-auto-merge_"
 
   revisar:
     needs: classificar
