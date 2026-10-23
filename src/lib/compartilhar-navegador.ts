@@ -9,23 +9,21 @@ function fechouAFolha(erro: unknown): boolean {
 // `share` é chamado antes de qualquer await: iOS Safari e Chrome só aceitam enquanto o toque é "fresco".
 // `link`: a URL vai só em `url` (nunca duplicada no texto); sem share, copia o texto com a URL.
 // `imagem`: o arquivo com o texto com a URL; sem suporte a arquivos, 'indisponivel' (a tela oferece baixar).
-// `modo` e `textoComUrl` têm padrão ('link' e `texto`) só enquanto ResultadoFinal não passa os dois.
 export async function compartilhar(p: {
-  modo?: 'link' | 'imagem'
+  modo: 'link' | 'imagem'
   texto: string
-  textoComUrl?: string
+  textoComUrl: string
   url: string
   titulo: string
   arquivo: File | null
   nav?: Navigator
 }): Promise<Desfecho> {
   const nav = p.nav ?? globalThis.navigator
-  const textoComUrl = p.textoComUrl ?? p.texto
   if (p.modo === 'imagem') {
     const files = p.arquivo ? [p.arquivo] : null
     if (!files || typeof nav.share !== 'function' || !nav.canShare?.({ files })) return 'indisponivel'
     try {
-      await nav.share({ files, text: textoComUrl, title: p.titulo })
+      await nav.share({ files, text: p.textoComUrl, title: p.titulo })
       return 'folha'
     } catch (erro) {
       return fechouAFolha(erro) ? 'cancelado' : 'falhou'
@@ -42,7 +40,7 @@ export async function compartilhar(p: {
   }
   try {
     // Sem clipboard (contexto inseguro, navegador antigo), o acesso lança e conta como falha.
-    await nav.clipboard.writeText(textoComUrl)
+    await nav.clipboard.writeText(p.textoComUrl)
     return 'copiado'
   } catch {
     return 'falhou'

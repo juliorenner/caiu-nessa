@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { slugDaFaixa, urlDoCartao, type Casa } from '@/lib/cartao'
+import { slugDaFaixa, urlDoCartao, urlDoResultado, type Casa } from '@/lib/cartao'
 import { NOME_ARQUIVO, textoDeCompartilhar } from '@/lib/compartilhar'
 import { buscarArquivo, compartilhar } from '@/lib/compartilhar-navegador'
 import type { RespostaResultado } from '@/lib/resultado-api'
@@ -18,6 +18,14 @@ import {
 } from './rotulos'
 
 type EstadoContinuar = 'parado' | 'sorteando' | 'fim' | 'falha'
+type Aviso = 'copiado' | 'falhou' | 'carregando' | 'imagemFalhou'
+
+const TEXTO_AVISO: Record<Aviso, string> = {
+  copiado: 'Texto copiado',
+  falhou: 'Não deu para copiar',
+  carregando: 'Imagem ainda carregando…',
+  imagemFalhou: 'Não deu para mandar a imagem',
+}
 
 export function ResultadoFinal(p: {
   dados: RespostaResultado
@@ -36,10 +44,15 @@ export function ResultadoFinal(p: {
     caiu: resultado.acreditadasEsquerda + resultado.acreditadasDireita,
     casas: p.casas,
   }
+  const faixa = slugDaFaixa(avaliacao.titulo)
+  const urlResultado = `${SITE_URL}${urlDoResultado({ ...placar, faixa })}`
   const texto = textoDeCompartilhar(placar)
-  const urlCartao = urlDoCartao({ ...placar, faixa: slugDaFaixa(avaliacao.titulo) })
+  const textoComUrl = textoDeCompartilhar({ ...placar, url: urlResultado })
+  const urlCartao = urlDoCartao({ ...placar, faixa })
   const [arquivo, setArquivo] = useState<File | null>(null)
-  const [aviso, setAviso] = useState<'copiado' | 'falhou' | null>(null)
+  // Só no navegador: no servidor (e até montar) o botão dos stories não aparece.
+  const [aceitaArquivos, setAceitaArquivos] = useState(false)
+  const [aviso, setAviso] = useState<Aviso | null>(null)
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Busca a imagem ao montar, não no toque: esperar um fetch depois do toque faz o share falhar.
@@ -53,6 +66,17 @@ export function ResultadoFinal(p: {
     }
   }, [urlCartao])
 
+  useEffect(() => {
+    let aceita = false
+    try {
+      aceita = navigator.canShare?.({ files: [new File([''], 'x.png', { type: 'image/png' })] }) ?? false
+    } catch {
+      // Qualquer erro: sem o botão dos stories; Baixar imagem continua.
+    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- navigator só existe no cliente; ler no render divergiria da hidratação
+    setAceitaArquivos(aceita)
+  }, [])
+
   useEffect(
     () => () => {
       if (temporizador.current) clearTimeout(temporizador.current)
@@ -60,22 +84,21 @@ export function ResultadoFinal(p: {
     [],
   )
 
+  function mostrar(novo: Aviso | null) {
+    if (temporizador.current) clearTimeout(temporizador.current)
+    temporizador.current = null
+    setAviso(novo)
+    if (novo === 'copiado') temporizador.current = setTimeout(() => setAviso(null), 2000)
+  }
+
   // Síncrono até o share: usa a imagem que já chegou, sem esperar a que falta.
-  function aoCompartilhar() {
-    void compartilhar({ texto, url: SITE_URL, titulo: TITULO, arquivo }).then(desfecho => {
+  function aoCompartilhar(modo: 'link' | 'imagem') {
+    void compartilhar({ modo, texto, textoComUrl, url: urlResultado, titulo: TITULO, arquivo }).then(desfecho => {
       // A folha abriu: um aviso de toque anterior já não vale.
-      if (desfecho === 'folha') {
-        if (temporizador.current) clearTimeout(temporizador.current)
-        temporizador.current = null
-        setAviso(null)
-      }
-      if (desfecho !== 'copiado' && desfecho !== 'falhou') return
-      // A folha recusou o arquivo (ex.: NotAllowedError no Android): o próximo toque vai direto para texto + link.
-      if (arquivo) setArquivo(null)
-      if (temporizador.current) clearTimeout(temporizador.current)
-      temporizador.current = null
-      setAviso(desfecho)
-      if (desfecho === 'copiado') temporizador.current = setTimeout(() => setAviso(null), 2000)
+      if (desfecho === 'folha') mostrar(null)
+      else if (desfecho === 'copiado') mostrar('copiado')
+      else if (desfecho === 'indisponivel') mostrar('carregando')
+      else if (desfecho === 'falhou') mostrar(modo === 'imagem' ? 'imagemFalhou' : 'falhou')
     })
   }
 
@@ -125,14 +148,19 @@ export function ResultadoFinal(p: {
             : 'Você é um dos primeiros a jogar. A comparação com os outros aparece a partir de 100 jogadas.'}
         </p>
       )}
-      <button type="button" onClick={aoCompartilhar} className={BOTAO_PRIMARIO}>
+      <button type="button" onClick={() => aoCompartilhar('link')} className={BOTAO_PRIMARIO}>
         Compartilhar placar
       </button>
+      {aceitaArquivos && (
+        <button type="button" onClick={() => aoCompartilhar('imagem')} className={BOTAO_SECUNDARIO}>
+          Mandar para os stories
+        </button>
+      )}
       <a download={NOME_ARQUIVO} href={urlCartao} className={`self-center text-base ${LINK_PAGINA}`}>
         Baixar imagem para os stories
       </a>
       <p aria-live="polite" className="text-base">
-        {aviso === 'copiado' ? 'Texto copiado' : aviso === 'falhou' ? 'Não deu para copiar' : ''}
+        {aviso ? TEXTO_AVISO[aviso] : ''}
       </p>
       {continuar === 'falha' && (
         <p role="alert" className="text-base">

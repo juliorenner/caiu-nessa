@@ -21,12 +21,6 @@ describe('compartilhar, modo link', () => {
     expect(share).toHaveBeenCalledWith({ text: base.texto, url: base.url, title: base.titulo })
   })
 
-  it('sem modo: link por padrão', async () => {
-    const share = vi.fn().mockResolvedValue(undefined)
-    expect(await compartilhar({ ...base, arquivo: null, nav: navegador({ share }) })).toBe('folha')
-    expect(share).toHaveBeenCalledWith({ text: base.texto, url: base.url, title: base.titulo })
-  })
-
   it('chama share na hora, antes de qualquer espera', () => {
     const share = vi.fn().mockReturnValue(new Promise(() => {}))
     void compartilhar({ ...base, modo: 'link', arquivo: null, nav: navegador({ share }) })
@@ -61,13 +55,6 @@ describe('compartilhar, modo link', () => {
     const recusa = vi.fn().mockRejectedValue(new Error('negado'))
     expect(await compartilhar({ ...base, modo: 'link', arquivo, nav: navegador({ writeText: recusa }) })).toBe('falhou')
     expect(await compartilhar({ ...base, modo: 'link', arquivo, nav: navegador({}) })).toBe('falhou')
-  })
-
-  it('sem textoComUrl: copia o texto', async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined)
-    const { textoComUrl: _, ...semTextoComUrl } = base
-    expect(await compartilhar({ ...semTextoComUrl, arquivo: null, nav: navegador({ writeText }) })).toBe('copiado')
-    expect(writeText).toHaveBeenCalledWith(base.texto)
   })
 })
 

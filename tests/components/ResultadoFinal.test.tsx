@@ -30,7 +30,9 @@ const dados: RespostaResultado = {
 }
 
 const casas: Casa[] = ['acerto', 'erro', 'acerto', 'acerto', 'erro', 'quase', 'erro', 'acerto', 'erro', 'erro', 'quase', 'erro']
-const texto = 'Fiz 4/12 no Caiu Nessa? e caí em 3. E você?\ncaiunessa.com.br'
+const texto = 'Fiz 4/12 no Caiu Nessa? e caí em 3. E você?'
+const urlResultado = `${SITE_URL}/r/4-12-3-caiu-feio-aeaaeqeaeeqe`
+const textoComUrl = `${texto}\n${urlResultado}`
 
 function renderizar() {
   return render(
@@ -40,6 +42,7 @@ function renderizar() {
 
 const aviso = () => document.querySelector('p[aria-live="polite"]')
 const botao = () => screen.getByRole('button', { name: 'Compartilhar placar' })
+const stories = () => screen.getByRole('button', { name: 'Mandar para os stories' })
 // Deixa o fetch pré-buscado resolver e o estado assentar.
 const assentar = () => act(() => new Promise(r => setTimeout(r, 0)))
 
@@ -69,28 +72,23 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(vi.mocked(fetch).mock.calls[0][0]).toMatch(/^\/cartao\?a=4&t=12&c=3&f=caiu-feio&g=aeaaeqeaeeqe$/)
   })
 
-  it('imagem pré-buscada e canShare aceita: share com files, texto e título', async () => {
+  it('Compartilhar placar: share com texto, url do resultado e título, sem files', async () => {
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
     renderizar()
     await assentar()
     fireEvent.click(botao())
     expect(share).toHaveBeenCalledTimes(1)
-    const [dadosShare] = share.mock.calls[0]
-    expect(dadosShare.files).toHaveLength(1)
-    expect(dadosShare.files[0]).toBeInstanceOf(File)
-    expect(dadosShare.files[0].name).toBe(NOME_ARQUIVO)
-    expect(dadosShare.text).toBe(texto)
-    expect(dadosShare.title).toBe(TITULO)
+    expect(share).toHaveBeenCalledWith({ text: texto, url: urlResultado, title: TITULO })
   })
 
-  it('imagem ainda chegando: share na hora com texto e url, sem files', () => {
+  it('Compartilhar placar chama share na hora, com a imagem ainda chegando', () => {
     vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
     const share = vi.fn().mockResolvedValue(undefined)
-    stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
+    stubNavegador({ share })
     renderizar()
     fireEvent.click(botao())
-    expect(share).toHaveBeenCalledWith({ text: texto, url: SITE_URL, title: TITULO })
+    expect(share).toHaveBeenCalledWith({ text: texto, url: urlResultado, title: TITULO })
   })
 
   it('AbortError: nada no aviso', async () => {
@@ -104,31 +102,16 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(writeText).not.toHaveBeenCalled()
   })
 
-  it('share falha por outro motivo: copia o texto e mostra Texto copiado', async () => {
+  it('share falha por outro motivo: copia o texto com a URL e mostra Texto copiado', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share: vi.fn().mockRejectedValue(new DOMException('negado', 'NotAllowedError')), writeText })
     renderizar()
     fireEvent.click(botao())
     await waitFor(() => expect(aviso()).toHaveTextContent('Texto copiado'))
-    expect(writeText).toHaveBeenCalledWith(texto)
+    expect(writeText).toHaveBeenCalledWith(textoComUrl)
   })
 
-  it('share recusou o arquivo: o próximo toque vai sem files', async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined)
-    const share = vi.fn().mockRejectedValueOnce(new DOMException('negado', 'NotAllowedError')).mockResolvedValue(undefined)
-    stubNavegador({ share, canShare: () => true, writeText })
-    renderizar()
-    await assentar()
-    fireEvent.click(botao())
-    await waitFor(() => expect(aviso()).toHaveTextContent('Texto copiado'))
-    expect(share.mock.calls[0][0]).toHaveProperty('files')
-    fireEvent.click(botao())
-    expect(share).toHaveBeenCalledTimes(2)
-    expect(share.mock.calls[1][0]).not.toHaveProperty('files')
-    expect(share.mock.calls[1][0]).toMatchObject({ text: texto, url: SITE_URL })
-  })
-
-  it('sem share: copia, mostra Texto copiado por 2 s', async () => {
+  it('sem share: copia o texto com a URL, mostra Texto copiado por 2 s', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ writeText })
     renderizar()
@@ -136,7 +119,7 @@ describe('ResultadoFinal: compartilhar', () => {
     vi.useFakeTimers()
     fireEvent.click(botao())
     await act(async () => {})
-    expect(writeText).toHaveBeenCalledWith(texto)
+    expect(writeText).toHaveBeenCalledWith(textoComUrl)
     expect(aviso()).toHaveTextContent('Texto copiado')
     act(() => vi.advanceTimersByTime(1999))
     expect(aviso()).toHaveTextContent('Texto copiado')
@@ -153,7 +136,7 @@ describe('ResultadoFinal: compartilhar', () => {
 
   it('folha abre depois de Não deu para copiar: o aviso some', async () => {
     const share = vi.fn().mockRejectedValueOnce(new DOMException('negado', 'NotAllowedError')).mockResolvedValue(undefined)
-    stubNavegador({ share, canShare: () => true, writeText: vi.fn().mockRejectedValue(new Error('negado')) })
+    stubNavegador({ share, writeText: vi.fn().mockRejectedValue(new Error('negado')) })
     renderizar()
     await assentar()
     fireEvent.click(botao())
@@ -162,6 +145,63 @@ describe('ResultadoFinal: compartilhar', () => {
     await assentar()
     expect(share).toHaveBeenCalledTimes(2)
     expect(aviso()).toHaveTextContent(/^$/)
+  })
+
+  it('canShare aceita arquivos e imagem pré-buscada: Mandar para os stories manda files e o texto com a URL', async () => {
+    const share = vi.fn().mockResolvedValue(undefined)
+    stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
+    renderizar()
+    await assentar()
+    fireEvent.click(stories())
+    expect(share).toHaveBeenCalledTimes(1)
+    const [dadosShare] = share.mock.calls[0]
+    expect(dadosShare.files).toHaveLength(1)
+    expect(dadosShare.files[0]).toBeInstanceOf(File)
+    expect(dadosShare.files[0].name).toBe(NOME_ARQUIVO)
+    expect(dadosShare.text).toBe(textoComUrl)
+    expect(dadosShare.title).toBe(TITULO)
+    expect(dadosShare).not.toHaveProperty('url')
+  })
+
+  it('sem canShare: Mandar para os stories não aparece', async () => {
+    stubNavegador({ share: vi.fn() })
+    renderizar()
+    await assentar()
+    expect(screen.queryByRole('button', { name: 'Mandar para os stories' })).not.toBeInTheDocument()
+  })
+
+  it('canShare lança: Mandar para os stories não aparece', async () => {
+    stubNavegador({
+      share: vi.fn(),
+      canShare: () => {
+        throw new Error('quebrou')
+      },
+    })
+    renderizar()
+    await assentar()
+    expect(screen.queryByRole('button', { name: 'Mandar para os stories' })).not.toBeInTheDocument()
+  })
+
+  it('imagem ainda carregando: Mandar para os stories avisa e não chama share', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
+    const share = vi.fn().mockResolvedValue(undefined)
+    stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
+    renderizar()
+    await assentar()
+    fireEvent.click(stories())
+    await waitFor(() => expect(aviso()).toHaveTextContent('Imagem ainda carregando…'))
+    expect(share).not.toHaveBeenCalled()
+  })
+
+  it('stories recusado: Não deu para mandar a imagem, sem copiar', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    const share = vi.fn().mockRejectedValue(new DOMException('negado', 'NotAllowedError'))
+    stubNavegador({ share, canShare: () => true, writeText })
+    renderizar()
+    await assentar()
+    fireEvent.click(stories())
+    await waitFor(() => expect(aviso()).toHaveTextContent('Não deu para mandar a imagem'))
+    expect(writeText).not.toHaveBeenCalled()
   })
 
   it('link Baixar imagem para os stories baixa o cartão', async () => {
@@ -173,14 +213,19 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(link.getAttribute('href')).toMatch(/^\/cartao\?a=/)
   })
 
-  it('ordem: Compartilhar placar, Baixar imagem, Continuar jogando; Jogar de novo é link e a linha Acertei sai', async () => {
-    stubNavegador({})
+  it('ordem: Compartilhar placar, Mandar para os stories, Baixar imagem, aviso, Continuar jogando; Jogar de novo é link e a linha Acertei sai', async () => {
+    stubNavegador({ share: vi.fn(), canShare: () => true })
     renderizar()
     await assentar()
     const compartilharBtn = botao()
+    const storiesBtn = stories()
     const baixar = screen.getByRole('link', { name: 'Baixar imagem para os stories' })
     const continuar = screen.getByRole('button', { name: 'Continuar jogando' })
-    expect(compartilharBtn.compareDocumentPosition(baixar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    const p = aviso()!
+    expect(compartilharBtn.compareDocumentPosition(storiesBtn) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(storiesBtn.compareDocumentPosition(baixar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(baixar.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(p.compareDocumentPosition(continuar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(baixar.compareDocumentPosition(continuar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
     expect(screen.queryByText(/Acertei/)).not.toBeInTheDocument()
