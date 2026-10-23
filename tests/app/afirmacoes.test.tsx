@@ -77,11 +77,11 @@ describe('página /afirmacoes', () => {
   })
 
   it('itens com observacao aparecem só em "Fora do jogo", com a observação', () => {
+    // O pool pode não ter nenhum item fora do jogo (todos voltaram em 2026-10-23); aí a seção fica vazia.
     const fora = foraDoJogo(carregarPool())
-    expect(fora.length).toBeGreaterThan(0)
     render(<Afirmacoes />)
     const noJogo = screen.getByRole('region', { name: 'No jogo' })
-    const cards = within(screen.getByRole('region', { name: 'Fora do jogo' })).getAllByRole('article')
+    const cards = within(screen.getByRole('region', { name: 'Fora do jogo' })).queryAllByRole('article')
     expect(cards).toHaveLength(fora.length)
     fora.forEach((a, i) => {
       expect(within(cards[i]).getByText(a.texto)).toBeInTheDocument()

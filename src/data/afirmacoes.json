@@ -10,7 +10,7 @@
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "9ffc66a8",
@@ -19,11 +19,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "Em 2009, a Alerj discutiu uma proposta para estender a licença-maternidade das servidoras estaduais de quatro para seis meses. Flávio Bolsonaro foi o único a declarar voto contrário; outro deputado que também votara contra mudou o voto para sim.",
+    "explicacao": "G1 Fato ou Fake, Aos Fatos, Lupa e Estadão Verifica classificam a afirmação como verdadeira. Em 2009, a Alerj discutiu uma proposta para estender a licença-maternidade das servidoras estaduais de quatro para seis meses. Flávio Bolsonaro foi o único a declarar voto contrário; outro deputado que também votara contra mudou o voto para sim.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-19",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "aa857dcd",
@@ -32,11 +32,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "falso",
-    "explicacao": "Segundo o painel do Instituto Socioambiental, o governo com mais terras indígenas demarcadas foi o de Fernando Henrique Cardoso, com 142 territórios entre 1995 e 2002. Nos governos Lula foram 103.",
+    "explicacao": "G1 Fato ou Fake e Aos Fatos classificam a afirmação como falsa. Segundo o painel do Instituto Socioambiental, o governo com mais terras indígenas demarcadas foi o de Fernando Henrique Cardoso, com 142 territórios entre 1995 e 2002. Nos governos Lula foram 103.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-19",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "ad602974",
@@ -45,11 +45,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "falso",
-    "explicacao": "Roberta Luchsinger publicou no Instagram ao menos duas fotos com Lula, em 27 de outubro e 3 de novembro de 2022. Ela também tem fotos com ministros e integrantes do governo depois que ele foi eleito para o terceiro mandato.",
+    "explicacao": "Aos Fatos, Lupa e Estadão Verifica classificam a afirmação como falsa. Roberta Luchsinger publicou no Instagram ao menos duas fotos com Lula, em 27 de outubro e 3 de novembro de 2022. Ela também tem fotos com ministros e integrantes do governo depois que ele foi eleito para o terceiro mandato.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-entrevista-lula-globo/",
     "data_checagem": "2026-08-27",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "3d13028f",
@@ -58,11 +58,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "enganoso",
-    "explicacao": "O BRB (Banco de Brasília) emprestou R$ 3,1 milhões ao senador para comprar uma casa de R$ 6 milhões em Brasília, e não de R$ 10 milhões. O banco é de fato investigado por fraudes na compra de carteiras de crédito do Banco Master.",
+    "explicacao": "O Aos Fatos classifica a afirmação como \"não é bem assim\" e o Estadão Verifica, como \"exagerado\". O BRB (Banco de Brasília) emprestou R$ 3,1 milhões ao senador para comprar uma casa de R$ 6 milhões em Brasília, e não de R$ 10 milhões. O banco é de fato investigado por fraudes na compra de carteiras de crédito do Banco Master.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "392ba64f",
@@ -80,7 +80,7 @@
   {
     "id": "0e702aab",
     "texto": "O Brasil registrou, no governo Lula, um recorde de mulheres espancadas.",
-    "citacao": "[Lula deixa] recorde de mulher espancada.",
+    "citacao": "Recorde de mulher espancada.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "verdadeiro",
@@ -97,11 +97,11 @@
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "Lula vetou parcialmente o projeto que acabava com a saída temporária de presos em datas comemorativas, mantendo as visitas a familiares. Em 28 de maio de 2024, o Congresso derrubou o veto, com 314 votos na Câmara e 52 no Senado.",
+    "explicacao": "G1 Fato ou Fake e Lupa classificam a afirmação como verdadeira. Lula vetou parcialmente o projeto que acabava com a saída temporária de presos em datas comemorativas, mantendo as visitas a familiares. Em 28 de maio de 2024, o Congresso derrubou o veto, com 314 votos na Câmara e 52 no Senado.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-19",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "9f37b191",
@@ -127,7 +127,7 @@
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "b430643c",
@@ -136,11 +136,11 @@
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "enganoso",
-    "explicacao": "O benefício chegou a R$ 600 em 2022, no governo Bolsonaro, e antes o Bolsa Família pagava em média cerca de R$ 189. Mas só a primeira etapa, até R$ 400, partiu do Executivo; a elevação para R$ 600 veio de uma emenda constitucional aprovada e promulgada pelo Congresso, sem sanção presidencial.",
+    "explicacao": "O G1 Fato ou Fake classifica a afirmação como \"não é bem assim\" e a Lupa, como \"exagerado\". O benefício chegou a R$ 600 em 2022, no governo Bolsonaro, e antes o Bolsa Família pagava em média cerca de R$ 189. Mas só a primeira etapa, até R$ 400, partiu do Executivo; a elevação para R$ 600 veio de uma emenda constitucional aprovada e promulgada pelo Congresso, sem sanção presidencial.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-19",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "0386e511",
@@ -162,11 +162,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "Dados da Dataprev, confirmados pelo INSS, indicam que o governo já pagou R$ 3,52 bilhões a 5 milhões de aposentados e pensionistas que tiveram descontos indevidos em seus benefícios.",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "explicacao": "Estadão Verifica e Aos Fatos classificam a afirmação como verdadeira. Dados da Dataprev, confirmados pelo INSS, indicam que o governo já pagou R$ 3,52 bilhões a 5 milhões de aposentados e pensionistas que tiveram descontos indevidos em seus benefícios.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "8b01a7f6",
@@ -188,12 +188,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "verdadeiro",
-    "explicacao": "Segundo a pesquisa da CNC, 77,9% das famílias se declararam endividadas em dezembro de 2022. A agência ressalva que o percentual subiu durante o atual mandato e chegou a 81,7% em setembro de 2026.",
+    "explicacao": "Aos Fatos, G1 Fato ou Fake e Estadão Verifica classificam a afirmação como verdadeira; a Lupa, como \"falta contexto\", porque ter dívida não é o mesmo que estar inadimplente. Pela maioria, vale verdadeiro. Segundo a pesquisa da CNC, 77,9% das famílias se declararam endividadas em dezembro de 2022; o percentual subiu no atual mandato e chegou a 81,7% em setembro de 2026.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
     "data_checagem": "2026-10-15",
-    "alcance": 2,
-    "observacao": "Fora do jogo: Aos Fatos, G1 e Estadão Verifica dizem verdadeiro e a Lupa diz \"falta contexto\"."
+    "alcance": 3
   },
   {
     "id": "4372b28f",
@@ -211,15 +210,15 @@
   {
     "id": "cb76e4b6",
     "texto": "Dez ministérios foram desmontados quando Jair Bolsonaro tomou posse.",
-    "citacao": "Foram dez ministérios desmontados [quando Bolsonaro tomou posse].",
+    "citacao": "Foram dez ministérios desmontados.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "verdadeiro",
-    "explicacao": "Dez pastas foram extintas no início do governo Bolsonaro, em 2019, entre elas Cidades, Cultura, Esportes, Fazenda, Planejamento e Trabalho. Muitas foram incorporadas a outros ministérios.",
+    "explicacao": "Aos Fatos, G1 Fato ou Fake e Lupa classificam a afirmação como verdadeira. Dez pastas foram extintas no início do governo Bolsonaro, em 2019, entre elas Cidades, Cultura, Esportes, Fazenda, Planejamento e Trabalho. Muitas foram incorporadas a outros ministérios.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
     "data_checagem": "2026-10-15",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "b36811f1",
@@ -254,12 +253,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "verdadeiro",
-    "explicacao": "Segundo o Banco Mundial, o Brasil registrou em 2010, último ano do segundo mandato de Lula, um PIB de US$ 2,21 trilhões, o que colocou o país como a sétima maior economia do mundo.",
+    "explicacao": "Aos Fatos, Lupa e G1 Fato ou Fake classificam a afirmação como verdadeira; o Estadão Verifica deu \"verdadeiro em partes\" à fala inteira, que também incluía os 22 milhões de empregos. Pela maioria, vale verdadeiro. Segundo o Banco Mundial, o Brasil teve em 2010, último ano do segundo mandato de Lula, um PIB de US$ 2,21 trilhões, o sétimo maior do mundo.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
     "data_checagem": "2026-10-15",
-    "alcance": 2,
-    "observacao": "Fora do jogo: o Estadão Verifica classifica a fala completa (economia e empregos) como \"verdadeiro em partes\", rótulo que não usamos."
+    "alcance": 3
   },
   {
     "id": "6bf3e590",
@@ -268,11 +266,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "enganoso",
-    "explicacao": "O comércio com os EUA de fato recuou e o com a China cresceu entre janeiro e setembro de 2026, mas os percentuais citados não batem com os dados do MDIC: a corrente de comércio com os EUA caiu 6,8% e a com a China subiu 11,1%.",
+    "explicacao": "Aos Fatos e G1 Fato ou Fake classificam a afirmação como \"não é bem assim\"; a Lupa (sobre os 20% com a China) e o Estadão Verifica, como \"exagerado\". O comércio com os EUA de fato recuou e o com a China cresceu entre janeiro e setembro de 2026, mas os percentuais citados não batem com os dados do MDIC: a corrente de comércio com os EUA caiu 6,8% e a com a China subiu 11,1%.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
     "data_checagem": "2026-10-15",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "226b7d8c",
@@ -290,16 +288,15 @@
   {
     "id": "09406cc5",
     "texto": "Quando Lula assumiu a Presidência em 2003, o Brasil devia US$ 30 bilhões ao FMI; ao fim de dois mandatos, o FMI estava pago e o país tinha reservas de US$ 270 bilhões.",
-    "citacao": "Quando Lula assumiu a Presidência em 2003, o Brasil devia US$ 30 bilhões ao FMI; ao fim de dois mandatos, o FMI estava pago e o país tinha reservas de US$ 270 bilhões.",
+    "citacao": "Quando eu cheguei na presidência, esse país devia 30 bilhões para o FMI, esse país não tinha dinheiro para pagar as exportações, esse país não tinha reserva. Nós pagamos o FMI, nós fizemos 270 bilhões de reserva,",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "Em 2002, no governo Fernando Henrique Cardoso, o Brasil contraiu uma dívida de US$ 30,4 bilhões com o FMI, herdada em 2003. O Banco Central registra a quitação antecipada em 2005, e as reservas internacionais chegaram a US$ 270 bilhões em 2010.",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "explicacao": "Aos Fatos, Estadão Verifica e G1 Fato ou Fake (sobre a dívida com o FMI) classificam a afirmação como verdadeira; a Lupa classifica as reservas de US$ 270 bilhões como \"subestimado\", porque chegaram a US$ 288,6 bilhões no fim de 2010. Pela maioria, vale verdadeiro. A dívida de US$ 30,4 bilhões com o FMI, contraída em 2002, foi quitada antecipadamente em 2005.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 2,
-    "observacao": "Fora do jogo: o Estadão Verifica diz verdadeiro e a Lupa diz \"subestimado\" sobre o valor das reservas."
+    "alcance": 3
   },
   {
     "id": "912298e6",
@@ -308,12 +305,11 @@
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "O Banco Central informou que a Dívida Bruta do Governo Geral atingiu R$ 11,1 trilhões em agosto de 2026, 82,9% do PIB. O indicador inclui governo federal, INSS, estados e municípios; no fim de 2022 estava em R$ 7,2 trilhões.",
+    "explicacao": "G1 Fato ou Fake, Aos Fatos e Lupa classificam a afirmação como verdadeira. O Banco Central informou que a Dívida Bruta do Governo Geral atingiu R$ 11,1 trilhões em agosto de 2026, 82,9% do PIB. O indicador inclui governo federal, INSS, estados e municípios; no fim de 2022 estava em R$ 7,2 trilhões.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-19",
-    "alcance": 2,
-    "observacao": "Fora do jogo: G1, Aos Fatos e Lupa dizem verdadeiro e o Estadão Verifica diz \"falta contexto\"."
+    "alcance": 3
   },
   {
     "id": "068625bc",
@@ -322,11 +318,11 @@
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
-    "explicacao": "Fábio Luís Lula da Silva, filho do presidente, é alvo de três inquéritos autorizados pelo STF a pedido da Polícia Federal, abertos entre julho e agosto de 2026, que apuram suspeitas de tráfico de influência e corrupção.",
+    "explicacao": "G1 Fato ou Fake e Aos Fatos classificam a afirmação como falsa. Fábio Luís Lula da Silva, filho do presidente, é alvo de três inquéritos autorizados pelo STF a pedido da Polícia Federal, abertos entre julho e agosto de 2026, que apuram suspeitas de tráfico de influência e corrupção.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-19",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "6b98ca43",
@@ -361,24 +357,24 @@
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
     "veredito": "falso",
-    "explicacao": "Em março de 2023, Flávio Dino visitou o Complexo da Maré a convite de uma ONG. A Polícia Federal e a Polícia Rodoviária Federal confirmaram ter participado da segurança da comitiva, com apoio das polícias Civil e Militar do Rio.",
+    "explicacao": "Aos Fatos e Lupa classificam a afirmação como falsa. Em março de 2023, Flávio Dino visitou o Complexo da Maré a convite de uma ONG. A Polícia Federal e a Polícia Rodoviária Federal confirmaram ter participado da segurança da comitiva, com apoio das polícias Civil e Militar do Rio.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-flavio-bolsonaro-globo-segundo-turno/",
     "data_checagem": "2026-10-16",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "0458cba4",
     "texto": "O áudio atribuído ao banqueiro Daniel Vorcaro, dono do Banco Master, sobre o financiamento de um documentário sobre Lula foi confirmado pela Polícia Federal.",
-    "citacao": "[O áudio de Vorcaro sobre o financiamento de um documentário sobre Lula] está confirmado pela Polícia Federal.",
+    "citacao": "Está confirmado pela Polícia Federal.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
     "veredito": "falso",
-    "explicacao": "No dia da publicação do áudio pela revista Veja, a Polícia Federal afirmou que Daniel Vorcaro nunca prestou depoimento com aquele conteúdo nem entregou documentos sobre o assunto. A PGR e a defesa de Vorcaro também contestaram a informação.",
+    "explicacao": "Aos Fatos, G1 Fato ou Fake e Lupa classificam a afirmação como falsa. No dia da publicação do áudio pela revista Veja, a Polícia Federal afirmou que Daniel Vorcaro nunca prestou depoimento com aquele conteúdo nem entregou documentos sobre o assunto. A PGR e a defesa de Vorcaro também contestaram a informação.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-flavio-bolsonaro-globo-segundo-turno/",
     "data_checagem": "2026-10-16",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "ce1109ff",
@@ -386,13 +382,12 @@
     "citacao": "Só os penduricalhos, dos Três Poderes, se você for botar na ponta do lápis, são R$ 24 bilhões por ano.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em entrevista à TV Globo",
-    "veredito": "verdadeiro",
-    "explicacao": "Um estudo citado pelo jornal O Globo, a partir de 25,9 mil contracheques, estimou em ao menos R$ 24,3 bilhões os pagamentos acima do teto constitucional em 2025. Uma comissão técnica criada pelo STF chegou a valor compatível para as carreiras com maior peso.",
+    "veredito": "enganoso",
+    "explicacao": "O G1 Fato ou Fake classifica a afirmação como fato e o Estadão Verifica, como \"falta contexto\"; no empate entre verdadeiro e enganoso, vale enganoso. Um estudo estimou em R$ 24,3 bilhões os pagamentos acima do teto em 2025, mas, segundo o Estadão, só na elite das carreiras jurídicas; a comissão dos Três Poderes criada no STF estimou o gasto total acima do teto em cerca de R$ 9,8 bilhões.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/16/veja-o-que-e-fato-ou-fake-na-entrevista-de-flavio-bolsonaro-a-globo-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-16",
-    "alcance": 2,
-    "observacao": "Fora do jogo: o G1 diz verdadeiro e o Estadão Verifica diz \"falta contexto\"."
+    "alcance": 3
   },
   {
     "id": "3715fbb7",
@@ -409,17 +404,16 @@
   },
   {
     "id": "b96d3fc1",
-    "texto": "Com a Lei Antifacção, aprovada no Congresso, os líderes das facções criminosas vão ficar 80 anos presos.",
-    "citacao": "Com a Lei Antifacção, aprovada no Congresso, os líderes das facções criminosas vão ficar 80 anos presos.",
+    "texto": "Com a Lei Antifacção, aprovada no Congresso, os líderes das facções criminosas vão ficar até 80 anos presos.",
+    "citacao": "A Lei Antifacção que nós aprovamos, os líderes dessas organizações vão ficar até 80 anos presos",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "enganoso",
-    "explicacao": "A Lei Antifacção, proposta pela Presidência e sancionada em março de 2026, elevou a pena por participação em organização criminosa para até 40 anos, e ela pode dobrar para 80 anos no caso de líderes. Mas o Código Penal limita o tempo de cumprimento da pena a 40 anos, então o preso não fica automaticamente 80 anos na cadeia.",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "explicacao": "O Estadão Verifica classifica a afirmação como enganosa e a Lupa, como \"falta contexto\". A Lei Antifacção, proposta pela Presidência e sancionada em março de 2026, prevê de 20 a 40 anos de prisão, e a pena pode chegar ao dobro para líderes. Mas o Código Penal limita a 40 anos o tempo de cumprimento da pena, então o preso não fica 80 anos na cadeia.",
+    "fonte_nome": "Lupa",
+    "fonte_url": "https://www.agencialupa.org/checagem/2026/10/18/ao-vivo-checagem-do-debate-entre-lula-e-flavio-bolsonaro-na-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 2,
-    "observacao": "Fora do jogo: o Estadão Verifica diz enganoso e a Lupa diz \"falta contexto\"."
+    "alcance": 3
   },
   {
     "id": "483d6a7b",
@@ -428,11 +422,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "Segundo o governo federal, há 17,56 milhões de microempreendedores individuais ativos. A figura do MEI foi criada em 2008, no segundo mandato de Lula, que sancionou um projeto do deputado Antônio Carlos de Mendes Thame (PV).",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
-    "data_checagem": "2026-10-18",
-    "alcance": 2
+    "explicacao": "Estadão Verifica, Aos Fatos e G1 Fato ou Fake classificam a afirmação como verdadeira. Segundo o governo federal, há 17,56 milhões de microempreendedores individuais ativos. A figura do MEI foi criada em 2008, no segundo mandato de Lula, que sancionou um projeto do deputado Antônio Carlos de Mendes Thame (PV).",
+    "fonte_nome": "G1 Fato ou Fake",
+    "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
+    "data_checagem": "2026-10-19",
+    "alcance": 3
   },
   {
     "id": "5fc452a2",
@@ -445,7 +439,7 @@
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/lula-flavio-crise-stf/",
     "data_checagem": "2026-09-17",
-    "alcance": 2
+    "alcance": 1
   },
   {
     "id": "fb1c8e61",
@@ -454,12 +448,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "enganoso",
-    "explicacao": "Entre 2003 e 2010, nos dois primeiros mandatos de Lula, foram criados 15,4 milhões de empregos formais, segundo a Rais. O número só se aproxima de 22 milhões somando os governos de Dilma Rousseff; juntos, os governos petistas criaram cerca de 20 milhões de vagas.",
+    "explicacao": "Aos Fatos e G1 Fato ou Fake classificam a afirmação como \"não é bem assim\", a Lupa como \"exagerado\" e o Estadão Verifica como \"verdadeiro em partes\". Entre 2003 e 2010, nos dois primeiros mandatos de Lula, foram criados cerca de 15,4 milhões de empregos formais, segundo a Rais. O número só se aproxima de 22 milhões somando os governos de Dilma Rousseff.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
     "data_checagem": "2026-10-15",
-    "alcance": 2,
-    "observacao": "Fora do jogo: o Estadão Verifica classifica como \"verdadeiro em partes\", rótulo que não usamos."
+    "alcance": 3
   },
   {
     "id": "b8b388ad",
@@ -490,15 +483,15 @@
   {
     "id": "b2d99249",
     "texto": "Flávio Bolsonaro nunca quis tirar o número de identificação das munições.",
-    "citacao": "[Eu] nunca quis tirar nada disso [o número de identificação das munições].",
+    "citacao": "[Eu] Nunca quis tirar nada disso [código de rastreamento de munições].",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
-    "explicacao": "Flávio apoiou o projeto de lei 3.723/2019, do governo Bolsonaro, que revogava a exigência de venda de munições em embalagens com código de rastreio. Em 2021, ele escreveu nas redes sociais que era declaradamente a favor do projeto.",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
-    "data_checagem": "2026-10-18",
-    "alcance": 2
+    "explicacao": "Estadão Verifica, Aos Fatos e G1 Fato ou Fake classificam a afirmação como falsa. Flávio apoiou o projeto de lei 3.723/2019, do governo Bolsonaro, que revogava a exigência de venda de munições em embalagens com código de rastreio. Em 2021, ele escreveu nas redes sociais que era declaradamente a favor do projeto.",
+    "fonte_nome": "G1 Fato ou Fake",
+    "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
+    "data_checagem": "2026-10-19",
+    "alcance": 3
   },
   {
     "id": "01702d43",
@@ -533,25 +526,24 @@
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
-    "explicacao": "Não há registro de que Lula tenha dado cargos a condenados no Mensalão em seu terceiro mandato. O que a imprensa registrou foi o apoio declarado do presidente a petistas condenados no caso, como José Dirceu e Delúbio Soares, que se candidataram a deputado federal e não foram eleitos.",
-    "fonte_nome": "Estadão Verifica",
-    "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
+    "explicacao": "Estadão Verifica e Aos Fatos classificam a afirmação como falsa. Não há registro de que Lula tenha dado cargos a condenados no Mensalão em seu terceiro mandato. O que a imprensa registrou foi o apoio declarado do presidente a petistas condenados no caso, como José Dirceu e Delúbio Soares, que se candidataram a deputado federal e não foram eleitos.",
+    "fonte_nome": "Aos Fatos",
+    "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "7bb5f029",
     "texto": "O governo Lula bateu o recorde de empresas fechadas no Brasil.",
-    "citacao": "[Lula deixa] recorde de empresa fechada.",
+    "citacao": "E um monte de recorde negativo: [...] recorde de empresa fechada,",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
-    "explicacao": "O recorde de falências foi em 2015, com 1.828 empresas baixadas. Nos últimos anos do governo Lula o número caiu, segundo a Serasa Experian: 862 em 2024, 734 em 2025 e 277 até maio de 2026. O Aos Fatos diz que é falso que tenha havido recorde de empresas fechadas no atual governo.",
+    "explicacao": "Aos Fatos e G1 Fato ou Fake classificam a afirmação como falsa; o Estadão Verifica, como \"falta contexto\", porque os fechamentos aumentaram no atual governo, mas a abertura de empresas também bateu recorde. Pela maioria, vale falso. Segundo a Serasa Experian, o recorde de falências foi em 2015, com 1.828 empresas; depois o número caiu: 862 em 2024, 734 em 2025 e 277 até maio de 2026.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 2,
-    "observacao": "Fora do jogo: Aos Fatos e G1 dizem falso e o Estadão Verifica diz \"falta contexto\"."
+    "alcance": 3
   },
   {
     "id": "641a29c1",
@@ -573,11 +565,11 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "O Aos Fatos classifica a afirmação como verdadeira: Flávio Bolsonaro defendeu, como advogado, o policial militar Bruno Dias Delaroli, acusado de matar Ana Clara Machado, de 5 anos, com dois tiros de fuzil em Niterói (RJ), em 2021. Ele passou a integrar a defesa em 2024 e assinou um recurso ao STJ para reverter a decisão de levar o caso a júri popular; o recurso foi negado e o caso ainda aguarda julgamento.",
+    "explicacao": "Aos Fatos e G1 Fato ou Fake classificam a afirmação como verdadeira: Flávio Bolsonaro defendeu, como advogado, o policial militar Bruno Dias Delaroli, acusado de matar Ana Clara Machado, de 5 anos, com dois tiros de fuzil em Niterói (RJ), em 2021. Ele passou a integrar a defesa em 2024 e assinou um recurso ao STJ para reverter a decisão de levar o caso a júri popular; o recurso foi negado e o caso ainda aguarda julgamento.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 2
+    "alcance": 3
   },
   {
     "id": "6938e526",
@@ -590,6 +582,6 @@
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-flavio-bolsonaro-globo/",
     "data_checagem": "2026-08-28",
-    "alcance": 2
+    "alcance": 3
   }
 ]
