@@ -25,13 +25,14 @@ import {
 } from "./rotulos";
 
 type EstadoContinuar = "parado" | "sorteando" | "fim" | "falha";
-type Aviso = "copiado" | "falhou" | "carregando" | "imagemFalhou";
+type Aviso = "copiado" | "falhou" | "carregando" | "imagemFalhou" | "imagemNaoCarregou";
 
 const TEXTO_AVISO: Record<Aviso, string> = {
   copiado: "Texto copiado",
   falhou: "Não deu para copiar",
   carregando: "Imagem ainda carregando…",
   imagemFalhou: "Não deu para mandar a imagem",
+  imagemNaoCarregou: "Não deu para carregar a imagem. Tente o link de baixar.",
 };
 
 export function ResultadoFinal(p: {
@@ -65,6 +66,7 @@ export function ResultadoFinal(p: {
   const [arquivo, setArquivo] = useState<File | null>(null);
   // Só no navegador: no servidor (e até montar) o botão dos stories não aparece.
   const [aceitaArquivos, setAceitaArquivos] = useState(false);
+  const [imagemNaoCarregou, setImagemNaoCarregou] = useState(false);
   const [aviso, setAviso] = useState<Aviso | null>(null);
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -76,6 +78,8 @@ export function ResultadoFinal(p: {
       setArquivo(f);
       // Quem tocou em "Mandar para os stories" cedo demais viu "carregando": some quando a imagem chega.
       if (f) setAviso((atual) => (atual === "carregando" ? null : atual));
+      // A busca falhou de vez: o próximo toque nos stories avisa isso, não "carregando".
+      else setImagemNaoCarregou(true);
     });
     return () => {
       montado = false;
@@ -124,7 +128,7 @@ export function ResultadoFinal(p: {
       // A folha abriu: um aviso de toque anterior já não vale.
       if (desfecho === "folha") mostrar(null);
       else if (desfecho === "copiado") mostrar("copiado");
-      else if (desfecho === "indisponivel") mostrar("carregando");
+      else if (desfecho === "indisponivel") mostrar(imagemNaoCarregou ? "imagemNaoCarregou" : "carregando");
       else if (desfecho === "falhou")
         mostrar(modo === "imagem" ? "imagemFalhou" : "falhou");
     });

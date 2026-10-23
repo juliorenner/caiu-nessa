@@ -211,6 +211,17 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(share).not.toHaveBeenCalled()
   })
 
+  it('busca da imagem falhou: Mandar para os stories avisa que não carregou', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('rede')))
+    const share = vi.fn().mockResolvedValue(undefined)
+    stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
+    renderizar()
+    await assentar()
+    fireEvent.click(stories())
+    await waitFor(() => expect(aviso()).toHaveTextContent('Não deu para carregar a imagem'))
+    expect(share).not.toHaveBeenCalled()
+  })
+
   it('aviso de carregando some quando a imagem chega', async () => {
     let resolver: (v: unknown) => void = () => {}
     vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(r => (resolver = r))))
