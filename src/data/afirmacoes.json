@@ -2116,7 +2116,8 @@
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-19",
-    "alcance": 3
+    "alcance": 3,
+    "observacao": "Fora do jogo: o Aos Fatos deu \"Verdadeiro\" à mesma alegação (\"eu peguei um déficit de 2,8%\") na entrevista de Lula à Globo em 15/10, enquanto o G1 Fato ou Fake (#FAKE) e a Lupa (falso) a checaram como falsa; verdadeiro contra falso tira o item do jogo."
   },
   {
     "id": "c5c384ee",
@@ -2337,6 +2338,45 @@
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/coro-lula-rock-in-rio/",
     "data_checagem": "2026-09-14",
+    "alcance": 1
+  },
+  {
+    "id": "a7c31e5d",
+    "texto": "O governo Bolsonaro trouxe a tecnologia 5G para o Brasil.",
+    "citacao": "Trouxe a tecnologia 5G para o Brasil.",
+    "lado": "direita",
+    "autor": "Lista viral de 42 \"realizações de Bolsonaro\", postada por Pablo Marçal em 7/10 e curtida por Flávio Bolsonaro (PL), segundo a Lupa",
+    "veredito": "verdadeiro",
+    "explicacao": "A Lupa classifica como verdadeiro: o 5G começou a ser oferecido comercialmente no Brasil em julho de 2020, no governo Bolsonaro; a Anatel fez o leilão das frequências em novembro de 2021, e Brasília foi a primeira capital com 5G standalone, em julho de 2022.",
+    "fonte_nome": "Lupa",
+    "fonte_url": "https://agencialupa.org/noticias/2026/10/22/lista-viral-de-42-realizacoes-de-bolsonaro-inclui-obras-de-outros-governos-e-nome-de-rodovia-que-nao-existe",
+    "data_checagem": "2026-10-22",
+    "alcance": 1
+  },
+  {
+    "id": "4be09f27",
+    "texto": "O governo Bolsonaro bateu recorde de lucro na Caixa Econômica Federal.",
+    "citacao": "Bateu recorde de lucro pela Caixa Econômica.",
+    "lado": "direita",
+    "autor": "Lista viral de 42 \"realizações de Bolsonaro\", postada por Pablo Marçal em 7/10 e curtida por Flávio Bolsonaro (PL), segundo a Lupa",
+    "veredito": "verdadeiro",
+    "explicacao": "A Lupa classifica como verdadeiro: em 2019 a Caixa teve lucro líquido recorde de R$ 21,1 bilhões, alta de 103% sobre o ano anterior. A Lupa registra que o resultado foi impulsionado por mais de R$ 15,5 bilhões em vendas de ativos.",
+    "fonte_nome": "Lupa",
+    "fonte_url": "https://agencialupa.org/noticias/2026/10/22/lista-viral-de-42-realizacoes-de-bolsonaro-inclui-obras-de-outros-governos-e-nome-de-rodovia-que-nao-existe",
+    "data_checagem": "2026-10-22",
+    "alcance": 1
+  },
+  {
+    "id": "d82f6a13",
+    "texto": "O governo Bolsonaro fez parceria com a Nasa na missão Artemis.",
+    "citacao": "Realizou a parceria com a Nasa na Missão Artemis.",
+    "lado": "direita",
+    "autor": "Lista viral de 42 \"realizações de Bolsonaro\", postada por Pablo Marçal em 7/10 e curtida por Flávio Bolsonaro (PL), segundo a Lupa",
+    "veredito": "verdadeiro",
+    "explicacao": "A Lupa classifica como verdadeiro: em junho de 2021, no governo Bolsonaro, o Brasil aderiu aos Acordos Artemis, idealizados pela Nasa, e foi o primeiro país da América do Sul a integrar a iniciativa. A Lupa ressalva que o acordo não garante participação direta nas missões lunares.",
+    "fonte_nome": "Lupa",
+    "fonte_url": "https://agencialupa.org/noticias/2026/10/22/lista-viral-de-42-realizacoes-de-bolsonaro-inclui-obras-de-outros-governos-e-nome-de-rodovia-que-nao-existe",
+    "data_checagem": "2026-10-22",
     "alcance": 1
   }
 ]
