@@ -1,6 +1,6 @@
 import { cleanup, render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
-import { escolher, IconesDoCartao, livreParaGrande, MAXIMO, VAGAS, VARIACOES } from '@/components/IconesDoCartao'
+import { DISTANCIA_MINIMA, escolher, IconesDoCartao, livreParaGrande, MAXIMO, VAGAS, VARIACOES } from '@/components/IconesDoCartao'
 
 afterEach(cleanup)
 
@@ -33,6 +33,21 @@ describe('VARIACOES', () => {
 })
 
 describe('escolher', () => {
+  it('ícones ficam a pelo menos a distância mínima uns dos outros e cobrem cima e baixo', () => {
+    for (let s = 0; s < 12; s++) {
+      for (const longo of [false, true]) {
+        const itens = escolher(s, longo)
+        expect(itens).toHaveLength(MAXIMO)
+        for (let i = 0; i < itens.length; i++)
+          for (let j = i + 1; j < itens.length; j++) {
+            const a = itens[i]!.vaga, b = itens[j]!.vaga
+            expect(Math.hypot(a.left - b.left, a.top - b.top), `semente ${s} longo ${longo}`).toBeGreaterThanOrEqual(DISTANCIA_MINIMA)
+          }
+        expect(itens.some(({ vaga }) => vaga.top < 50) && itens.some(({ vaga }) => vaga.top > 50), `semente ${s} longo ${longo}`).toBe(true)
+      }
+    }
+  })
+
   it('toda variação tem 3 vagas livres para ícones grandes, inclusive só extremas', () => {
     for (const { vagas } of VARIACOES) {
       const livres = vagas.map(v => VAGAS[v]!).filter(livreParaGrande)
