@@ -1,20 +1,24 @@
 import { expect, it } from 'vitest'
 import { NOME_ARQUIVO, textoDeCompartilhar } from '@/lib/compartilhar'
 
-it('texto curto: placar, quantas caiu e o domínio', () => {
-  expect(textoDeCompartilhar({ acertos: 4, total: 12, caiu: 3 })).toBe(
-    'Fiz 4/12 no Caiu Nessa? e caí em 3. E você?\ncaiunessa.com.br',
+const URL_RESULTADO = 'https://caiunessa.com.br/r/4-12-3-caiu-feio-aeaqeeaeeqea'
+
+it('sem url: uma linha, termina em "E você?"', () => {
+  expect(textoDeCompartilhar({ acertos: 4, total: 12, caiu: 3 })).toBe('Fiz 4/12 no Caiu Nessa? e caí em 3. E você?')
+})
+
+it('com url: segunda linha com a URL absoluta do resultado', () => {
+  expect(textoDeCompartilhar({ acertos: 4, total: 12, caiu: 3, url: URL_RESULTADO })).toBe(
+    `Fiz 4/12 no Caiu Nessa? e caí em 3. E você?\n${URL_RESULTADO}`,
   )
 })
 
 it('zero caiu', () => {
-  expect(textoDeCompartilhar({ acertos: 12, total: 12, caiu: 0 })).toBe(
-    'Fiz 12/12 no Caiu Nessa? e não caí em nenhuma. E você?\ncaiunessa.com.br',
-  )
+  expect(textoDeCompartilhar({ acertos: 12, total: 12, caiu: 0 })).toBe('Fiz 12/12 no Caiu Nessa? e não caí em nenhuma. E você?')
 })
 
 it('rodada de 6', () => {
-  expect(textoDeCompartilhar({ acertos: 3, total: 6, caiu: 1 })).toBe('Fiz 3/6 no Caiu Nessa? e caí em 1. E você?\ncaiunessa.com.br')
+  expect(textoDeCompartilhar({ acertos: 3, total: 6, caiu: 1 })).toBe('Fiz 3/6 no Caiu Nessa? e caí em 1. E você?')
 })
 
 it('nome do arquivo da imagem', () => expect(NOME_ARQUIVO).toBe('caiu-nessa-placar.png'))

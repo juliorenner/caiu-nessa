@@ -34,9 +34,11 @@ export function letrasParaCasas(g: string): Casa[] {
   })
 }
 
+export type Parametros = { a: number; t: 6 | 12; c: number; f: Faixa; g: string }
+
 const inteiro = z.coerce.number().int().min(0)
 
-export const parametrosSchema: z.ZodType<{ a: number; t: 6 | 12; c: number; f: Faixa; g: string }> = z
+export const parametrosSchema: z.ZodType<Parametros> = z
   .object({
     a: inteiro,
     t: z.coerce.number().pipe(z.union([z.literal(6), z.literal(12)])),
@@ -62,4 +64,25 @@ export function urlDoCartao(p: { acertos: number; total: number; caiu: number; f
     g: casasParaLetras(p.casas),
   })
   return `/cartao?${query.toString()}`
+}
+
+type Resultado = { acertos: number; total: number; caiu: number; faixa: Faixa; casas: Casa[] }
+
+// Código do resultado: {a}-{t}-{c}-{f}-{g}. A faixa tem hífens; g só tem a, e, q.
+export function codigoDoResultado(p: Resultado): string {
+  return `${p.acertos}-${p.total}-${p.caiu}-${p.faixa}-${casasParaLetras(p.casas)}`
+}
+
+const CODIGO = /^(\d+)-(\d+)-(\d+)-([a-z-]+)-([aeq]+)$/
+
+export function parametrosDoCodigo(codigo: string): Parametros | null {
+  const partes = CODIGO.exec(codigo)
+  if (!partes) return null
+  const [, a, t, c, f, g] = partes
+  const lido = parametrosSchema.safeParse({ a, t, c, f, g })
+  return lido.success ? lido.data : null
+}
+
+export function urlDoResultado(p: Resultado): string {
+  return `/r/${codigoDoResultado(p)}`
 }
