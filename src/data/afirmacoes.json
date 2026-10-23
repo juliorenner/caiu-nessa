@@ -13,12 +13,12 @@
   },
   {
     "id": "9ffc66a8",
-    "texto": "Em 2009, na Assembleia Legislativa do Rio de Janeiro, Flávio Bolsonaro, então deputado estadual, foi o único de 49 deputados a votar contra a ampliação da licença-maternidade das funcionárias.",
+    "texto": "Em 2009, na Alerj, Flávio Bolsonaro, então deputado estadual, foi o único a votar contra a ampliação da licença-maternidade das servidoras.",
     "citacao": "Em 2009, você [Flávio Bolsonaro], como deputado estadual… Tinha uma discussão na Assembleia [Legislativa do Rio de Janeiro] para ampliar a licença de maternidade das funcionárias. E, de 49 deputados, você foi o único que votou contra.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "Em março de 2009, a Alerj discutiu uma proposta para estender a licença-maternidade das servidoras estaduais de quatro para seis meses. Flávio Bolsonaro foi o único a declarar voto contrário; outro deputado que também votara contra mudou o voto para sim.",
+    "explicacao": "Em 2009, a Alerj discutiu uma proposta para estender a licença-maternidade das servidoras estaduais de quatro para seis meses. Flávio Bolsonaro foi o único a declarar voto contrário; outro deputado que também votara contra mudou o voto para sim.",
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-19"
@@ -62,7 +62,7 @@
   {
     "id": "392ba64f",
     "texto": "Todos os aposentados vítimas da fraude dos descontos indevidos no INSS já foram ressarcidos pelo governo.",
-    "citacao": "Não tem um aposentado que foi vítima da fraude no INSS que não foi ressarcido pelo governo.",
+    "citacao": "Não tem um aposentado que foi roubado e que não foi devolvido o dinheiro.",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista ao Jornal Nacional, da TV Globo",
     "veredito": "enganoso",
@@ -146,7 +146,7 @@
   {
     "id": "3c13f8ef",
     "texto": "O governo já devolveu R$ 3,5 bilhões aos afetados por descontos irregulares no INSS.",
-    "citacao": "O governo já devolveu R$ 3,5 bilhões aos afetados por descontos irregulares no INSS.",
+    "citacao": "Já pagamos R$ 3 bilhões e meio aos aposentados.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
@@ -187,7 +187,7 @@
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista ao podcast Flow",
     "veredito": "verdadeiro",
-    "explicacao": "Segundo o IBGE, a inflação acumulada entre janeiro de 2023 e agosto de 2026 foi de 17,9%, o menor percentual para o período equivalente de um mandato presidencial desde o início do Plano Real, em 1994.",
+    "explicacao": "Segundo o IBGE, a inflação acumulada entre janeiro de 2023 e agosto de 2026 foi de 17,9%, o menor percentual para o período equivalente de um mandato presidencial desde o início do Plano Real, em 1994, excluído o período 2015–2018, encurtado pelo impeachment.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-entrevista-lula-ao-flow/",
     "data_checagem": "2026-10-01"
@@ -256,7 +256,7 @@
   {
     "id": "226b7d8c",
     "texto": "Jair Bolsonaro mentia 11 vezes por dia.",
-    "citacao": "Jair Bolsonaro mentia 11 vezes por dia.",
+    "citacao": "[Jair Bolsonaro] mentia 11 vezes por dia.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "enganoso",
@@ -305,7 +305,7 @@
   },
   {
     "id": "6b98ca43",
-    "texto": "Lula é o responsável pela liberação do “jogo do tigrinho”.",
+    "texto": "Lula é o responsável pela liberação das bets, as apostas on-line, no Brasil.",
     "citacao": "Você [Lula] que é o pai do tigrinho.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em live no YouTube",
@@ -322,7 +322,7 @@
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), em live no YouTube",
     "veredito": "falso",
-    "explicacao": "Nenhuma decisão judicial impediu Flávio de participar do debate da TV Globo. Duas decisões alteraram regras do programa, e ele anunciou que não iria; com a desistência, a emissora cancelou o debate.",
+    "explicacao": "Nenhuma decisão judicial impediu Flávio de participar do debate da TV Globo. Duas decisões alteraram regras do programa, e ele anunciou que não iria; com a desistência dele e as determinações judiciais, a emissora cancelou o debate.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-live-flavio-bolsonaro/",
     "data_checagem": "2026-10-02"
@@ -392,7 +392,7 @@
   {
     "id": "483d6a7b",
     "texto": "O governo de Lula criou o MEI, e há 17,5 milhões de MEIs no Brasil.",
-    "citacao": "O governo de Lula criou o MEI, e há 17,5 milhões de MEIs no Brasil.",
+    "citacao": "Nós criamos o MEI [...]. Nós temos hoje 17,5 milhões de MEIs.",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
@@ -406,7 +406,7 @@
     "texto": "Flávio Bolsonaro era senador quando Alexandre de Moraes foi indicado ao Supremo e deve ter votado nele.",
     "citacao": "Quando o Alexandre de Moraes foi indicado para ministro do Supremo, [o Flávio] era senador. Ele deve ter votado nele.",
     "lado": "esquerda",
-    "autor": "Lula (PT)",
+    "autor": "Lula (PT), em 16 de setembro de 2026, segundo o Aos Fatos",
     "veredito": "falso",
     "explicacao": "Moraes foi indicado e aprovado pelo Senado em fevereiro de 2017. Na época, Flávio Bolsonaro era deputado estadual no Rio de Janeiro e não participou da sabatina nem da votação.",
     "fonte_nome": "Aos Fatos",
@@ -465,7 +465,7 @@
   {
     "id": "01702d43",
     "texto": "O PT governou o País em 20 dos últimos 24 anos.",
-    "citacao": "O PT governou o País em 20 dos últimos 24 anos.",
+    "citacao": "O PT já governa esse país há 20 anos dos últimos 24.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "enganoso",
@@ -489,11 +489,11 @@
   {
     "id": "bf0bc02b",
     "texto": "Lula está dando emprego para pessoas que foram condenadas no Mensalão.",
-    "citacao": "[Lula] está dando emprego para pessoas que foram condenadas no Mensalão.",
+    "citacao": "Você está dando emprego para um monte de cara que foi condenado por corrupção no Mensalão.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
-    "explicacao": "Não há registro de que Lula tenha dado cargos a condenados no Mensalão em seu terceiro mandato. O que a imprensa registrou foi o apoio declarado do presidente a petistas condenados que se candidataram a deputado federal e não foram eleitos.",
+    "explicacao": "Não há registro de que Lula tenha dado cargos a condenados no Mensalão em seu terceiro mandato. O que a imprensa registrou foi o apoio declarado do presidente a petistas condenados no caso, como José Dirceu e Delúbio Soares, que se candidataram a deputado federal e não foram eleitos.",
     "fonte_nome": "Estadão Verifica",
     "fonte_url": "https://www.estadao.com.br/estadao-verifica/checamos-o-debate-entre-lula-e-flavio-na-band/",
     "data_checagem": "2026-10-18"
@@ -505,19 +505,20 @@
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
     "veredito": "falso",
-    "explicacao": "O recorde de falências foi em 2015, com 1.828 empresas baixadas. Nos últimos anos do governo Lula o número caiu, segundo a Serasa Experian: 862 em 2024, 734 em 2025 e 277 até maio de 2026. Flávio repetiu a afirmação ao menos 25 vezes em 2026, e o Aos Fatos diz que é falso que tenha havido recorde de empresas fechadas no atual governo.",
+    "explicacao": "O recorde de falências foi em 2015, com 1.828 empresas baixadas. Nos últimos anos do governo Lula o número caiu, segundo a Serasa Experian: 862 em 2024, 734 em 2025 e 277 até maio de 2026. O Aos Fatos diz que é falso que tenha havido recorde de empresas fechadas no atual governo.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
-    "data_checagem": "2026-10-18"
+    "data_checagem": "2026-10-18",
+    "observacao": "Fora do jogo: Aos Fatos e G1 dizem falso e o Estadão Verifica diz \"falta contexto\"."
   },
   {
     "id": "641a29c1",
     "texto": "Um vídeo de uma mulher com uma suposta droga mostra militantes do ato em apoio a Lula realizado em 11 de outubro na Avenida Paulista, em São Paulo.",
-    "citacao": "Militantes que participaram de uma manifestação em apoio ao presidente Luiz Inácio Lula da Silva [teriam consumido substâncias ilícitas durante o ato na Avenida Paulista].",
+    "citacao": "Militantes que participaram de uma manifestação em apoio ao presidente Luiz Inácio Lula da Silva teriam consumido substâncias supostamente ilícitas neste domingo (11), na Avenida Paulista, em São Paulo.",
     "lado": "direita",
-    "autor": "Flávio Bolsonaro (PL), em post no Instagram, repostando o deputado federal eleito Rony Gabriel, segundo a Lupa",
+    "autor": "Post nas redes, compartilhado por Flávio Bolsonaro (PL) ao repostar o deputado federal eleito Rony Gabriel, segundo a Lupa",
     "veredito": "falso",
-    "explicacao": "A Lupa fala em substância suspeita, não identificada. O vídeo já circulava antes do ato: uma busca reversa encontrou a mesma gravação em um post em espanhol no X de 10 de outubro, véspera da manifestação. A Lupa ressalva que isso não mostra onde nem quando o vídeo foi gravado, só que não é do ato pró-Lula. A legenda no Instagram teve cerca de 30 mil visualizações; Tarcísio de Freitas (Republicanos) também publicou vídeo criticando o ato.",
+    "explicacao": "A Lupa fala em substância suspeita, não identificada. O vídeo já circulava antes do ato: uma busca reversa encontrou a mesma gravação em um post em espanhol no X de 10 de outubro, véspera da manifestação. A Lupa ressalva que isso não mostra onde nem quando o vídeo foi gravado, só que não é do ato pró-Lula. Um dos posts com a alegação teve cerca de 30 mil visualizações.",
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/eleicoes/2026/10/12/video-de-mulher-com-suposta-droga-nao-e-de-ato-pro-lula-em-sp/",
     "data_checagem": "2026-10-12"
