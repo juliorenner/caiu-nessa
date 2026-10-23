@@ -45,6 +45,7 @@ export function CartaoAfirmacao({
   onResposta,
   reduzirMovimento,
   semente,
+  primeira = false,
 }: {
   afirmacao: AfirmacaoNoQuiz
   fase: FaseCartao
@@ -52,6 +53,7 @@ export function CartaoAfirmacao({
   onResposta: (v: Veredito) => void
   reduzirMovimento: boolean
   semente: number
+  primeira?: boolean
 }): ReactElement {
   const ativo = fase === 'ativo'
   const { handlers, dx, dy, arrastando, selo } = useArrasto({ ativo, onResposta })
@@ -94,8 +96,9 @@ export function CartaoAfirmacao({
         ?
       </span>
       {/* Dicas de gesto nas bordas; o texto para leitor de tela sobre as setas fica no Quiz. */}
+      {/* Na primeira ficha da partida a dica explica o termo; depois a pessoa já viu o painel do veredito. */}
       <span aria-hidden className={`${DICA} top-1 left-1/2 -translate-x-1/2 text-secundario`}>
-        ↑ Cheira mal
+        {primeira ? '↑ Cheira mal (meia-verdade)' : '↑ Cheira mal'}
       </span>
       <span aria-hidden className={`${DICA} bottom-1 left-2 text-mentira`}>
         ← Mentira

@@ -12,6 +12,8 @@ import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
 
 const DICA = `font-letreiro text-[11px] leading-[1.9] text-center lg:hidden ${TEXTO_SECUNDARIO}`
 const LINK_COMO_ESCOLHEMOS = `text-base ${LINK_PAGINA}`
+// O terceiro botão confunde quem chega: define o termo antes da primeira ficha.
+const DEFINICAO_CHEIRA_MAL = 'Cheira mal = verdade pela metade: exagero, falta de contexto ou número torto'
 const REPOSITORIO = 'https://github.com/juliorenner/caiu-nessa'
 // Marca do GitHub (Octicons, MIT) ao lado do texto, como os sites costumam linkar o código.
 const MARCA_GITHUB =
@@ -66,6 +68,7 @@ export default function Home() {
             <p className={DICA}>← Mentira · ↑ Cheira mal · Verdade →</p>
             <p className={DICA}>Arraste o cartão ou toque</p>
           </div>
+          <p className={DICA}>{DEFINICAO_CHEIRA_MAL}</p>
           <p
             aria-hidden
             className={`hidden lg:flex lg:flex-wrap lg:items-center lg:gap-x-[18px] lg:gap-y-2 font-letreiro text-[12px] ${TEXTO_SECUNDARIO}`}
@@ -90,6 +93,7 @@ export default function Home() {
             </span>
             <span className="font-sans text-sm">ou arraste com o mouse</span>
           </p>
+          <p className={`hidden lg:block font-sans text-sm ${TEXTO_SECUNDARIO}`}>{DEFINICAO_CHEIRA_MAL}</p>
           <BotaoSom />
           <p className="sr-only">Arraste o cartão: direita é verdade, esquerda é mentira, para cima se cheira mal.</p>
           <Link href="/como-escolhemos" className={`self-center lg:hidden ${LINK_COMO_ESCOLHEMOS}`}>

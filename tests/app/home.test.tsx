@@ -45,6 +45,15 @@ describe('home em telas largas', () => {
     expect(emLg[0].parentElement).toHaveClass('hidden', 'lg:flex')
   })
 
+  it('define "Cheira mal" uma vez por tamanho, visível para leitor de tela', () => {
+    render(<Home />)
+    const linhas = screen.getAllByText('Cheira mal = verdade pela metade: exagero, falta de contexto ou número torto')
+    expect(linhas).toHaveLength(2)
+    expect(linhas.filter((l) => l.classList.contains('lg:hidden'))).toHaveLength(1)
+    expect(linhas.filter((l) => l.classList.contains('hidden') && l.classList.contains('lg:block'))).toHaveLength(1)
+    for (const l of linhas) expect(l.closest('[aria-hidden]')).toBeNull()
+  })
+
   it('o link do GitHub (ícone + texto) aparece uma vez por tamanho, ao lado do "Como escolhemos"', () => {
     render(<Home />)
     const links = screen.getAllByRole('link', { name: 'Código aberto' })

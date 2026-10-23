@@ -298,6 +298,7 @@ export default function Quiz({
                 onResposta={responder}
                 reduzirMovimento={reduzirMovimento}
                 semente={indice + (rodada - 1) * 7}
+                primeira={indice === 0 && rodada === 1}
               />
             </div>
           </div>
