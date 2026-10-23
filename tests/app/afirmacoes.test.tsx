@@ -114,6 +114,16 @@ const primeira = {
 }
 
 describe('ResultadoFinal', () => {
+  it('com estatísticas, mostra a comparação com as outras pessoas', () => {
+    const comEstatisticas = {
+      ...dados,
+      estatisticas: { totalJogadas: 120, histograma: [], erroPorAfirmacao: {}, mediaEsquerda: 0, mediaDireita: 0 },
+      percentilAbaixo: 37,
+    }
+    render(<ResultadoFinal {...primeira} dados={comEstatisticas} onContinuar={async () => 'fim'} />)
+    expect(screen.getByText('Você acertou mais que 37% das pessoas.')).toBeInTheDocument()
+  })
+
   it('tem um link para /afirmacoes', () => {
     render(<ResultadoFinal {...primeira} onContinuar={async () => 'fim'} />)
     expect(screen.getByRole('link', { name: 'Ver todas as afirmações e suas fontes' })).toHaveAttribute(
@@ -130,7 +140,8 @@ describe('ResultadoFinal', () => {
     expect(screen.getByText(`4 de ${TOTAL_AFIRMACOES}`)).toHaveClass('sr-only')
     expect(screen.getByText('Fim de jogo')).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 1, name: 'Caiu feio' })).toBeInTheDocument()
-    expect(screen.getByText(/Você é um dos primeiros a jogar/)).toBeInTheDocument()
+    // Sem 100 jogadas ainda não há comparação: a caixa não aparece, nem um aviso no lugar.
+    expect(screen.queryByText(/das pessoas|primeiros a jogar|não está disponível/)).not.toBeInTheDocument()
     expect(screen.queryByText(/Na partida/)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Continuar jogando' })).toBeEnabled()
     expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')

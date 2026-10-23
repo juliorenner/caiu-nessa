@@ -44,13 +44,7 @@ export function ResultadoFinal(p: {
   casas: Casa[];
   onContinuar: () => Promise<"ok" | "fim" | "falha">;
 }) {
-  const {
-    resultado,
-    avaliacao,
-    estatisticas,
-    percentilAbaixo,
-    estatisticasIndisponiveis,
-  } = p.dados;
+  const { resultado, avaliacao, estatisticas, percentilAbaixo } = p.dados;
   const [continuar, setContinuar] = useState<EstadoContinuar>("parado");
   // Números da rodada corrente, não da partida.
   const placar = {
@@ -184,14 +178,11 @@ export function ResultadoFinal(p: {
             {avaliacao.vies}
           </p>
         )}
-        {/* A comparação com os outros jogadores só existe para a rodada completa (TOTAL_AFIRMACOES). Papel é claro nos dois temas. */}
-        {p.rodada === 1 && (
+        {/* A comparação com os outros jogadores só existe para a rodada completa (TOTAL_AFIRMACOES) e só
+            aparece quando já há jogadas suficientes; antes disso (ou com as estatísticas fora) não se diz nada. */}
+        {p.rodada === 1 && estatisticas && (
           <p className="border-[3px] border-tinta bg-papel p-4 text-base text-tinta">
-            {estatisticasIndisponiveis
-              ? "A comparação com os outros jogadores não está disponível agora."
-              : estatisticas
-                ? `Você acertou mais que ${percentilAbaixo ?? 0}% das pessoas.`
-                : "Você é um dos primeiros a jogar. A comparação com os outros aparece a partir de 100 jogadas."}
+            Você acertou mais que {percentilAbaixo ?? 0}% das pessoas.
           </p>
         )}
         <button
@@ -210,8 +201,6 @@ export function ResultadoFinal(p: {
             Mandar para os stories
           </button>
         )}
-        {/* Lembrete de precisão: a pesquisa (Nature 2021) mostra queda de ~51% no repasse de manchetes falsas. */}
-        <p className={`text-sm ${TEXTO_SECUNDARIO}`}>Antes de repassar no grupo, confira a checagem.</p>
         <a
           download={NOME_ARQUIVO}
           href={urlCartao}
