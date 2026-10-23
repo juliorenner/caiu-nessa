@@ -11,6 +11,24 @@ it('Ficha mostra os dois lados', () => {
   expect(screen.getByText('Placar 00')).toBeInTheDocument()
 })
 
+it('Ficha com ícone: o nó fica num span aria-hidden antes do rótulo', () => {
+  const { container } = render(<Ficha icone={<svg data-testid="icone" />} esquerda="Ficha 01/12" />)
+  const icone = screen.getByTestId('icone')
+  const span = icone.parentElement!
+  expect(span).toHaveAttribute('aria-hidden')
+  expect(span).toHaveClass('hidden', 'min-[360px]:inline-block')
+  expect(span.nextElementSibling).toHaveTextContent('Ficha 01/12')
+  expect(container.querySelector('[data-ficha]')!.contains(span)).toBe(true)
+})
+
+it('Ficha sem ícone não renderiza o span do ícone', () => {
+  const { container } = render(<Ficha esquerda="Ficha 01/12" />)
+  const ficha = container.querySelector('[data-ficha]')!
+  // Só os dois furos e o rótulo.
+  expect(ficha.children).toHaveLength(3)
+  expect(ficha.querySelector('svg')).toBeNull()
+})
+
 it('CarimbosDeProgresso marca pendente, atual, acerto e erro', () => {
   const { container } = render(
     <CarimbosDeProgresso total={6} atual={2} estados={['acerto', 'erro', null, null, null, null]} />,

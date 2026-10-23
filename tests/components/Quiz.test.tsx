@@ -243,6 +243,14 @@ describe('Quiz', () => {
     expect(screen.getAllByRole('button').every(b => b.querySelector('svg'))).toBe(true)
   })
 
+  it('a ficha do jogo traz a urna, decorativa, sem esconder o rótulo', () => {
+    const { container } = render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const svg = container.querySelector('[data-ficha] svg')
+    expect(svg).not.toBeNull()
+    expect(svg!.closest('[aria-hidden]')).not.toBeNull()
+    expect(screen.getByText('Ficha 01/12')).toBeInTheDocument()
+  })
+
   it('carimbos de progresso acompanham acerto e erro', async () => {
     const user = userEvent.setup()
     const { container } = render(<Quiz {...daRodada} afirmacoes={afirmacoesValidas} erroPorAfirmacao={null} embaralharFn={identidade} />)

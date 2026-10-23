@@ -11,6 +11,7 @@ import { ResultadoFinal } from './ResultadoFinal'
 import { CarimbosDeProgresso } from './CarimbosDeProgresso'
 import { Ficha } from './Ficha'
 import { IconeVeredito } from './IconeVeredito'
+import { Urna } from './icones/Urna'
 import { ARIA_BOTAO_RESPOSTA, BOTAO_EM_CARTAO, BOTAO_RESPOSTA, FOCO, ROTULO_BOTAO, SUPERFICIE } from './rotulos'
 import type { AfirmacaoNoQuiz } from './tipos'
 
@@ -252,6 +253,7 @@ export default function Quiz({
         className={`flex flex-1 flex-col gap-3 ${etapa === 'feedback' ? '[filter:brightness(.75)_saturate(.6)]' : ''}`}
       >
         <Ficha
+          icone={<Urna className="size-[18px]" />}
           esquerda={
             // A posição é lida pelo sr-only "Afirmação n de N" logo abaixo: aqui não anuncia de novo.
             <>
