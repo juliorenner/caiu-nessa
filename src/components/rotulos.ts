@@ -64,7 +64,7 @@ const BOTAO_ACAO = 'flex min-h-12 w-full items-center justify-center px-5 py-3 d
 export const BOTAO_PRIMARIO = `${BOTAO_APERTAR} ${BOTAO_ACAO} bg-tinta text-papel dark:bg-papel dark:text-tinta ${FOCO}`
 
 // Ação secundária ("fantasma") ao lado do primário: mesma forma, fundo branco; no escuro, transparente com papel.
-export const BOTAO_SECUNDARIO = `${BOTAO_APERTAR} ${BOTAO_ACAO} bg-superficie text-tinta dark:bg-transparent dark:text-papel ${FOCO}`
+export const BOTAO_SECUNDARIO = `${BOTAO_APERTAR} ${BOTAO_ACAO} bg-superficie text-tinta dark:bg-fundo-escuro dark:text-papel ${FOCO}`
 
 // Botão dentro de um cartão (branco nos dois temas): sem variante escura.
 export const BOTAO_EM_CARTAO = `${APERTAR_CLARO} ${BOTAO_ACAO} bg-tinta text-papel ${FOCO_EM_SUPERFICIE}`
