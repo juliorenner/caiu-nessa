@@ -250,9 +250,43 @@ describe('Quiz', () => {
 
   it('botões na ordem dos gestos, com ícone', () => {
     render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
-    const nomes = screen.getAllByRole('button').map(b => b.getAttribute('aria-label') ?? b.textContent)
-    expect(nomes).toEqual(['Mentira', 'Isso me cheira mal: enganoso', 'Verdade'])
+    const nomes = ['Mentira', 'Isso me cheira mal: enganoso', 'Verdade']
+    expect(screen.getAllByRole('button')).toEqual(nomes.map(name => screen.getByRole('button', { name })))
     expect(screen.getAllByRole('button').every(b => b.querySelector('svg'))).toBe(true)
+  })
+
+  it('cada botão de resposta mostra sua tecla, decorativa, sem mudar o nome acessível', () => {
+    render(<Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />)
+    const teclas: [string, string][] = [
+      ['Mentira', '←'],
+      ['Isso me cheira mal: enganoso', '↑'],
+      ['Verdade', '→'],
+    ]
+    for (const [name, tecla] of teclas) {
+      const kbd = screen.getByRole('button', { name }).querySelector('kbd')
+      expect(kbd).toHaveTextContent(tecla)
+      expect(kbd).toHaveAttribute('aria-hidden')
+    }
+  })
+
+  it('caixa de dicas de teclado ao lado do cartão (só em lg)', () => {
+    const { container } = render(
+      <Quiz {...daRodada} afirmacoes={rodadaPrimeira} erroPorAfirmacao={null} embaralharFn={identidade} />,
+    )
+    const caixa = screen.getByRole('complementary', { name: 'Dicas de teclado' })
+    expect(caixa.tagName).toBe('ASIDE')
+    expect(caixa).toHaveClass('hidden', 'lg:flex')
+    expect(caixa).toHaveTextContent('Teclas')
+    for (const rotulo of ['Mentira', 'Cheira mal', 'Verdade', 'ou arraste com o mouse']) expect(caixa).toHaveTextContent(rotulo)
+    expect([...caixa.querySelectorAll('kbd')].map(k => k.textContent)).toEqual(['←', '↑', '→'])
+    expect(container.querySelector('[data-conteudo]')).toHaveClass('lg:grid', 'lg:grid-cols-[1fr_420px]')
+  })
+
+  it('texto do cartão cresce em lg', () => {
+    expect(tamanhoDoTexto('x'.repeat(50))).toBe('text-2xl lg:text-[32px]')
+    expect(tamanhoDoTexto('x'.repeat(80))).toBe('text-xl lg:text-[28px]')
+    expect(tamanhoDoTexto('x'.repeat(120))).toBe('text-lg lg:text-2xl')
+    expect(tamanhoDoTexto('x'.repeat(200))).toBe('text-base lg:text-xl')
   })
 
   it('a ficha do jogo traz a urna, decorativa, sem esconder o rótulo', () => {
@@ -295,6 +329,8 @@ describe('Quiz', () => {
     expect(container.querySelector('[data-conteudo]')!.className).not.toMatch(/brightness/)
     await user.click(screen.getByRole('button', { name: 'Verdade' }))
     expect(container.querySelector('[data-conteudo]')!.className).toMatch(/brightness/)
+    // Em lg o cartão e o painel ficam lado a lado: sem escurecer, para ler os dois.
+    expect(container.querySelector('[data-conteudo]')).toHaveClass('lg:[filter:none]')
   })
 
   it('ignora resposta durante a animação', () => {
@@ -385,7 +421,7 @@ describe('Quiz', () => {
     expect(raiz).not.toHaveClass('overflow-hidden')
     const texto = screen.getByText(maisLonga.texto)
     expect(texto).toHaveClass(tamanhoDoTexto(maisLonga.texto))
-    expect(['text-lg', 'text-base']).toContain(tamanhoDoTexto(maisLonga.texto))
+    expect(['text-lg lg:text-2xl', 'text-base lg:text-xl']).toContain(tamanhoDoTexto(maisLonga.texto))
     for (const botao of ['Verdade', 'Mentira', 'Isso me cheira mal: enganoso'])
       expect(screen.getByRole('button', { name: botao })).toHaveClass('min-h-14')
 
