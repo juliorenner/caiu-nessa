@@ -95,7 +95,7 @@ export function PainelVeredito(p: {
         aria-live="polite"
         aria-describedby={idMensagem}
         onKeyDown={conterFoco}
-        className={`fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[85dvh] w-full max-w-xl flex-col gap-4 overflow-y-auto px-5 pt-1 pb-[max(1rem,env(safe-area-inset-bottom))] ${SUPERFICIE_PAINEL} ${movimento}`}
+        className={`fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[85dvh] w-full max-w-xl flex-col gap-4 overflow-hidden px-5 pt-1 pb-[max(1rem,env(safe-area-inset-bottom))] ${SUPERFICIE_PAINEL} ${movimento}`}
       >
         <div
           data-alca
@@ -107,21 +107,24 @@ export function PainelVeredito(p: {
         >
           <div className="h-1 w-10 rounded-full bg-tinta/30" />
         </div>
-        <span className={SELO_VEREDITO[afirmacao.veredito]}>{ROTULO_VEREDITO[afirmacao.veredito]}</span>
-        <p id={idMensagem} className="text-lg font-bold">{mensagem(afirmacao.veredito, respostaDada)}</p>
-        <p className="text-base text-secundario">Quem disse: {afirmacao.autor}</p>
-        <blockquote className="border-l-[3px] border-tinta pl-3 text-base text-secundario italic">“{afirmacao.citacao}”</blockquote>
-        <p className="text-base leading-relaxed text-tinta">{afirmacao.explicacao}</p>
-        {erroPct !== null && <p className="text-base text-secundario">{erroPct}% das pessoas erraram esta.</p>}
-        <a
-          href={afirmacao.fonte_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`self-start text-base ${LINK_EM_CARTAO}`}
-        >
-          Ver a checagem ({afirmacao.fonte_nome})
-        </a>
-        <button ref={botaoRef} type="button" onClick={onFechar} className={BOTAO_EM_CARTAO}>
+        {/* Só o conteúdo rola; o botão fica sempre visível no rodapé do painel. */}
+        <div data-conteudo-painel className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
+          <span className={SELO_VEREDITO[afirmacao.veredito]}>{ROTULO_VEREDITO[afirmacao.veredito]}</span>
+          <p id={idMensagem} className="text-lg font-bold">{mensagem(afirmacao.veredito, respostaDada)}</p>
+          <p className="text-base text-secundario">Quem disse: {afirmacao.autor}</p>
+          <blockquote className="border-l-[3px] border-tinta pl-3 text-base text-secundario italic">“{afirmacao.citacao}”</blockquote>
+          <p className="text-base leading-relaxed text-tinta">{afirmacao.explicacao}</p>
+          {erroPct !== null && <p className="text-base text-secundario">{erroPct}% das pessoas erraram esta.</p>}
+          <a
+            href={afirmacao.fonte_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`self-start text-base ${LINK_EM_CARTAO}`}
+          >
+            Ver a checagem ({afirmacao.fonte_nome})
+          </a>
+        </div>
+        <button ref={botaoRef} type="button" onClick={onFechar} className={`shrink-0 ${BOTAO_EM_CARTAO}`}>
           {ultima ? 'Ver meu resultado' : 'Próxima'}
         </button>
       </section>

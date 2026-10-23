@@ -1,6 +1,6 @@
 import { cleanup, render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
-import { escolher, IconesDoCartao, VAGAS, VARIACOES } from '@/components/IconesDoCartao'
+import { escolher, IconesDoCartao, livreParaGrande, MAXIMO, VAGAS, VARIACOES } from '@/components/IconesDoCartao'
 
 afterEach(cleanup)
 
@@ -33,19 +33,32 @@ describe('VARIACOES', () => {
 })
 
 describe('escolher', () => {
+  it('toda variação tem 3 vagas livres para ícones grandes, inclusive só extremas', () => {
+    for (const { vagas } of VARIACOES) {
+      const livres = vagas.map(v => VAGAS[v]!).filter(livreParaGrande)
+      expect(livres.length).toBeGreaterThanOrEqual(MAXIMO)
+      expect(livres.filter(extrema).length).toBeGreaterThanOrEqual(MAXIMO)
+    }
+    for (let s = 0; s < 12; s++) for (const { vaga } of escolher(s, false)) expect(livreParaGrande(vaga)).toBe(true)
+  })
+
+  it('posições variam entre cartões', () => {
+    const chaves = new Set(Array.from({ length: 12 }, (_, i) => escolher(i, false).map(({ vaga }) => `${vaga.left},${vaga.top}`).join('|')))
+    expect(chaves.size).toBeGreaterThanOrEqual(6)
+  })
+
   it('é determinística e usa a semente em módulo 12', () => {
     const itens = escolher(3, false)
-    expect(itens.length).toBeGreaterThanOrEqual(6)
-    expect(itens.length).toBeLessThanOrEqual(9)
+    expect(itens).toHaveLength(MAXIMO)
     expect(itens).toEqual(escolher(15, false))
     expect(itens).toEqual(escolher(-9, false))
     expect(itens).not.toEqual(escolher(4, false))
   })
 
-  it('dá tamanhos de 28 a 40 px e giros de −8° a 8°', () => {
+  it('dá tamanhos de 42 a 60 px e giros de −8° a 8°', () => {
     for (let s = 0; s < 12; s++) {
       for (const { tamanho, giro } of [...escolher(s, false), ...escolher(s, true)]) {
-        expect(tamanho >= 28 && tamanho <= 40).toBe(true)
+        expect(tamanho >= 42 && tamanho <= 60).toBe(true)
         expect(giro >= -8 && giro <= 8).toBe(true)
       }
     }
@@ -54,7 +67,7 @@ describe('escolher', () => {
   it('com longo dá 4 itens, todos nas vagas extremas', () => {
     for (let s = 0; s < 12; s++) {
       const itens = escolher(s, true)
-      expect(itens).toHaveLength(4)
+      expect(itens).toHaveLength(MAXIMO)
       for (const { vaga } of itens) expect(extrema(vaga)).toBe(true)
     }
   })
@@ -78,9 +91,9 @@ describe('IconesDoCartao', () => {
     })
   })
 
-  it('com longo renderiza 4 ícones', () => {
+  it('com longo renderiza 3 ícones', () => {
     const { container } = render(<IconesDoCartao semente={7} longo />)
-    expect(container.querySelectorAll('[data-icones-cartao] svg')).toHaveLength(4)
+    expect(container.querySelectorAll('[data-icones-cartao] svg')).toHaveLength(MAXIMO)
   })
 
   it('duas renders com a mesma semente são idênticas', () => {

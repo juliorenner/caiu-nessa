@@ -2,6 +2,8 @@
 
 Data: 2026-10-22, noite. Pedido do autor: "existem ícones nos cards também? tinha pensado em eles no fundo dos cards, variando quais por cartão"; "o '?' é legal, mas o card fica todo muito 'branco'"; "eu pensei em vários ícones pequenos, flutuando ao redor do texto nos cards, não deixando tudo branco, sendo detalhes que preenchem um pouco". O autor dispensou perguntas; as escolhas estão aqui como decisão do controlador. Revisado por um construtor antes da entrega; as três dúvidas dele (vagas livres, faixa do texto, repetição entre rodadas) estão resolvidas no texto como decisão do controlador.
 
+**Revisão 2026-10-22 (22h30):** o autor pediu ícones 50% maiores (42–60 px) e no máximo 3 por cartão, com as posições variando; o texto abaixo descreve a versão original (6–9 ícones de 28–40 px).
+
 ## Intenção
 O cartão da afirmação é um retângulo branco com o texto no meio e o "?" de papel no canto; em celulares altos sobra muito branco. Em vez de um ícone grande, um **padrão esparso de ícones pequenos** em traço de tinta, bem claros (12%), espalhados pelas bordas do cartão ao redor do texto, como detalhes de um cartaz. O conjunto muda de cartão para cartão.
 

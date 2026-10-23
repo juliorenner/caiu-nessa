@@ -51,21 +51,31 @@ export const VARIACOES: readonly { vagas: number[]; icones: number[]; giros: num
 
 // Classes literais para o Tailwind enxergar: índice = tamanho − 28.
 const TAMANHOS = [
-  'size-[28px]', 'size-[29px]', 'size-[30px]', 'size-[31px]', 'size-[32px]', 'size-[33px]', 'size-[34px]', 'size-[35px]', 'size-[36px]', 'size-[37px]', 'size-[38px]', 'size-[39px]', 'size-[40px]',
+  'size-[42px]', 'size-[43px]', 'size-[44px]', 'size-[45px]', 'size-[46px]', 'size-[47px]', 'size-[48px]', 'size-[49px]', 'size-[50px]', 'size-[51px]', 'size-[52px]', 'size-[53px]', 'size-[54px]', 'size-[55px]', 'size-[56px]', 'size-[57px]', 'size-[58px]', 'size-[59px]', 'size-[60px]',
 ] as const
 
 const extrema = ({ top }: Vaga): boolean => top < 12 || top > 88
 
 // Mesma semente → mesmos ícones; a semente entra em módulo 12. Com `longo`, só as 4 primeiras vagas extremas.
+export const MAXIMO = 3
+
+// Fora da faixa do texto (25–75% da altura) e fora do canto superior esquerdo, onde fica o "?".
+export function livreParaGrande(v: Vaga): boolean {
+  return (v.top < 25 || v.top > 75) && !(v.top < 25 && v.left < 20)
+}
+
 export function escolher(semente: number, longo: boolean): { vaga: Vaga; Icone: Icone; giro: number; tamanho: number }[] {
   const { vagas, icones, giros } = VARIACOES[((semente % 12) + 12) % 12]!
   const itens = vagas.map((v, i) => ({
     vaga: VAGAS[v]!,
     Icone: REPERTORIO[icones[i]!]!,
     giro: giros[i]!,
-    tamanho: 28 + ((v * 5 + icones[i]! * 3 + i) % 13),
+    tamanho: 42 + ((v * 5 + icones[i]! * 3 + i) % 19),
   }))
-  return longo ? itens.filter(({ vaga }) => extrema(vaga)).slice(0, 4) : itens
+  // No máximo 3 por cartão, e grandes (42–60 px): só as faixas de cima e de baixo (as laterais encostariam no
+  // texto a 320 px) e longe do canto do "?". As posições variam pela variação, não pela quantidade.
+  const candidatos = itens.filter(({ vaga }) => livreParaGrande(vaga) && (!longo || extrema(vaga)))
+  return candidatos.slice(0, MAXIMO)
 }
 
 // Ícones pequenos e quase transparentes espalhados pelas bordas do cartão, atrás do texto, sem toque.
@@ -74,7 +84,7 @@ export function IconesDoCartao({ semente, longo }: { semente: number; longo: boo
     <div aria-hidden data-icones-cartao className="pointer-events-none absolute inset-0 overflow-hidden text-tinta opacity-[0.12]">
       {escolher(semente, longo).map(({ vaga, Icone, giro, tamanho }, i) => (
         <span key={i} className="absolute" style={{ left: `${vaga.left}%`, top: `${vaga.top}%`, transform: `rotate(${giro}deg)` }}>
-          <Icone className={TAMANHOS[tamanho - 28]} />
+          <Icone className={TAMANHOS[tamanho - 42]} />
         </span>
       ))}
     </div>

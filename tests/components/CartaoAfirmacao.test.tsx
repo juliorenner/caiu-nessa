@@ -187,21 +187,19 @@ describe('PilhaDeCartoes', () => {
 })
 
 describe('CartaoAfirmacao: ícones', () => {
-  it('texto curto: camada com 4 a 9 ícones, antes do texto', () => {
+  it('texto curto: camada com 3 ícones, antes do texto', () => {
     expect(tamanhoDoTexto(afirmacao.texto)).not.toBe('text-base')
     render(<CartaoAfirmacao afirmacao={afirmacao} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={0} />)
     const camada = cartao().querySelector('[data-icones-cartao]')
     expect(camada).not.toBeNull()
     expect(cartao().firstElementChild).toBe(camada)
-    const n = camada!.querySelectorAll('svg').length
-    expect(n).toBeGreaterThanOrEqual(4)
-    expect(n).toBeLessThanOrEqual(9)
+    expect(camada!.querySelectorAll('svg')).toHaveLength(3)
   })
 
-  it('texto longo (> 160): exatamente 4 ícones', () => {
+  it('texto longo (> 160): 3 ícones, só nas vagas extremas', () => {
     const longa = { ...afirmacao, texto: 'Uma afirmação bem comprida. '.repeat(7) }
     expect(longa.texto.length).toBeGreaterThan(160)
     render(<CartaoAfirmacao afirmacao={longa} fase="ativo" respostaDada={null} onResposta={vi.fn()} reduzirMovimento={false} semente={5} />)
-    expect(cartao().querySelectorAll('[data-icones-cartao] svg')).toHaveLength(4)
+    expect(cartao().querySelectorAll('[data-icones-cartao] svg')).toHaveLength(3)
   })
 })
