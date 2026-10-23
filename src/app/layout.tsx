@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Atkinson_Hyperlegible, Bungee, Bungee_Shade } from "next/font/google";
 import { FUNDO_PAGINA } from "@/components/rotulos";
@@ -44,7 +45,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="pt-BR"
       className={`${bungee.variable} ${bungeeShade.variable} ${atkinson.variable} h-full antialiased`}
     >
-      <body className={`flex min-h-full flex-col font-sans ${FUNDO_PAGINA}`}>{children}</body>
+      <body className={`flex min-h-full flex-col font-sans ${FUNDO_PAGINA}`}>
+        {children}
+        {/* Vercel Web Analytics: visitas, origem, país e aparelho, sem cookies; só carrega na Vercel. */}
+        <Analytics />
+      </body>
     </html>
   );
 }
