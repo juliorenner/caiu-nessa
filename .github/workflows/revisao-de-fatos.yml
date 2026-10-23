@@ -35,7 +35,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          n=$(gh pr list --state open --search "head:bot/revisao-de-fatos-" --json number --jq 'length')
+          n=$(gh pr list --state open --limit 100 --json headRefName \
+            --jq '[.[] | select(.headRefName | startswith("bot/revisao-de-fatos-"))] | length')
           echo "n=$n" >> "$GITHUB_OUTPUT"
           if [ "$n" != "0" ]; then echo "Há $n PR aberta de revisão; nada a fazer até ela ser mesclada ou fechada."; fi
 
