@@ -7,6 +7,11 @@ export type Lado = 'esquerda' | 'direita'
 export const VEREDITOS = ['verdadeiro', 'falso', 'enganoso'] as const
 export type Veredito = (typeof VEREDITOS)[number]
 
+// Alcance da fala (critério em /como-escolhemos): 3 = debate ou TV nacional e duas ou mais agências;
+// 2 = debate ou TV nacional, uma agência; 1 = o resto.
+export const ALCANCES = [1, 2, 3] as const
+export type Alcance = (typeof ALCANCES)[number]
+
 export interface Afirmacao {
   id: string
   texto: string // neutro, em terceira pessoa: é o que aparece na pergunta
@@ -18,6 +23,7 @@ export interface Afirmacao {
   fonte_nome: string
   fonte_url: string
   data_checagem: string // YYYY-MM-DD
+  alcance: Alcance
   observacao?: string // por que o item fica fora do jogo; item com observacao nunca é sorteado
 }
 
@@ -109,6 +115,7 @@ const esquemaAfirmacao = z.object({
         error: 'data_checagem deve ser uma data de calendário válida',
       },
     ),
+  alcance: z.union([z.literal(1), z.literal(2), z.literal(3)], { error: 'alcance deve ser 1, 2 ou 3' }),
   observacao: z
     .string()
     .refine((v) => v.trim().length >= 20, {
@@ -170,11 +177,13 @@ export function semLado({ lado: _lado, ...resto }: Afirmacao): AfirmacaoNoQuiz {
 }
 
 // Sorteia `composicao[veredito]` jogáveis de cada par, fora de `excluir`, e embaralha o resultado; null se algum par não fecha.
+// Com `pesos`, o sorteio dentro de cada par é ponderado pelo alcance; a composição não muda.
 export function sortearRodada(
   pool: readonly Afirmacao[],
   composicao: Composicao,
   excluir: Iterable<string>,
   aleatorio: () => number = Math.random,
+  pesos?: Readonly<Record<Alcance, number>>,
 ): Afirmacao[] | null {
   const excluidos = new Set(excluir)
   const disponiveis = jogaveis(pool).filter((a) => !excluidos.has(a.id))
@@ -183,9 +192,42 @@ export function sortearRodada(
     const quantos = composicao[veredito]
     const candidatas = disponiveis.filter((a) => a.lado === lado && a.veredito === veredito)
     if (candidatas.length < quantos) return null
-    sorteadas.push(...embaralhar(candidatas, aleatorio).slice(0, quantos))
+    sorteadas.push(
+      ...(pesos
+        ? sortearPonderado(candidatas, quantos, (a) => pesos[a.alcance], aleatorio)
+        : embaralhar(candidatas, aleatorio).slice(0, quantos)),
+    )
   }
   return embaralhar(sorteadas, aleatorio)
+}
+
+function indicePonderado(itens: readonly { peso: number }[], total: number, aleatorio: () => number): number {
+  let alvo = aleatorio() * total
+  for (let i = 0; i < itens.length; i++) {
+    alvo -= itens[i].peso
+    if (itens[i].peso > 0 && alvo < 0) return i
+  }
+  // Arredondamento: se o alvo sobrar no fim, vale o último com peso.
+  for (let i = itens.length - 1; i >= 0; i--) if (itens[i].peso > 0) return i
+  return -1
+}
+
+// Sorteio ponderado sem reposição: cada escolha tem probabilidade proporcional ao peso (peso ≤ 0 conta como 0);
+// se todos os restantes pesam 0, a escolha é uniforme.
+export function sortearPonderado<T>(
+  itens: readonly T[],
+  quantos: number,
+  peso: (t: T) => number,
+  aleatorio: () => number,
+): T[] {
+  const restantes = itens.map((item) => ({ item, peso: Math.max(0, peso(item)) }))
+  const escolhidos: T[] = []
+  while (escolhidos.length < quantos && restantes.length > 0) {
+    const total = restantes.reduce((soma, r) => soma + r.peso, 0)
+    const indice = total > 0 ? indicePonderado(restantes, total, aleatorio) : Math.floor(aleatorio() * restantes.length)
+    escolhidos.push(restantes.splice(indice, 1)[0].item)
+  }
+  return escolhidos
 }
 
 export function embaralhar<T>(itens: readonly T[], aleatorio: () => number = Math.random): T[] {

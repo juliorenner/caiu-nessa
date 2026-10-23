@@ -13,6 +13,7 @@ function criar(id: string, lado: Lado, veredito: Veredito): Afirmacao {
     fonte_nome: 'Aos Fatos',
     fonte_url: `https://aosfatos.org/noticias/teste-${id}`,
     data_checagem: '2026-10-01',
+    alcance: 1,
   }
 }
 

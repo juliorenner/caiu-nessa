@@ -23,9 +23,10 @@ Você está revisando o banco de afirmações do **Caiu Nessa?**, um quiz neutro
 | `fonte_nome` | Aos Fatos, Lupa, Comprova, G1 Fato ou Fake ou Estadão Verifica |
 | `fonte_url` | a página da checagem, numa dessas agências (o esquema recusa outros domínios), respondendo 200 |
 | `data_checagem` | `AAAA-MM-DD` |
+| `alcance` | `1`, `2` ou `3`: **3** = dita em debate ou entrevista de TV nacional (Band, Globo, JN) **e** checada por duas ou mais agências da lista; **2** = debate ou entrevista de TV nacional, checada por uma agência; **1** = o resto (post, live, podcast, fala avulsa) |
 | `observacao` | opcional; presente = item **fora do jogo** (aparece só na lista pública), com o motivo |
 
-Mapeamento de rótulos das agências: verdadeiro = Verdadeiro/Fato; falso = Falso/Fake/Mentira; enganoso = Enganoso, Exagerado, Distorcido, Fora de contexto, Impreciso, "Não é bem assim". Rótulos fora desses três (Insustentável, Subestimado, Contraditório, Sem contexto suficiente etc.) não entram. Agências discordando: verdadeiro contra falso ou enganoso = fora do jogo; falso contra enganoso = vale a maioria, no empate falso.
+Mapeamento de rótulos das agências: verdadeiro = Verdadeiro/Fato; falso = Falso/Fake/Mentira; enganoso = Enganoso, Exagerado, Distorcido, Fora de contexto, Falta contexto, Impreciso, "Não é bem assim", Verdadeiro em partes, Subestimado. Rótulos que não dizem se é verdade ou mentira (Insustentável, Contraditório, Ainda é cedo, Sem contexto suficiente) não contam como voto. Agências discordando: verdadeiro contra falso = fora do jogo; nos outros casos vale a maioria dos votos; empate entre verdadeiro e enganoso = enganoso; empate entre falso e enganoso = falso. A `explicacao` cita todas as agências que checaram a fala.
 
 Regras editoriais completas: `src/app/como-escolhemos/page.tsx`. Exemplo de uma revisão anterior: `docs/superpowers/notes/2026-10-23-auditoria-de-fatos.md`.
 
@@ -33,9 +34,9 @@ Regras editoriais completas: `src/app/como-escolhemos/page.tsx`. Exemplo de uma 
 
 Para cada item (inclusive os com `observacao`):
 
-1. Busque a `fonte_url` com WebFetch. Confira que a checagem continua no ar e que `veredito`, `citacao`, os números da `explicacao` e a `data_checagem` batem com a página.
+1. Busque a `fonte_url` com WebFetch. Confira que a checagem continua no ar e que `veredito`, `citacao`, os números da `explicacao` e a `data_checagem` batem com a página. Revise o `alcance`: uma segunda agência da lista checando a mesma fala de debate ou TV nacional eleva 2 para 3.
 2. Divergência num campo: corrija o campo.
-3. Checagem retirada do ar, veredito mudado para fora dos três, ou outra agência da lista com veredito incompatível: adicione `observacao` explicando (o item sai do jogo). Nunca apague um item, nem mude o `lado` de um item existente. Itens fora do jogo não entram no verificador de links.
+3. Checagem retirada do ar, veredito mudado para rótulo que não conta como voto, ou outra agência da lista dizendo verdadeiro onde esta diz falso (ou o contrário): adicione `observacao` explicando (o item sai do jogo). Nunca apague um item, nem mude o `lado` de um item existente. Itens fora do jogo não entram no verificador de links.
 4. Item que já tem `observacao`: reavalie. Se o motivo não vale mais, remova a `observacao` e ele volta ao jogo.
 
 Páginas que não carregam no WebFetch: tente uma vez mais; se continuar, registre na nota como "não verificado" e não altere o item.
@@ -46,7 +47,7 @@ Pesquise com WebSearch checagens publicadas depois da `data_checagem` mais recen
 
 Prioridade: o que mais circulou; e os pares (lado, veredito) com menos itens jogáveis no arquivo (conte antes de escolher). Limites, conferidos pelo script: **até 6 novas por rodada, até 3 por lado**. Prefira menos itens bem documentados a muitos fracos.
 
-Cada nova afirmação precisa de todos os campos da tabela. Gere o `id` com 8 hexadecimais aleatórios que não existam no arquivo. A `citacao` é a fala literal, copiada da checagem; se a checagem não traz a fala literal, não entra.
+Cada nova afirmação precisa de todos os campos da tabela, inclusive `alcance` pelo critério acima. Gere o `id` com 8 hexadecimais aleatórios que não existam no arquivo. A `citacao` é a fala literal, copiada da checagem; se a checagem não traz a fala literal, não entra.
 
 ## 3. Validar
 

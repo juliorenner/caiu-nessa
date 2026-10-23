@@ -1,12 +1,14 @@
 # Caiu Nessa?
 
-Quiz de checagem de fatos políticos, neutro e em português. A primeira rodada tem 12 afirmações políticas já checadas por agências de checagem, sorteadas de um conjunto maior, e dá para continuar jogando em rodadas de 6; para cada uma o jogador responde **VERDADE**, **MENTIRA** ou **ISSO ME CHEIRA MAL 🤔** (enganoso), arrastando o cartão (direita, esquerda ou para cima), pelos botões ou pelas setas do teclado. No fim vê a nota, o viés das respostas e como se saiu em comparação com os outros jogadores. É anônimo e não tem login.
+Quiz de checagem de fatos políticos, neutro e em português. A primeira rodada tem 10 afirmações políticas já checadas por agências de checagem, sorteadas de um conjunto maior, e dá para continuar jogando em rodadas de 6; para cada uma o jogador responde **VERDADE**, **MENTIRA** ou **ISSO ME CHEIRA MAL 🤔** (enganoso), arrastando o cartão (direita, esquerda ou para cima), pelos botões ou pelas setas do teclado. No fim vê a nota, o viés das respostas e como se saiu em comparação com os outros jogadores. É anônimo e não tem login.
 
 ## Regras de neutralidade
 
 - Só entram checagens de cinco agências: Aos Fatos, Lupa, Comprova, G1 Fato ou Fake e Estadão Verifica. Toda afirmação tem link para a checagem original.
-- Toda rodada tem o mesmo número de afirmações por lado e, em cada lado, de cada veredito: a primeira 2 de cada (12), as seguintes 1 de cada (6). O conjunto precisa ter ao menos 2 jogáveis de cada combinação lado × veredito.
-- Afirmações em que as agências discordam ficam de fora.
+- Toda rodada tem o mesmo número de afirmações por lado, com a mesma composição de vereditos nos dois lados: a primeira 2 verdadeiras, 2 falsas e 1 enganosa por lado (10), as seguintes 1 de cada (6). O conjunto precisa ter ao menos 2 jogáveis de cada combinação lado × veredito.
+- Rótulos de contexto ("Falta contexto", "Verdadeiro em partes", "Subestimado") contam como enganoso; rótulos que não dizem se é verdade ou mentira (Insustentável, Contraditório, Ainda é cedo, Sem contexto suficiente) não contam como voto.
+- Quando as agências discordam: verdadeiro contra falso fica de fora; nos outros casos vale a maioria (empate entre verdadeiro e enganoso = enganoso; entre falso e enganoso = falso).
+- Cada afirmação tem um alcance: 3 = debate ou entrevista de TV nacional e checada por duas ou mais agências; 2 = debate ou entrevista de TV nacional, uma agência; 1 = o resto (post, live, podcast, fala avulsa). A primeira rodada dá preferência às de maior alcance, igualmente nos dois lados; a composição por lado e veredito não muda.
 - O lado é o de quem disse a frase, e nunca aparece durante o jogo.
 - Nenhum texto do site apoia ou ataca um lado. O resultado mede a pessoa, não os políticos.
 

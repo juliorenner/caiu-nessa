@@ -107,3 +107,13 @@ it('autor tem o partido entre parênteses e uma vírgula', () => {
     expect(a.autor, a.id).toContain(', ')
   }
 })
+
+// Alcance (publicado em /como-escolhemos): 3 e 2 só para debate ou entrevista de TV nacional; post, live e podcast são 1.
+// Conferência heurística pelo `autor`.
+it('alcance é 1, 2 ou 3 e bate com a ocasião descrita no autor', () => {
+  for (const a of todasAsAfirmacoes) {
+    expect([1, 2, 3], a.id).toContain(a.alcance)
+    if (/debate|Jornal Nacional|TV Globo/.test(a.autor)) expect(a.alcance, `${a.id}: ${a.autor}`).toBeGreaterThanOrEqual(2)
+    if (/\bFlow\b|\blive\b|\bposts?\b/i.test(a.autor)) expect(a.alcance, `${a.id}: ${a.autor}`).toBe(1)
+  }
+})

@@ -60,6 +60,24 @@ describe('página /afirmacoes', () => {
     }
   })
 
+  it('mostra o selo de alcance de cada item', () => {
+    // Uma passada só: com 180 itens, procurar cada texto dentro de cada card estourava o tempo do teste.
+    const pool = carregarPool()
+    render(<Afirmacoes />)
+    const cards = screen.getAllByRole('article')
+    expect(cards).toHaveLength(pool.length)
+    const esperado = new Map<number, number>()
+    for (const a of pool) esperado.set(a.alcance, (esperado.get(a.alcance) ?? 0) + 1)
+    const encontrado = new Map<number, number>()
+    for (const card of cards) {
+      const selos = within(card).getAllByText(/^Alcance [123]$/)
+      expect(selos).toHaveLength(1)
+      const n = Number(selos[0].textContent!.replace('Alcance ', ''))
+      encontrado.set(n, (encontrado.get(n) ?? 0) + 1)
+    }
+    expect(encontrado).toEqual(esperado)
+  })
+
   it('mostra os três rótulos de veredito', () => {
     render(<Afirmacoes />)
     for (const rotulo of ['Verdade', 'Mentira', 'Enganoso']) {
@@ -68,11 +86,11 @@ describe('página /afirmacoes', () => {
   })
 
   it('itens com observacao aparecem só em "Fora do jogo", com a observação', () => {
+    // O pool pode não ter nenhum item fora do jogo (todos voltaram em 2026-10-23); aí a seção fica vazia.
     const fora = foraDoJogo(carregarPool())
-    expect(fora.length).toBeGreaterThan(0)
     render(<Afirmacoes />)
     const noJogo = screen.getByRole('region', { name: 'No jogo' })
-    const cards = within(screen.getByRole('region', { name: 'Fora do jogo' })).getAllByRole('article')
+    const cards = within(screen.getByRole('region', { name: 'Fora do jogo' })).queryAllByRole('article')
     expect(cards).toHaveLength(fora.length)
     fora.forEach((a, i) => {
       expect(within(cards[i]).getByText(a.texto)).toBeInTheDocument()

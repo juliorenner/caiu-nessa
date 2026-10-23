@@ -1,7 +1,15 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { ALCANCES } from '@/lib/afirmacoes'
 import { LINK_PAGINA, TITULO_LETREIRO } from '@/components/rotulos'
-import { COMPOSICAO_EXTRA, COMPOSICAO_PRIMEIRA, TOTAL_AFIRMACOES, descricaoDaComposicao, tamanhoDa } from '@/lib/rodadas'
+import {
+  COMPOSICAO_EXTRA,
+  COMPOSICAO_PRIMEIRA,
+  TOTAL_AFIRMACOES,
+  descricaoDaComposicao,
+  descricaoDoAlcance,
+  tamanhoDa,
+} from '@/lib/rodadas'
 
 export const metadata: Metadata = { title: 'Como escolhemos as afirmações · Caiu Nessa?' }
 
@@ -17,7 +25,8 @@ export default function ComoEscolhemos() {
       <p className="mt-2">
         Toda afirmação do jogo já foi verificada por pelo menos uma destas agências de checagem: Aos Fatos, Lupa,
         Comprova, G1 Fato ou Fake e Estadão Verifica. Nós não damos veredito próprio: cada afirmação traz o link da
-        checagem original, para você conferir.
+        checagem original, para você conferir. O conjunto de afirmações é revisado todo mês por um agente automatizado,
+        e cada mudança chega como um pull request público no repositório do projeto.
       </p>
 
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Mesmo peso para os dois lados</h2>
@@ -46,12 +55,27 @@ export default function ComoEscolhemos() {
       </ul>
       <p className="mt-2">
         As agências usam nomes diferentes. Contamos como enganoso os rótulos Enganoso, Exagerado, Distorcido, Fora de
-        contexto, Impreciso e &quot;Não é bem assim&quot;. Afirmações com rótulos que não cabem nos três vereditos
-        ficam de fora.
+        contexto, Falta contexto, Impreciso, &quot;Não é bem assim&quot;, Verdadeiro em partes e Subestimado. Rótulos
+        que não dizem se a afirmação é verdade ou mentira (Insustentável, Contraditório, Ainda é cedo e Sem contexto
+        suficiente) não contam como voto.
       </p>
       <p className="mt-2">
-        Quando agências diferentes discordam sobre a mesma afirmação: se uma diz verdadeiro e outra diz falso ou
-        enganoso, ela fica de fora; entre falso e enganoso, vale o rótulo da maioria (no empate, falso).
+        Quando agências diferentes discordam sobre a mesma afirmação: se uma diz verdadeiro e outra diz falso, ela fica
+        de fora. Nos outros casos, vale a maioria dos votos; no empate entre verdadeiro e enganoso, vale enganoso; no
+        empate entre falso e enganoso, vale falso. As afirmações que ficam fora do jogo aparecem na lista pública, com
+        o motivo.
+      </p>
+
+      <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Alcance</h2>
+      <p className="mt-2">Cada afirmação tem um alcance, que mede quanta gente ouviu a fala e quantas agências a checaram:</p>
+      <ul className="mt-2 list-disc space-y-1 pl-6">
+        {[...ALCANCES].reverse().map((a) => (
+          <li key={a}>{descricaoDoAlcance(a)}.</li>
+        ))}
+      </ul>
+      <p className="mt-2">
+        A primeira rodada dá preferência às afirmações de maior alcance, igualmente nos dois lados; a composição por lado
+        e veredito não muda.
       </p>
 
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>O que o resultado mede</h2>

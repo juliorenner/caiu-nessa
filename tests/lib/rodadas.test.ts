@@ -4,9 +4,12 @@ import {
   COMPOSICAO_PRIMEIRA,
   COMPOSICOES_HISTORICAS,
   composicaoDoTamanho,
+  descricaoDoAlcance,
   descricaoDaComposicao,
   MAXIMO_ACERTOS,
   MINIMO_POR_PAR,
+  PESO_POR_ALCANCE,
+  PESOS_DA_PRIMEIRA,
   porLinha,
   TAMANHOS_ACEITOS,
   tamanhoDa,
@@ -49,5 +52,14 @@ describe('rodadas', () => {
     expect(descricaoDaComposicao({ verdadeiro: 1, falso: 2, enganoso: 1 })).toBe('1 verdadeira, 2 falsas e 1 enganosa')
     expect(descricaoDaComposicao(COMPOSICAO_EXTRA)).toBe('1 verdadeira, 1 falsa e 1 enganosa')
     expect(descricaoDaComposicao({ verdadeiro: 2, falso: 2, enganoso: 2 })).toBe('2 verdadeiras, 2 falsas e 2 enganosas')
+  })
+  it('peso por alcance: 1, 2 e 4; a primeira rodada usa esses pesos', () => {
+    expect(PESO_POR_ALCANCE).toEqual({ 1: 1, 2: 2, 3: 3 })
+    expect(PESOS_DA_PRIMEIRA).toBe(PESO_POR_ALCANCE)
+  })
+  it('descricaoDoAlcance descreve o critério de cada nível', () => {
+    expect(descricaoDoAlcance(3)).toBe('Alcance 3: debate ou entrevista de TV nacional, checada por duas ou mais agências')
+    expect(descricaoDoAlcance(2)).toBe('Alcance 2: debate ou entrevista de TV nacional, checada por uma agência')
+    expect(descricaoDoAlcance(1)).toBe('Alcance 1: o resto (post, live, podcast, fala avulsa)')
   })
 })

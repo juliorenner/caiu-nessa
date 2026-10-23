@@ -8,6 +8,7 @@ import {
   jogaveis,
   PARES,
   semLado,
+  sortearPonderado,
   sortearRodada,
   validarPool,
   type Afirmacao,
@@ -69,6 +70,14 @@ describe('validarPool', () => {
     const item = { ...afirmacoesValidas[0], observacao: ' '.repeat(25) }
     expect(() => afirmacaoSchema.parse(item)).toThrow(/observacao/)
   })
+  it('rejeita item sem alcance', () => {
+    const { alcance: _alcance, ...semAlcance } = afirmacoesValidas[0]
+    expect(() => afirmacaoSchema.parse(semAlcance)).toThrow(/alcance/)
+  })
+  it('rejeita alcance fora de 1, 2 ou 3', () => {
+    const alterada = afirmacoesValidas.map(a => a.id === 'e1' ? { ...a, alcance: 4 } : a)
+    expect(() => validarPool(alterada)).toThrow(/alcance deve ser 1, 2 ou 3/)
+  })
   it('rejeita observacao com menos de 20 caracteres', () => {
     const alterada = afirmacoesValidas.map(a => a.id === 'd1' ? { ...a, observacao: 'curta' } : a)
     expect(() => validarPool(alterada)).toThrow(/observacao/)
@@ -127,6 +136,89 @@ describe('sortearRodada', () => {
     const ordemDosPares = PARES.map(({ lado, veredito }) => `${lado}:${veredito}`)
     const indices = a.map(x => ordemDosPares.indexOf(`${x.lado}:${x.veredito}`))
     expect(indices).not.toEqual([...indices].sort((m, n) => m - n))
+  })
+})
+
+// Gerador congruente linear semeado: sorteios reproduzíveis nos testes de distribuição.
+function lcg(semente: number): () => number {
+  let estado = semente
+  return () => {
+    estado = (estado * 1664525 + 1013904223) % 2 ** 32
+    return estado / 2 ** 32
+  }
+}
+
+describe('sortearPonderado', () => {
+  it('escolhe o item de peso maior na grande maioria das vezes', () => {
+    const peso: Record<string, number> = { a: 100, b: 1, c: 1 }
+    const aleatorio = lcg(42)
+    let vezes = 0
+    for (let i = 0; i < 500; i++) if (sortearPonderado(['a', 'b', 'c'], 1, (t) => peso[t], aleatorio)[0] === 'a') vezes++
+    expect(vezes).toBeGreaterThanOrEqual(475)
+  })
+  it('pedir todos devolve todos, sem repetir', () => {
+    const peso: Record<string, number> = { a: 100, b: 1, c: 1 }
+    const escolhidos = sortearPonderado(['a', 'b', 'c'], 3, (t) => peso[t], lcg(7))
+    expect([...escolhidos].sort()).toEqual(['a', 'b', 'c'])
+  })
+  it('pesos todos zero: sorteio uniforme', () => {
+    const itens = Array.from({ length: 10 }, (_, i) => i)
+    const contagem = new Array<number>(10).fill(0)
+    const aleatorio = lcg(3)
+    for (let i = 0; i < 2000; i++) contagem[sortearPonderado(itens, 1, () => 0, aleatorio)[0]]++
+    for (const n of contagem) {
+      expect(n).toBeGreaterThanOrEqual(100)
+      expect(n).toBeLessThanOrEqual(300)
+    }
+  })
+})
+
+describe('sortearRodada com pesos por alcance', () => {
+  // Um item de alcance 3 e nove de alcance 1 em cada par.
+  function poolPorAlcance(): Afirmacao[] {
+    const base = afirmacoesValidas[0]
+    return PARES.flatMap(({ lado, veredito }) =>
+      Array.from({ length: 10 }, (_, i) => ({ ...base, id: `${lado}-${veredito}-${i}`, lado, veredito, alcance: i === 0 ? 3 : 1 }) as Afirmacao),
+    )
+  }
+
+  // Peso 1000 contra nove de peso 1: chance de 1000/1009 (~99 %) por sorteio. Com peso 100 seria ~92 %.
+  it('prefere o item de alcance maior', () => {
+    const pool = poolPorAlcance()
+    const aleatorio = lcg(11)
+    let vezes = 0
+    for (let i = 0; i < 500; i++) {
+      const rodada = sortearRodada(pool, COMPOSICAO_EXTRA, [], aleatorio, { 1: 1, 2: 1, 3: 1000 })!
+      if (rodada.some(a => a.id === 'esquerda-verdadeiro-0')) vezes++
+    }
+    expect(vezes).toBeGreaterThanOrEqual(475)
+  })
+  it('com pesos iguais, sorteio uniforme dentro do par', () => {
+    const pool = poolPorAlcance()
+    const aleatorio = lcg(5)
+    const contagem = new Map<string, number>()
+    for (let i = 0; i < 2000; i++) {
+      const escolhido = sortearRodada(pool, COMPOSICAO_EXTRA, [], aleatorio, { 1: 1, 2: 1, 3: 1 })!.find(
+        a => a.lado === 'esquerda' && a.veredito === 'verdadeiro',
+      )!
+      contagem.set(escolhido.id, (contagem.get(escolhido.id) ?? 0) + 1)
+    }
+    expect(contagem.size).toBe(10)
+    for (const n of contagem.values()) {
+      expect(n).toBeGreaterThanOrEqual(100)
+      expect(n).toBeLessThanOrEqual(300)
+    }
+  })
+  it('mantém a composição exata e nunca repete um id em 200 sorteios', () => {
+    const pool = poolPorAlcance()
+    const aleatorio = lcg(9)
+    for (let i = 0; i < 200; i++) {
+      const rodada = sortearRodada(pool, COMPOSICAO_PRIMEIRA, ['direita-falso-0'], aleatorio, { 1: 1, 2: 2, 3: 4 })!
+      expect(rodada).toHaveLength(10)
+      expect(new Set(rodada.map(a => a.id)).size).toBe(10)
+      expect(rodada.some(a => a.id === 'direita-falso-0')).toBe(false)
+      expect([...contarPorPar(rodada).values()]).toEqual([2, 2, 1, 2, 2, 1])
+    }
   })
 })
 

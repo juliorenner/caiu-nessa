@@ -1,4 +1,4 @@
-import type { Veredito } from '@/lib/afirmacoes'
+import type { Alcance, Veredito } from '@/lib/afirmacoes'
 
 // Quantos itens de cada veredito uma rodada tem em cada lado. Só este arquivo descreve as rodadas;
 // mudar o tamanho de uma rodada ou aceitar uma nova é mudar um dado aqui.
@@ -63,4 +63,20 @@ function contar(n: number, veredito: Veredito): string {
 // "1 verdadeira, 2 falsas e 1 enganosa": a composição de um lado, por extenso.
 export function descricaoDaComposicao(c: Composicao): string {
   return `${contar(c.verdadeiro, 'verdadeiro')}, ${contar(c.falso, 'falso')} e ${contar(c.enganoso, 'enganoso')}`
+}
+
+// Peso de cada alcance no sorteio da primeira rodada (as extras sorteiam sem peso). Para tirar a preferência,
+// basta trocar os três números por 1.
+export const PESO_POR_ALCANCE: Readonly<Record<Alcance, number>> = { 1: 1, 2: 2, 3: 3 }
+export const PESOS_DA_PRIMEIRA = PESO_POR_ALCANCE
+
+const CRITERIO_DO_ALCANCE: Record<Alcance, string> = {
+  3: 'debate ou entrevista de TV nacional, checada por duas ou mais agências',
+  2: 'debate ou entrevista de TV nacional, checada por uma agência',
+  1: 'o resto (post, live, podcast, fala avulsa)',
+}
+
+// "Alcance 3: debate ou entrevista de TV nacional, checada por duas ou mais agências".
+export function descricaoDoAlcance(a: Alcance): string {
+  return `Alcance ${a}: ${CRITERIO_DO_ALCANCE[a]}`
 }

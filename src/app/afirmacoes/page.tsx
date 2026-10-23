@@ -5,6 +5,7 @@ import {
   LINK_EM_CARTAO,
   LINK_PAGINA,
   ROTULO_VEREDITO,
+  SELO_ALCANCE,
   SELO_VEREDITO,
   SUPERFICIE_LISTA,
   TITULO_LETREIRO,
@@ -21,7 +22,10 @@ function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
       <p className="text-[17px] leading-relaxed font-bold text-tinta">{a.texto}</p>
       <p className="text-base text-secundario">Quem disse: {a.autor}</p>
       <blockquote className="border-l-4 border-secundario pl-3 text-base text-secundario italic">“{a.citacao}”</blockquote>
-      <span className={SELO_VEREDITO[a.veredito]}>{ROTULO_VEREDITO[a.veredito]}</span>
+      <div className="flex flex-wrap items-center gap-3">
+        <span className={SELO_VEREDITO[a.veredito]}>{ROTULO_VEREDITO[a.veredito]}</span>
+        <span className={SELO_ALCANCE}>{`Alcance ${a.alcance}`}</span>
+      </div>
       {a.observacao && <p className="text-base text-secundario">{a.observacao}</p>}
       <p className="text-[17px] leading-relaxed text-tinta">{a.explicacao}</p>
       <a href={a.fonte_url} target="_blank" rel="noopener noreferrer" className={`self-start ${LINK_EM_CARTAO}`}>
