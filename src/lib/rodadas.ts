@@ -4,10 +4,13 @@ import type { Veredito } from '@/lib/afirmacoes'
 // mudar o tamanho de uma rodada ou aceitar uma nova é mudar um dado aqui.
 export type Composicao = Readonly<Record<Veredito, number>>
 
-export const COMPOSICAO_PRIMEIRA: Composicao = { verdadeiro: 1, falso: 2, enganoso: 1 }
+export const COMPOSICAO_PRIMEIRA: Composicao = { verdadeiro: 2, falso: 2, enganoso: 1 }
 export const COMPOSICAO_EXTRA: Composicao = { verdadeiro: 1, falso: 1, enganoso: 1 }
 // Rodadas que não são mais sorteadas mas ainda são aceitas (jogos em andamento, links antigos).
-export const COMPOSICOES_HISTORICAS: readonly Composicao[] = [{ verdadeiro: 2, falso: 2, enganoso: 2 }]
+export const COMPOSICOES_HISTORICAS: readonly Composicao[] = [
+  { verdadeiro: 1, falso: 2, enganoso: 1 },
+  { verdadeiro: 2, falso: 2, enganoso: 2 },
+]
 
 const COMPOSICOES_ATUAIS: readonly Composicao[] = [COMPOSICAO_PRIMEIRA, COMPOSICAO_EXTRA]
 // Atuais primeiro: num empate de tamanho, vale a atual.
