@@ -1,6 +1,6 @@
 import type { Db } from '@/db/client'
 import { jogadas } from '@/db/schema'
-import { todasCertas } from '../fixtures/afirmacoes-validas'
+import { respostasCertas, rodadaDeOito } from '../fixtures/afirmacoes-validas'
 
 type NovaJogada = typeof jogadas.$inferInsert
 
@@ -10,11 +10,11 @@ export async function inserirJogadas(
   gerar: (i: number) => Partial<NovaJogada> = () => ({}),
 ): Promise<void> {
   const linhas: NovaJogada[] = Array.from({ length: n }, (_, i) => ({
-    respostas: todasCertas,
-    acertos: 12,
-    total: 12,
-    acertosEsquerda: 6,
-    acertosDireita: 6,
+    respostas: respostasCertas(rodadaDeOito),
+    acertos: 8,
+    total: 8,
+    acertosEsquerda: 4,
+    acertosDireita: 4,
     ipHash: null,
     ...gerar(i),
   }))

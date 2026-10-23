@@ -7,7 +7,9 @@ import {
   obterEstatisticasComCache,
   percentilAbaixo,
 } from '@/lib/estatisticas'
-import { afirmacoesValidas, rodadaDeSeis, todasCertas } from '../fixtures/afirmacoes-validas'
+import { afirmacoesValidas, respostasCertas, rodadaDeOito, rodadaDeSeis, todasCertas } from '../fixtures/afirmacoes-validas'
+
+const oito = respostasCertas(rodadaDeOito)
 import { criarDbTeste } from '../helpers/db'
 import { inserirJogadas } from '../helpers/jogadas'
 
@@ -22,34 +24,34 @@ describe('obterEstatisticas', () => {
 
   it('histograma, erro por afirmação e média por lado', async () => {
     const db = await criarDbTeste()
-    // 60 jogadas perfeitas; 40 jogadas que erram só e4 (respondem VERDADE numa falsa)
+    // 60 jogadas perfeitas de 8; 40 que erram só e4 (respondem VERDADE numa falsa)
     await inserirJogadas(db, 60)
     await inserirJogadas(db, 40, () => ({
-      respostas: { ...todasCertas, e4: 'verdadeiro' },
-      acertos: 11,
-      acertosEsquerda: 5,
+      respostas: { ...oito, e4: 'verdadeiro' },
+      acertos: 7,
+      acertosEsquerda: 3,
     }))
     const e = (await obterEstatisticas(db, afirmacoesValidas))!
-    expect(e.histograma[12]).toBe(60)
-    expect(e.histograma[11]).toBe(40)
-    expect(e.histograma).toHaveLength(13)
+    expect(e.histograma[8]).toBe(60)
+    expect(e.histograma[7]).toBe(40)
+    expect(e.histograma).toHaveLength(9)
     expect(e.erroPorAfirmacao.e4).toBe(40)
     expect(e.erroPorAfirmacao.e1).toBe(0)
-    expect(e.mediaEsquerda).toBe(5.6)
-    expect(e.mediaDireita).toBe(6)
+    expect(e.mediaEsquerda).toBe(3.6)
+    expect(e.mediaDireita).toBe(4)
   })
 
   it('ignora ids antigos nas respostas e deixa de fora id sem respostas', async () => {
     const db = await criarDbTeste()
-    const { e1: _, ...semE1 } = todasCertas
+    const { e1: _, ...semE1 } = oito
     await inserirJogadas(db, 100, () => ({ respostas: { ...semE1, removida: 'falso' } }))
     const e = (await obterEstatisticas(db, afirmacoesValidas))!
     expect(e.erroPorAfirmacao).not.toHaveProperty('removida')
     expect(e.erroPorAfirmacao).not.toHaveProperty('e1')
-    expect(Object.keys(e.erroPorAfirmacao)).toHaveLength(11)
+    expect(Object.keys(e.erroPorAfirmacao)).toHaveLength(7)
   })
 
-  it('ranking e histograma só contam jogadas de 12', async () => {
+  it('ranking e histograma só contam jogadas de 8 (nem extras de 6, nem históricas de 12)', async () => {
     const db = await criarDbTeste()
     const seis = Object.fromEntries(rodadaDeSeis.map(a => [a.id, a.veredito]))
     await inserirJogadas(db, 100)
@@ -60,15 +62,22 @@ describe('obterEstatisticas', () => {
       acertosEsquerda: 1,
       acertosDireita: 1,
     }))
+    await inserirJogadas(db, 30, () => ({
+      respostas: todasCertas,
+      acertos: 12,
+      total: 12,
+      acertosEsquerda: 6,
+      acertosDireita: 6,
+    }))
     const e = (await obterEstatisticas(db, afirmacoesValidas))!
     expect(e.totalJogadas).toBe(100)
     expect(e.histograma.reduce((s, n) => s + n, 0)).toBe(100)
-    expect(e.histograma[12]).toBe(100)
+    expect(e.histograma[8]).toBe(100)
     expect(e.histograma[2]).toBe(0)
-    expect(e.mediaEsquerda).toBe(6)
+    expect(e.mediaEsquerda).toBe(4)
   })
 
-  it('gate de 100 conta só jogadas de 12', async () => {
+  it('gate de 100 conta só jogadas de 8', async () => {
     const db = await criarDbTeste()
     await inserirJogadas(db, 99)
     await inserirJogadas(db, 50, () => ({

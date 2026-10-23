@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import type { Db } from '@/db/client'
-import { type Afirmacao, type AfirmacaoNoQuiz, POR_PAR_EXTRA, semLado, sortearRodada } from '@/lib/afirmacoes'
+import { type Afirmacao, type AfirmacaoNoQuiz, semLado, sortearRodada } from '@/lib/afirmacoes'
 import { obterEstatisticasComCache } from '@/lib/estatisticas'
+import { COMPOSICAO_EXTRA } from '@/lib/rodadas'
 
 // Ids desconhecidos em `vistas` são simplesmente ignorados pelo sorteio.
 export const corpoRodadaSchema = z.object({ vistas: z.array(z.string().min(1)).max(500) })
@@ -36,7 +37,7 @@ export async function processarRodada(
   if (!validacao.success) return { status: 400, body: { erro: 'pedido_invalido' } }
 
   const { db, pool, aleatorio } = deps
-  const rodada = sortearRodada(pool, POR_PAR_EXTRA, validacao.data.vistas, aleatorio)
+  const rodada = sortearRodada(pool, COMPOSICAO_EXTRA, validacao.data.vistas, aleatorio)
   if (!rodada) return { status: 200, body: { afirmacoes: null, erroPorAfirmacao: null } }
   return {
     status: 200,

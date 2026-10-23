@@ -1,7 +1,8 @@
 // tests/data/afirmacoes-reais.test.ts
 import { expect, it } from 'vitest'
 import dados from '@/data/afirmacoes.json'
-import { contarPorPar, jogaveis, POR_VEREDITO_POR_LADO, validarPool } from '@/lib/afirmacoes'
+import { contarPorPar, jogaveis, PARES, POR_VEREDITO_POR_LADO, sortearRodada, validarPool } from '@/lib/afirmacoes'
+import { COMPOSICAO_EXTRA, COMPOSICAO_PRIMEIRA } from '@/lib/rodadas'
 
 it('src/data/afirmacoes.json é um pool válido', () => {
   expect(() => validarPool(dados)).not.toThrow()
@@ -12,6 +13,20 @@ it('nenhuma explicação é vazia ou menor que 40 caracteres', () => {
 it('pool tem ao menos 2 jogáveis por par', () => {
   for (const [par, n] of contarPorPar(jogaveis(validarPool(dados)))) {
     expect(n, par).toBeGreaterThanOrEqual(POR_VEREDITO_POR_LADO)
+  }
+})
+it('pool sustenta a primeira rodada e mais uma extra (inclui ao menos 2 falsas jogáveis por lado)', () => {
+  const contagem = contarPorPar(jogaveis(validarPool(dados)))
+  for (const { lado, veredito } of PARES) {
+    const precisa = COMPOSICAO_PRIMEIRA[veredito] + COMPOSICAO_EXTRA[veredito]
+    expect(contagem.get(`${lado}:${veredito}`), `${lado}:${veredito}`).toBeGreaterThanOrEqual(precisa)
+  }
+  expect(COMPOSICAO_PRIMEIRA.falso).toBeGreaterThanOrEqual(2)
+  const pool = validarPool(dados)
+  for (let i = 0; i < 20; i++) {
+    const primeira = sortearRodada(pool, COMPOSICAO_PRIMEIRA, [])
+    expect(primeira).not.toBeNull()
+    expect(sortearRodada(pool, COMPOSICAO_EXTRA, primeira!.map((a) => a.id))).not.toBeNull()
   }
 })
 

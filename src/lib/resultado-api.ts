@@ -83,7 +83,7 @@ export async function processarResultado(
       resultado,
       avaliacao: gerarAvaliacao(resultado),
       estatisticas,
-      // O ranking só compara rodadas de 12.
+      // O ranking só compara primeiras rodadas (TOTAL_AFIRMACOES).
       percentilAbaixo:
         estatisticas && resultado.total === TOTAL_AFIRMACOES
           ? percentilAbaixo(estatisticas.histograma, resultado.acertos)
