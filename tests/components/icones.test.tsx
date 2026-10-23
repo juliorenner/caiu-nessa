@@ -1,7 +1,10 @@
 import { cleanup, render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Congresso } from '@/components/icones/Congresso'
+import { Jornal } from '@/components/icones/Jornal'
+import { Microfone } from '@/components/icones/Microfone'
 import { Politico } from '@/components/icones/Politico'
+import { TituloEleitor } from '@/components/icones/TituloEleitor'
 import { Urna } from '@/components/icones/Urna'
 import { MarcaDagua } from '@/components/MarcaDagua'
 
@@ -11,6 +14,9 @@ describe.each([
   ['Urna', Urna],
   ['Politico', Politico],
   ['Congresso', Congresso],
+  ['TituloEleitor', TituloEleitor],
+  ['Microfone', Microfone],
+  ['Jornal', Jornal],
 ])('%s', (_nome, Icone) => {
   it('desenha um svg decorativo 64×64 em traço de tinta e aceita className', () => {
     const { container } = render(<Icone className="h-8 w-8" />)
