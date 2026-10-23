@@ -89,3 +89,28 @@ Em seguida: F1 ("Bolsonaro nunca foi ameaça à democracia", Lupa falso), F4 (na
 - Estadão: a busca do WebSearch é bloqueada; li só a listagem atual (cerca de 20 peças) e 7 artigos.
 - Não achei checagem do Aos Fatos nem do G1 para o comício de lançamento; o V1, V2, E1 e F1 têm só a Lupa.
 - Citações copiadas das páginas salvas aqui; conferir na página antes de entrar no banco, como manda a skill.
+
+## Aplicado
+
+Os 16 itens entraram em `src/data/afirmacoes.json` com `lado: "direita"`: V1–V4, E1, F1–F10 e o vídeo dos ossos, que entra como enganoso porque o dono decidiu que o "Falta contexto" da Lupa conta como enganoso. Cada página foi baixada com `curl` em 23/10 e a citação conferida nela; `conferir-citacoes.ts` deu OK nos 16. `validar-revisao.ts` acusa só os limites de volume (16 novas, limite 6; 16 à direita, limite 3): é um lote humano.
+
+| id | sweep | texto | veredito | fonte |
+|---|---|---|---|---|
+| 3bd5c055 | V1 | O governo Lula cortou mais de R$ 4,2 bilhões da verba das Forças Armadas. | verdadeiro | Lupa, 17/08 |
+| 5c9b6e39 | V2 | O Brasil tem mais de 80 milhões de pessoas endividadas. | verdadeiro | Lupa, 17/08 |
+| 15897b12 | V3 | O Brasil bateu o recorde de carga tributária. | verdadeiro | Lupa, 01/10 |
+| 912818c1 | V4 | Eduardo Paes foi gravado num grampo da PF se apresentando a Lula como soldado do petista. | verdadeiro | Lupa, 01/10 |
+| c6e52312 | E1 | O número de pessoas em situação de rua no Brasil dobrou durante o governo Lula. | enganoso | Lupa, 17/08 |
+| ac343dd1 | ossos | Vídeos de distribuição de ossos mostram que Lula prometeu picanha e entregou a fila do osso. | enganoso | Lupa, 16/10 |
+| 5ffa3803 | F1 | Jair Bolsonaro nunca foi uma ameaça para a democracia. | falso | Lupa, 17/08 |
+| b258bf74 | F2 | Um vídeo de multidão mostra o bloco do 22 de Flávio em Minas. | falso | Aos Fatos, 16/10 |
+| 50b79160 | F3 | Lula acha normal o roubo de celular para comprar uma cervejinha. | falso | Lupa, 01/10 (e Estadão Verifica, 22/10) |
+| 5a930c09 | F4 | Lula fez piada com abuso sexual de meninas ao falar de mulheres tocadas desde pequenas. | falso | Lupa, 01/10 (e Aos Fatos e Lupa, 29/09) |
+| 9b9c9f37 | F5 | Nos últimos quatro anos, o Brasil bateu o recorde de falências de empresas. | falso | Lupa, 01/10 |
+| 492d1dda | F6 | Em comício no Rio de Janeiro, Lula disse que não acredita em Deus. | falso | Aos Fatos, 25/08 |
+| 9c86cda9 | F7 | Uma foto mostra uma trabalhadora limpando pichações do ato pró-Lula na Paulista. | falso | Lupa, 12/10 (e Aos Fatos, 12/10) |
+| 0774ce12 | F8 | Em gravação, Marcola confessa que Lula é o melhor candidato para o crime organizado. | falso | Lupa, 15/10 |
+| aa4201d1 | F9 | Um vídeo de ponto de religião de matriz africana foi gravado no ato de Lula na Paulista. | falso | Lupa, 12/10 |
+| 7a23af63 | F10 | Um relatório da PF diz que não há indícios de crime nas conversas de Nikolas com Vorcaro. | falso | Lupa, 04/09 (e Aos Fatos, 03/09) |
+
+Contagem: 4 verdadeiro, 2 enganoso, 10 falso. Textos encurtados na tabela; o texto completo está no JSON.
