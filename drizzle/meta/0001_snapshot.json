@@ -1,5 +1,5 @@
 {
-  "id": "81174266-4b8f-4363-b2d0-5f8184063253",
+  "id": "85909a46-3eb8-4db8-96d7-775e9d3a564d",
   "prevId": "57e1ccf8-0e75-41d0-a6d7-dfbccda2cf95",
   "version": "7",
   "dialect": "postgresql",
@@ -71,6 +71,21 @@
               "asc": true,
               "nulls": "last"
             },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "eventos_created_at_idx": {
+          "name": "eventos_created_at_idx",
+          "columns": [
             {
               "expression": "created_at",
               "isExpression": false,

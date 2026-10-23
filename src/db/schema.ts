@@ -32,5 +32,6 @@ export const eventos = pgTable(
   t => [
     index('eventos_tipo_created_at_idx').on(t.tipo, t.createdAt),
     index('eventos_ip_hash_created_at_idx').on(t.ipHash, t.createdAt),
+    index('eventos_created_at_idx').on(t.createdAt),
   ],
 )
