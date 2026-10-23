@@ -1,3 +1,4 @@
+import { DESCRICAO } from '@/lib/site'
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -16,6 +17,11 @@ beforeEach(() => {
 })
 
 describe('página /r/[codigo]', () => {
+  it('explica o jogo antes do Começar', async () => {
+    render(await Pagina({ params: Promise.resolve({ codigo: CODIGO }) }))
+    expect(screen.getByText(DESCRICAO)).toBeInTheDocument()
+  })
+
   it('mostra o placar do amigo, a faixa, a grade e o botão Começar', async () => {
     render(await Pagina({ params: params(CODIGO) }))
     expect(screen.getByText('Placar de um amigo')).toBeInTheDocument()

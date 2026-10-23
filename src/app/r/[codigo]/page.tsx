@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { DESCRICAO } from '@/lib/site'
 import { Ficha } from '@/components/Ficha'
 import { GradeDeCasas } from '@/components/GradeDeCasas'
-import { BOTAO_PRIMARIO, CARIMBO_FAIXA, LINK_PAGINA, NUMERO_PLACAR } from '@/components/rotulos'
+import { BOTAO_PRIMARIO, TEXTO_SECUNDARIO, CARIMBO_FAIXA, LINK_PAGINA, NUMERO_PLACAR } from '@/components/rotulos'
 import { FAIXAS, letrasParaCasas, parametrosDoCodigo, type Parametros } from '@/lib/cartao'
 
 type Props = { params: Promise<{ codigo: string }> }
@@ -53,6 +54,8 @@ export default async function Pagina({ params }: Props) {
         </h1>
         <GradeDeCasas casas={letrasParaCasas(p.g)} />
         <p className="text-lg leading-relaxed">{fraseDoCaiu(p.c)}</p>
+        {/* Primeiro contato de quem recebe o link: diz o que é o jogo antes do botão. */}
+        <p className={`text-base leading-relaxed ${TEXTO_SECUNDARIO}`}>{DESCRICAO}</p>
         <Link href="/quiz" className={BOTAO_PRIMARIO}>
           Começar
         </Link>
