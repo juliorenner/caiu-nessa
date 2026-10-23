@@ -2116,7 +2116,8 @@
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-19",
-    "alcance": 3
+    "alcance": 3,
+    "observacao": "Fora do jogo: o Aos Fatos deu \"Verdadeiro\" à mesma alegação (\"eu peguei um déficit de 2,8%\") na entrevista de Lula à Globo em 15/10, enquanto o G1 Fato ou Fake (#FAKE) e a Lupa (falso) a checaram como falsa; verdadeiro contra falso tira o item do jogo."
   },
   {
     "id": "c5c384ee",
