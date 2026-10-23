@@ -64,7 +64,7 @@ describe('escolher', () => {
     }
   })
 
-  it('com longo dá 4 itens, todos nas vagas extremas', () => {
+  it('com longo dá 3 itens, todos nas vagas extremas', () => {
     for (let s = 0; s < 12; s++) {
       const itens = escolher(s, true)
       expect(itens).toHaveLength(MAXIMO)

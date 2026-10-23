@@ -32,7 +32,8 @@ export const VAGAS: readonly Vaga[] = [
   { left: 82, top: 90 },
 ]
 
-// 12 variações: vagas × ícones (índices em REPERTORIO) × giro em graus. Cada uma tem ao menos 4 vagas extremas,
+// 12 variações: vagas × ícones (índices em REPERTORIO) × giro em graus. Cada uma lista 6–9 candidatos, dos quais
+// `escolher` usa até 3 (MAXIMO). Cada uma tem ao menos 4 vagas extremas,
 // com as quatro primeiras alternando topo e base.
 export const VARIACOES: readonly { vagas: number[]; icones: number[]; giros: number[] }[] = [
   { vagas: [0, 13, 6, 3, 9, 15, 4], icones: [0, 1, 2, 3, 4, 5, 1], giros: [-6, 4, -3, 7, -5, 2, -1] },
@@ -56,7 +57,7 @@ const TAMANHOS = [
 
 const extrema = ({ top }: Vaga): boolean => top < 12 || top > 88
 
-// Mesma semente → mesmos ícones; a semente entra em módulo 12. Com `longo`, só as 4 primeiras vagas extremas.
+// Mesma semente → mesmos ícones; a semente entra em módulo 12. Com `longo`, só vagas extremas (até MAXIMO).
 export const MAXIMO = 3
 
 // Fora da faixa do texto (25–75% da altura) e fora do canto superior esquerdo, onde fica o "?".
