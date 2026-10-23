@@ -41,8 +41,8 @@ function renderizar() {
 }
 
 const aviso = () => document.querySelector('p[aria-live="polite"]')
-const botao = () => screen.getByRole('button', { name: 'Compartilhar placar' })
-const stories = () => screen.getByRole('button', { name: 'Mandar para os stories' })
+const botao = () => screen.getByRole('button', { name: 'Mais opções de compartilhar' })
+const stories = () => screen.getByRole('button', { name: 'Mandar para o Instagram' })
 // Deixa o fetch pré-buscado resolver e o estado assentar.
 const assentar = () => act(() => new Promise(r => setTimeout(r, 0)))
 
@@ -71,8 +71,13 @@ describe('ResultadoFinal: político em marca-d\'água', () => {
     expect(marca).not.toBeNull()
     expect(marca!.querySelector('svg')).not.toBeNull()
     expect(container.querySelector('[data-ficha] svg')).toBeNull()
-    expect(screen.getAllByRole('button').map(b => b.textContent)).toEqual(['Compartilhar placar', 'Continuar jogando'])
-    expect(screen.getAllByRole('link').map(l => l.textContent)).toEqual([
+    // Sem canShare não há Instagram. Os rótulos visíveis são curtos; o nome completo vai no aria-label.
+    expect(screen.getAllByRole('button').map(b => b.getAttribute('aria-label') ?? b.textContent)).toEqual([
+      'Mais opções de compartilhar',
+      'Continuar jogando',
+    ])
+    expect(screen.getAllByRole('link').map(l => l.getAttribute('aria-label') ?? l.textContent)).toEqual([
+      'Mandar no WhatsApp',
       'Baixar imagem para os stories',
       'Jogar de novo',
       'Como escolhemos as afirmações',
@@ -90,7 +95,7 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(vi.mocked(fetch).mock.calls[0][0]).toMatch(/^\/cartao\?a=4&t=12&c=3&f=caiu-feio&g=aeaaeqeaeeqe$/)
   })
 
-  it('Compartilhar placar: share com texto, url do resultado e título, sem files', async () => {
+  it('Mais (compartilhar): share com texto, url do resultado e título, sem files', async () => {
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
     renderizar()
@@ -100,7 +105,7 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(share).toHaveBeenCalledWith({ text: texto, url: urlResultado, title: TITULO })
   })
 
-  it('Compartilhar placar chama share na hora, com a imagem ainda chegando', () => {
+  it('Mais (compartilhar) chama share na hora, com a imagem ainda chegando', () => {
     vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share })
@@ -165,7 +170,7 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(aviso()).toHaveTextContent(/^$/)
   })
 
-  it('canShare aceita arquivos e imagem pré-buscada: Mandar para os stories manda files e o texto com a URL', async () => {
+  it('canShare aceita arquivos e imagem pré-buscada: Instagram manda files e o texto com a URL', async () => {
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
     renderizar()
@@ -181,14 +186,14 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(dadosShare).not.toHaveProperty('url')
   })
 
-  it('sem canShare: Mandar para os stories não aparece', async () => {
+  it('sem canShare: Instagram não aparece', async () => {
     stubNavegador({ share: vi.fn() })
     renderizar()
     await assentar()
-    expect(screen.queryByRole('button', { name: 'Mandar para os stories' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Mandar para o Instagram' })).not.toBeInTheDocument()
   })
 
-  it('canShare lança: Mandar para os stories não aparece', async () => {
+  it('canShare lança: Instagram não aparece', async () => {
     stubNavegador({
       share: vi.fn(),
       canShare: () => {
@@ -197,10 +202,10 @@ describe('ResultadoFinal: compartilhar', () => {
     })
     renderizar()
     await assentar()
-    expect(screen.queryByRole('button', { name: 'Mandar para os stories' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Mandar para o Instagram' })).not.toBeInTheDocument()
   })
 
-  it('imagem ainda carregando: Mandar para os stories avisa e não chama share', async () => {
+  it('imagem ainda carregando: Instagram avisa e não chama share', async () => {
     vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
@@ -211,7 +216,7 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(share).not.toHaveBeenCalled()
   })
 
-  it('busca da imagem falhou: Mandar para os stories avisa que não carregou', async () => {
+  it('busca da imagem falhou: Instagram avisa que não carregou', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('rede')))
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
@@ -256,22 +261,35 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(link.getAttribute('href')).toMatch(/^\/cartao\?a=/)
   })
 
-  it('ordem: Compartilhar placar, Mandar para os stories, Baixar imagem, aviso, Continuar jogando; Jogar de novo é link e a linha Acertei sai', async () => {
+  it('ordem: WhatsApp, Instagram, Baixar, Mais, aviso, Continuar jogando; Jogar de novo é link e a linha Acertei sai', async () => {
     stubNavegador({ share: vi.fn(), canShare: () => true })
     renderizar()
     await assentar()
-    const compartilharBtn = botao()
-    const storiesBtn = stories()
+    const whatsapp = screen.getByRole('link', { name: 'Mandar no WhatsApp' })
+    const instagram = stories()
     const baixar = screen.getByRole('link', { name: 'Baixar imagem para os stories' })
+    const mais = botao()
     const continuar = screen.getByRole('button', { name: 'Continuar jogando' })
     const p = aviso()!
-    expect(compartilharBtn.compareDocumentPosition(storiesBtn) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(storiesBtn.compareDocumentPosition(baixar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(baixar.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(p.compareDocumentPosition(continuar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(baixar.compareDocumentPosition(continuar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    const segue = (a: Element, b: Element) => expect(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    segue(whatsapp, instagram)
+    segue(instagram, baixar)
+    segue(baixar, mais)
+    segue(mais, p)
+    segue(p, continuar)
+    expect(screen.getByText('Compartilhar')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Jogar de novo' })).toHaveAttribute('href', '/quiz')
     expect(screen.queryByText(/Acertei/)).not.toBeInTheDocument()
+  })
+
+  it('WhatsApp: link wa.me com o texto e a URL do resultado, em nova aba', async () => {
+    stubNavegador({})
+    renderizar()
+    await assentar()
+    const link = screen.getByRole('link', { name: 'Mandar no WhatsApp' })
+    expect(link).toHaveAttribute('href', `https://wa.me/?text=${encodeURIComponent(textoComUrl)}`)
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
   })
 })
 
@@ -283,7 +301,7 @@ describe('ResultadoFinal: registra cada compartilhar', () => {
       .mock.calls.filter(([url]) => url === '/api/evento')
       .map(([, init]) => JSON.parse(String(init?.body)))
 
-  it('Compartilhar placar copiado: registra link/copiado', async () => {
+  it('Mais (compartilhar) copiado: registra link/copiado', async () => {
     stubNavegador({ writeText: vi.fn().mockResolvedValue(undefined) })
     renderizar()
     await assentar()
@@ -292,7 +310,7 @@ describe('ResultadoFinal: registra cada compartilhar', () => {
     expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'link', resultado: 'copiado' } }])
   })
 
-  it('Mandar para os stories cancelado: registra imagem/cancelado e o aviso fica vazio', async () => {
+  it('Instagram cancelado: registra imagem/cancelado e o aviso fica vazio', async () => {
     stubNavegador({ share: vi.fn().mockRejectedValue(new DOMException('fechou', 'AbortError')), canShare: () => true })
     renderizar()
     await assentar()
@@ -300,6 +318,16 @@ describe('ResultadoFinal: registra cada compartilhar', () => {
     await waitFor(() => expect(eventosEnviados()).toHaveLength(1))
     expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'imagem', resultado: 'cancelado' } }])
     expect(aviso()).toHaveTextContent(/^$/)
+  })
+
+  it('WhatsApp: registra whatsapp/clique', async () => {
+    stubNavegador({})
+    renderizar()
+    await assentar()
+    const link = screen.getByRole('link', { name: 'Mandar no WhatsApp' })
+    link.addEventListener('click', e => e.preventDefault())
+    fireEvent.click(link)
+    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'whatsapp', resultado: 'clique' } }])
   })
 
   it('Baixar imagem para os stories: registra baixar/clique', async () => {

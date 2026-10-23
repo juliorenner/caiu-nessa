@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { NOME_ARQUIVO, textoDeCompartilhar } from '@/lib/compartilhar'
+import { NOME_ARQUIVO, textoDeCompartilhar, urlDoWhatsApp } from '@/lib/compartilhar'
 
 const URL_RESULTADO = 'https://caiunessa.com.br/r/4-12-3-caiu-feio-aeaqeeaeeqea'
 
@@ -22,3 +22,9 @@ it('rodada de 6', () => {
 })
 
 it('nome do arquivo da imagem', () => expect(NOME_ARQUIVO).toBe('caiu-nessa-placar.png'))
+
+it('urlDoWhatsApp: wa.me com o texto codificado (quebra de linha e URL inclusive)', () => {
+  const texto = `Fiz 4/12 no Caiu Nessa? e caí em 3. E você?\n${URL_RESULTADO}`
+  expect(urlDoWhatsApp(texto)).toBe(`https://wa.me/?text=${encodeURIComponent(texto)}`)
+  expect(urlDoWhatsApp(texto)).not.toContain('\n')
+})

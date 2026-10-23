@@ -97,7 +97,7 @@ describe('Quiz', () => {
     expect(await screen.findByText(`4/${TOTAL_AFIRMACOES}`)).toBeInTheDocument()
     expect(screen.queryByText(/primeiros a jogar|das pessoas/)).not.toBeInTheDocument()
     expect(screen.getByText('Texto do viés.')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Compartilhar placar' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Mais opções de compartilhar' })).toBeInTheDocument()
     // Uma casa por afirmação, na ordem jogada: tudo "Verdade" acerta só as verdadeiras.
     const casas = rodadaPrimeira.map(a => (a.veredito === 'verdadeiro' ? 'a' : 'e')).join('')
     expect(screen.getByRole('link', { name: 'Baixar imagem para os stories' }).getAttribute('href')).toContain(`g=${casas}`)

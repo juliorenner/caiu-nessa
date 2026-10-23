@@ -66,6 +66,15 @@ export const BOTAO_PRIMARIO = `${BOTAO_APERTAR} ${BOTAO_ACAO} bg-tinta text-pape
 // Ação secundária ("fantasma") ao lado do primário: mesma forma, fundo branco; no escuro, transparente com papel.
 export const BOTAO_SECUNDARIO = `${BOTAO_APERTAR} ${BOTAO_ACAO} bg-superficie text-tinta dark:bg-fundo-escuro dark:text-papel ${FOCO}`
 
+// Linha de compartilhar: o controle inteiro (círculo + rótulo) é o alvo do toque e do foco;
+// o círculo afunda quando o controle é pressionado (group-active). Estreito abaixo de 360 px.
+export const ITEM_COMPARTILHAR = `group flex w-[66px] shrink flex-col items-center gap-2 rounded min-[360px]:w-[72px] ${FOCO}`
+const CIRCULO_ICONE =
+  'flex size-[60px] shrink-0 items-center justify-center rounded-full border-[3px] border-tinta shadow-[0_5px_0_var(--color-tinta)] group-active:translate-y-[5px] group-active:shadow-none transition-transform duration-[80ms] motion-reduce:transition-none dark:border-papel dark:shadow-[0_5px_0_var(--color-papel)]'
+export const CIRCULO_ICONE_PRIMARIO = `${CIRCULO_ICONE} bg-tinta text-papel dark:bg-papel dark:text-tinta`
+export const CIRCULO_ICONE_SECUNDARIO = `${CIRCULO_ICONE} bg-superficie text-tinta dark:bg-fundo-escuro dark:text-papel`
+export const ROTULO_ICONE = 'text-[12px] font-bold min-[360px]:text-[13px]'
+
 // Botão dentro de um cartão (branco nos dois temas): sem variante escura.
 export const BOTAO_EM_CARTAO = `${APERTAR_CLARO} ${BOTAO_ACAO} bg-tinta text-papel ${FOCO_EM_SUPERFICIE}`
 

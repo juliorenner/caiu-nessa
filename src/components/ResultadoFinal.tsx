@@ -8,16 +8,16 @@ import {
   urlDoResultado,
   type Casa,
 } from "@/lib/cartao";
-import { NOME_ARQUIVO, textoDeCompartilhar } from "@/lib/compartilhar";
+import { NOME_ARQUIVO, textoDeCompartilhar, urlDoWhatsApp } from "@/lib/compartilhar";
 import { buscarArquivo, compartilhar } from "@/lib/compartilhar-navegador";
 import { registrarEvento } from "@/lib/eventos-navegador";
 import type { RespostaResultado } from "@/lib/resultado-api";
 import { SITE_URL, TITULO } from "@/lib/site";
 import { Ficha } from "./Ficha";
+import { LinhaDeCompartilhar } from "./LinhaDeCompartilhar";
 import { Politico } from "./icones/Politico";
 import { MarcaDagua } from "./MarcaDagua";
 import {
-  BOTAO_PRIMARIO,
   BOTAO_SECUNDARIO,
   CARIMBO_FAIXA,
   LINK_PAGINA,
@@ -59,7 +59,7 @@ export function ResultadoFinal(p: {
   const textoComUrl = textoDeCompartilhar({ ...placar, url: urlResultado });
   const urlCartao = urlDoCartao({ ...placar, faixa });
   const [arquivo, setArquivo] = useState<File | null>(null);
-  // Só no navegador: no servidor (e até montar) o botão dos stories não aparece.
+  // Só no navegador: no servidor (e até montar) o botão do Instagram não aparece.
   const [aceitaArquivos, setAceitaArquivos] = useState(false);
   const [imagemNaoCarregou, setImagemNaoCarregou] = useState(false);
   const [aviso, setAviso] = useState<Aviso | null>(null);
@@ -71,9 +71,9 @@ export function ResultadoFinal(p: {
     void buscarArquivo(urlCartao, NOME_ARQUIVO).then((f) => {
       if (!montado) return;
       setArquivo(f);
-      // Quem tocou em "Mandar para os stories" cedo demais viu "carregando": some quando a imagem chega.
+      // Quem tocou em "Instagram" cedo demais viu "carregando": some quando a imagem chega.
       if (f) setAviso((atual) => (atual === "carregando" ? null : atual));
-      // A busca falhou de vez: o próximo toque nos stories avisa isso, não "carregando".
+      // A busca falhou de vez: o próximo toque no Instagram avisa isso, não "carregando".
       else setImagemNaoCarregou(true);
     });
     return () => {
@@ -89,7 +89,7 @@ export function ResultadoFinal(p: {
           files: [new File([""], "x.png", { type: "image/png" })],
         }) ?? false;
     } catch {
-      // Qualquer erro: sem o botão dos stories; Baixar imagem continua.
+      // Qualquer erro: sem o botão do Instagram; Baixar continua.
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect -- navigator só existe no cliente; ler no render divergiria da hidratação
     setAceitaArquivos(aceita);
@@ -185,32 +185,19 @@ export function ResultadoFinal(p: {
             Você acertou mais que {percentilAbaixo ?? 0}% das pessoas.
           </p>
         )}
-        <button
-          type="button"
-          onClick={() => aoCompartilhar("link")}
-          className={BOTAO_PRIMARIO}
-        >
-          Compartilhar placar
-        </button>
-        {aceitaArquivos && (
-          <button
-            type="button"
-            onClick={() => aoCompartilhar("imagem")}
-            className={BOTAO_SECUNDARIO}
-          >
-            Mandar para os stories
-          </button>
-        )}
-        <a
-          download={NOME_ARQUIVO}
-          href={urlCartao}
-          onClick={() =>
+        <LinhaDeCompartilhar
+          urlWhatsApp={urlDoWhatsApp(textoComUrl)}
+          onWhatsApp={() =>
+            registrarEvento({ tipo: "compartilhar", dados: { modo: "whatsapp", resultado: "clique" } })
+          }
+          onInstagram={aceitaArquivos ? () => aoCompartilhar("imagem") : undefined}
+          urlImagem={urlCartao}
+          nomeArquivo={NOME_ARQUIVO}
+          onBaixar={() =>
             registrarEvento({ tipo: "compartilhar", dados: { modo: "baixar", resultado: "clique" } })
           }
-          className={`self-center text-base ${LINK_PAGINA}`}
-        >
-          Baixar imagem para os stories
-        </a>
+          onMais={() => aoCompartilhar("link")}
+        />
         <p aria-live="polite" className="text-base">
           {aviso ? TEXTO_AVISO[aviso] : ""}
         </p>

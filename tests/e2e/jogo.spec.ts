@@ -19,7 +19,7 @@ test('joga uma rodada inteira', async ({ page }) => {
   }
 
   await expect(page.locator('[data-placar]')).toHaveText(new RegExp(`^\\d+/${TOTAL_AFIRMACOES}$`))
-  await expect(page.getByRole('button', { name: 'Compartilhar placar' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Mais opções de compartilhar' })).toBeVisible()
 })
 
 test('abre o quiz e mostra o veredito da primeira carta', async ({ page }) => {

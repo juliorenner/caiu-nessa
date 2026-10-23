@@ -4,8 +4,8 @@ import { z } from 'zod'
 export const TIPOS_DE_EVENTO = ['compartilhar'] as const
 export type TipoDeEvento = (typeof TIPOS_DE_EVENTO)[number]
 
-export const MODOS_DE_COMPARTILHAR = ['link', 'imagem', 'baixar'] as const
-// Os desfechos de compartilhar() mais 'clique' para o link de baixar a imagem.
+export const MODOS_DE_COMPARTILHAR = ['link', 'imagem', 'baixar', 'whatsapp'] as const
+// Os desfechos de compartilhar() mais 'clique' para os links (baixar a imagem, abrir o WhatsApp).
 export const RESULTADOS_DE_COMPARTILHAR = ['folha', 'copiado', 'cancelado', 'falhou', 'indisponivel', 'clique'] as const
 
 // Teto do JSON serializado de `dados`, valha o que valer o esquema do tipo.

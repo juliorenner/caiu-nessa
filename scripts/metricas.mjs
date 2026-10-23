@@ -7,7 +7,7 @@ import { COMPOSICAO_EXTRA, TAMANHOS_ACEITOS, tamanhoDa } from '../src/lib/rodada
 
 const TAMANHO_EXTRA = tamanhoDa(COMPOSICAO_EXTRA)
 const TAMANHOS_PRIMEIRA = TAMANHOS_ACEITOS.filter((t) => t !== TAMANHO_EXTRA)
-// O navegador só confirma que a folha abriu, o texto foi copiado ou o link de baixar foi tocado.
+// O navegador só confirma que a folha abriu, o texto foi copiado ou um link (baixar, WhatsApp) foi tocado.
 const RESULTADOS_QUE_CONTAM = ['folha', 'copiado', 'clique']
 
 async function abrir(url) {
