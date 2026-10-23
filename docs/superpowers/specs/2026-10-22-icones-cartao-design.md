@@ -3,10 +3,10 @@
 Data: 2026-10-22, noite. Pedido do autor: "existem ícones nos cards também? tinha pensado em eles no fundo dos cards, variando quais por cartão"; "o '?' é legal, mas o card fica todo muito 'branco'"; "eu pensei em vários ícones pequenos, flutuando ao redor do texto nos cards, não deixando tudo branco, sendo detalhes que preenchem um pouco". O autor dispensou perguntas; as escolhas estão aqui como decisão do controlador. Revisado por um construtor antes da entrega; as três dúvidas dele (vagas livres, faixa do texto, repetição entre rodadas) estão resolvidas no texto como decisão do controlador.
 
 ## Intenção
-O cartão da afirmação é um retângulo branco com o texto no meio e o "?" de papel no canto; em celulares altos sobra muito branco. Em vez de um ícone grande, um **padrão esparso de ícones pequenos** em traço de tinta, bem claros, espalhados pelas bordas do cartão ao redor do texto, como detalhes de um cartaz. O conjunto muda de cartão para cartão.
+O cartão da afirmação é um retângulo branco com o texto no meio e o "?" de papel no canto; em celulares altos sobra muito branco. Em vez de um ícone grande, um **padrão esparso de ícones pequenos** em traço de tinta, bem claros (12%), espalhados pelas bordas do cartão ao redor do texto, como detalhes de um cartaz. O conjunto muda de cartão para cartão.
 
 ## Objetivos
-- Entre 6 e 9 ícones pequenos (28–40 px) por cartão, nas bordas e cantos, nunca atrás das linhas de texto; opacidade ~7% (tinta sobre branco), `aria-hidden`, `pointer-events-none`.
+- Entre 6 e 9 ícones pequenos (28–40 px) por cartão, nas bordas e cantos, nunca atrás das linhas de texto; opacidade ~12% (tinta sobre branco; 7% ficou invisível na checagem visual), `aria-hidden`, `pointer-events-none`.
 - Variar por cartão: o índice do cartão na rodada escolhe, de forma determinística, quais ícones, em quais posições e com que leve rotação; sem aleatoriedade no render (hidratação).
 - Repertório de 6 ícones no mesmo traço dos existentes: urna, político, Congresso (já existem) + título de eleitor (cartão com faixa e foto quadrada), microfone de debate, jornal dobrado.
 - O "?" de papel fica. O verso (próximo cartão, atrás) não mostra ícones. O texto segue legível: contraste do texto medido com o ícone por baixo não cai abaixo de 4,5:1 (a 7% o fundo é ~#fff → ~#ece9f0 no pior caso; conferir).

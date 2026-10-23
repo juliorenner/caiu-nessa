@@ -65,7 +65,7 @@ describe('IconesDoCartao', () => {
     const { container } = render(<IconesDoCartao semente={3} longo={false} />)
     const camada = container.querySelector('[data-icones-cartao]')!
     expect(camada).toHaveAttribute('aria-hidden', 'true')
-    expect(camada).toHaveClass('pointer-events-none', 'absolute', 'inset-0', 'overflow-hidden', 'text-tinta', 'opacity-[0.07]')
+    expect(camada).toHaveClass('pointer-events-none', 'absolute', 'inset-0', 'overflow-hidden', 'text-tinta', 'opacity-[0.12]')
     const itens = escolher(3, false)
     expect(camada.querySelectorAll('svg')).toHaveLength(itens.length)
     const spans = camada.querySelectorAll(':scope > span')

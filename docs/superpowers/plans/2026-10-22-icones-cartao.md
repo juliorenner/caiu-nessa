@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Ícones no padrão `Traco` (64×64, `currentColor`, `strokeWidth` 3.5, pontas quadradas), `aria-hidden`, `focusable="false"`; nada que leia como partido, candidato, bandeira, estrela, número.
-- Camada dos ícones: `absolute inset-0 pointer-events-none text-tinta opacity-[0.07]`, `aria-hidden`; os ícones em `absolute` por percentuais (`left`/`top` em %), tamanho 28–40 px, rotação −8°..8°.
+- Camada dos ícones: `absolute inset-0 pointer-events-none text-tinta opacity-[0.12]`, `aria-hidden`; os ícones em `absolute` por percentuais (`left`/`top` em %), tamanho 28–40 px, rotação −8°..8°.
 - Faixa central sempre livre: nenhuma vaga com `top` entre 25% e 75% E `left` entre 12% e 88%. Com `longo` (texto `text-base`), só vagas com `top` < 12% ou > 88%, 4 ícones.
 - Determinismo: mesma semente → mesmo conjunto; `semente % 12` indexa a tabela; `Quiz` passa `indice + (rodada - 1) * 7`.
 - O verso (próximo cartão) não recebe ícones. O texto do cartão continua `relative` acima da camada.
@@ -50,7 +50,7 @@
 - Test: `tests/components/IconesDoCartao.test.tsx`
 
 **Interfaces:**
-- Produces: `export const VAGAS: readonly { left: number; top: number }[]` (16 vagas em %, nenhuma na faixa central), `export const VARIACOES: readonly { vagas: number[]; icones: number[]; giros: number[] }[]` (12 entradas, 6–9 itens cada; `icones` indexa `REPERTORIO = [Urna, Politico, Congresso, TituloEleitor, Microfone, Jornal]`), `export function escolher(semente: number, longo: boolean): { vaga: { left; top }; Icone; giro: number; tamanho: number }[]` (`longo` filtra vagas com `top < 12 || top > 88` e corta em 4), `export function IconesDoCartao({ semente, longo }: { semente: number; longo: boolean })` → `<div aria-hidden data-icones-cartao className="pointer-events-none absolute inset-0 overflow-hidden text-tinta opacity-[0.07]">` com um `<span>` por item em `absolute` (`style={{ left: '%', top: '%', transform: 'rotate(..deg)' }}`) contendo o ícone com `className="size-[Npx]"`.
+- Produces: `export const VAGAS: readonly { left: number; top: number }[]` (16 vagas em %, nenhuma na faixa central), `export const VARIACOES: readonly { vagas: number[]; icones: number[]; giros: number[] }[]` (12 entradas, 6–9 itens cada; `icones` indexa `REPERTORIO = [Urna, Politico, Congresso, TituloEleitor, Microfone, Jornal]`), `export function escolher(semente: number, longo: boolean): { vaga: { left; top }; Icone; giro: number; tamanho: number }[]` (`longo` filtra vagas com `top < 12 || top > 88` e corta em 4), `export function IconesDoCartao({ semente, longo }: { semente: number; longo: boolean })` → `<div aria-hidden data-icones-cartao className="pointer-events-none absolute inset-0 overflow-hidden text-tinta opacity-[0.12]">` com um `<span>` por item em `absolute` (`style={{ left: '%', top: '%', transform: 'rotate(..deg)' }}`) contendo o ícone com `className="size-[Npx]"`.
 
 - [ ] **Step 1: Testes** — `VAGAS` nunca na faixa central (todas satisfazem `top < 25 || top > 75 || left < 12 || left > 88`); `escolher(3, false)` tem entre 6 e 9 itens e é igual a `escolher(15, false)` (módulo 12) e diferente de `escolher(4, false)`; `escolher(3, true)` tem 4 itens, todos com `top < 12 || top > 88`; render: container `aria-hidden`, `pointer-events-none`, `absolute`, N `svg` filhos; sem aleatoriedade (duas renders iguais).
 - [ ] **Step 2–4** como acima. — [ ] **Step 5: Commit** — `feat(cartao): camada de ícones pequenos, determinística por semente`.

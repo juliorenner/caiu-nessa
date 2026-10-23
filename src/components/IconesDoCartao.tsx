@@ -71,7 +71,7 @@ export function escolher(semente: number, longo: boolean): { vaga: Vaga; Icone: 
 // Ícones pequenos e quase transparentes espalhados pelas bordas do cartão, atrás do texto, sem toque.
 export function IconesDoCartao({ semente, longo }: { semente: number; longo: boolean }): ReactElement {
   return (
-    <div aria-hidden data-icones-cartao className="pointer-events-none absolute inset-0 overflow-hidden text-tinta opacity-[0.07]">
+    <div aria-hidden data-icones-cartao className="pointer-events-none absolute inset-0 overflow-hidden text-tinta opacity-[0.12]">
       {escolher(semente, longo).map(({ vaga, Icone, giro, tamanho }, i) => (
         <span key={i} className="absolute" style={{ left: `${vaga.left}%`, top: `${vaga.top}%`, transform: `rotate(${giro}deg)` }}>
           <Icone className={TAMANHOS[tamanho - 28]} />
