@@ -59,6 +59,20 @@ export function PainelVeredito(p: {
     return () => cancelAnimationFrame(quadro)
   }, [montado])
 
+  // Enter avança de qualquer lugar da página, não só com o botão focado (o clique no painel tira o foco dele).
+  // Num botão, link ou campo o Enter já tem efeito próprio; aí não dispara de novo.
+  useEffect(() => {
+    function aoTeclar(e: globalThis.KeyboardEvent) {
+      if (e.key !== 'Enter' || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return
+      const origem = e.target instanceof HTMLElement ? e.target : null
+      if (origem && origem !== document.body && origem.closest('a, button, input, textarea, select, [role="button"]')) return
+      e.preventDefault()
+      onFechar()
+    }
+    window.addEventListener('keydown', aoTeclar)
+    return () => window.removeEventListener('keydown', aoTeclar)
+  }, [onFechar])
+
   function conterFoco(e: KeyboardEvent<HTMLElement>) {
     if (e.key !== 'Tab') return
     const focaveis = Array.from(e.currentTarget.querySelectorAll<HTMLElement>(FOCAVEIS))
