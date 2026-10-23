@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm'
 import { expect, it } from 'vitest'
-import { jogadas } from '@/db/schema'
-import { excedeuLimite, extrairIp, hashIp, inserirDentroDoLimite, limparIpHashesExpirados } from '@/lib/rate-limit'
+import { eventos, jogadas } from '@/db/schema'
+import { excedeuLimite, extrairIp, hashIp, inserirDentroDoLimite, limparIpHashesDeEventosExpirados, limparIpHashesExpirados } from '@/lib/rate-limit'
 import { criarDbTeste } from '../helpers/db'
 
 it('extrairIp usa o primeiro x-forwarded-for, depois x-real-ip, depois "desconhecido"', () => {
@@ -44,5 +44,14 @@ it('limparIpHashesExpirados anula ip_hash com mais de 1h e mantém o resto', asy
     { respostas: {}, acertos: 0, total: 12, acertosEsquerda: 0, acertosDireita: 0, ipHash: 'novo', createdAt: new Date(agora.getTime() - 59 * 60_000) }])
   await limparIpHashesExpirados(db, agora)
   const hashes = (await db.select({ ipHash: jogadas.ipHash }).from(jogadas)).map(l => l.ipHash).sort()
+  expect(hashes).toEqual(['novo', null])
+})
+it('limparIpHashesDeEventosExpirados anula ip_hash de eventos com mais de 1h e mantém o resto', async () => {
+  const db = await criarDbTeste(); const agora = new Date('2026-10-21T12:00:00Z')
+  await db.insert(eventos).values([
+    { tipo: 'compartilhar', ipHash: 'velho', createdAt: new Date(agora.getTime() - 61 * 60_000) },
+    { tipo: 'compartilhar', ipHash: 'novo', createdAt: new Date(agora.getTime() - 59 * 60_000) }])
+  await limparIpHashesDeEventosExpirados(db, agora)
+  const hashes = (await db.select({ ipHash: eventos.ipHash }).from(eventos)).map(l => l.ipHash).sort()
   expect(hashes).toEqual(['novo', null])
 })
