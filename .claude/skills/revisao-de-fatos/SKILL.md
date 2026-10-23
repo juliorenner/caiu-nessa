@@ -34,12 +34,12 @@ Regras editoriais completas: `src/app/como-escolhemos/page.tsx`. Exemplo de uma 
 
 Para cada item (inclusive os com `observacao`):
 
-1. Busque a `fonte_url` com WebFetch. Confira que a checagem continua no ar e que `veredito`, `citacao`, os números da `explicacao` e a `data_checagem` batem com a página. Revise o `alcance`: uma segunda agência da lista checando a mesma fala de debate ou TV nacional eleva 2 para 3.
+1. Leia a página com `npx tsx scripts/pagina.ts <fonte_url>`: ele devolve o texto inteiro (sem o corte do WebFetch e sem recusar domínio) e traz os selos que ficam só em atributo, como `[SELO: FALSO]` do Aos Fatos. Uma página serve para todos os itens que a citam: leia cada página uma vez e confira todos os seus itens. Confira que a checagem continua no ar e que `veredito`, `citacao`, os números da `explicacao` e a `data_checagem` batem com a página. Revise o `alcance`: uma segunda agência da lista checando a mesma fala de debate ou TV nacional eleva 2 para 3.
 2. Divergência num campo: corrija o campo.
 3. Checagem retirada do ar, veredito mudado para rótulo que não conta como voto, ou outra agência da lista dizendo verdadeiro onde esta diz falso (ou o contrário): adicione `observacao` explicando (o item sai do jogo). Nunca apague um item, nem mude o `lado` de um item existente. Itens fora do jogo não entram no verificador de links.
 4. Item que já tem `observacao`: reavalie. Se o motivo não vale mais, remova a `observacao` e ele volta ao jogo.
 
-Páginas que não carregam no WebFetch: tente uma vez mais; se continuar, registre na nota como "não verificado" e não altere o item.
+Página que o script não consegue ler (erro HTTP ou tempo esgotado): tente uma vez mais; se continuar, registre o item na nota como "não verificado" e não o altere. A revisão só está completa quando todos os itens foram conferidos ou listados como "não verificado"; a nota diz quantos de cada.
 
 ## 2. Adicionar novas
 
@@ -58,6 +58,8 @@ npm test
 npx tsx scripts/verificar-fontes.ts
 npx tsx scripts/validar-revisao.ts
 ```
+
+Leia a saída de cada um até o fim: `npm test` termina com a contagem de testes passando; `verificar-fontes` imprime `OK <id>` para cada item em jogo e nenhum `FALHOU`; `validar-revisao` imprime `OK: n novas, m alteradas`. Só abra a PR depois de ver os três resultados; não presuma que passaram.
 
 Falha que você não consegue resolver: descarte o item novo que a causou, ou desfaça a mudança no item existente; nunca abra PR com algo vermelho.
 

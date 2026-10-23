@@ -69,7 +69,7 @@ jobs:
           claude_args: |
             --model ${{ inputs.modelo || 'claude-sonnet-5-5' }}
             --max-turns 150
-            --allowedTools "WebFetch,WebSearch,Read,Edit(src/data/afirmacoes.json),Write(docs/superpowers/notes/*),Bash(npm test),Bash(npx tsx scripts/verificar-fontes.ts),Bash(npx tsx scripts/validar-revisao.ts),Bash(git diff:*),Bash(git status:*),Bash(git checkout -b:*),Bash(git add:*),Bash(git commit:*),Bash(git push -u origin HEAD),Bash(gh pr create:*),Bash(gh pr list:*)"
+            --allowedTools "WebFetch,WebSearch,Read,Edit(src/data/afirmacoes.json),Write(docs/superpowers/notes/*),Bash(npm test),Bash(npx tsx scripts/pagina.ts:*),Bash(npx tsx scripts/verificar-fontes.ts),Bash(npx tsx scripts/validar-revisao.ts),Bash(git diff:*),Bash(git status:*),Bash(git checkout -b:*),Bash(git add:*),Bash(git commit:*),Bash(git push -u origin HEAD),Bash(gh pr create:*),Bash(gh pr list:*)"
 
       # A action esconde a saída do agente; mostra a mensagem final dele (o que fez, ou o motivo do erro)
       # no log e no resumo da execução.
