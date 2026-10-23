@@ -1,5 +1,15 @@
 import { expect, it } from 'vitest'
-import { type Casa, casasParaLetras, letrasParaCasas, parametrosSchema, slugDaFaixa, urlDoCartao } from '@/lib/cartao'
+import {
+  type Casa,
+  casasParaLetras,
+  codigoDoResultado,
+  letrasParaCasas,
+  parametrosDoCodigo,
+  parametrosSchema,
+  slugDaFaixa,
+  urlDoCartao,
+  urlDoResultado,
+} from '@/lib/cartao'
 
 // 4 letras 'a' em 12.
 const valido = { a: '4', t: '12', c: '3', f: 'caiu-feio', g: 'aeaeeqeaeeae' }
@@ -43,4 +53,29 @@ it('letrasParaCasas(casasParaLetras(x)) é identidade', () => {
   const casas: Casa[] = ['acerto', 'erro', 'quase', 'quase', 'acerto', 'erro']
   expect(casasParaLetras(casas)).toBe('aeqqae')
   expect(letrasParaCasas(casasParaLetras(casas))).toEqual(casas)
+})
+
+const resultado = (faixa: 'abre-o-olho' | 'quase-imune') => {
+  const casas: Casa[] = ['acerto', 'erro', 'quase', 'acerto', 'erro', 'erro', 'acerto', 'acerto', 'erro', 'quase', 'acerto', 'erro']
+  return { acertos: 5, total: 12, caiu: 2, faixa, casas }
+}
+it.each(['abre-o-olho', 'quase-imune'] as const)('código do resultado vai e volta com a faixa %s', faixa => {
+  const codigo = codigoDoResultado(resultado(faixa))
+  expect(codigo).toBe(`5-12-2-${faixa}-aeqaeeaaeqae`)
+  expect(parametrosDoCodigo(codigo)).toEqual({ a: 5, t: 12, c: 2, f: faixa, g: 'aeqaeeaaeqae' })
+})
+it('parametrosDoCodigo lê um código válido', () => {
+  expect(parametrosDoCodigo('4-12-3-caiu-feio-aeaqeeaeeqea')).toEqual({ a: 4, t: 12, c: 3, f: 'caiu-feio', g: 'aeaqeeaeeqea' })
+})
+it.each([
+  ['letra inválida em g', '4-12-3-caiu-feio-aeaxeeaeeqea'],
+  ['faixa desconhecida', '4-12-3-x-aeaqeeaeeqea'],
+  ['código incompleto', '4-12'],
+])('parametrosDoCodigo devolve null para %s', (_, codigo) => {
+  expect(parametrosDoCodigo(codigo)).toBeNull()
+})
+it('urlDoResultado aponta para /r/<código>', () => {
+  const url = urlDoResultado(resultado('abre-o-olho'))
+  expect(url.startsWith('/r/')).toBe(true)
+  expect(url).toBe('/r/5-12-2-abre-o-olho-aeqaeeaaeqae')
 })
