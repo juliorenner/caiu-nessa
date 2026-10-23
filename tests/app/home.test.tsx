@@ -40,7 +40,20 @@ describe('home em telas largas', () => {
     const links = screen.getAllByRole('link', { name: 'Como escolhemos as afirmações' })
     expect(links).toHaveLength(2)
     expect(links.filter((l) => l.classList.contains('lg:hidden'))).toHaveLength(1)
-    expect(links.filter((l) => l.classList.contains('hidden') && l.classList.contains('lg:inline'))).toHaveLength(1)
+    const emLg = links.filter((l) => !l.classList.contains('lg:hidden'))
+    expect(emLg).toHaveLength(1)
+    expect(emLg[0].parentElement).toHaveClass('hidden', 'lg:flex')
+  })
+
+  it('o link do repositório no GitHub aparece uma vez por tamanho, ao lado do "Como escolhemos"', () => {
+    render(<Home />)
+    const links = screen.getAllByRole('link', { name: 'Código aberto no GitHub' })
+    expect(links).toHaveLength(2)
+    for (const l of links) expect(l).toHaveAttribute('href', 'https://github.com/juliorenner/caiu-nessa')
+    expect(links.filter((l) => l.classList.contains('lg:hidden'))).toHaveLength(1)
+    const emLg = links.filter((l) => !l.classList.contains('lg:hidden'))
+    expect(emLg).toHaveLength(1)
+    expect(emLg[0].parentElement).toHaveClass('hidden', 'lg:flex')
   })
 })
 

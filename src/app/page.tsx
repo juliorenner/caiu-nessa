@@ -12,6 +12,7 @@ import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
 
 const DICA = `font-letreiro text-[11px] leading-[1.9] text-center lg:hidden ${TEXTO_SECUNDARIO}`
 const LINK_COMO_ESCOLHEMOS = `text-base ${LINK_PAGINA}`
+const REPOSITORIO = 'https://github.com/juliorenner/caiu-nessa'
 
 export default function Home() {
   return (
@@ -40,9 +41,14 @@ export default function Home() {
                 Enter
               </Tecla>
             </Link>
-            <Link href="/como-escolhemos" className={`hidden lg:inline lg:min-w-0 ${LINK_COMO_ESCOLHEMOS}`}>
-              Como escolhemos as afirmações
-            </Link>
+            <span className="hidden lg:flex lg:min-w-0 lg:flex-col lg:gap-1">
+              <Link href="/como-escolhemos" className={LINK_COMO_ESCOLHEMOS}>
+                Como escolhemos as afirmações
+              </Link>
+              <a href={REPOSITORIO} className={LINK_COMO_ESCOLHEMOS}>
+                Código aberto no GitHub
+              </a>
+            </span>
           </div>
           <div aria-hidden>
             <p className={DICA}>← Mentira · ↑ Cheira mal · Verdade →</p>
@@ -77,6 +83,9 @@ export default function Home() {
           <Link href="/como-escolhemos" className={`self-center lg:hidden ${LINK_COMO_ESCOLHEMOS}`}>
             Como escolhemos as afirmações
           </Link>
+          <a href={REPOSITORIO} className={`self-center lg:hidden ${LINK_COMO_ESCOLHEMOS}`}>
+            Código aberto no GitHub
+          </a>
         </div>
         <PreviaDoCartao />
         <FocoNoComecar alvoId="comecar" />
