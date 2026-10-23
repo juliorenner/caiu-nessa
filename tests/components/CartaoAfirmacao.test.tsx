@@ -124,6 +124,15 @@ describe('CartaoAfirmacao', () => {
     for (const t of ['← Mentira', '↑ Cheira mal', 'Verdade →']) expect(screen.getByText(t)).toHaveAttribute('aria-hidden', 'true')
   })
 
+  it('na primeira ficha a dica de cima define o termo; nas demais, não', () => {
+    const base = { afirmacao, fase: 'ativo' as const, respostaDada: null, onResposta: vi.fn(), reduzirMovimento: false, semente: 0 }
+    const { unmount } = render(<CartaoAfirmacao {...base} primeira />)
+    expect(screen.getByText('↑ Cheira mal (meia-verdade)')).toBeInTheDocument()
+    unmount()
+    render(<CartaoAfirmacao {...base} />)
+    expect(screen.getByText('↑ Cheira mal')).toBeInTheDocument()
+  })
+
   it('tamanhoDoTexto degrada por comprimento', () => {
     expect(tamanhoDoTexto('a'.repeat(60))).toBe('text-2xl lg:text-[36px]')
     expect(tamanhoDoTexto('a'.repeat(61))).toBe('text-xl lg:text-[32px]')
