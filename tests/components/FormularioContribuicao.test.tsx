@@ -38,7 +38,7 @@ describe('FormularioContribuicao: sugestão', () => {
   it('envio aceito: POST com link e contexto, mostra o número da issue e o link', async () => {
     const f = stubFetch(Response.json({ numero: 42, url: 'https://github.com/juliorenner/caiu-nessa/issues/42' }, { status: 201 }))
     render(<FormularioContribuicao tipo="sugestao" />)
-    fireEvent.change(screen.getByLabelText(/Link da checagem/), { target: { value: ' https://www.aosfatos.org/noticias/x/ ' } })
+    fireEvent.change(screen.getByLabelText(/Link da checagem/), { target: { value: ' www.aosfatos.org/noticias/x/ ' } })
     fireEvent.change(screen.getByLabelText(/Contexto/), { target: { value: 'No debate da Globo' } })
     enviar(/Enviar sugestão/)
     await assentar()

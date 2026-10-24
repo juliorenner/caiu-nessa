@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { blocoDeCodigo, contribuicaoSchema, issueDaContribuicao, MAX_CONTEXTO, MAX_DESCRICAO } from '@/lib/contribuicao'
+import { blocoDeCodigo, contribuicaoSchema, issueDaContribuicao, MAX_CONTEXTO, MAX_DESCRICAO, normalizarLink } from '@/lib/contribuicao'
 
 const URL_OK = 'https://www.aosfatos.org/noticias/checamos-debate-globo/'
 
@@ -16,7 +16,7 @@ describe('contribuicaoSchema', () => {
   })
 
   it('sugestão: recusa outro domínio, matéria comum do G1, http e contexto longo', () => {
-    for (const url of ['https://www.exemplo.com/x', 'https://g1.globo.com/politica/x', 'http://www.aosfatos.org/x', 'não é link', ''])
+    for (const url of ['https://www.exemplo.com/x', 'https://g1.globo.com/politica/x', 'ftp://www.aosfatos.org/x', 'não é link', ''])
       expect(contribuicaoSchema.safeParse({ tipo: 'sugestao', url }).success).toBe(false)
     expect(contribuicaoSchema.safeParse({ tipo: 'sugestao', url: URL_OK, contexto: 'x'.repeat(MAX_CONTEXTO + 1) }).success).toBe(false)
   })
@@ -33,6 +33,21 @@ describe('contribuicaoSchema', () => {
     expect(contribuicaoSchema.safeParse({ tipo: 'sugestao', url: URL_OK, site: 'http://spam' }).success).toBe(false)
     expect(contribuicaoSchema.safeParse({ tipo: 'sugestao', url: URL_OK, email: 'a@b.c' }).success).toBe(false)
     expect(contribuicaoSchema.safeParse({ tipo: 'elogio', texto: 'oi' }).success).toBe(false)
+  })
+})
+
+describe('normalizarLink', () => {
+  it('completa o https:// que falta e troca http por https; o resto fica como está', () => {
+    expect(normalizarLink(' aosfatos.org/noticias/x/ ')).toBe('https://aosfatos.org/noticias/x/')
+    expect(normalizarLink('www.aosfatos.org/x')).toBe('https://www.aosfatos.org/x')
+    expect(normalizarLink('http://g1.globo.com/fato-ou-fake/x')).toBe('https://g1.globo.com/fato-ou-fake/x')
+    expect(normalizarLink('https://lupa.uol.com.br/x')).toBe('https://lupa.uol.com.br/x')
+    expect(normalizarLink('ftp://aosfatos.org/x')).toBe('ftp://aosfatos.org/x')
+  })
+
+  it('o esquema aceita o link sem protocolo e entrega já normalizado', () => {
+    const r = contribuicaoSchema.safeParse({ tipo: 'sugestao', url: 'www.aosfatos.org/noticias/x/' })
+    expect(r.success && r.data.tipo === 'sugestao' && r.data.url).toBe('https://www.aosfatos.org/noticias/x/')
   })
 })
 

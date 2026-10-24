@@ -9,6 +9,15 @@ export const MAX_DESCRICAO = 1000
 
 export const TELAS = ['Início', 'Jogo (cartões)', 'Fim de jogo', 'As afirmações', 'Como escolhemos', 'Outra'] as const
 
+// Quem cola um link nem sempre traz o protocolo: "aosfatos.org/…" e "http://…" viram "https://…".
+// A regra das fontes do banco (só https) continua valendo depois disso.
+export function normalizarLink(valor: string): string {
+  const link = valor.trim()
+  if (/^http:\/\//i.test(link)) return `https://${link.slice('http://'.length)}`
+  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(link)) return `https://${link}`
+  return link
+}
+
 // `site` é o campo-armadilha: invisível para pessoas, preenchido por robôs. Precisa vir vazio.
 const armadilha = z.literal('').optional()
 
@@ -16,7 +25,7 @@ export const contribuicaoSchema = z.discriminatedUnion('tipo', [
   z.strictObject({
     tipo: z.literal('sugestao'),
     // A mesma regra das fontes do banco: só checagens das agências aceitas.
-    url: z.string().trim().max(500).refine(fonteEhPermitida),
+    url: z.string().trim().max(500).transform(normalizarLink).refine(fonteEhPermitida),
     contexto: z.string().trim().max(MAX_CONTEXTO).optional(),
     site: armadilha,
   }),

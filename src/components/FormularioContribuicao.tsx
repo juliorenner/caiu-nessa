@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { type FormEvent, useState } from 'react'
-import { MAX_CONTEXTO, MAX_DESCRICAO, MIN_DESCRICAO, TELAS } from '@/lib/contribuicao'
+import { MAX_CONTEXTO, MAX_DESCRICAO, MIN_DESCRICAO, normalizarLink, TELAS } from '@/lib/contribuicao'
 import { fonteEhPermitida } from '@/lib/fontes'
 import { URL_REPOSITORIO } from '@/lib/site'
 import { BOTAO_PRIMARIO, BOTAO_SECUNDARIO, FOCO, LINK_EM_CARTAO, LINK_PAGINA, SUPERFICIE } from './rotulos'
@@ -35,12 +35,12 @@ function Mensagem({ id, children }: { id?: string; children: React.ReactNode }) 
 }
 
 function erroDoLink(url: string): string | null {
-  const valor = url.trim()
-  if (!valor) return 'Cole o link da checagem. Ele é obrigatório.'
+  if (!url.trim()) return 'Cole o link da checagem. Ele é obrigatório.'
+  const valor = normalizarLink(url)
   try {
-    new URL(valor)
+    if (!new URL(valor).hostname.includes('.')) throw new Error('sem domínio')
   } catch {
-    return 'Isso não parece um link. Cole o endereço completo, começando com https://'
+    return 'Isso não parece um link. Cole o endereço da checagem, por exemplo aosfatos.org/noticias/…'
   }
   if (!fonteEhPermitida(valor)) return `Esse link não é de uma checagem aceita. Cole o link de: ${AGENCIAS.join(', ')}.`
   return null
@@ -67,7 +67,7 @@ export function FormularioContribuicao({ tipo }: { tipo: TipoContribuicao }) {
     }
     const corpo =
       tipo === 'sugestao'
-        ? { tipo, url: url.trim(), ...(contexto.trim() ? { contexto: contexto.trim() } : {}), site }
+        ? { tipo, url: normalizarLink(url), ...(contexto.trim() ? { contexto: contexto.trim() } : {}), site }
         : { tipo, descricao: descricao.trim(), ...(tela ? { tela } : {}), site }
     setEstado({ fase: 'enviando' })
     try {
@@ -143,10 +143,10 @@ export function FormularioContribuicao({ tipo }: { tipo: TipoContribuicao }) {
             <input
               id="url"
               name="url"
-              type="url"
+              type="text"
               inputMode="url"
               autoComplete="off"
-              placeholder="https://www.aosfatos.org/…"
+              placeholder="aosfatos.org/noticias/…"
               value={url}
               onChange={e => setUrl(e.target.value)}
               aria-invalid={erro ? true : undefined}
