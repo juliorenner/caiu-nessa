@@ -41,6 +41,8 @@ it('imprime jogadas, compartilhamentos e o funil do banco em DATABASE_URL', asyn
     { tipo: 'compartilhar', dados: { modo: 'link', resultado: 'copiado' } },
     { tipo: 'compartilhar', dados: { modo: 'imagem', resultado: 'cancelado', cartao: 'placar' } },
     { tipo: 'compartilhar', dados: { modo: 'baixar', resultado: 'clique', cartao: 'convite' } },
+    // Da home: entra nas contagens, fica fora do funil (não vem de quem concluiu a rodada).
+    { tipo: 'compartilhar', dados: { modo: 'whatsapp', resultado: 'clique', cartao: 'convite', tela: 'home' } },
   ])
   await cliente.close()
 
@@ -57,10 +59,12 @@ it('imprime jogadas, compartilhamentos e o funil do banco em DATABASE_URL', asyn
     '  baixar / clique: 1',
     '  imagem / cancelado: 1',
     '  link / copiado: 1',
-    'compartilhamentos estimados: 2',
-    'compartilhamentos por cartão',
-    '  convite: 1',
-    '  sem registro: 1',
+    '  whatsapp / clique: 1',
+    'compartilhamentos estimados: 3',
+    'compartilhamentos por tela / cartão',
+    '  fim / convite: 1',
+    '  fim / sem registro: 1',
+    '  home / convite: 1',
     `funil desde ${inicio.toISOString().slice(0, 10)}`,
     '  começaram: 2',
     '  concluíram a primeira rodada: 1 (50%)',
