@@ -22,7 +22,7 @@ type Grupo = { id: string; titulo: string; afirmacoes: Afirmacao[] }
 
 function CartaoAfirmacao({ afirmacao: a }: { afirmacao: Afirmacao }) {
   return (
-    <article className={`flex flex-col gap-3 p-5 ${SUPERFICIE_LISTA}`}>
+    <article className={`flex h-full flex-col gap-3 p-5 ${SUPERFICIE_LISTA}`}>
       <p className="text-[17px] leading-relaxed font-bold text-tinta">{a.texto}</p>
       <p className="text-base text-secundario">Quem disse: {a.autor}</p>
       <blockquote className="border-l-4 border-secundario pl-3 text-base text-secundario italic">“{a.citacao}”</blockquote>
@@ -84,6 +84,8 @@ const CELULA = 'lg:border-t-2 lg:border-dashed lg:border-tinta lg:px-3 lg:py-3.5
 
 // Uma tabela só: em lg, colunas de verdade; no celular, cada linha vira um registro empilhado
 // (afirmação em cima, selo à esquerda, quem disse e a fonte à direita), sem rolagem lateral.
+// Abaixo de 420px não há largura para duas colunas: tudo numa só, o selo logo depois da afirmação.
+// A coluna do selo cabe o maior ("Enganoso"); as posições de grade não valem em lg, onde a linha é de tabela.
 function Tabela({ grupos }: { grupos: Grupo[] }) {
   return (
     <div className={`mt-5 ${SUPERFICIE_LISTA}`}>
@@ -112,17 +114,17 @@ function Tabela({ grupos }: { grupos: Grupo[] }) {
             {g.afirmacoes.map(a => (
               <tr
                 key={a.id}
-                className="max-lg:grid max-lg:grid-cols-[96px_1fr] max-lg:gap-x-3 max-lg:gap-y-1.5 max-lg:border-t-2 max-lg:border-dashed max-lg:border-tinta max-lg:px-4 max-lg:py-4"
+                className="max-lg:grid max-lg:grid-cols-1 min-[420px]:grid-cols-[7.25rem_1fr] max-lg:gap-x-3 max-lg:gap-y-1.5 max-lg:border-t-2 max-lg:border-dashed max-lg:border-tinta max-lg:px-4 max-lg:py-4"
               >
-                <td className={`font-bold max-lg:col-span-2 lg:w-[36%] ${CELULA}`}>{a.texto}</td>
-                <td className={`text-secundario max-lg:col-start-2 max-lg:row-start-2 lg:w-[22%] ${CELULA}`}>
+                <td className={`font-bold min-[420px]:col-span-2 lg:w-[36%] ${CELULA}`}>{a.texto}</td>
+                <td className={`text-secundario max-lg:row-start-3 min-[420px]:col-start-2 min-[420px]:row-start-2 lg:w-[22%] ${CELULA}`}>
                   <b className="text-tinta lg:hidden">Quem disse </b>
                   {a.autor}
                 </td>
-                <td className={`max-lg:col-start-1 max-lg:row-span-2 max-lg:row-start-2 ${CELULA}`}>
+                <td className={`max-lg:row-start-2 min-[420px]:col-start-1 min-[420px]:row-span-2 ${CELULA}`}>
                   <span className={SELO_VEREDITO[a.veredito]}>{ROTULO_VEREDITO[a.veredito]}</span>
                 </td>
-                <td className={`max-lg:col-start-2 max-lg:row-start-3 ${CELULA}`}>
+                <td className={`max-lg:row-start-4 min-[420px]:col-start-2 min-[420px]:row-start-3 ${CELULA}`}>
                   <a href={a.fonte_url} target="_blank" rel="noopener noreferrer" className={LINK_EM_CARTAO}>
                     {a.fonte_nome}
                     <span className="lg:hidden"> · {formatarData(a.data_checagem)}</span>
