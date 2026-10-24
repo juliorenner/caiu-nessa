@@ -18,10 +18,12 @@ export const TAMANHO_MAXIMO_DADOS = 500
 export const DADOS_POR_TIPO = {
   inicio: z.strictObject({}),
   // `cartao` é opcional: páginas abertas antes do carrossel (e os eventos antigos) não o mandam.
+  // `tela: 'home'` marca o compartilhar da home (só o convite); ausente = tela de fim de jogo.
   compartilhar: z.strictObject({
     modo: z.enum(MODOS_DE_COMPARTILHAR),
     resultado: z.enum(RESULTADOS_DE_COMPARTILHAR),
     cartao: z.enum(CARTOES_DE_COMPARTILHAR).optional(),
+    tela: z.literal('home').optional(),
   }),
 } satisfies Record<TipoDeEvento, z.ZodType>
 

@@ -313,7 +313,7 @@
   },
   {
     "id": "068625bc",
-    "texto": "A Polícia Federal até agora não foi atrás de Fábio Luís, filho de Lula, citado em acusações de tráfico de influência e corrupção.",
+    "texto": "A Polícia Federal até agora não foi atrás de Fábio Luís, filho de Lula.",
     "citacao": "A Polícia Federal até agora não foi atrás do seu filho.",
     "lado": "direita",
     "autor": "Flávio Bolsonaro (PL), no debate da Band",
@@ -456,12 +456,12 @@
   },
   {
     "id": "b8b388ad",
-    "texto": "O governo Lula conseguiu aprovar tudo no Congresso.",
+    "texto": "Depois de dizer que o governo aprovou 99% do que levou ao Congresso, Lula afirmou que conseguiu aprovar tudo.",
     "citacao": "É por isso que nós conseguimos aprovar tudo [no Congresso].",
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista à TV Globo",
     "veredito": "enganoso",
-    "explicacao": "O governo aprovou pautas que considerava prioritárias, como a reforma tributária, o novo arcabouço fiscal, a ampliação da isenção do IR e o fim da escala 6x1. Mas nem todas as propostas foram acolhidas: o Congresso derrubou vetos de Lula, como o do marco temporal, e o Senado rejeitou a indicação de Jorge Messias ao STF.",
+    "explicacao": "O Aos Fatos classificou como \"não é bem assim\": o governo aprovou pautas que considerava prioritárias, como a reforma tributária, o novo arcabouço fiscal, a ampliação da isenção do IR e o fim da escala 6x1. Mas nem todas as propostas foram acolhidas: o Congresso derrubou vetos de Lula, como o do marco temporal, e o Senado rejeitou a indicação de Jorge Messias ao STF.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-globo-segundo-turno/",
     "data_checagem": "2026-10-15",
@@ -543,7 +543,8 @@
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 3
+    "alcance": 3,
+    "observacao": "Fora do jogo por ambiguidade: \"empresa fechada\" pode ser falência ou CNPJ encerrado; Aos Fatos e G1 mediram falências, sem recorde, e o Estadão, CNPJs encerrados, que aumentaram, e o cartão não diz qual medida vale."
   },
   {
     "id": "641a29c1",
@@ -565,7 +566,7 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "Aos Fatos e G1 Fato ou Fake classificam a afirmação como verdadeira: Flávio Bolsonaro defendeu, como advogado, o policial militar Bruno Dias Delaroli, acusado de matar Ana Clara Machado, de 5 anos, com dois tiros de fuzil em Niterói (RJ), em 2021. Ele passou a integrar a defesa em 2024 e assinou um recurso ao STJ para reverter a decisão de levar o caso a júri popular; o recurso foi negado e o caso ainda aguarda julgamento.",
+    "explicacao": "Aos Fatos e G1 Fato ou Fake classificam a afirmação como verdadeira: Flávio Bolsonaro defendeu, como advogado, o policial militar Bruno Dias Delaroli, acusado de matar Ana Clara Machado, de 5 anos, com dois tiros de fuzil em Niterói (RJ), em 2021, quando teve a prisão preventiva decretada. Ele passou a integrar a defesa em 2024 e assinou um recurso ao STJ para reverter a decisão de levar o caso a júri popular; o recurso foi negado e o caso ainda aguarda julgamento.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
@@ -1089,7 +1090,8 @@
     "fonte_nome": "G1 Fato ou Fake",
     "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/19/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-band-no-2o-turno-das-eleicoes-2026.ghtml",
     "data_checagem": "2026-10-19",
-    "alcance": 3
+    "alcance": 3,
+    "observacao": "Fora do jogo por ambiguidade: \"mais de 40 milhões\" continua correto se o número real for de 50 a 61 milhões; o enganoso vem só da regra do subestimado e o G1 deu fato, então quem lê com atenção marca verdade."
   },
   {
     "id": "8ecc47f3",
@@ -1102,7 +1104,8 @@
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 3
+    "alcance": 3,
+    "observacao": "Fora do jogo por ambiguidade: os juros futuros caíram cerca de 2 pontos após o 1º turno, o Estadão Verifica deu verdadeiro e o Aos Fatos admite a queda; o enganoso depende da diferença entre ponto percentual e percentual, que o cartão não consegue mostrar."
   },
   {
     "id": "f0fe3e98",
@@ -1258,7 +1261,8 @@
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/checagem/2026/08/28/ao-vivo-checagem-da-entrevista-de-flavio-bolsonaro-ao-jornal-nacional/",
     "data_checagem": "2026-08-28",
-    "alcance": 3
+    "alcance": 3,
+    "observacao": "Fora do jogo por ambiguidade: \"criado no governo Bolsonaro\" pode ser lido como lançado, e o Pix foi lançado em 2020, no governo dele; as agências julgaram a concepção, de 2018, e o Aos Fatos deu \"não é bem assim\"."
   },
   {
     "id": "12ef6a7e",
@@ -1618,7 +1622,7 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "O Aos Fatos classificou como verdadeiro e o G1 Fato ou Fake como #FATO: segundo o Instituto Sou da Paz, 994 milhões de munições foram vendidas de janeiro de 2019 a junho de 2022, e um decreto de 2019, depois revogado, permitiria comprar 2,1 bilhões por ano. A Lupa considerou o número insustentável, por falta de dados oficiais.",
+    "explicacao": "O Aos Fatos classificou como verdadeiro e o G1 Fato ou Fake como #FATO. O Aos Fatos considerou o número próximo do real: segundo o Instituto Sou da Paz, 994 milhões de munições foram vendidas de janeiro de 2019 a junho de 2022, e um decreto de 2019, depois revogado, permitiria comprar 2,1 bilhões por ano. A Lupa considerou o número insustentável, por falta de dados oficiais.",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
@@ -1631,7 +1635,7 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "Aos Fatos e Estadão Verifica classificaram como verdadeiro. Lula se referiu a um levantamento do próprio Aos Fatos, que mapeou 43 declarações enganosas de Flávio Bolsonaro sobre sua relação com o ex-banqueiro Daniel Vorcaro, do Banco Master, entre maio e setembro.",
+    "explicacao": "Aos Fatos e Estadão Verifica classificaram como verdadeiro. Lula se referiu a um levantamento do próprio Aos Fatos, que mapeou 43 declarações enganosas de Flávio Bolsonaro sobre sua relação com o ex-banqueiro Daniel Vorcaro, do Banco Master, entre maio e setembro; no resumo da checagem, o próprio Aos Fatos as chama de \"43 mentiras\".",
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
@@ -1722,7 +1726,7 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "verdadeiro",
-    "explicacao": "A Lupa classificou como verdadeiro e o G1 Fato ou Fake como #FATO. O projeto do governo aprovado pelo Congresso em 16 de outubro perdoa dívidas de cerca de 3,6 milhões de microempreendedores com a União, que somam aproximadamente R$ 12,6 bilhões; o texto seguiu para sanção.",
+    "explicacao": "A Lupa classificou como verdadeiro e o G1 Fato ou Fake como #FATO. O projeto do governo aprovado pelo Congresso em 16 de outubro perdoa dívidas de cerca de 3,6 milhões de microempreendedores com a União, que somam aproximadamente R$ 12,6 bilhões; o texto seguiu para sanção. A Lupa considerou a fala verdadeira mesmo antes da sanção.",
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/checagem/2026/10/18/ao-vivo-checagem-do-debate-entre-lula-e-flavio-bolsonaro-na-band/",
     "data_checagem": "2026-10-18",
@@ -1830,7 +1834,8 @@
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/checagem/2026/10/15/ao-vivo-checagem-da-entrevista-de-lula-na-tv-globo/",
     "data_checagem": "2026-10-15",
-    "alcance": 3
+    "alcance": 3,
+    "observacao": "Fora do jogo por ambiguidade: \"6 mil obras paralisadas\" fica abaixo das 8.603 do TCU, mas não contradiz o número real; o enganoso vem só da regra do subestimado e o Aos Fatos deu verdadeiro, então quem lê com atenção marca verdade."
   },
   {
     "id": "e44dec7c",
@@ -1912,12 +1917,12 @@
   },
   {
     "id": "d58b61f7",
-    "texto": "O PIB industrial do Brasil cresceu 3,4%.",
+    "texto": "Com a economia voltando a crescer, o PIB industrial do Brasil está crescendo 3,4%.",
     "citacao": "A economia brasileira voltou a crescer, o PIB industrial é de 3.4%",
     "lado": "esquerda",
     "autor": "Lula (PT), no debate da Band",
     "veredito": "enganoso",
-    "explicacao": "A Lupa classificou como exagerado e o G1 Fato ou Fake como #NÃOÉBEMASSIM: a indústria cresceu cerca de 1,6% em 2023, 3,3% em 2024 e 1,4% em 2025; os 3,4% correspondem ao crescimento do PIB geral em 2024, segundo a Lupa.",
+    "explicacao": "A Lupa classificou como exagerado e o G1 Fato ou Fake como #NÃOÉBEMASSIM: o dado mais recente, de 2025, mostra a indústria crescendo 1,4%; em 2024 foram 3,3% e em 2023 cerca de 1,6%. Os 3,4% citados são o crescimento do PIB geral de 2024, não o da indústria, segundo a Lupa.",
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/checagem/2026/10/18/ao-vivo-checagem-do-debate-entre-lula-e-flavio-bolsonaro-na-band/",
     "data_checagem": "2026-10-18",
@@ -1934,7 +1939,8 @@
     "fonte_nome": "Aos Fatos",
     "fonte_url": "https://www.aosfatos.org/noticias/checamos-lula-flavio-bolsonaro-debate-band/",
     "data_checagem": "2026-10-18",
-    "alcance": 2
+    "alcance": 2,
+    "observacao": "Fora do jogo por ambiguidade: a Constituição diz que a segurança pública é \"dever do Estado\" (o poder público como um todo: União, estados e municípios), e a fala diz \"uma das responsabilidades dos Estados\". O Aos Fatos considera essa parte verdadeira; a ressalva depende do contexto da fala, que o cartão não consegue mostrar sem confundir."
   },
   {
     "id": "a38f9b27",
@@ -1947,7 +1953,8 @@
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/checagem/2026/10/15/ao-vivo-checagem-da-entrevista-de-lula-na-tv-globo/",
     "data_checagem": "2026-10-15",
-    "alcance": 3
+    "alcance": 3,
+    "observacao": "Fora do jogo por ambiguidade: a fala transcrita diz R$ 15 bilhões e a Lupa compara com US$ 10 bilhões; em reais da época, US$ 10 bilhões passavam de R$ 15 bilhões, e o cartão não consegue dizer qual moeda foi julgada."
   },
   {
     "id": "4b116e93",
@@ -2169,7 +2176,8 @@
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/noticias/2026/08/17/em-pontape-da-campanha-flavio-e-lula-cometem-erros-sobre-desempenho-de-gestoes-passadas/",
     "data_checagem": "2026-08-17",
-    "alcance": 1
+    "alcance": 1,
+    "observacao": "Fora do jogo por ambiguidade: \"criar empregos\" pode ser vínculos registrados ou saldo líquido; a Lupa deu verdadeiro contando vínculos da Rais, enquanto no mesmo texto julgou os 2 milhões de Bolsonaro pelo saldo do Caged, e o jogador não tem como saber qual medida vale."
   },
   {
     "id": "ef4812c8",
@@ -2243,7 +2251,7 @@
     "lado": "esquerda",
     "autor": "Lula (PT), no comício de lançamento da campanha, em São Bernardo do Campo",
     "veredito": "enganoso",
-    "explicacao": "A Lupa classificou como \"falta contexto\": o IPCA teve média anual de 6,1% no governo Bolsonaro, mas 2019 (4,31%) e 2020 (4,52%) ficaram perto da média de 4,5% dos três primeiros anos de Lula 3; a média subiu por causa da inflação da pandemia, de 10,06% em 2021.",
+    "explicacao": "A Lupa classificou como \"falta contexto\": as médias citadas estão próximas das reais (6,1% ao ano no governo Bolsonaro e 4,5% nos três primeiros anos de Lula 3), mas a comparação omite que 2019 (4,31%) e 2020 (4,52%) ficaram no mesmo nível do governo Lula e que a média de Bolsonaro subiu com a inflação da pandemia, de 10,06% em 2021.",
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/noticias/2026/08/17/em-pontape-da-campanha-flavio-e-lula-cometem-erros-sobre-desempenho-de-gestoes-passadas/",
     "data_checagem": "2026-08-17",
@@ -2286,7 +2294,8 @@
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/checagem/2026/09/22/na-onu-lula-acerta-sobre-desmatamento-e-lei-antifaccao-mas-exagera-sobre-feminicidio/",
     "data_checagem": "2026-09-22",
-    "alcance": 1
+    "alcance": 1,
+    "observacao": "Fora do jogo por ambiguidade: a Lupa confirma que em 2024 o PIB cresceu e as emissões caíram; o \"falta contexto\" vem da origem da queda (desmatamento) e da expansão do petróleo, contexto que o cartão não carrega, e a fala lida sozinha é verdadeira."
   },
   {
     "id": "1d026a0f",
@@ -2295,7 +2304,7 @@
     "lado": "esquerda",
     "autor": "Lula (PT), em entrevista ao Jornal Nacional, da TV Globo, trecho depois usado em anúncio da campanha",
     "veredito": "enganoso",
-    "explicacao": "A Lupa classificou como \"falta contexto\": a Carbono Oculto, de agosto de 2025, foi uma operação conjunta da Polícia Federal e da Receita Federal com o Ministério Público de São Paulo e as polícias Civil e Militar do estado. Órgãos federais participaram diretamente, mas não a fizeram sozinhos.",
+    "explicacao": "A Lupa classificou como \"falta contexto\": a Carbono Oculto, de agosto de 2025, foi uma operação conjunta da Polícia Federal e da Receita Federal com o Ministério Público de São Paulo e as polícias Civil e Militar do estado. Órgãos federais participaram diretamente, mas a fala atribui ao governo federal uma operação que resultou de atuação conjunta com o estado.",
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/checagem/2026/08/27/ao-vivo-checagem-da-entrevista-de-lula-ao-jornal-nacional/",
     "data_checagem": "2026-08-27",
@@ -2312,7 +2321,8 @@
     "fonte_nome": "Lupa",
     "fonte_url": "https://www.agencialupa.org/checagem/2026/09/22/na-onu-lula-acerta-sobre-desmatamento-e-lei-antifaccao-mas-exagera-sobre-feminicidio/",
     "data_checagem": "2026-09-22",
-    "alcance": 1
+    "alcance": 1,
+    "observacao": "Fora do jogo por ambiguidade: a Lupa não contesta a autossuficiência nem a pesquisa na Margem Equatorial; o \"falta contexto\" trata dos riscos ambientais e da disputa judicial, que o cartão não consegue mostrar, e a fala lida sozinha parece verdadeira."
   },
   {
     "id": "253506a1",

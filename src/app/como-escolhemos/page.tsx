@@ -28,6 +28,14 @@ export default function ComoEscolhemos() {
         checagem original, para você conferir. O conjunto de afirmações é revisado todo mês por um agente automatizado,
         e cada mudança chega como um pull request público no repositório do projeto.
       </p>
+      <p className="mt-2">
+        Viu uma checagem que não está no jogo? Você pode{' '}
+        <Link href="/sugerir" className={LINK_PAGINA}>
+          sugerir uma afirmação
+        </Link>{' '}
+        colando o link da checagem de uma dessas agências. A sugestão vira uma issue pública no repositório e é só uma
+        pista: a afirmação só entra depois de conferida, pelas mesmas regras desta página.
+      </p>
 
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Mesmo peso para os dois lados</h2>
       <p className="mt-2">
@@ -62,7 +70,9 @@ export default function ComoEscolhemos() {
       <p className="mt-2">
         Quando agências diferentes discordam sobre a mesma afirmação: se uma diz verdadeiro e outra diz falso, ela fica
         de fora. Nos outros casos, vale a maioria dos votos; no empate entre verdadeiro e enganoso, vale enganoso; no
-        empate entre falso e enganoso, vale falso. As afirmações que ficam fora do jogo aparecem na lista pública, com
+        empate entre falso e enganoso, vale falso. Uma afirmação também fica de fora quando o cartão não consegue ser
+        fiel à fala sem confundir quem joga, por exemplo quando o veredito depende de um contexto que não cabe no
+        cartão; isso vale igual para os dois lados. As afirmações que ficam fora do jogo aparecem na lista pública, com
         o motivo.
       </p>
 

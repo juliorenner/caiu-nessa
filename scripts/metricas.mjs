@@ -38,9 +38,9 @@ try {
     select dados->>'modo' as modo, dados->>'resultado' as resultado, count(*)::int as n
     from eventos where tipo = 'compartilhar'
     group by 1, 2 order by 1, 2`)
-  // Só os que contam; eventos de antes do carrossel não têm cartão.
+  // Só os que contam; eventos de antes do carrossel não têm cartão. A home só tem o convite.
   const porCartao = await banco.consultar(`
-    select coalesce(dados->>'cartao', 'sem registro') as cartao, count(*)::int as n
+    select coalesce(dados->>'tela', 'fim') || ' / ' || coalesce(dados->>'cartao', 'sem registro') as cartao, count(*)::int as n
     from eventos where tipo = 'compartilhar' and dados->>'resultado' in (${RESULTADOS_QUE_CONTAM.map(r => `'${r}'`).join(', ')})
     group by 1 order by 2 desc, 1`)
   // Funil desde o primeiro evento `inicio` (antes dele não há como saber quantas partidas começaram).
@@ -52,7 +52,7 @@ try {
              where total in (${TAMANHOS_PRIMEIRA.join(', ')}) and created_at >= desde.t) as concluiram,
            (select count(*)::int from eventos, desde
              where tipo = 'compartilhar' and dados->>'resultado' in (${RESULTADOS_QUE_CONTAM.map(r => `'${r}'`).join(', ')})
-               and created_at >= desde.t) as compartilharam`)
+               and dados->>'tela' is null and created_at >= desde.t) as compartilharam`)
   const estimados = compartilhar
     .filter(linha => RESULTADOS_QUE_CONTAM.includes(linha.resultado))
     .reduce((soma, linha) => soma + linha.n, 0)
@@ -64,7 +64,7 @@ try {
   console.log('compartilhar (modo / resultado)')
   for (const linha of compartilhar) console.log(`  ${linha.modo} / ${linha.resultado}: ${linha.n}`)
   console.log(`compartilhamentos estimados: ${estimados}`)
-  console.log('compartilhamentos por cartão')
+  console.log('compartilhamentos por tela / cartão')
   for (const linha of porCartao) console.log(`  ${linha.cartao}: ${linha.n}`)
   const pct = (parte, todo) => (todo ? ` (${Math.round((100 * parte) / todo)}%)` : '')
   console.log(`funil desde ${funil.desde ? new Date(funil.desde).toISOString().slice(0, 10) : 'sem inícios ainda'}`)

@@ -22,6 +22,12 @@ export function textoDeConvite(url?: string): string {
   return url ? [frase, url].join('\n') : frase
 }
 
+// O mesmo convite, da home: quem compartilha ali pode ainda não ter jogado, então sem "já joguei".
+export function textoDeChamado(url?: string): string {
+  const frase = 'Conhece o Caiu Nessa? É um quiz sobre a eleição: será que você cai?'
+  return url ? [frase, url].join('\n') : frase
+}
+
 export const NOME_ARQUIVO_PERCENTIL = 'caiu-nessa-percentil.png'
 
 // A comparação sem o placar: quanto foi bem, não quantas errou.
