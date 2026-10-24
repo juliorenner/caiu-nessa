@@ -8,7 +8,8 @@ function fechouAFolha(erro: unknown): boolean {
 
 // `share` é chamado antes de qualquer await: iOS Safari e Chrome só aceitam enquanto o toque é "fresco".
 // `link`: a URL vai só em `url` (nunca duplicada no texto); sem share, copia o texto com a URL.
-// `imagem`: o arquivo com o texto com a URL; sem suporte a arquivos, 'indisponivel' (a tela oferece baixar).
+// `imagem`: só o arquivo; sem suporte a arquivos, 'indisponivel' (a tela oferece baixar). Sem texto nem título:
+// no iOS, texto junto descarta o arquivo (WebKit 251500) e o Instagram, sem imagem, só oferece as conversas.
 export async function compartilhar(p: {
   modo: 'link' | 'imagem'
   texto: string
@@ -23,7 +24,7 @@ export async function compartilhar(p: {
     const files = p.arquivo ? [p.arquivo] : null
     if (!files || typeof nav.share !== 'function' || !nav.canShare?.({ files })) return 'indisponivel'
     try {
-      await nav.share({ files, text: p.textoComUrl, title: p.titulo })
+      await nav.share({ files })
       return 'folha'
     } catch (erro) {
       return fechouAFolha(erro) ? 'cancelado' : 'falhou'

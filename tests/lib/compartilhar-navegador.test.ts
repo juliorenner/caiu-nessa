@@ -59,12 +59,12 @@ describe('compartilhar, modo link', () => {
 })
 
 describe('compartilhar, modo imagem', () => {
-  it('canShare aceita e há arquivo: share com files e texto com URL, sem url', async () => {
+  it('canShare aceita e há arquivo: share só com files (texto descartaria a imagem no iOS)', async () => {
     const share = vi.fn().mockResolvedValue(undefined)
     const canShare = vi.fn().mockReturnValue(true)
     expect(await compartilhar({ ...base, modo: 'imagem', arquivo, nav: navegador({ share, canShare }) })).toBe('folha')
     expect(canShare).toHaveBeenCalledWith({ files: [arquivo] })
-    expect(share).toHaveBeenCalledWith({ files: [arquivo], text: base.textoComUrl, title: base.titulo })
+    expect(share).toHaveBeenCalledWith({ files: [arquivo] })
   })
 
   it('sem arquivo, canShare recusa ou não existe: indisponivel, nada chamado', async () => {

@@ -215,7 +215,7 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(aviso()).toHaveTextContent(/^$/)
   })
 
-  it('Com placar — canShare aceita arquivos e imagem pré-buscada: Instagram manda files e o texto com a URL', async () => {
+  it('Com placar — canShare aceita arquivos e imagem pré-buscada: Instagram manda só a imagem', async () => {
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
     renderizar()
@@ -227,9 +227,8 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(dadosShare.files).toHaveLength(1)
     expect(dadosShare.files[0]).toBeInstanceOf(File)
     expect(dadosShare.files[0].name).toBe(NOME_ARQUIVO)
-    expect(dadosShare.text).toBe(textoComUrl)
-    expect(dadosShare.title).toBe(TITULO)
-    expect(dadosShare).not.toHaveProperty('url')
+    // Só o arquivo: no iOS, texto junto descarta a imagem e o Instagram não oferece os stories.
+    expect(Object.keys(dadosShare)).toEqual(['files'])
   })
 
   it('sem canShare: Instagram não aparece', async () => {
@@ -431,7 +430,7 @@ describe('ResultadoFinal: escolha do cartão', () => {
     fireEvent.click(stories())
     const [dadosShare] = share.mock.calls[0]
     expect(dadosShare.files[0].name).toBe(NOME_ARQUIVO_PERCENTIL)
-    expect(dadosShare.text).toBe(`Acertei mais que 73% das pessoas no Caiu Nessa? Como será que você se sai?\n${SITE_URL}/jogue/73`)
+    expect(Object.keys(dadosShare)).toEqual(['files'])
   })
 
   it('tocar no cartão vizinho o escolhe: rótulo, ponto e Baixar acompanham', async () => {
