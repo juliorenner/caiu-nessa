@@ -355,7 +355,7 @@ describe('ResultadoFinal: registra cada compartilhar', () => {
     await assentar()
     fireEvent.click(botao())
     await waitFor(() => expect(aviso()).toHaveTextContent('Texto copiado'))
-    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'link', resultado: 'copiado' } }])
+    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'link', resultado: 'copiado', cartao: 'convite' } }])
   })
 
   it('Instagram cancelado: registra imagem/cancelado e o aviso fica vazio', async () => {
@@ -364,7 +364,7 @@ describe('ResultadoFinal: registra cada compartilhar', () => {
     await assentar()
     fireEvent.click(stories())
     await waitFor(() => expect(eventosEnviados()).toHaveLength(1))
-    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'imagem', resultado: 'cancelado' } }])
+    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'imagem', resultado: 'cancelado', cartao: 'convite' } }])
     expect(aviso()).toHaveTextContent(/^$/)
   })
 
@@ -375,7 +375,7 @@ describe('ResultadoFinal: registra cada compartilhar', () => {
     const link = screen.getByRole('link', { name: 'Mandar no WhatsApp' })
     link.addEventListener('click', e => e.preventDefault())
     fireEvent.click(link)
-    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'whatsapp', resultado: 'clique' } }])
+    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'whatsapp', resultado: 'clique', cartao: 'convite' } }])
   })
 
   it('Baixar imagem para os stories: registra baixar/clique', async () => {
@@ -386,7 +386,7 @@ describe('ResultadoFinal: registra cada compartilhar', () => {
     // jsdom não navega: o clique só precisa chegar ao handler.
     link.addEventListener('click', e => e.preventDefault())
     fireEvent.click(link)
-    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'baixar', resultado: 'clique' } }])
+    expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'baixar', resultado: 'clique', cartao: 'convite' } }])
   })
 })
 

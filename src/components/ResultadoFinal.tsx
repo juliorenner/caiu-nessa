@@ -18,6 +18,7 @@ import {
   urlDoWhatsApp,
 } from "@/lib/compartilhar";
 import { buscarArquivo, compartilhar } from "@/lib/compartilhar-navegador";
+import type { CartaoDeCompartilhar } from "@/lib/eventos";
 import { registrarEvento } from "@/lib/eventos-navegador";
 import type { RespostaResultado } from "@/lib/resultado-api";
 import { SITE_URL, TITULO } from "@/lib/site";
@@ -37,7 +38,7 @@ import {
 
 
 type EstadoContinuar = "parado" | "sorteando" | "fim" | "falha";
-type IdCartao = "convite" | "percentil" | "placar";
+type IdCartao = CartaoDeCompartilhar;
 // O que cada cartão manda: a imagem e o texto (sem e com a URL), e o link que vai junto.
 type Cartao = {
   id: IdCartao;
@@ -190,7 +191,7 @@ export function ResultadoFinal(p: {
       titulo: TITULO,
       arquivo,
     }).then((desfecho) => {
-      registrarEvento({ tipo: "compartilhar", dados: { modo, resultado: desfecho } });
+      registrarEvento({ tipo: "compartilhar", dados: { modo, resultado: desfecho, cartao: cartao.id } });
       // A folha abriu: um aviso de toque anterior já não vale.
       if (desfecho === "folha") mostrar(null);
       else if (desfecho === "copiado") mostrar("copiado");
@@ -270,13 +271,13 @@ export function ResultadoFinal(p: {
           <LinhaDeCompartilhar
             urlWhatsApp={urlDoWhatsApp(cartao.textoComUrl)}
             onWhatsApp={() =>
-              registrarEvento({ tipo: "compartilhar", dados: { modo: "whatsapp", resultado: "clique" } })
+              registrarEvento({ tipo: "compartilhar", dados: { modo: "whatsapp", resultado: "clique", cartao: cartao.id } })
             }
             onInstagram={aceitaArquivos ? () => aoCompartilhar("imagem") : undefined}
             urlImagem={cartao.urlImagem}
             nomeArquivo={cartao.nomeArquivo}
             onBaixar={() =>
-              registrarEvento({ tipo: "compartilhar", dados: { modo: "baixar", resultado: "clique" } })
+              registrarEvento({ tipo: "compartilhar", dados: { modo: "baixar", resultado: "clique", cartao: cartao.id } })
             }
             onMais={() => aoCompartilhar("link")}
           />
