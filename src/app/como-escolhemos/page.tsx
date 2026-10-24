@@ -28,6 +28,14 @@ export default function ComoEscolhemos() {
         checagem original, para você conferir. O conjunto de afirmações é revisado todo mês por um agente automatizado,
         e cada mudança chega como um pull request público no repositório do projeto.
       </p>
+      <p className="mt-2">
+        Viu uma checagem que não está no jogo? Você pode{' '}
+        <Link href="/sugerir" className={LINK_PAGINA}>
+          sugerir uma afirmação
+        </Link>{' '}
+        colando o link da checagem de uma dessas agências. A sugestão vira uma issue pública no repositório e é só uma
+        pista: a afirmação só entra depois de conferida, pelas mesmas regras desta página.
+      </p>
 
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Mesmo peso para os dois lados</h2>
       <p className="mt-2">

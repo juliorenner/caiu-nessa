@@ -84,6 +84,9 @@ describe('ResultadoFinal: político em marca-d\'água', () => {
       'Jogar de novo',
       'Como escolhemos as afirmações',
       'Ver todas as afirmações e suas fontes',
+      // Painel "Nos ajude a melhorar": ícone e seta são decorativos (aria-hidden), mas entram no textContent.
+      '+Sugerir uma afirmação que está faltando→',
+      '!Teve algum problema? Reporte aqui→',
     ])
   })
 })
@@ -123,6 +126,16 @@ describe('ResultadoFinal: suas respostas', () => {
     for (const nome of ['Como escolhemos as afirmações', 'Ver todas as afirmações e suas fontes']) {
       expect(screen.getByRole('link', { name: nome })).toHaveClass('lg:hidden')
     }
+  })
+
+  it('painel "Nos ajude a melhorar" depois dos links, com sugerir e reportar', () => {
+    stubNavegador({})
+    renderizar()
+    const painel = screen.getByRole('navigation', { name: 'Nos ajude a melhorar' })
+    const todas = screen.getByRole('link', { name: 'Ver todas as afirmações e suas fontes' })
+    expect(todas.compareDocumentPosition(painel) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(screen.getByRole('link', { name: /Sugerir uma afirmação/ })).toHaveAttribute('href', '/sugerir')
+    expect(screen.getByRole('link', { name: /Reporte aqui/ })).toHaveAttribute('href', '/relatar')
   })
 })
 

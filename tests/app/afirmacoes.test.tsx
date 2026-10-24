@@ -1,4 +1,4 @@
-import { act, render, screen, within } from '@testing-library/react'
+import { act, cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import Afirmacoes from '@/app/afirmacoes/page'
@@ -7,9 +7,12 @@ import { carregarPool, foraDoJogo, jogaveis } from '@/lib/afirmacoes'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { COMPOSICAO_EXTRA, COMPOSICAO_PRIMEIRA, TOTAL_AFIRMACOES, tamanhoDa } from '@/lib/rodadas'
 
+const renderizar = async (vista?: string) =>
+  render(await Afirmacoes({ searchParams: Promise.resolve(vista ? { vista } : {}) }))
+
 describe('página /afirmacoes', () => {
-  it('explica que cada rodada é sorteada do conjunto', () => {
-    render(<Afirmacoes />)
+  it('explica que cada rodada é sorteada do conjunto', async () => {
+    await renderizar()
     expect(screen.getByRole('heading', { level: 1, name: 'As afirmações do jogo' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 1 })).toHaveClass('font-letreiro')
     expect(
@@ -19,15 +22,15 @@ describe('página /afirmacoes', () => {
     ).toBeInTheDocument()
   })
 
-  it('separa as seções "No jogo" e "Fora do jogo"', () => {
-    render(<Afirmacoes />)
+  it('separa as seções "No jogo" e "Fora do jogo"', async () => {
+    await renderizar()
     expect(screen.getByRole('heading', { level: 2, name: 'No jogo' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 2, name: 'Fora do jogo' })).toBeInTheDocument()
   })
 
-  it('agrupa os jogáveis por lado, na ordem do pool', () => {
+  it('agrupa os jogáveis por lado, na ordem do pool', async () => {
     const pool = carregarPool()
-    render(<Afirmacoes />)
+    await renderizar()
     const noJogo = screen.getByRole('region', { name: 'No jogo' })
     for (const [lado, titulo] of [
       ['esquerda', 'Ditas ou espalhadas pela esquerda'],
@@ -42,9 +45,9 @@ describe('página /afirmacoes', () => {
     }
   })
 
-  it('lista cada item do pool uma vez, com o link da sua checagem', () => {
+  it('lista cada item do pool uma vez, com o link da sua checagem', async () => {
     const pool = carregarPool()
-    render(<Afirmacoes />)
+    await renderizar()
     const cards = screen.getAllByRole('article')
     expect(cards).toHaveLength(pool.length)
     for (const a of pool) {
@@ -60,10 +63,10 @@ describe('página /afirmacoes', () => {
     }
   })
 
-  it('mostra o selo de alcance de cada item', () => {
+  it('mostra o selo de alcance de cada item', async () => {
     // Uma passada só: com 180 itens, procurar cada texto dentro de cada card estourava o tempo do teste.
     const pool = carregarPool()
-    render(<Afirmacoes />)
+    await renderizar()
     const cards = screen.getAllByRole('article')
     expect(cards).toHaveLength(pool.length)
     const esperado = new Map<number, number>()
@@ -78,17 +81,17 @@ describe('página /afirmacoes', () => {
     expect(encontrado).toEqual(esperado)
   })
 
-  it('mostra os três rótulos de veredito', () => {
-    render(<Afirmacoes />)
+  it('mostra os três rótulos de veredito', async () => {
+    await renderizar()
     for (const rotulo of ['Verdade', 'Mentira', 'Enganoso']) {
       expect(screen.getAllByText(rotulo).length).toBeGreaterThan(0)
     }
   })
 
-  it('itens com observacao aparecem só em "Fora do jogo", com a observação', () => {
+  it('itens com observacao aparecem só em "Fora do jogo", com a observação', async () => {
     // O pool pode não ter nenhum item fora do jogo (todos voltaram em 2026-10-23); aí a seção fica vazia.
     const fora = foraDoJogo(carregarPool())
-    render(<Afirmacoes />)
+    await renderizar()
     const noJogo = screen.getByRole('region', { name: 'No jogo' })
     const cards = within(screen.getByRole('region', { name: 'Fora do jogo' })).queryAllByRole('article')
     expect(cards).toHaveLength(fora.length)
@@ -132,7 +135,7 @@ const primeira = {
 }
 
 describe('ResultadoFinal', () => {
-  it('com estatísticas, mostra a comparação com as outras pessoas', () => {
+  it('com estatísticas, mostra a comparação com as outras pessoas', async () => {
     const comEstatisticas = {
       ...dados,
       estatisticas: { totalJogadas: 120, histograma: [], erroPorAfirmacao: {}, mediaEsquerda: 0, mediaDireita: 0 },
@@ -142,7 +145,7 @@ describe('ResultadoFinal', () => {
     expect(screen.getByText('Você acertou mais que 37% das pessoas.')).toBeInTheDocument()
   })
 
-  it('tem um link para /afirmacoes', () => {
+  it('tem um link para /afirmacoes', async () => {
     render(<ResultadoFinal {...primeira} onContinuar={async () => 'fim'} />)
     expect(screen.getByRole('link', { name: 'Ver todas as afirmações e suas fontes' })).toHaveAttribute(
       'href',
@@ -150,7 +153,7 @@ describe('ResultadoFinal', () => {
     )
   })
 
-  it('rodada 1 mostra comparação e Continuar jogando', () => {
+  it('rodada 1 mostra comparação e Continuar jogando', async () => {
     render(<ResultadoFinal {...primeira} onContinuar={async () => 'fim'} />)
     expect(screen.getByText(`4/${TOTAL_AFIRMACOES}`)).toBeInTheDocument()
     // Leitor de tela ouve "4 de N", não "4 barra N".
@@ -179,5 +182,33 @@ describe('ResultadoFinal', () => {
     expect(screen.getByText('Acabaram as afirmações por enquanto. Volte depois: a lista cresce.')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Continuar jogando|Sorteando/ })).not.toBeInTheDocument()
     expect(onContinuar).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('página /afirmacoes: vista em tabela', () => {
+  it('troca por link: cartões por padrão, ?vista=tabela mostra a tabela com uma linha por afirmação', async () => {
+    const pool = carregarPool()
+    await renderizar()
+    expect(screen.getByRole('link', { name: 'Cartões' })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('link', { name: 'Tabela' })).toHaveAttribute('href', '/afirmacoes?vista=tabela')
+    expect(screen.queryByRole('table')).not.toBeInTheDocument()
+    cleanup()
+    await renderizar('tabela')
+    expect(screen.getByRole('link', { name: 'Tabela' })).toHaveAttribute('aria-current', 'page')
+    const tabela = screen.getByRole('table', { name: /Afirmações do jogo/ })
+    expect(within(tabela.querySelector('thead')!).getAllByRole('columnheader').map(c => c.textContent)).toEqual([
+      'Afirmação',
+      'Quem disse',
+      'Veredito',
+      'Checagem',
+      'Data',
+    ])
+    // Cabeçalho + 3 linhas de grupo + uma por afirmação.
+    expect(within(tabela).getAllByRole('row')).toHaveLength(1 + 3 + pool.length)
+    const primeira = jogaveis(pool).find(a => a.lado === 'esquerda')!
+    expect(within(tabela).getByText(primeira.texto)).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { level: 2, name: 'No jogo' })).not.toBeInTheDocument()
+    expect(within(tabela).getByRole('columnheader', { name: 'Fora do jogo' })).toBeInTheDocument()
+    expect(foraDoJogo(pool).length).toBeGreaterThan(0)
   })
 })

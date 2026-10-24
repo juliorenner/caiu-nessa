@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import dados from '@/data/afirmacoes.json'
+import { fonteEhPermitida } from '@/lib/fontes'
 import { COMPOSICOES_ACEITAS, type Composicao, composicaoDoTamanho, MINIMO_POR_PAR } from '@/lib/rodadas'
 
 export type Lado = 'esquerda' | 'direita'
@@ -67,29 +68,7 @@ export function ehRodadaBalanceada(
   )
 }
 
-function hostEhDominio(host: string, dominio: string): boolean {
-  return host === dominio || host === `www.${dominio}`
-}
-
-export function fonteEhPermitida(url: string): boolean {
-  let endereco: URL
-  try {
-    endereco = new URL(url)
-  } catch {
-    return false
-  }
-  if (endereco.protocol !== 'https:') return false
-
-  const host = endereco.hostname
-  const caminho = endereco.pathname
-  if (hostEhDominio(host, 'aosfatos.org')) return true
-  if (hostEhDominio(host, 'projetocomprova.com.br')) return true
-  if (host === 'lupa.uol.com.br') return true
-  if (hostEhDominio(host, 'agencialupa.org')) return true
-  if (host === 'g1.globo.com') return caminho === '/fato-ou-fake' || caminho.startsWith('/fato-ou-fake/')
-  if (hostEhDominio(host, 'estadao.com.br')) return caminho.includes('estadao-verifica')
-  return false
-}
+export { fonteEhPermitida }
 
 const esquemaAfirmacao = z.object({
   id: z.string().min(1, { error: 'id não pode ser vazio' }),

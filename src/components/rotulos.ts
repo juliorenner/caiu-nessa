@@ -37,7 +37,7 @@ export const FOCO =
   'focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-tinta dark:focus-visible:outline-papel'
 
 // Foco dentro de uma superfície branca (igual nos dois temas).
-const FOCO_EM_SUPERFICIE = 'focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-tinta'
+export const FOCO_EM_SUPERFICIE = 'focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-tinta'
 
 // Letreiro (claro) e Letreiro noite (escuro). As cores ficam em globals.css (@theme).
 export const FUNDO_PAGINA = 'hachura bg-fundo text-tinta dark:bg-fundo-escuro dark:text-papel'
