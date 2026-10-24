@@ -1,19 +1,112 @@
-export type OpcaoDeCartao = { id: string; rotulo: string; urlImagem: string }
+"use client";
 
-// Carrossel de cartões para os stories: a pessoa desliza, toca no que quer mostrar e os botões de
-// compartilhar mandam esse. É um grupo de rádio (um escolhido por vez), com as setas do teclado de graça.
+import { useEffect, useRef } from "react";
+
+export type OpcaoDeCartao = { id: string; rotulo: string; urlImagem: string };
+
+// Carrossel em destaque: o cartão do centro é o escolhido, grande; os vizinhos aparecem menores
+// e cortados nas bordas, convidando a deslizar. Deslizar, tocar num vizinho ou usar os pontos
+// (um grupo de rádio, com as setas do teclado) escolhem o cartão que os botões vão mandar.
 export function EscolhaDeCartao(p: {
-  opcoes: OpcaoDeCartao[]
-  escolhida: string
-  onEscolher: (id: string) => void
+  opcoes: OpcaoDeCartao[];
+  escolhida: string;
+  onEscolher: (id: string) => void;
 }) {
+  const trilho = useRef<HTMLDivElement>(null);
+  // A escolha veio do deslizar: o trilho já está no lugar, não rola de novo (brigaria com o dedo).
+  const doDeslizar = useRef(false);
+  const quadro = useRef<number | null>(null);
+
+  // Escolha por toque ou pelos pontos: centraliza o cartão escolhido.
+  useEffect(() => {
+    if (doDeslizar.current) {
+      doDeslizar.current = false;
+      return;
+    }
+    const t = trilho.current;
+    const item = t?.querySelector<HTMLElement>(`[data-cartao="${p.escolhida}"]`);
+    if (!t || !item) return;
+    const suave = !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    t.scrollTo?.({ left: item.offsetLeft - (t.clientWidth - item.clientWidth) / 2, behavior: suave ? "smooth" : "auto" });
+  }, [p.escolhida]);
+
+  useEffect(
+    () => () => {
+      if (quadro.current !== null) cancelAnimationFrame(quadro.current);
+    },
+    [],
+  );
+
+  // Ao deslizar, escolhe o cartão mais perto do centro (uma vez por quadro).
+  function aoDeslizar() {
+    if (quadro.current !== null) return;
+    quadro.current = requestAnimationFrame(() => {
+      quadro.current = null;
+      const t = trilho.current;
+      if (!t) return;
+      const centro = t.scrollLeft + t.clientWidth / 2;
+      let maisPerto: HTMLElement | null = null;
+      for (const item of t.querySelectorAll<HTMLElement>("[data-cartao]")) {
+        const distancia = Math.abs(item.offsetLeft + item.clientWidth / 2 - centro);
+        const melhor = maisPerto && Math.abs(maisPerto.offsetLeft + maisPerto.clientWidth / 2 - centro);
+        if (melhor === null || distancia < melhor) maisPerto = item;
+      }
+      const id = maisPerto?.dataset.cartao;
+      if (id && id !== p.escolhida) {
+        doDeslizar.current = true;
+        p.onEscolher(id);
+      }
+    });
+  }
+
+  const escolhida = p.opcoes.find((o) => o.id === p.escolhida);
+
   return (
-    <fieldset className="flex min-w-0 flex-col gap-3">
-      <legend className="mb-3 font-letreiro text-[13px]">Escolha o cartão</legend>
-      {/* Sangra até a borda no celular para o deslizar ficar evidente; o snap centraliza cada cartão. */}
-      <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pt-1 pb-3 lg:mx-0 lg:px-1">
-        {p.opcoes.map(o => (
-          <label key={o.id} className="flex shrink-0 cursor-pointer snap-center flex-col items-center gap-2">
+    <div className="flex min-w-0 flex-col items-center gap-3">
+      <p className="font-letreiro text-[13px] lg:self-start">Escolha o cartão</p>
+      {/* Sangra até a borda no celular; o recuo lateral (em % do pai, 2rem mais estreito no celular)
+          deixa o primeiro e o último no centro. */}
+      <div
+        ref={trilho}
+        onScroll={aoDeslizar}
+        className="-mx-4 flex w-[calc(100%+2rem)] snap-x snap-mandatory items-center gap-1 overflow-x-auto px-[calc(50%+1rem-6.5rem)] lg:px-[calc(50%-6.5rem)] py-3 [scrollbar-width:none] lg:mx-0 lg:w-full [&::-webkit-scrollbar]:hidden"
+      >
+        {p.opcoes.map((o) => {
+          const ativo = o.id === p.escolhida;
+          return (
+            // Fora da ordem de foco e da árvore de acessibilidade: quem escolhe pelo teclado usa os pontos.
+            <button
+              key={o.id}
+              type="button"
+              data-cartao={o.id}
+              tabIndex={-1}
+              aria-hidden
+              onClick={() => p.onEscolher(o.id)}
+              className="w-52 shrink-0 snap-center"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- PNG gerado pela rota, sem otimização */}
+              <img
+                src={o.urlImagem}
+                alt=""
+                width={208}
+                height={370}
+                className={`aspect-[9/16] w-full border-[3px] border-tinta transition-[transform,opacity,box-shadow] duration-200 motion-reduce:transition-none dark:border-papel ${
+                  ativo
+                    ? "scale-100 opacity-100 shadow-[8px_8px_0_var(--color-tinta)] dark:shadow-[8px_8px_0_var(--color-papel)]"
+                    : "scale-[0.84] opacity-55"
+                }`}
+              />
+            </button>
+          );
+        })}
+      </div>
+      <p aria-hidden className="text-base font-bold">
+        {escolhida?.rotulo}
+      </p>
+      <fieldset className="flex gap-2">
+        <legend className="sr-only">Escolha o cartão</legend>
+        {p.opcoes.map((o) => (
+          <label key={o.id} className="flex cursor-pointer p-1.5">
             <input
               type="radio"
               name="cartao"
@@ -22,21 +115,14 @@ export function EscolhaDeCartao(p: {
               onChange={() => p.onEscolher(o.id)}
               className="peer sr-only"
             />
-            {/* Imagem decorativa: o nome acessível é o rótulo. A mesma URL que a pré-busca usa (cache). */}
-            {/* eslint-disable-next-line @next/next/no-img-element -- PNG gerado pela rota, sem otimização */}
-            <img
-              src={o.urlImagem}
-              alt=""
-              width={144}
-              height={256}
-              className="aspect-[9/16] w-36 border-[3px] border-tinta opacity-70 transition-transform duration-100 peer-checked:-translate-y-1 peer-checked:opacity-100 peer-checked:shadow-[6px_6px_0_var(--color-tinta)] peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-tinta motion-reduce:transition-none dark:border-papel dark:peer-checked:shadow-[6px_6px_0_var(--color-papel)] dark:peer-focus-visible:outline-papel"
+            <span className="sr-only">{o.rotulo}</span>
+            <span
+              aria-hidden
+              className="size-3 rounded-full border-2 border-tinta transition-colors peer-checked:bg-tinta peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-tinta dark:border-papel dark:peer-checked:bg-papel dark:peer-focus-visible:outline-papel"
             />
-            <span className="text-[13px] font-bold peer-checked:underline peer-checked:underline-offset-4">
-              {o.rotulo}
-            </span>
           </label>
         ))}
-      </div>
-    </fieldset>
-  )
+      </fieldset>
+    </div>
+  );
 }
