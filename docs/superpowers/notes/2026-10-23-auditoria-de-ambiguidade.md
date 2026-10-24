@@ -56,3 +56,7 @@ São 7,7% dos itens da esquerda contra 8,9% da direita. A esquerda teve menos ca
 
 - 62afc456 ("não tem absolutamente nada de irregular nesse filme", enganoso) e 929b9a8b ("não tem absolutamente nada de errado com esse filme, não tem um centavo de dinheiro público", falso) são quase a mesma frase, com vereditos diferentes do Aos Fatos em ocasiões diferentes. Não há contradição dentro de cada item, mas, se os dois caírem na mesma rodada, o jogador pode estranhar.
 - A página do Aos Fatos sobre a entrevista de Lula à Globo (2º turno) diz no resumo: "Também é fato que o déficit orçamentário foi de 2,8% no primeiro ano do terceiro governo Lula". Isso confirma a decisão de tirar o item do déficit, que já está fora.
+
+## Aplicado depois (24/10/2026)
+
+- **c4b9a095** (aquecimento global, falso): o dono respondeu errado por causa do "só" no cartão e escolheu deixar a pergunta explícita. O texto passou a ser "Perguntado se existe aquecimento global, Flávio Bolsonaro respondeu que os eventos climáticos extremos vêm de épocas cíclicas, e não diretamente da ação humana.", e a explicação ganhou "Flávio respondia se acreditava no aquecimento global.". A citação literal e o veredito (Aos Fatos e Lupa: falso) não mudaram. A pergunta da jornalista está na transcrição do Aos Fatos. Tirar o "só" deixa o cartão um pouco mais forte que a fala, e é a pergunta que mostra o que as agências julgaram.
