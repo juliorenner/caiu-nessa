@@ -140,3 +140,17 @@ describe('home: afirmações e "Nos ajude a melhorar"', () => {
     expect(screen.getByRole('link', { name: /Teve algum problema\? Reporte aqui/ })).toHaveAttribute('href', '/relatar')
   })
 })
+
+describe('home: ícones nos links de rodapé', () => {
+  it('"Como escolhemos" e "Som da urna" têm ícone decorativo, sem mudar o nome acessível', () => {
+    render(<Home />)
+    for (const link of screen.getAllByRole('link', { name: 'Como escolhemos as afirmações' }))
+      expect(link.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+    const som = screen.getByRole('button', { name: /Som da urna/ })
+    expect(som.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+    const antes = som.innerHTML
+    fireEvent.click(som)
+    expect(som).toHaveTextContent('Som da urna: desligado')
+    expect(som.innerHTML).not.toBe(antes)
+  })
+})
