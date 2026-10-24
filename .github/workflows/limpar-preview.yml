@@ -17,9 +17,9 @@ jobs:
     timeout-minutes: 10
     environment: production
     env:
-      VERCEL_CLI: vercel@62.7.0
       BRANCH: ${{ github.event.ref }}
     steps:
+      # API REST em vez do CLI: sem a pasta .vercel, o CLI com token não acha o projeto.
       - name: Apagar os previews da branch
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -27,15 +27,22 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -euo pipefail
+          api=https://api.vercel.com
+          auth=(-H "Authorization: Bearer $VERCEL_TOKEN")
+          # Lista todos os previews do projeto (paginado) e fica com os da branch apagada.
+          ids=""
+          ate=""
+          while :; do
+            pagina=$(curl -fsS "${auth[@]}" \
+              "$api/v6/deployments?projectId=$VERCEL_PROJECT_ID&teamId=$VERCEL_ORG_ID&target=preview&limit=100${ate:+&until=$ate}")
+            ids+=" $(printf '%s' "$pagina" | jq -r --arg b "$BRANCH" \
+              '.deployments[] | select(.target != "production" and .meta.githubCommitRef == $b) | .uid')"
+            ate=$(printf '%s' "$pagina" | jq -r '.pagination.next // empty')
+            [ -z "$ate" ] && break
+          done
           total=0
-          # A listagem vem em páginas de 20: apaga e lista de novo até esvaziar (com teto, por segurança).
-          for _ in $(seq 1 10); do
-            urls=$(npx --yes "$VERCEL_CLI" ls --environment preview -m "githubCommitRef=$BRANCH" \
-              --format json --token="$VERCEL_TOKEN" \
-              | jq -r '.deployments[] | select(.target != "production") | .url')
-            [ -z "$urls" ] && break
-            # shellcheck disable=SC2086 # uma URL por palavra
-            npx --yes "$VERCEL_CLI" remove $urls --yes --token="$VERCEL_TOKEN"
-            total=$((total + $(echo "$urls" | wc -l)))
+          for id in $ids; do
+            curl -fsS -X DELETE "${auth[@]}" "$api/v13/deployments/$id?teamId=$VERCEL_ORG_ID" > /dev/null
+            total=$((total + 1))
           done
           echo "Previews apagados da branch $BRANCH: $total" >> "$GITHUB_STEP_SUMMARY"
