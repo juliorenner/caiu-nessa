@@ -14,6 +14,10 @@ Na tela de fim, acima da linha de compartilhar, um carrossel "Escolha o cartão"
 
 O "Mais que X%" só aparece onde a tela já mostra a comparação (rodada 1, com estatísticas) e quando X está entre 1 e 99.
 
+## Carrossel em destaque (segunda versão)
+
+O dono pediu "um mais destacado na frente", com referência no Pinterest iOS (Mobbin): o cartão do centro fica grande e escolhido; os vizinhos aparecem menores, apagados e cortados nas bordas. Deslizar escolhe o cartão que para no centro; tocar num vizinho o traz para o centro; os pontos embaixo são o grupo de rádio (teclado e leitor de tela), com o nome do cartão escolhido acima deles.
+
 ## Decisões minhas (o dono pode mudar)
 
 - Ordem: Convite, Mais que X%, Com placar.

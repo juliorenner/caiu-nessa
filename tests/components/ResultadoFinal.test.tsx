@@ -434,6 +434,16 @@ describe('ResultadoFinal: escolha do cartão', () => {
     expect(dadosShare.text).toBe(`Acertei mais que 73% das pessoas no Caiu Nessa? Duvido você passar de mim.\n${SITE_URL}`)
   })
 
+  it('tocar no cartão vizinho o escolhe: rótulo, ponto e Baixar acompanham', async () => {
+    stubNavegador({})
+    renderizar()
+    await assentar()
+    fireEvent.click(document.querySelector('[data-cartao="placar"]')!)
+    expect(screen.getByRole('radio', { name: 'Com placar' })).toBeChecked()
+    expect(screen.getByText('Com placar', { selector: 'p' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Baixar imagem para os stories' }).getAttribute('href')).toMatch(/^\/cartao\?a=/)
+  })
+
   it('"mais que 0%" não vira cartão', async () => {
     stubNavegador({})
     render(
