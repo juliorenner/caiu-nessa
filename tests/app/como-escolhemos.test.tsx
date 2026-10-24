@@ -50,6 +50,7 @@ describe('página /como-escolhemos', () => {
       'revisado todo mês por um agente automatizado, e cada mudança chega como um pull request público no repositório',
     )
     expect(texto).toContain('As afirmações que ficam fora do jogo aparecem na lista pública, com o motivo.')
+    expect(texto).toContain('Uma afirmação também fica de fora quando o cartão não consegue ser fiel à fala sem confundir quem joga')
   })
 
   it('publica o critério de alcance e a preferência da primeira rodada', () => {

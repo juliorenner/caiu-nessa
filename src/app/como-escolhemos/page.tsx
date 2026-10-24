@@ -70,7 +70,9 @@ export default function ComoEscolhemos() {
       <p className="mt-2">
         Quando agências diferentes discordam sobre a mesma afirmação: se uma diz verdadeiro e outra diz falso, ela fica
         de fora. Nos outros casos, vale a maioria dos votos; no empate entre verdadeiro e enganoso, vale enganoso; no
-        empate entre falso e enganoso, vale falso. As afirmações que ficam fora do jogo aparecem na lista pública, com
+        empate entre falso e enganoso, vale falso. Uma afirmação também fica de fora quando o cartão não consegue ser
+        fiel à fala sem confundir quem joga, por exemplo quando o veredito depende de um contexto que não cabe no
+        cartão; isso vale igual para os dois lados. As afirmações que ficam fora do jogo aparecem na lista pública, com
         o motivo.
       </p>
 
