@@ -39,7 +39,8 @@ Para cada item (inclusive os com `observacao`):
 1. Leia a página com `npx tsx scripts/pagina.ts <fonte_url>`: ele devolve o texto inteiro (sem o corte do WebFetch e sem recusar domínio) e traz os selos que ficam só em atributo, como `[SELO: FALSO]` do Aos Fatos. Uma página serve para todos os itens que a citam: leia cada página uma vez e confira todos os seus itens. Confira que a checagem continua no ar e que `veredito`, `citacao`, os números da `explicacao` e a `data_checagem` batem com a página. Revise o `alcance`: uma segunda agência da lista checando a mesma fala de debate ou TV nacional eleva 2 para 3.
 2. Divergência num campo: corrija o campo.
 3. Checagem retirada do ar, veredito mudado para rótulo que não conta como voto, ou outra agência da lista dizendo verdadeiro onde esta diz falso (ou o contrário): adicione `observacao` explicando (o item sai do jogo). Nunca apague um item, nem mude o `lado` de um item existente. Itens fora do jogo não entram no verificador de links.
-4. Item que já tem `observacao`: reavalie. Se o motivo não vale mais, remova a `observacao` e ele volta ao jogo.
+4. Cartão que não consegue ser fiel à fala sem confundir (o veredito depende de um contexto que não cabe no cartão): também é motivo para sair do jogo, mas é decisão do dono. Não adicione `observacao` por isso; registre o item na nota, com o porquê, para o dono decidir. Vale igual para os dois lados.
+5. Item que já tem `observacao`: reavalie. Se o motivo não vale mais, remova a `observacao` e ele volta ao jogo.
 
 Página que o script não consegue ler (erro HTTP ou tempo esgotado): tente uma vez mais; se continuar, registre o item na nota como "não verificado" e não o altere. A revisão só está completa quando todos os itens foram conferidos ou listados como "não verificado"; a nota diz quantos de cada.
 
