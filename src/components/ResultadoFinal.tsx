@@ -8,11 +8,20 @@ import {
   urlDoResultado,
   type Casa,
 } from "@/lib/cartao";
-import { NOME_ARQUIVO, textoDeCompartilhar, urlDoWhatsApp } from "@/lib/compartilhar";
+import {
+  NOME_ARQUIVO,
+  NOME_ARQUIVO_CONVITE,
+  NOME_ARQUIVO_PERCENTIL,
+  textoDeCompartilhar,
+  textoDeConvite,
+  textoDePercentil,
+  urlDoWhatsApp,
+} from "@/lib/compartilhar";
 import { buscarArquivo, compartilhar } from "@/lib/compartilhar-navegador";
 import { registrarEvento } from "@/lib/eventos-navegador";
 import type { RespostaResultado } from "@/lib/resultado-api";
 import { SITE_URL, TITULO } from "@/lib/site";
+import { EscolhaDeCartao } from "./EscolhaDeCartao";
 import { Ficha } from "./Ficha";
 import { LinhaDeCompartilhar } from "./LinhaDeCompartilhar";
 import { Politico } from "./icones/Politico";
@@ -28,6 +37,18 @@ import {
 
 
 type EstadoContinuar = "parado" | "sorteando" | "fim" | "falha";
+type IdCartao = "convite" | "percentil" | "placar";
+// O que cada cartão manda: a imagem e o texto (sem e com a URL), e o link que vai junto.
+type Cartao = {
+  id: IdCartao;
+  rotulo: string;
+  urlImagem: string;
+  nomeArquivo: string;
+  url: string;
+  texto: string;
+  textoComUrl: string;
+};
+
 type Aviso = "copiado" | "falhou" | "carregando" | "imagemFalhou" | "imagemNaoCarregou";
 
 const TEXTO_AVISO: Record<Aviso, string> = {
@@ -60,31 +81,75 @@ export function ResultadoFinal(p: {
   };
   const faixa = slugDaFaixa(avaliacao.titulo);
   const urlResultado = `${SITE_URL}${urlDoResultado({ ...placar, faixa })}`;
-  const texto = textoDeCompartilhar(placar);
-  const textoComUrl = textoDeCompartilhar({ ...placar, url: urlResultado });
-  const urlCartao = urlDoCartao({ ...placar, faixa });
-  const [arquivo, setArquivo] = useState<File | null>(null);
+  // O convite vem primeiro (e escolhido): ninguém precisa mostrar quantas errou para chamar os amigos.
+  // A comparação só existe na rodada completa, com estatísticas, e "mais que 0%" não entra.
+  // Os cartões sem placar levam o link da capa, cuja prévia também não tem números.
+  const comPercentil =
+    p.rodada === 1 && estatisticas !== null && percentilAbaixo !== null && percentilAbaixo >= 1 && percentilAbaixo <= 99;
+  const cartoes: Cartao[] = [
+    {
+      id: "convite",
+      rotulo: "Convite",
+      urlImagem: "/convite",
+      nomeArquivo: NOME_ARQUIVO_CONVITE,
+      url: SITE_URL,
+      texto: textoDeConvite(),
+      textoComUrl: textoDeConvite(SITE_URL),
+    },
+    ...(comPercentil
+      ? [
+          {
+            id: "percentil" as const,
+            rotulo: `Mais que ${percentilAbaixo}%`,
+            urlImagem: `/percentil?p=${percentilAbaixo}`,
+            nomeArquivo: NOME_ARQUIVO_PERCENTIL,
+            url: SITE_URL,
+            texto: textoDePercentil(percentilAbaixo),
+            textoComUrl: textoDePercentil(percentilAbaixo, SITE_URL),
+          },
+        ]
+      : []),
+    {
+      id: "placar",
+      rotulo: "Com placar",
+      urlImagem: urlDoCartao({ ...placar, faixa }),
+      nomeArquivo: NOME_ARQUIVO,
+      url: urlResultado,
+      texto: textoDeCompartilhar(placar),
+      textoComUrl: textoDeCompartilhar({ ...placar, url: urlResultado }),
+    },
+  ];
+  const [escolhida, setEscolhida] = useState<IdCartao>("convite");
+  const escolhidaRef = useRef<IdCartao>("convite");
+  const cartao = cartoes.find((c) => c.id === escolhida) ?? cartoes[0];
+  // Por cartão: ausente = carregando, null = a busca falhou.
+  const [arquivos, setArquivos] = useState<Partial<Record<IdCartao, File | null>>>({});
+  const arquivo = arquivos[cartao.id] ?? null;
+  const imagemNaoCarregou = arquivos[cartao.id] === null;
   // Só no navegador: no servidor (e até montar) o botão do Instagram não aparece.
   const [aceitaArquivos, setAceitaArquivos] = useState(false);
-  const [imagemNaoCarregou, setImagemNaoCarregou] = useState(false);
   const [aviso, setAviso] = useState<Aviso | null>(null);
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Busca a imagem ao montar, não no toque: esperar um fetch depois do toque faz o share falhar.
+  // Busca as imagens de todos os cartões ao montar, não no toque: esperar um fetch depois do toque
+  // faz o share falhar. As miniaturas do carrossel usam as mesmas URLs (vêm do cache).
+  const fontesDosArquivos = cartoes.map((c) => `${c.id} ${c.urlImagem} ${c.nomeArquivo}`).join("\n");
   useEffect(() => {
     let montado = true;
-    void buscarArquivo(urlCartao, NOME_ARQUIVO).then((f) => {
-      if (!montado) return;
-      setArquivo(f);
-      // Quem tocou em "Instagram" cedo demais viu "carregando": some quando a imagem chega.
-      if (f) setAviso((atual) => (atual === "carregando" ? null : atual));
-      // A busca falhou de vez: o próximo toque no Instagram avisa isso, não "carregando".
-      else setImagemNaoCarregou(true);
-    });
+    for (const linha of fontesDosArquivos.split("\n")) {
+      const [id, url, nome] = linha.split(" ") as [IdCartao, string, string];
+      void buscarArquivo(url, nome).then((f) => {
+        if (!montado) return;
+        // null marca a falha: o próximo toque no Instagram avisa isso, não "carregando".
+        setArquivos((atual) => ({ ...atual, [id]: f }));
+        // Quem tocou em "Instagram" cedo demais viu "carregando": some quando a imagem escolhida chega.
+        if (f && id === escolhidaRef.current) setAviso((atual) => (atual === "carregando" ? null : atual));
+      });
+    }
     return () => {
       montado = false;
     };
-  }, [urlCartao]);
+  }, [fontesDosArquivos]);
 
   useEffect(() => {
     let aceita = false;
@@ -119,9 +184,9 @@ export function ResultadoFinal(p: {
   function aoCompartilhar(modo: "link" | "imagem") {
     void compartilhar({
       modo,
-      texto,
-      textoComUrl,
-      url: urlResultado,
+      texto: cartao.texto,
+      textoComUrl: cartao.textoComUrl,
+      url: cartao.url,
       titulo: TITULO,
       arquivo,
     }).then((desfecho) => {
@@ -133,6 +198,12 @@ export function ResultadoFinal(p: {
       else if (desfecho === "falhou")
         mostrar(modo === "imagem" ? "imagemFalhou" : "falhou");
     });
+  }
+
+  function aoEscolher(id: string) {
+    escolhidaRef.current = id as IdCartao;
+    setEscolhida(id as IdCartao);
+    mostrar(null);
   }
 
   async function aoContinuar() {
@@ -195,14 +266,15 @@ export function ResultadoFinal(p: {
               Você acertou mais que {percentilAbaixo ?? 0}% das pessoas.
             </p>
           )}
+          <EscolhaDeCartao opcoes={cartoes} escolhida={cartao.id} onEscolher={aoEscolher} />
           <LinhaDeCompartilhar
-            urlWhatsApp={urlDoWhatsApp(textoComUrl)}
+            urlWhatsApp={urlDoWhatsApp(cartao.textoComUrl)}
             onWhatsApp={() =>
               registrarEvento({ tipo: "compartilhar", dados: { modo: "whatsapp", resultado: "clique" } })
             }
             onInstagram={aceitaArquivos ? () => aoCompartilhar("imagem") : undefined}
-            urlImagem={urlCartao}
-            nomeArquivo={NOME_ARQUIVO}
+            urlImagem={cartao.urlImagem}
+            nomeArquivo={cartao.nomeArquivo}
             onBaixar={() =>
               registrarEvento({ tipo: "compartilhar", dados: { modo: "baixar", resultado: "clique" } })
             }
