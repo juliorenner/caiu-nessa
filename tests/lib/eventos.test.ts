@@ -33,6 +33,12 @@ describe('eventoSchema', () => {
     expect(eventoSchema.safeParse({ tipo: 'compartilhar', dados: { modo: 'link', resultado: 'folha', cartao: 'outro' } }).success).toBe(false)
   })
 
+  it("compartilhar aceita tela 'home' e nenhuma (fim de jogo); outra tela, não", () => {
+    const dados = { modo: 'link', resultado: 'folha', cartao: 'convite' }
+    expect(eventoSchema.safeParse({ tipo: 'compartilhar', dados: { ...dados, tela: 'home' } }).success).toBe(true)
+    expect(eventoSchema.safeParse({ tipo: 'compartilhar', dados: { ...dados, tela: 'fim' } }).success).toBe(false)
+  })
+
   it('rejeita tipo desconhecido, dados ausentes, valores fora da lista e chaves extras', () => {
     for (const corpo of [
       null,

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { BotaoSom } from '@/components/BotaoSom'
+import { CompartilharConvite } from '@/components/CompartilharConvite'
 import { Carimbo } from '@/components/Carimbo'
 import { Ficha } from '@/components/Ficha'
 import { FocoNoComecar } from '@/components/FocoNoComecar'
@@ -127,6 +128,7 @@ export default function Home() {
           <p className="sr-only">Arraste o cartão: direita é verdade, esquerda é mentira, para cima se cheira mal.</p>
           <LinkComoEscolhemos className="self-center lg:hidden" />
           <LinkDoRepositorio className="self-center lg:hidden" />
+          <CompartilharConvite />
           <div className="mt-1 lg:max-w-[560px]">
             <PainelDeMelhoria duasColunas />
           </div>
