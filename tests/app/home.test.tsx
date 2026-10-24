@@ -123,3 +123,20 @@ describe('FocoNoComecar', () => {
     expect(clique).not.toHaveBeenCalled()
   })
 })
+
+describe('home: afirmações e "Nos ajude a melhorar"', () => {
+  it('link para todas as afirmações uma vez por tamanho (no cartão no celular, ao lado do Começar em lg)', () => {
+    render(<Home />)
+    const links = screen.getAllByRole('link', { name: 'Ver todas as afirmações e suas fontes' })
+    expect(links.map(l => l.getAttribute('href'))).toEqual(['/afirmacoes', '/afirmacoes'])
+    expect(links[0]).toHaveClass('lg:hidden')
+  })
+
+  it('painel com sugerir e reportar', () => {
+    render(<Home />)
+    const painel = screen.getByRole('navigation', { name: 'Nos ajude a melhorar' })
+    expect(painel).toContainElement(screen.getByRole('link', { name: /Sugerir uma afirmação que está faltando/ }))
+    expect(screen.getByRole('link', { name: /Sugerir uma afirmação/ })).toHaveAttribute('href', '/sugerir')
+    expect(screen.getByRole('link', { name: /Teve algum problema\? Reporte aqui/ })).toHaveAttribute('href', '/relatar')
+  })
+})

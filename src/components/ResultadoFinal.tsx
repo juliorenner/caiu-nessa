@@ -25,6 +25,7 @@ import { ehPercentilCompartilhavel } from "@/lib/percentil";
 import { SITE_URL, TITULO } from "@/lib/site";
 import { EscolhaDeCartao } from "./EscolhaDeCartao";
 import { Ficha } from "./Ficha";
+import { PainelDeMelhoria } from "./PainelDeMelhoria";
 import { LinhaDeCompartilhar } from "./LinhaDeCompartilhar";
 import { Politico } from "./icones/Politico";
 import { MarcaDagua } from "./MarcaDagua";
@@ -336,6 +337,10 @@ export function ResultadoFinal(p: {
         >
           Ver todas as afirmações e suas fontes
         </Link>
+        {/* Por último no celular, para não competir com o compartilhar; em lg, embaixo da coluna da esquerda. */}
+        <div className="lg:col-span-2 lg:col-start-1 lg:row-start-3 lg:self-start">
+          <PainelDeMelhoria />
+        </div>
       </section>
     </>
   );
