@@ -8,8 +8,8 @@ Na tela de fim, acima da linha de compartilhar, um carrossel "Escolha o cartão"
 
 | Cartão | Imagem | Texto | Link |
 |---|---|---|---|
-| **Convite** (primeiro, já escolhido) | `GET /convite`, tema noite: "Eu já joguei / Sua vez", carimbo, "E você, cai nessa?", os três selos de veredito, "Duvido você não cair em nenhuma", "Insira a ficha" | "Já joguei o Caiu Nessa? Agora é sua vez: será que você cai?" | capa (prévia sem números) |
-| **Mais que X%** | `GET /percentil?p=X` (1 a 99): "Acertei mais que X% das pessoas", "Como será que você se sai?" | "Acertei mais que X% das pessoas no Caiu Nessa? Como será que você se sai?" | capa |
+| **Convite** (primeiro, já escolhido) | `GET /convite`, tema noite: "Eu já joguei / Sua vez", carimbo, "E você, cai nessa?", os três selos de veredito, "Duvido você não cair em nenhuma", "Insira a ficha" | "Já joguei o Caiu Nessa? Agora é sua vez: será que você cai?" | `/jogue` (prévia: o convite deitado) |
+| **Mais que X%** | `GET /percentil?p=X` (1 a 99): "Acertei mais que X% das pessoas", "Como será que você se sai?" | "Acertei mais que X% das pessoas no Caiu Nessa? Como será que você se sai?" | `/jogue/X` (prévia: a comparação deitada) |
 | **Com placar** | `GET /cartao` (o de sempre) | o de sempre | `/r/…` (o de sempre) |
 
 O "Mais que X%" só aparece onde a tela já mostra a comparação (rodada 1, com estatísticas) e quando X está entre 1 e 99.
@@ -21,6 +21,6 @@ O dono pediu "um mais destacado na frente", com referência no Pinterest iOS (Mo
 ## Decisões minhas (o dono pode mudar)
 
 - Ordem: Convite, Mais que X%, Com placar.
-- Os cartões sem placar apontam para a capa, não para `/r/…`, porque a prévia de `/r/…` mostra o placar.
+- Os cartões sem placar têm link próprio (`/jogue`, `/jogue/X`): a página é a capa, mas a prévia no WhatsApp é o cartão escolhido, sem placar (o dono notou que o WhatsApp não levava a imagem; o link `wa.me` só leva texto). Canonical na capa.
 - As imagens de todos os cartões são pré-buscadas ao montar (o share precisa do arquivo na hora do toque).
 - Os eventos de `compartilhar` não registram qual cartão foi escolhido (fica para outra PR, mexe no esquema).
