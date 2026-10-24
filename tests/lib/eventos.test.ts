@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  CARTOES_DE_COMPARTILHAR,
   DADOS_POR_TIPO,
   MODOS_DE_COMPARTILHAR,
   RESULTADOS_DE_COMPARTILHAR,
@@ -24,6 +25,12 @@ describe('eventoSchema', () => {
     for (const modo of MODOS_DE_COMPARTILHAR)
       for (const resultado of RESULTADOS_DE_COMPARTILHAR)
         expect(eventoSchema.safeParse({ tipo: 'compartilhar', dados: { modo, resultado } }).success).toBe(true)
+  })
+
+  it('compartilhar aceita cada cartão do carrossel, e nenhum (páginas antigas)', () => {
+    for (const cartao of CARTOES_DE_COMPARTILHAR)
+      expect(eventoSchema.safeParse({ tipo: 'compartilhar', dados: { modo: 'link', resultado: 'folha', cartao } }).success).toBe(true)
+    expect(eventoSchema.safeParse({ tipo: 'compartilhar', dados: { modo: 'link', resultado: 'folha', cartao: 'outro' } }).success).toBe(false)
   })
 
   it('rejeita tipo desconhecido, dados ausentes, valores fora da lista e chaves extras', () => {

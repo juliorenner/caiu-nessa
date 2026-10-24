@@ -8,13 +8,21 @@ export type TipoDeEvento = (typeof TIPOS_DE_EVENTO)[number]
 export const MODOS_DE_COMPARTILHAR = ['link', 'imagem', 'baixar', 'whatsapp'] as const
 // Os desfechos de compartilhar() mais 'clique' para os links (baixar a imagem, abrir o WhatsApp).
 export const RESULTADOS_DE_COMPARTILHAR = ['folha', 'copiado', 'cancelado', 'falhou', 'indisponivel', 'clique'] as const
+// Os cartões do carrossel da tela de fim, na ordem em que aparecem.
+export const CARTOES_DE_COMPARTILHAR = ['convite', 'percentil', 'placar'] as const
+export type CartaoDeCompartilhar = (typeof CARTOES_DE_COMPARTILHAR)[number]
 
 // Teto do JSON serializado de `dados`, valha o que valer o esquema do tipo.
 export const TAMANHO_MAXIMO_DADOS = 500
 
 export const DADOS_POR_TIPO = {
   inicio: z.strictObject({}),
-  compartilhar: z.strictObject({ modo: z.enum(MODOS_DE_COMPARTILHAR), resultado: z.enum(RESULTADOS_DE_COMPARTILHAR) }),
+  // `cartao` é opcional: páginas abertas antes do carrossel (e os eventos antigos) não o mandam.
+  compartilhar: z.strictObject({
+    modo: z.enum(MODOS_DE_COMPARTILHAR),
+    resultado: z.enum(RESULTADOS_DE_COMPARTILHAR),
+    cartao: z.enum(CARTOES_DE_COMPARTILHAR).optional(),
+  }),
 } satisfies Record<TipoDeEvento, z.ZodType>
 
 type Dados = typeof DADOS_POR_TIPO
