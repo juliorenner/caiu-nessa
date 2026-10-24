@@ -431,7 +431,7 @@ describe('ResultadoFinal: escolha do cartão', () => {
     fireEvent.click(stories())
     const [dadosShare] = share.mock.calls[0]
     expect(dadosShare.files[0].name).toBe(NOME_ARQUIVO_PERCENTIL)
-    expect(dadosShare.text).toBe(`Acertei mais que 73% das pessoas no Caiu Nessa? Duvido você passar de mim.\n${SITE_URL}`)
+    expect(dadosShare.text).toBe(`Acertei mais que 73% das pessoas no Caiu Nessa? Como será que você se sai?\n${SITE_URL}`)
   })
 
   it('tocar no cartão vizinho o escolhe: rótulo, ponto e Baixar acompanham', async () => {

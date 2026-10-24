@@ -89,7 +89,7 @@ export function Percentil({ percentil }: { percentil: number }) {
             lineHeight: 1.2,
           }}
         >
-          Duvido você passar de mim.
+          Como será que você se sai?
         </div>
       </div>
 
