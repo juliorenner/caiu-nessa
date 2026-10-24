@@ -1,6 +1,6 @@
 # Afirmações do debate da Globo (23/10/2026)
 
-47 afirmações novas do debate de Lula (PT) e Flávio Bolsonaro (PL) na TV Globo, em 23/10/2026: 22 de Lula (`esquerda`) e 25 de Flávio (`direita`). Nenhum item existente foi alterado. A primeira leva tinha 6 itens (3 por lado), respeitando o limite da rodada mensal. O dono liberou o limite para esta PR e pediu a varredura completa: entraram mais 41.
+46 afirmações novas do debate de Lula (PT) e Flávio Bolsonaro (PL) na TV Globo, em 23/10/2026: 22 de Lula (`esquerda`) e 24 de Flávio (`direita`). Nenhum item existente foi alterado. A primeira leva tinha 6 itens (3 por lado), respeitando o limite da rodada mensal. O dono liberou o limite para esta PR e pediu a varredura completa: entraram mais 41.
 
 ## Como verifiquei
 
@@ -10,7 +10,7 @@
   - Estadão Verifica: https://www.estadao.com.br/estadao-verifica/debate-tv-globo-checagem-tempo-real-ao-vivo/ (só paráfrase, sem fala literal: usado para contar agências e votos, nunca como fonte de citação)
   - Aos Fatos: https://www.aosfatos.org/noticias/checamos-flavio-bolsonaro-lula-debate-globo/. O texto da página traz só o resumo. As falas e os selos ficam num widget de transcrição, carregado de `https://www.aosfatos.org/api/escriba/177500de-f763-4f91-894c-981086c9bbe3/` (endereço encontrado no JavaScript da página). Li esse JSON: 60 falas comentadas, 46 com selo. Ele serviu para contar agências e votos. Não serviu como fonte: a fala não está no texto da página do Aos Fatos, e um JSON não é página de checagem. Falas sem selo no JSON (checagem pendente) não contam como voto.
   - Comprova: nenhuma checagem de falas do debate.
-- Citação: toda `citacao` foi copiada da Lupa ou do G1, da página que está em `fonte_url`. `npx tsx scripts/conferir-citacoes.ts --estrito` confirma as 47.
+- Citação: toda `citacao` foi copiada da Lupa ou do G1, da página que está em `fonte_url`. `npx tsx scripts/conferir-citacoes.ts --estrito` confirma as 46.
 - Votos: rótulos mapeados como manda a skill (Falta contexto, Exagerado, Subestimado, Impreciso, #NÃOÉBEMASSIM e "não é bem assim" = enganoso; Insustentável não conta). Empate entre verdadeiro e enganoso dá enganoso; empate entre falso e enganoso dá falso; verdadeiro contra falso tira a fala do jogo.
 - `alcance`: 3 quando duas ou mais agências da lista checaram a mesma fala (com ou sem voto), 2 quando só uma.
 - Duplicatas: comparei `citacao` e `texto` do banco com cada fala. Falas já presentes no banco (de outra ocasião) e falas que só repetem o mesmo fato de um item existente ficaram de fora.
@@ -45,7 +45,6 @@
 | 665b6616 | direita | verdadeiro | 2 | G1 (#FATO) | G1 |
 | 7be06631 | direita | verdadeiro | 3 | Lupa (Verdadeiro), G1 (#FATO) | Lupa |
 | f316ee02 | direita | falso | 3 | Lupa (Falso), G1 (#NÃOÉBEMASSIM) | G1 |
-| f5ae3786 | direita | enganoso | 3 | Lupa (Exagerado), G1 (#NÃOÉBEMASSIM) | Lupa |
 | 0bd23b76 | direita | verdadeiro | 2 | Lupa (Verdadeiro) | Lupa |
 | bba014ee | direita | enganoso | 3 | Lupa (Exagerado), G1 (#NÃOÉBEMASSIM), Estadão (Enganoso) | Lupa |
 | c55efd48 | direita | falso | 3 | Lupa, Estadão, Aos Fatos (Falso), G1 (#FAKE) | Lupa |
@@ -71,7 +70,7 @@
 
 - Já no banco (mesma fala ou mesmo fato):
   - de Lula: PIB acima de 3% (a88285e0), 33 milhões passando fome (2027f3bc), fim da fome (eaa6facd), 6 mil obras paradas (311499c1), licença-maternidade (9ffc66a8), perdão de dívidas de MEIs (c6a6d3f6), defesa do policial no caso Ana Clara (cbfe2cc3), casa de R$ 10 milhões (3d13028f)
-  - de Flávio: "pai do tigrinho" (6b98ca43), roubo de celular para "cervejinha" (50b79160), Bolsa Família de R$ 600 (b430643c), dívida de R$ 11 trilhões (912298e6), população de rua dobrou (c6e52312), 80 milhões com contas atrasadas (5c9b6e39), Selic perto de 14% e "uma das maiores taxas de juros do mundo" (b6039b81), previsão de juros de 7% (6b1e2a40), saidinhas (fbf784ba), Roberta Luchsinger (ad602974), marcação de munições (b2d99249, 9d9d9871), relatório da PF sobre dinheiro público no "Dark Horse" (929b9a8b), recorde de mulheres assassinadas (f0fe3e98), recorde de carga tributária (15897b12)
+  - de Flávio: "pai do tigrinho" (6b98ca43), roubo de celular para "cervejinha" (50b79160), Bolsa Família de R$ 600 (b430643c), dívida de R$ 11 trilhões (912298e6), população de rua dobrou (c6e52312), 80 milhões com contas atrasadas (5c9b6e39), Selic perto de 14% e "uma das maiores taxas de juros do mundo" (b6039b81), previsão de juros de 7% (6b1e2a40), saidinhas (fbf784ba), Roberta Luchsinger (ad602974), marcação de munições (b2d99249, 9d9d9871), relatório da PF sobre dinheiro público no "Dark Horse" (929b9a8b), recorde de mulheres assassinadas (f0fe3e98), recorde de carga tributária (15897b12), mais de R$ 400 bilhões gastos para tentar se reeleger (07b59434; o item f5ae3786 saiu desta PR em 24/10)
 - Agências em conflito verdadeiro x falso: Flávio sobre as 11,5 mil obras paralisadas e o "cemitério de obras" (Estadão: verdadeiro; G1 e Aos Fatos: falso).
 - Rótulo que não conta como voto, sem outra agência: Flávio sobre os R$ 30 milhões ao Instituto Lula (Lupa: Insustentável).
 - Sem fala literal na página de uma agência:
@@ -79,9 +78,25 @@
   - só o Aos Fatos (citação só no JSON do widget): de Lula, investimento recorde em infraestrutura, investimentos "três ou quatro vezes" maiores, "abrir a porteira", supercomputador em Natal, Rio Grande do Sul com mais aposentados, barco no dia de 1.100 mortes e vacinas da Covaxin que não vieram; de Flávio, IVA de 28%, Argentina governada 20 anos pela esquerda, Cracolândia, Santas Casas, Pisa, ilha do Richarlison, "Dark Horse" sem dinheiro público, mais de 30 impostos
 - Selo pendente (sem voto) e sem outra agência com citação: Flávio sobre o Comando Vermelho no Nordeste e sobre a ferrovia entre as capitais do Nordeste (Aos Fatos, sem selo).
 
+## Ajustes de ambiguidade (24/10)
+
+Segunda revisão, com a regra do cartão fiel (veredito que depende de contexto fora do cartão, explicação que admite o veredito oposto sem dizer por que ele não vale). Mesmo critério para os dois lados.
+
+- Lula (esquerda):
+  - 6c86cfa6 (vacina e "virar gay"): explicação diz em que trecho a Lupa e o Aos Fatos se apoiam ("algum homem começar a falar fino") e por que o G1 divergiu; veredito pela maioria mantido.
+  - 3d8b71e2 (1 milhão de acidentes): explicação diz que o G1 comparou com os registros anuais, abaixo de 1 milhão, e que a checagem não avalia a causa.
+  - 5e05c974 (PAC): explicação diz por que o G1 deu #FATO apesar de o executado (R$ 1,3 trilhão) passar do valor citado.
+- Flávio (direita):
+  - c55efd48 (vídeo do suspiro): explicação traz a conclusão do Aos Fatos de que Bolsonaro "debochou, sim", mesmo criticando a orientação de Mandetta.
+  - 2f62e6eb (pontos de internet): explicação diz que o Estadão e o Aos Fatos não trataram das 11 mil conexões anteriores apontadas pelo G1; veredito pela maioria mantido (par simétrico de 6c86cfa6).
+  - e1fd5967 (maioridade penal): explicação diz por que é enganoso e não falso: posição antiga de Lula e a mudança de 15/10, omitida.
+  - 33cd0720 (Ana Clara): explicação diz por que é falso apesar de o policial ainda não ter sido julgado; o que a PM disse fica atribuído ao Aos Fatos, com a divergência do G1.
+  - 9aea7fbe (Casa da Mulher Brasileira): cartão passa a dizer o que a agência refutou ("ainda não existe"), em vez da promessa.
+  - f5ae3786 (R$ 400 bilhões): sai da PR, mesmo fato de 07b59434, como já se fez com os "6 mil obras" e o perdão aos MEIs de Lula.
+
 ## Validação
 
-- `npm test`: `Test Files  57 passed (57)`, `Tests  738 passed (738)`
-- `npx tsx scripts/verificar-fontes.ts`: 226 `OK`, nenhum `FALHOU`
-- `npx tsx scripts/validar-revisao.ts`: `PROBLEMA 47 novas, limite 6`, `PROBLEMA 22 novas à esquerda, limite 3`, `PROBLEMA 25 novas à direita, limite 3`. É só o limite da rodada mensal, que o dono liberou para esta PR; não houve outro problema.
-- `npx tsx scripts/conferir-citacoes.ts --estrito`: `47 conferidas, 0 sem citação encontrada`
+- `npx vitest run --exclude ".claude/**"`: `Test Files  57 passed (57)`, `Tests  737 passed (737)`
+- `npx tsx scripts/verificar-fontes.ts`: 225 `OK`, nenhum `FALHOU`
+- `npx tsx scripts/validar-revisao.ts`: `PROBLEMA 46 novas, limite 6`, `PROBLEMA 22 novas à esquerda, limite 3`, `PROBLEMA 24 novas à direita, limite 3`. É só o limite da rodada mensal, que o dono liberou para esta PR; não houve outro problema.
+- `npx tsx scripts/conferir-citacoes.ts --estrito`: `47 conferidas, 0 sem citação encontrada` (as 46 novas mais ef0309f9, que difere da main só porque a `observacao` dela entrou na main depois do último merge)
