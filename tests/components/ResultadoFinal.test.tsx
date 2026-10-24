@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ResultadoFinal } from '@/components/ResultadoFinal'
 import type { Casa } from '@/lib/cartao'
-import { NOME_ARQUIVO } from '@/lib/compartilhar'
+import { NOME_ARQUIVO, NOME_ARQUIVO_CONVITE, NOME_ARQUIVO_PERCENTIL } from '@/lib/compartilhar'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { SITE_URL, TITULO } from '@/lib/site'
 
@@ -44,6 +44,7 @@ const aviso = () => document.querySelector('p[aria-live="polite"]')
 const botao = () => screen.getByRole('button', { name: 'Mais opções de compartilhar' })
 const stories = () => screen.getByRole('button', { name: 'Mandar para o Instagram' })
 // Deixa o fetch pré-buscado resolver e o estado assentar.
+const escolherPlacar = () => fireEvent.click(screen.getByRole('radio', { name: 'Com placar' }))
 const assentar = () => act(() => new Promise(r => setTimeout(r, 0)))
 
 function stubNavegador(n: { share?: unknown; canShare?: unknown; writeText?: unknown }) {
@@ -126,29 +127,32 @@ describe('ResultadoFinal: suas respostas', () => {
 })
 
 describe('ResultadoFinal: compartilhar', () => {
-  it('busca a imagem dos stories ao montar', async () => {
+  it('busca as imagens dos cartões ao montar', async () => {
     stubNavegador({})
     renderizar()
     await assentar()
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(vi.mocked(fetch).mock.calls[0][0]).toMatch(/^\/cartao\?a=4&t=12&c=3&f=caiu-feio&g=aeaaeqeaeeqe$/)
+    // Sem estatísticas, dois cartões: o convite e o placar (as miniaturas também pedem as URLs).
+    const pedidas = vi.mocked(fetch).mock.calls.map(c => c[0])
+    expect(new Set(pedidas)).toEqual(new Set(['/convite', '/cartao?a=4&t=12&c=3&f=caiu-feio&g=aeaaeqeaeeqe']))
   })
 
-  it('Mais (compartilhar): share com texto, url do resultado e título, sem files', async () => {
+  it('Com placar — Mais (compartilhar): share com texto, url do resultado e título, sem files', async () => {
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
     renderizar()
+    escolherPlacar()
     await assentar()
     fireEvent.click(botao())
     expect(share).toHaveBeenCalledTimes(1)
     expect(share).toHaveBeenCalledWith({ text: texto, url: urlResultado, title: TITULO })
   })
 
-  it('Mais (compartilhar) chama share na hora, com a imagem ainda chegando', () => {
+  it('Com placar — Mais (compartilhar) chama share na hora, com a imagem ainda chegando', () => {
     vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share })
     renderizar()
+    escolherPlacar()
     fireEvent.click(botao())
     expect(share).toHaveBeenCalledWith({ text: texto, url: urlResultado, title: TITULO })
   })
@@ -164,19 +168,21 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(writeText).not.toHaveBeenCalled()
   })
 
-  it('share falha por outro motivo: copia o texto com a URL e mostra Texto copiado', async () => {
+  it('Com placar — share falha por outro motivo: copia o texto com a URL e mostra Texto copiado', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share: vi.fn().mockRejectedValue(new DOMException('negado', 'NotAllowedError')), writeText })
     renderizar()
+    escolherPlacar()
     fireEvent.click(botao())
     await waitFor(() => expect(aviso()).toHaveTextContent('Texto copiado'))
     expect(writeText).toHaveBeenCalledWith(textoComUrl)
   })
 
-  it('sem share: copia o texto com a URL, mostra Texto copiado por 2 s', async () => {
+  it('Com placar — sem share: copia o texto com a URL, mostra Texto copiado por 2 s', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ writeText })
     renderizar()
+    escolherPlacar()
     await assentar()
     vi.useFakeTimers()
     fireEvent.click(botao())
@@ -209,10 +215,11 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(aviso()).toHaveTextContent(/^$/)
   })
 
-  it('canShare aceita arquivos e imagem pré-buscada: Instagram manda files e o texto com a URL', async () => {
+  it('Com placar — canShare aceita arquivos e imagem pré-buscada: Instagram manda files e o texto com a URL', async () => {
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
     renderizar()
+    escolherPlacar()
     await assentar()
     fireEvent.click(stories())
     expect(share).toHaveBeenCalledTimes(1)
@@ -291,9 +298,10 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(writeText).not.toHaveBeenCalled()
   })
 
-  it('link Baixar imagem para os stories baixa o cartão', async () => {
+  it('Com placar — link Baixar imagem para os stories baixa o cartão', async () => {
     stubNavegador({})
     renderizar()
+    escolherPlacar()
     await assentar()
     const link = screen.getByRole('link', { name: 'Baixar imagem para os stories' })
     expect(link).toHaveAttribute('download', NOME_ARQUIVO)
@@ -321,9 +329,10 @@ describe('ResultadoFinal: compartilhar', () => {
     expect(screen.queryByText(/Acertei/)).not.toBeInTheDocument()
   })
 
-  it('WhatsApp: link wa.me com o texto e a URL do resultado, em nova aba', async () => {
+  it('Com placar — WhatsApp: link wa.me com o texto e a URL do resultado, em nova aba', async () => {
     stubNavegador({})
     renderizar()
+    escolherPlacar()
     await assentar()
     const link = screen.getByRole('link', { name: 'Mandar no WhatsApp' })
     expect(link).toHaveAttribute('href', `https://wa.me/?text=${encodeURIComponent(textoComUrl)}`)
@@ -378,5 +387,84 @@ describe('ResultadoFinal: registra cada compartilhar', () => {
     link.addEventListener('click', e => e.preventDefault())
     fireEvent.click(link)
     expect(eventosEnviados()).toEqual([{ tipo: 'compartilhar', dados: { modo: 'baixar', resultado: 'clique' } }])
+  })
+})
+
+describe('ResultadoFinal: escolha do cartão', () => {
+  const textoConvite = 'Já joguei o Caiu Nessa? Agora é sua vez: será que você cai?'
+  const radios = () => screen.getAllByRole('radio').map(r => r.closest('label')!.textContent)
+
+  it('o convite vem primeiro e escolhido: WhatsApp, Mais e Baixar sem números e com o link da capa', async () => {
+    const share = vi.fn().mockResolvedValue(undefined)
+    stubNavegador({ share })
+    renderizar()
+    await assentar()
+    expect(radios()).toEqual(['Convite', 'Com placar'])
+    expect(screen.getByRole('radio', { name: 'Convite' })).toBeChecked()
+    expect(screen.getByRole('link', { name: 'Mandar no WhatsApp' })).toHaveAttribute(
+      'href',
+      `https://wa.me/?text=${encodeURIComponent(`${textoConvite}\n${SITE_URL}`)}`,
+    )
+    const baixar = screen.getByRole('link', { name: 'Baixar imagem para os stories' })
+    expect(baixar).toHaveAttribute('href', '/convite')
+    expect(baixar).toHaveAttribute('download', NOME_ARQUIVO_CONVITE)
+    fireEvent.click(botao())
+    expect(share).toHaveBeenCalledWith({ text: textoConvite, url: SITE_URL, title: TITULO })
+  })
+
+  it('com estatísticas na rodada 1: o cartão "Mais que X%" entra em segundo, sem placar', async () => {
+    const share = vi.fn().mockResolvedValue(undefined)
+    stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
+    render(
+      <ResultadoFinal
+        dados={{ ...dados, estatisticas: {} as RespostaResultado['estatisticas'], percentilAbaixo: 73 }}
+        rodada={1}
+        acumulado={{ acertos: 4, total: 12 }}
+        casas={casas}
+        onContinuar={async () => 'fim'}
+      />,
+    )
+    await assentar()
+    expect(radios()).toEqual(['Convite', 'Mais que 73%', 'Com placar'])
+    fireEvent.click(screen.getByRole('radio', { name: 'Mais que 73%' }))
+    expect(screen.getByRole('link', { name: 'Baixar imagem para os stories' })).toHaveAttribute('href', '/percentil?p=73')
+    fireEvent.click(stories())
+    const [dadosShare] = share.mock.calls[0]
+    expect(dadosShare.files[0].name).toBe(NOME_ARQUIVO_PERCENTIL)
+    expect(dadosShare.text).toBe(`Acertei mais que 73% das pessoas no Caiu Nessa? Duvido você passar de mim.\n${SITE_URL}`)
+  })
+
+  it('"mais que 0%" não vira cartão', async () => {
+    stubNavegador({})
+    render(
+      <ResultadoFinal
+        dados={{ ...dados, estatisticas: {} as RespostaResultado['estatisticas'], percentilAbaixo: 0 }}
+        rodada={1}
+        acumulado={{ acertos: 4, total: 12 }}
+        casas={casas}
+        onContinuar={async () => 'fim'}
+      />,
+    )
+    await assentar()
+    expect(radios()).toEqual(['Convite', 'Com placar'])
+  })
+
+  it('Instagram não manda outra imagem enquanto a escolhida carrega', async () => {
+    const share = vi.fn().mockResolvedValue(undefined)
+    stubNavegador({ share, canShare: vi.fn().mockReturnValue(true) })
+    // O convite chega; o placar fica carregando.
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string) =>
+        url === '/convite' ? Promise.resolve({ ok: true, blob: async () => new Blob(['png']) }) : new Promise(() => {}),
+      ),
+    )
+    renderizar()
+    await assentar()
+    escolherPlacar()
+    fireEvent.click(stories())
+    await assentar()
+    expect(share).not.toHaveBeenCalled()
+    expect(aviso()).toHaveTextContent('Imagem ainda carregando…')
   })
 })

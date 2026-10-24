@@ -46,7 +46,7 @@ test('páginas de resultado antigas e novas', async ({ page }) => {
 })
 
 test('imagens', async ({ request }) => {
-  for (const url of ['/cartao?a=5&t=8&c=2&f=abre-o-olho&g=aaeaqaae', '/opengraph-image']) {
+  for (const url of ['/cartao?a=5&t=8&c=2&f=abre-o-olho&g=aaeaqaae', '/convite', '/percentil?p=73', '/opengraph-image']) {
     const resposta = await request.get(url)
     expect(resposta.status(), url).toBe(200)
     expect(resposta.headers()['content-type'], url).toContain('image/png')

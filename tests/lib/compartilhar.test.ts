@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { NOME_ARQUIVO, textoDeCompartilhar, urlDoWhatsApp } from '@/lib/compartilhar'
+import { NOME_ARQUIVO, textoDeCompartilhar, textoDeConvite, urlDoWhatsApp } from '@/lib/compartilhar'
 
 const URL_RESULTADO = 'https://caiunessa.com.br/r/4-12-3-caiu-feio-aeaqeeaeeqea'
 
@@ -27,4 +27,9 @@ it('urlDoWhatsApp: wa.me com o texto codificado (quebra de linha e URL inclusive
   const texto = `Fiz 4/12 no Caiu Nessa? e caí em 3. E você?\n${URL_RESULTADO}`
   expect(urlDoWhatsApp(texto)).toBe(`https://wa.me/?text=${encodeURIComponent(texto)}`)
   expect(urlDoWhatsApp(texto)).not.toContain('\n')
+})
+
+it('convite: sem números; com url, na segunda linha', () => {
+  expect(textoDeConvite()).toBe('Já joguei o Caiu Nessa? Agora é sua vez: será que você cai?')
+  expect(textoDeConvite('https://caiunessa.com.br')).toBe('Já joguei o Caiu Nessa? Agora é sua vez: será que você cai?\nhttps://caiunessa.com.br')
 })
