@@ -1,0 +1,41 @@
+name: limpar-preview
+
+# Branch apagada (merge com --delete-branch, ou à mão): apaga os deploys de preview dela na Vercel.
+# A integração do Neon (gerenciada pela Vercel) apaga o branch do banco `preview/<branch>` quando o último
+# deploy ligado a ele some; sem isso, os branches do Neon se acumulam até o limite do plano e todo preview
+# novo falha com "Resource provisioning failed".
+# O evento `delete` roda a partir de main: o ambiente production (só branches protegidas) libera os segredos.
+on:
+  delete:
+
+permissions: {}
+
+jobs:
+  limpar:
+    if: github.event.ref_type == 'branch' && github.event.ref != 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    env:
+      VERCEL_CLI: vercel@62.7.0
+      BRANCH: ${{ github.event.ref }}
+    steps:
+      - name: Apagar os previews da branch
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -euo pipefail
+          total=0
+          # A listagem vem em páginas de 20: apaga e lista de novo até esvaziar (com teto, por segurança).
+          for _ in $(seq 1 10); do
+            urls=$(npx --yes "$VERCEL_CLI" ls --environment preview -m "githubCommitRef=$BRANCH" \
+              --format json --token="$VERCEL_TOKEN" \
+              | jq -r '.deployments[] | select(.target != "production") | .url')
+            [ -z "$urls" ] && break
+            # shellcheck disable=SC2086 # uma URL por palavra
+            npx --yes "$VERCEL_CLI" remove $urls --yes --token="$VERCEL_TOKEN"
+            total=$((total + $(echo "$urls" | wc -l)))
+          done
+          echo "Previews apagados da branch $BRANCH: $total" >> "$GITHUB_STEP_SUMMARY"
