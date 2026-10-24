@@ -21,6 +21,7 @@ import { buscarArquivo, compartilhar } from "@/lib/compartilhar-navegador";
 import type { CartaoDeCompartilhar } from "@/lib/eventos";
 import { registrarEvento } from "@/lib/eventos-navegador";
 import type { RespostaResultado } from "@/lib/resultado-api";
+import { ehPercentilCompartilhavel } from "@/lib/percentil";
 import { SITE_URL, TITULO } from "@/lib/site";
 import { EscolhaDeCartao } from "./EscolhaDeCartao";
 import { Ficha } from "./Ficha";
@@ -84,18 +85,18 @@ export function ResultadoFinal(p: {
   const urlResultado = `${SITE_URL}${urlDoResultado({ ...placar, faixa })}`;
   // O convite vem primeiro (e escolhido): ninguém precisa mostrar quantas errou para chamar os amigos.
   // A comparação só existe na rodada completa, com estatísticas, e "mais que 0%" não entra.
-  // Os cartões sem placar levam o link da capa, cuja prévia também não tem números.
+  // Os cartões sem placar levam um link próprio (/jogue), cuja prévia é o próprio cartão, sem números.
   const comPercentil =
-    p.rodada === 1 && estatisticas !== null && percentilAbaixo !== null && percentilAbaixo >= 1 && percentilAbaixo <= 99;
+    p.rodada === 1 && estatisticas !== null && ehPercentilCompartilhavel(percentilAbaixo);
   const cartoes: Cartao[] = [
     {
       id: "convite",
       rotulo: "Convite",
       urlImagem: "/convite",
       nomeArquivo: NOME_ARQUIVO_CONVITE,
-      url: SITE_URL,
+      url: `${SITE_URL}/jogue`,
       texto: textoDeConvite(),
-      textoComUrl: textoDeConvite(SITE_URL),
+      textoComUrl: textoDeConvite(`${SITE_URL}/jogue`),
     },
     ...(comPercentil
       ? [
@@ -104,9 +105,9 @@ export function ResultadoFinal(p: {
             rotulo: `Mais que ${percentilAbaixo}%`,
             urlImagem: `/percentil?p=${percentilAbaixo}`,
             nomeArquivo: NOME_ARQUIVO_PERCENTIL,
-            url: SITE_URL,
+            url: `${SITE_URL}/jogue/${percentilAbaixo}`,
             texto: textoDePercentil(percentilAbaixo),
-            textoComUrl: textoDePercentil(percentilAbaixo, SITE_URL),
+            textoComUrl: textoDePercentil(percentilAbaixo, `${SITE_URL}/jogue/${percentilAbaixo}`),
           },
         ]
       : []),

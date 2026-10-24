@@ -394,7 +394,7 @@ describe('ResultadoFinal: escolha do cartão', () => {
   const textoConvite = 'Já joguei o Caiu Nessa? Agora é sua vez: será que você cai?'
   const radios = () => screen.getAllByRole('radio').map(r => r.closest('label')!.textContent)
 
-  it('o convite vem primeiro e escolhido: WhatsApp, Mais e Baixar sem números e com o link da capa', async () => {
+  it('o convite vem primeiro e escolhido: WhatsApp, Mais e Baixar sem números e com o link /jogue', async () => {
     const share = vi.fn().mockResolvedValue(undefined)
     stubNavegador({ share })
     renderizar()
@@ -403,13 +403,13 @@ describe('ResultadoFinal: escolha do cartão', () => {
     expect(screen.getByRole('radio', { name: 'Convite' })).toBeChecked()
     expect(screen.getByRole('link', { name: 'Mandar no WhatsApp' })).toHaveAttribute(
       'href',
-      `https://wa.me/?text=${encodeURIComponent(`${textoConvite}\n${SITE_URL}`)}`,
+      `https://wa.me/?text=${encodeURIComponent(`${textoConvite}\n${SITE_URL}/jogue`)}`,
     )
     const baixar = screen.getByRole('link', { name: 'Baixar imagem para os stories' })
     expect(baixar).toHaveAttribute('href', '/convite')
     expect(baixar).toHaveAttribute('download', NOME_ARQUIVO_CONVITE)
     fireEvent.click(botao())
-    expect(share).toHaveBeenCalledWith({ text: textoConvite, url: SITE_URL, title: TITULO })
+    expect(share).toHaveBeenCalledWith({ text: textoConvite, url: `${SITE_URL}/jogue`, title: TITULO })
   })
 
   it('com estatísticas na rodada 1: o cartão "Mais que X%" entra em segundo, sem placar', async () => {
@@ -431,7 +431,7 @@ describe('ResultadoFinal: escolha do cartão', () => {
     fireEvent.click(stories())
     const [dadosShare] = share.mock.calls[0]
     expect(dadosShare.files[0].name).toBe(NOME_ARQUIVO_PERCENTIL)
-    expect(dadosShare.text).toBe(`Acertei mais que 73% das pessoas no Caiu Nessa? Como será que você se sai?\n${SITE_URL}`)
+    expect(dadosShare.text).toBe(`Acertei mais que 73% das pessoas no Caiu Nessa? Como será que você se sai?\n${SITE_URL}/jogue/73`)
   })
 
   it('tocar no cartão vizinho o escolhe: rótulo, ponto e Baixar acompanham', async () => {
