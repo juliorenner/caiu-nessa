@@ -39,8 +39,8 @@ it('imprime jogadas, compartilhamentos e o funil do banco em DATABASE_URL', asyn
   ])
   await db.insert(schema.eventos).values([
     { tipo: 'compartilhar', dados: { modo: 'link', resultado: 'copiado' } },
-    { tipo: 'compartilhar', dados: { modo: 'imagem', resultado: 'cancelado' } },
-    { tipo: 'compartilhar', dados: { modo: 'baixar', resultado: 'clique' } },
+    { tipo: 'compartilhar', dados: { modo: 'imagem', resultado: 'cancelado', cartao: 'placar' } },
+    { tipo: 'compartilhar', dados: { modo: 'baixar', resultado: 'clique', cartao: 'convite' } },
   ])
   await cliente.close()
 
@@ -58,6 +58,9 @@ it('imprime jogadas, compartilhamentos e o funil do banco em DATABASE_URL', asyn
     '  imagem / cancelado: 1',
     '  link / copiado: 1',
     'compartilhamentos estimados: 2',
+    'compartilhamentos por cartão',
+    '  convite: 1',
+    '  sem registro: 1',
     `funil desde ${inicio.toISOString().slice(0, 10)}`,
     '  começaram: 2',
     '  concluíram a primeira rodada: 1 (50%)',
