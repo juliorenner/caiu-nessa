@@ -2339,5 +2339,83 @@
     "fonte_url": "https://www.aosfatos.org/noticias/coro-lula-rock-in-rio/",
     "data_checagem": "2026-09-14",
     "alcance": 1
+  },
+  {
+    "id": "0236f27b",
+    "texto": "O jogo do tigrinho, das apostas on-line, foi criado pelo governo Jair Bolsonaro em 2022.",
+    "citacao": "O ‘tigrinho’ foi criado por vocês [governo Bolsonaro] em 2022.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), no debate da Globo",
+    "veredito": "falso",
+    "explicacao": "A Lupa classificou como falso e o G1 Fato ou Fake como #FAKE; o Estadão Verifica também deu falso à fala de Lula que atribui o tigrinho a Jair Bolsonaro. As apostas on-line foram legalizadas pela Lei 13.756, sancionada por Michel Temer em dezembro de 2018. O governo Bolsonaro deixou passar o prazo para regulamentar o setor, que operou sem regras; a regulamentação veio com a Lei 14.790, sancionada por Lula em 2023.",
+    "fonte_nome": "Lupa",
+    "fonte_url": "https://www.agencialupa.org/checagem/2026/10/23/ao-vivo-checagem-do-ultimo-debate-entre-lula-e-flavio-bolsonaro-no-segundo-turno/",
+    "data_checagem": "2026-10-23",
+    "alcance": 3
+  },
+  {
+    "id": "122ae1d2",
+    "texto": "O governo Jair Bolsonaro gastou quase 30% a mais que o governo Lula com o cartão corporativo.",
+    "citacao": "Eles [governo de Jair Bolsonaro] gastaram quase 30% a mais do que nós [no cartão corporativo].",
+    "lado": "esquerda",
+    "autor": "Lula (PT), no debate da Globo",
+    "veredito": "falso",
+    "explicacao": "O G1 Fato ou Fake classificou como #FAKE. Analisando os gastos do cartão corporativo da Presidência de 2019 a agosto de 2026, nenhuma comparação sustenta os quase 30%: nos primeiros 44 meses de cada mandato, corrigidos pela inflação, Bolsonaro gastou R$ 95,4 milhões e Lula R$ 91,6 milhões, cerca de 4% a mais; no período total, corrigido, a diferença foi de cerca de 14%.",
+    "fonte_nome": "G1 Fato ou Fake",
+    "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/23/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-globo-no-2o-turno-das-eleicoes-2026.ghtml",
+    "data_checagem": "2026-10-23",
+    "alcance": 2
+  },
+  {
+    "id": "d7028255",
+    "texto": "O governo Lula está fazendo a BR-319, entre Porto Velho e Manaus, uma rodovia que ninguém teve coragem de fazer.",
+    "citacao": "[...] nós estamos fazendo uma rodovia muito importante, que ninguém teve coragem de fazer, que liga Porto Velho a Manaus, que é a BR-319.",
+    "lado": "esquerda",
+    "autor": "Lula (PT), no debate da Globo",
+    "veredito": "enganoso",
+    "explicacao": "O G1 Fato ou Fake classificou como #NÃOÉBEMASSIM e a Lupa como \"falta contexto\". A BR-319 foi construída durante a ditadura militar e inaugurada em 1976; ficou intrafegável por falta de manutenção, e as obras atuais são de reconstrução. A Lupa lembra que a licença prévia para o \"Trecho do Meio\" foi emitida pelo Ibama em 2022, no governo Bolsonaro; as obras foram retomadas no governo Lula e não estão concluídas.",
+    "fonte_nome": "G1 Fato ou Fake",
+    "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/23/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-globo-no-2o-turno-das-eleicoes-2026.ghtml",
+    "data_checagem": "2026-10-23",
+    "alcance": 3
+  },
+  {
+    "id": "3db29d6e",
+    "texto": "A espera por uma cirurgia de câncer de tireoide passou de 700 dias.",
+    "citacao": "O fato concreto é que a espera para uma cirurgia de câncer de tireoide ultrapassou os 700 dias.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), no debate da Globo",
+    "veredito": "verdadeiro",
+    "explicacao": "A Lupa classificou como verdadeiro e o G1 Fato ou Fake como #FATO. Relatório do TCU de junho de 2026 indica que a fila para cirurgia de câncer de tireoide foi de 719 dias em 2025. As agências registram que o número oscila: foi de 1.121 dias em 2022, 421 em 2023 e 75 em 2024.",
+    "fonte_nome": "Lupa",
+    "fonte_url": "https://www.agencialupa.org/checagem/2026/10/23/ao-vivo-checagem-do-ultimo-debate-entre-lula-e-flavio-bolsonaro-no-segundo-turno/",
+    "data_checagem": "2026-10-23",
+    "alcance": 3
+  },
+  {
+    "id": "665b6616",
+    "texto": "Lula votou contra a Constituição de 1988, que criou o SUS.",
+    "citacao": "O Lula votou contra a Constituição de 88 que criou o SUS.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), no debate da Globo",
+    "veredito": "verdadeiro",
+    "explicacao": "O G1 Fato ou Fake classificou como #FATO. O Diário da Assembleia Nacional Constituinte registra o voto contrário do então deputado Lula ao texto: o PT orientou o voto contra por considerar o resultado conservador. Apesar disso, os parlamentares do partido, Lula entre eles, assinaram a Constituição.",
+    "fonte_nome": "G1 Fato ou Fake",
+    "fonte_url": "https://g1.globo.com/fato-ou-fake/eleicoes/noticia/2026/10/23/veja-o-que-e-fato-ou-fake-nas-falas-de-flavio-bolsonaro-e-lula-no-debate-da-globo-no-2o-turno-das-eleicoes-2026.ghtml",
+    "data_checagem": "2026-10-23",
+    "alcance": 2
+  },
+  {
+    "id": "7be06631",
+    "texto": "O novo Marco Legal do Saneamento Básico foi feito no governo Jair Bolsonaro.",
+    "citacao": "E nós fizemos o Marco Legal do Saneamento Básico.",
+    "lado": "direita",
+    "autor": "Flávio Bolsonaro (PL), no debate da Globo",
+    "veredito": "verdadeiro",
+    "explicacao": "A Lupa classificou como verdadeiro e o G1 Fato ou Fake como #FATO. O novo marco, sancionado em julho de 2020 (Lei 14.026), nasceu do PL 4.162/2019, enviado pelo governo Bolsonaro. As agências ressalvam que ele revisou uma lei de 2007, do governo Lula, que já fixava as diretrizes do setor.",
+    "fonte_nome": "Lupa",
+    "fonte_url": "https://www.agencialupa.org/checagem/2026/10/23/ao-vivo-checagem-do-ultimo-debate-entre-lula-e-flavio-bolsonaro-no-segundo-turno/",
+    "data_checagem": "2026-10-23",
+    "alcance": 3
   }
 ]
