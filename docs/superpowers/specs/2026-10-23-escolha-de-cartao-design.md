@@ -9,7 +9,7 @@ Na tela de fim, acima da linha de compartilhar, um carrossel "Escolha o cartão"
 | Cartão | Imagem | Texto | Link |
 |---|---|---|---|
 | **Convite** (primeiro, já escolhido) | `GET /convite`, tema noite: "Eu já joguei / Sua vez", carimbo, "E você, cai nessa?", os três selos de veredito, "Duvido você não cair em nenhuma", "Insira a ficha" | "Já joguei o Caiu Nessa? Agora é sua vez: será que você cai?" | capa (prévia sem números) |
-| **Mais que X%** | `GET /percentil?p=X` (1 a 99): "Acertei mais que X% das pessoas", "Duvido você passar de mim" | "Acertei mais que X% das pessoas no Caiu Nessa? Duvido você passar de mim." | capa |
+| **Mais que X%** | `GET /percentil?p=X` (1 a 99): "Acertei mais que X% das pessoas", "Como será que você se sai?" | "Acertei mais que X% das pessoas no Caiu Nessa? Como será que você se sai?" | capa |
 | **Com placar** | `GET /cartao` (o de sempre) | o de sempre | `/r/…` (o de sempre) |
 
 O "Mais que X%" só aparece onde a tela já mostra a comparação (rodada 1, com estatísticas) e quando X está entre 1 e 99.

@@ -26,6 +26,6 @@ export const NOME_ARQUIVO_PERCENTIL = 'caiu-nessa-percentil.png'
 
 // A comparação sem o placar: quanto foi bem, não quantas errou.
 export function textoDePercentil(percentil: number, url?: string): string {
-  const frase = `Acertei mais que ${percentil}% das pessoas no Caiu Nessa? Duvido você passar de mim.`
+  const frase = `Acertei mais que ${percentil}% das pessoas no Caiu Nessa? Como será que você se sai?`
   return url ? [frase, url].join('\n') : frase
 }
