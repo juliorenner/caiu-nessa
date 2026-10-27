@@ -35,7 +35,7 @@ describe('textos derivados de src/lib/rodadas.ts', () => {
 
   it('a home e a descrição mostram TOTAL_AFIRMACOES', () => {
     const { container } = render(createElement(Home))
-    expect(container.textContent).toContain(`${TOTAL_AFIRMACOES} afirmações sobre a eleição.`)
-    expect(DESCRICAO.startsWith(`${TOTAL_AFIRMACOES} afirmações da eleição.`)).toBe(true)
+    expect(container.textContent).toContain(`${TOTAL_AFIRMACOES} afirmações do mundo político brasileiro.`)
+    expect(DESCRICAO.startsWith(`${TOTAL_AFIRMACOES} afirmações do mundo político brasileiro.`)).toBe(true)
   })
 })

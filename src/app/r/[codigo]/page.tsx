@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await lerParametros(params)
   const title = `Alguém fez ${p.a}/${p.t} no Caiu Nessa?`
   // O convite é para quem recebe: a primeira rodada dele tem sempre TOTAL_AFIRMACOES.
-  const description = `${fraseDoCaiu(p.c)} E você? ${TOTAL_AFIRMACOES} afirmações da eleição: verdade, mentira ou cheira mal.`
+  const description = `${fraseDoCaiu(p.c)} E você? ${TOTAL_AFIRMACOES} afirmações do mundo político brasileiro: verdade, mentira ou cheira mal.`
   return {
     title,
     description,

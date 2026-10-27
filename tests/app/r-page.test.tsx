@@ -75,7 +75,7 @@ describe('generateMetadata de /r/[codigo]', () => {
   it('usa título, descrição e a imagem da rota', async () => {
     const m = await generateMetadata({ params: params(CODIGO) })
     const titulo = `Alguém fez ${A}/${TOTAL_AFIRMACOES} no Caiu Nessa?`
-    const descricao = `Caiu em 1 das falsas ou enganosas. E você? ${TOTAL_AFIRMACOES} afirmações da eleição: verdade, mentira ou cheira mal.`
+    const descricao = `Caiu em 1 das falsas ou enganosas. E você? ${TOTAL_AFIRMACOES} afirmações do mundo político brasileiro: verdade, mentira ou cheira mal.`
     expect(m).toEqual({
       title: titulo,
       description: descricao,
@@ -88,7 +88,7 @@ describe('generateMetadata de /r/[codigo]', () => {
   it('c = 0 vira "Não caiu em nenhuma."', async () => {
     const m = await generateMetadata({ params: params('6-6-0-imune-aaaaaa') })
     expect(m.description).toBe(
-      `Não caiu em nenhuma. E você? ${TOTAL_AFIRMACOES} afirmações da eleição: verdade, mentira ou cheira mal.`,
+      `Não caiu em nenhuma. E você? ${TOTAL_AFIRMACOES} afirmações do mundo político brasileiro: verdade, mentira ou cheira mal.`,
     )
   })
 

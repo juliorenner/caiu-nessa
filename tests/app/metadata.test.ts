@@ -14,7 +14,7 @@ it('metadata tem OG e Twitter com base absoluta', () => {
   expect(metadata.metadataBase?.toString()).toBe(`${SITE_URL}/`)
   expect(metadata.description).toBe(DESCRICAO)
   expect(DESCRICAO).toBe(
-    `${TOTAL_AFIRMACOES} afirmações da eleição. Verdade, mentira ou cheira mal? Descubra em quantas você caiu.`,
+    `${TOTAL_AFIRMACOES} afirmações do mundo político brasileiro. Verdade, mentira ou cheira mal? Descubra em quantas você caiu.`,
   )
   expect(metadata.openGraph).toMatchObject({
     title: 'Caiu Nessa?',
