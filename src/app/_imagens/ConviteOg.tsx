@@ -77,7 +77,7 @@ export function ConviteOg() {
               lineHeight: 1.25,
             }}
           >
-            {`${TOTAL_AFIRMACOES} afirmações que circularam na eleição.`}
+            {`${TOTAL_AFIRMACOES} afirmações que circulam no mundo político brasileiro.`}
           </div>
         </div>
       </div>

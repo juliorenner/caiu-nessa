@@ -120,7 +120,7 @@ export function Convite() {
             lineHeight: 1.25,
           }}
         >
-          {`${TOTAL_AFIRMACOES} afirmações que circularam na eleição. Duvido você não cair em nenhuma.`}
+          {`${TOTAL_AFIRMACOES} afirmações que circulam no mundo político brasileiro. Duvido você não cair em nenhuma.`}
         </div>
       </div>
 

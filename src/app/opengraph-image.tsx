@@ -76,7 +76,7 @@ export default async function Image(): Promise<ImageResponse> {
                   color: TINTA,
                 }}
               >
-                {`${TOTAL_AFIRMACOES} afirmações da eleição. Verdade, mentira ou cheira mal?`}
+                {`${TOTAL_AFIRMACOES} afirmações do mundo político brasileiro. Verdade, mentira ou cheira mal?`}
               </div>
             </div>
           </div>
