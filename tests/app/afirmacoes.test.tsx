@@ -50,8 +50,10 @@ describe('página /afirmacoes', () => {
     await renderizar()
     const cards = screen.getAllByRole('article')
     expect(cards).toHaveLength(pool.length)
+    // O texto de cada card é lido uma vez: procurar cada afirmação com queryByText em cada card estourava o tempo.
+    const textos = cards.map((c) => c.textContent ?? '')
     for (const a of pool) {
-      const card = cards.find((c) => within(c).queryByText(a.texto) !== null)
+      const card = cards[textos.findIndex((t) => t.includes(a.texto))]
       expect(card, a.id).toBeDefined()
       expect(within(card!).getByText(`Quem disse: ${a.autor}`)).toBeInTheDocument()
       expect(within(card!).getByText(`“${a.citacao}”`)).toBeInTheDocument()
