@@ -65,11 +65,11 @@ export async function processarResultado(
   const resultado = calcularResultado(rodada, respostas)
 
   const ipHash = hashIp(extrairIp(headers), salt)
+  await limparIpHashesExpirados(db, agora)
   if (interno) {
     await limparIpHashesDeEventosExpirados(db, agora)
     if (!(await registrarInternoDentroDoLimite(db, ipHash, agora))) return { status: 429, body: { erro: 'muitas_jogadas' } }
   } else {
-    await limparIpHashesExpirados(db, agora)
     const gravada = await inserirDentroDoLimite(
       db,
       {
