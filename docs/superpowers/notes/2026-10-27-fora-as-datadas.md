@@ -8,7 +8,7 @@ Depois da eleição de 2026, o dono decidiu que o Caiu Nessa? fica no ar como qu
 
 Fica fora do jogo a afirmação **datada**: só fazia sentido durante uma campanha eleitoral (promessa de candidato, ato de campanha, a própria disputa). Vale igual para os dois lados. Publicada em /como-escolhemos, no README e no skill `revisao-de-fatos` (que passa a só apontar esses casos ao dono, como já faz com a ambiguidade).
 
-Falas sobre governo, economia, segurança, saúde ou corrupção continuam, mesmo ditas em debate ou entrevista de campanha. Ficaram de propósito, no limite: 912298e6 e 65e218f6 ("está deixando"), cujo fato checado continua valendo.
+Falas sobre governo, economia, segurança, saúde ou corrupção continuam, mesmo ditas em debate ou entrevista de campanha. Ficaram de propósito, no limite: 912298e6 e 65e218f6 ("está deixando"), cujo fato checado continua valendo; e 492d1dda ("em comício, Lula disse que não acredita em Deus"), porque o boato é sobre a crença de Lula, não sobre o ato: os que saíram tratam do próprio ato de campanha (quem estava, o que se viu lá).
 
 A mesma PR abre o escopo de novas afirmações: políticos de esquerda e de direita, de qualquer partido (os de centro só quando publicamente alinhados a um lado), e posts com origem atribuída pela agência.
 

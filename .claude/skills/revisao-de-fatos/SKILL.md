@@ -15,9 +15,9 @@ Você está revisando o banco de afirmações do **Caiu Nessa?**, um quiz neutro
 |---|---|
 | `id` | 8 caracteres hexadecimais minúsculos, único |
 | `texto` | a afirmação em terceira pessoa, neutra, sem colchetes, sem "você", sem começar por "eu", sem "nós"/"a gente" |
-| `citacao` | a fala original, literal, ao menos 10 caracteres |
+| `citacao` | a fala original, literal, ao menos 10 caracteres; num post, o texto do post como a agência o reproduz |
 | `lado` | `esquerda` ou `direita`: de quem disse ou espalhou, conforme a agência atribui, não pelo assunto |
-| `autor` | quem disse, com partido e ocasião ("Lula (PT), no debate da Band") |
+| `autor` | quem disse, com partido e ocasião ("Lula (PT), no debate da Band"); num post, quem a agência diz que o espalhou, com partido, e a agência ("Posts nas redes amplificados pelo senador Márcio Bittar (PL-AC), segundo o Aos Fatos") |
 | `veredito` | `verdadeiro`, `falso` ou `enganoso` |
 | `explicacao` | ao menos 40 caracteres: o que a agência concluiu e por quê, citando a agência |
 | `fonte_nome` | Aos Fatos, Lupa, Comprova, G1 Fato ou Fake ou Estadão Verifica |
