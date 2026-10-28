@@ -76,14 +76,14 @@ it.each(Object.entries(TAMANHO_MAXIMO))('%s tem no máximo %i caracteres', (camp
   for (const a of todasAsAfirmacoes) expect(a[campo as keyof typeof TAMANHO_MAXIMO].length, a.id).toBeLessThanOrEqual(maximo)
 })
 
-// Datas reais, dentro do período da campanha e nunca no futuro.
-const INICIO_DA_CAMPANHA = '2026-01-01'
-it('data_checagem é uma data real entre o início da campanha e hoje', () => {
+// Datas reais, de 2025 em diante (o jogo cobre o mundo político, não só a campanha de 2026) e nunca no futuro.
+const INICIO_DO_PERIODO = '2025-01-01'
+it('data_checagem é uma data real entre o início do período e hoje', () => {
   const hoje = new Date().toISOString().slice(0, 10)
   for (const a of todasAsAfirmacoes) {
     const data = new Date(`${a.data_checagem}T00:00:00Z`)
     expect(data.toISOString().slice(0, 10), a.id).toBe(a.data_checagem)
-    expect(a.data_checagem >= INICIO_DA_CAMPANHA, `${a.id}: ${a.data_checagem}`).toBe(true)
+    expect(a.data_checagem >= INICIO_DO_PERIODO,`${a.id}: ${a.data_checagem}`).toBe(true)
     expect(a.data_checagem <= hoje, `${a.id}: ${a.data_checagem}`).toBe(true)
   }
 })
