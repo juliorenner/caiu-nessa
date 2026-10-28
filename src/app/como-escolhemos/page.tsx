@@ -39,7 +39,7 @@ export default function ComoEscolhemos() {
 
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Mesmo peso para os dois lados</h2>
       <p className="mt-2">
-        Cada rodada é sorteada de um conjunto maior e tem o mesmo número de afirmações de cada lado da disputa e, em cada
+        Cada rodada é sorteada de um conjunto maior e tem o mesmo número de afirmações da esquerda e da direita e, em cada
         lado, o mesmo número de verdadeiras, falsas e enganosas: a primeira rodada tem {TOTAL_AFIRMACOES} afirmações: de
         cada lado, {descricaoDaComposicao(COMPOSICAO_PRIMEIRA)}; as seguintes têm {tamanhoDa(COMPOSICAO_EXTRA)}, de cada
         lado, {descricaoDaComposicao(COMPOSICAO_EXTRA)}. O &quot;lado&quot; de uma afirmação é
@@ -90,7 +90,7 @@ export default function ComoEscolhemos() {
 
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>O que o resultado mede</h2>
       <p className="mt-2">
-        Nenhum texto do jogo apoia ou ataca candidato. O resultado mede você, não os partidos: quantas você acertou e
+        Nenhum texto do jogo apoia ou ataca políticos. O resultado mede você, não os partidos: quantas você acertou e
         em quantas falsas ou enganosas de cada lado você acreditou.
       </p>
 

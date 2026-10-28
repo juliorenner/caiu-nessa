@@ -70,7 +70,7 @@ export default function Home() {
               Caiu Nessa?
             </h1>
             <p className="text-center text-[17px] leading-relaxed text-secundario lg:max-w-[30ch] lg:text-[21px]">
-              {TOTAL_AFIRMACOES} afirmações sobre a eleição. Você diz se é verdade, mentira ou se isso cheira mal. No fim, descobre em
+              {TOTAL_AFIRMACOES} afirmações do mundo político brasileiro. Você diz se é verdade, mentira ou se isso cheira mal. No fim, descobre em
               quantas caiu.
             </p>
             {/* De onde vem isso? A resposta fica junto da contagem; em lg, na coluna de links ao lado do Começar. */}
