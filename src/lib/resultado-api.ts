@@ -5,9 +5,17 @@ import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
 import { type Avaliacao, gerarAvaliacao } from '@/lib/avaliacao'
 import { type Estatisticas, obterEstatisticas, percentilAbaixo } from '@/lib/estatisticas'
 import { type Resultado, calcularResultado } from '@/lib/pontuacao'
-import { extrairIp, hashIp, inserirDentroDoLimite, limparIpHashesExpirados } from '@/lib/rate-limit'
+import {
+  extrairIp,
+  hashIp,
+  inserirDentroDoLimite,
+  limparIpHashesDeEventosExpirados,
+  limparIpHashesExpirados,
+  registrarInternoDentroDoLimite,
+} from '@/lib/rate-limit'
 
-// `interno`: jogador interno (o dono testando, o teste de fumaça); o resultado sai igual, mas a jogada não é gravada.
+// `interno`: jogador interno (o dono testando, o teste de fumaça); a jogada não é gravada nem entra na comparação,
+// mas passa pelo mesmo limite por IP.
 export const corpoSchema = z.object({
   respostas: z.record(z.string(), z.enum(VEREDITOS)),
   interno: z.boolean().optional(),
@@ -18,7 +26,7 @@ export interface RespostaResultado {
   avaliacao: Avaliacao
   estatisticas: Estatisticas | null
   percentilAbaixo: number | null
-  // true só quando a consulta de estatísticas falhou depois de gravar a jogada.
+  // true só quando a consulta de estatísticas falhou depois de gravar a jogada (ou de aceitar a interna).
   estatisticasIndisponiveis: boolean
 }
 
@@ -56,8 +64,11 @@ export async function processarResultado(
   const { respostas, interno } = validacao.data
   const resultado = calcularResultado(rodada, respostas)
 
-  if (!interno) {
-    const ipHash = hashIp(extrairIp(headers), salt)
+  const ipHash = hashIp(extrairIp(headers), salt)
+  if (interno) {
+    await limparIpHashesDeEventosExpirados(db, agora)
+    if (!(await registrarInternoDentroDoLimite(db, ipHash, agora))) return { status: 429, body: { erro: 'muitas_jogadas' } }
+  } else {
     await limparIpHashesExpirados(db, agora)
     const gravada = await inserirDentroDoLimite(
       db,
