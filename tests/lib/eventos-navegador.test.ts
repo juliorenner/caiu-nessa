@@ -16,6 +16,12 @@ describe('registrarEvento', () => {
     })
   })
 
+  it('jogador interno não envia nada', () => {
+    const enviar = vi.fn().mockResolvedValue(new Response(null, { status: 204 }))
+    registrarEvento(evento, enviar, true)
+    expect(enviar).not.toHaveBeenCalled()
+  })
+
   it('nunca lança: rejeição, erro síncrono ou fetch ausente', async () => {
     const rejeita = vi.fn().mockRejectedValue(new Error('rede caiu'))
     expect(() => registrarEvento(evento, rejeita)).not.toThrow()

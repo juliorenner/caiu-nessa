@@ -48,6 +48,15 @@ describe('processarResultado', () => {
     expect(linha.acertosEsquerda).toBe(5)
   })
 
+  it('jogada interna: devolve o resultado mas não grava nada', async () => {
+    const d = await deps()
+    const r = await processarResultado({ respostas: todasCertas, interno: true }, cab, d)
+    expect(r.status).toBe(200)
+    if (r.status !== 200) return
+    expect(r.body.resultado.acertos).toBe(Object.keys(todasCertas).length)
+    expect(await d.db.select().from(jogadas)).toHaveLength(0)
+  })
+
   it('429 na 6ª jogada do mesmo IP em um minuto', async () => {
     const d = await deps()
     for (let i = 0; i < 5; i++) expect((await processarResultado({ respostas: todasCertas }, cab, d)).status).toBe(200)

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Respostas, Veredito } from '@/lib/afirmacoes'
 import { registrarEvento } from '@/lib/eventos-navegador'
+import { jogadorInterno } from '@/lib/interno'
 import { ehQuase } from '@/lib/pontuacao'
 import type { RespostaResultado } from '@/lib/resultado-api'
 import { somLigado, tocarSomDaUrna } from '@/lib/som-urna'
@@ -136,7 +137,7 @@ export default function Quiz({
       const resposta = await fetch('/api/resultado', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ respostas: todas }),
+        body: JSON.stringify(jogadorInterno() ? { respostas: todas, interno: true } : { respostas: todas }),
       })
       if (!resposta.ok) {
         const motivo = resposta.status === 429 ? 'limite' : resposta.status === 400 ? 'invalido' : 'falha'

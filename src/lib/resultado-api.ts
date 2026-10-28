@@ -7,7 +7,11 @@ import { type Estatisticas, obterEstatisticas, percentilAbaixo } from '@/lib/est
 import { type Resultado, calcularResultado } from '@/lib/pontuacao'
 import { extrairIp, hashIp, inserirDentroDoLimite, limparIpHashesExpirados } from '@/lib/rate-limit'
 
-export const corpoSchema = z.object({ respostas: z.record(z.string(), z.enum(VEREDITOS)) })
+// `interno`: jogador interno (o dono testando, o teste de fumaça); o resultado sai igual, mas a jogada não é gravada.
+export const corpoSchema = z.object({
+  respostas: z.record(z.string(), z.enum(VEREDITOS)),
+  interno: z.boolean().optional(),
+})
 
 export interface RespostaResultado {
   resultado: Resultado
@@ -49,27 +53,28 @@ export async function processarResultado(
   if (!validacao.success || !rodada) {
     return { status: 400, body: { erro: 'respostas_invalidas' } }
   }
-  const { respostas } = validacao.data
-
-  const ipHash = hashIp(extrairIp(headers), salt)
-  await limparIpHashesExpirados(db, agora)
-
+  const { respostas, interno } = validacao.data
   const resultado = calcularResultado(rodada, respostas)
-  const gravada = await inserirDentroDoLimite(
-    db,
-    {
-      respostas,
-      acertos: resultado.acertos,
-      total: resultado.total,
-      acertosEsquerda: resultado.acertosEsquerda,
-      acertosDireita: resultado.acertosDireita,
-      ipHash,
-    },
-    agora,
-  )
-  if (!gravada) return { status: 429, body: { erro: 'muitas_jogadas' } }
 
-  // A jogada já foi gravada: se as estatísticas falharem, o jogador não deve ser mandado tentar de novo.
+  if (!interno) {
+    const ipHash = hashIp(extrairIp(headers), salt)
+    await limparIpHashesExpirados(db, agora)
+    const gravada = await inserirDentroDoLimite(
+      db,
+      {
+        respostas,
+        acertos: resultado.acertos,
+        total: resultado.total,
+        acertosEsquerda: resultado.acertosEsquerda,
+        acertosDireita: resultado.acertosDireita,
+        ipHash,
+      },
+      agora,
+    )
+    if (!gravada) return { status: 429, body: { erro: 'muitas_jogadas' } }
+  }
+
+  // A jogada já foi gravada (ou é interna): se as estatísticas falharem, o jogador não deve ser mandado tentar de novo.
   let estatisticas: Estatisticas | null = null
   let estatisticasIndisponiveis = false
   try {
