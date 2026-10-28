@@ -51,6 +51,14 @@ describe('página /como-escolhemos', () => {
     )
     expect(texto).toContain('As afirmações que ficam fora do jogo aparecem na lista pública, com o motivo.')
     expect(texto).toContain('Uma afirmação também fica de fora quando o cartão não consegue ser fiel à fala sem confundir quem joga')
+    expect(texto).toContain('Fica de fora ainda a afirmação datada, que só fazia sentido durante uma campanha eleitoral')
+  })
+
+  it('diz quem entra: os dois lados, de qualquer partido, e posts com origem atribuída pela agência', () => {
+    const { container } = render(<ComoEscolhemos />)
+    const texto = container.textContent!.replace(/\s+/g, ' ')
+    expect(texto).toContain('Entram falas de políticos de esquerda e de direita, de qualquer partido, e posts que circulam nas redes')
+    expect(texto).toContain('um post sem autor conhecido só entra quando a agência diz quem o espalhou')
   })
 
   it('publica o critério de alcance e a preferência da primeira rodada', () => {

@@ -43,8 +43,11 @@ export default function ComoEscolhemos() {
         lado, o mesmo número de verdadeiras, falsas e enganosas: a primeira rodada tem {TOTAL_AFIRMACOES} afirmações: de
         cada lado, {descricaoDaComposicao(COMPOSICAO_PRIMEIRA)}; as seguintes têm {tamanhoDa(COMPOSICAO_EXTRA)}, de cada
         lado, {descricaoDaComposicao(COMPOSICAO_EXTRA)}. O &quot;lado&quot; de uma afirmação é
-        definido por quem a disse ou a espalhou, conforme a agência de checagem atribui, não pelo assunto. Damos
-        prioridade às afirmações que mais circularam. Durante o jogo o lado não aparece.
+        definido por quem a disse ou a espalhou, conforme a agência de checagem atribui, não pelo assunto. Entram
+        falas de políticos de esquerda e de direita, de qualquer partido, e posts que circulam nas redes; políticos de
+        centro só entram quando são publicamente alinhados a um dos lados, e um post sem autor conhecido só entra
+        quando a agência diz quem o espalhou. Damos prioridade às afirmações que mais circularam. Durante o jogo o lado
+        não aparece.
       </p>
 
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Verdade, mentira ou enganoso</h2>
@@ -72,8 +75,9 @@ export default function ComoEscolhemos() {
         de fora. Nos outros casos, vale a maioria dos votos; no empate entre verdadeiro e enganoso, vale enganoso; no
         empate entre falso e enganoso, vale falso. Uma afirmação também fica de fora quando o cartão não consegue ser
         fiel à fala sem confundir quem joga, por exemplo quando o veredito depende de um contexto que não cabe no
-        cartão; isso vale igual para os dois lados. As afirmações que ficam fora do jogo aparecem na lista pública, com
-        o motivo.
+        cartão; isso vale igual para os dois lados. Fica de fora ainda a afirmação datada, que só fazia sentido durante
+        uma campanha eleitoral, como promessa de candidato, ato de campanha ou a própria disputa, também igual para os
+        dois lados. As afirmações que ficam fora do jogo aparecem na lista pública, com o motivo.
       </p>
 
       <h2 className={`mt-8 ${TITULO_LETREIRO} text-lg`}>Alcance</h2>
