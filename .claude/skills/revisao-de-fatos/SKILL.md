@@ -5,7 +5,7 @@ description: Revisão mensal do banco de afirmações do Caiu Nessa? (src/data/a
 
 # Revisão de fatos
 
-Você está revisando o banco de afirmações do **Caiu Nessa?**, um quiz neutro em português sobre o segundo turno presidencial de 2026 (Lula/PT = `esquerda`, Flávio Bolsonaro/PL = `direita`). O jogador vê uma afirmação e diz se é verdade, mentira ou enganosa; o veredito vem sempre de uma agência de checagem, nunca do jogo. Tudo o que você escrever vai para uma PR que o dono revisa antes de entrar. Trabalhe em português.
+Você está revisando o banco de afirmações do **Caiu Nessa?**, um quiz neutro em português sobre afirmações do mundo político brasileiro, de esquerda (`esquerda`) e de direita (`direita`). Boa parte do arquivo vem da eleição presidencial de 2026 (Lula/PT e Flávio Bolsonaro/PL), mas o jogo não é mais só sobre ela. O jogador vê uma afirmação e diz se é verdade, mentira ou enganosa; o veredito vem sempre de uma agência de checagem, nunca do jogo. Tudo o que você escrever vai para uma PR que o dono revisa antes de entrar. Trabalhe em português.
 
 ## O arquivo
 
@@ -39,14 +39,14 @@ Para cada item (inclusive os com `observacao`):
 1. Leia a página com `npx tsx scripts/pagina.ts <fonte_url>`: ele devolve o texto inteiro (sem o corte do WebFetch e sem recusar domínio) e traz os selos que ficam só em atributo, como `[SELO: FALSO]` do Aos Fatos. Uma página serve para todos os itens que a citam: leia cada página uma vez e confira todos os seus itens. Confira que a checagem continua no ar e que `veredito`, `citacao`, os números da `explicacao` e a `data_checagem` batem com a página. Revise o `alcance`: uma segunda agência da lista checando a mesma fala de debate ou TV nacional eleva 2 para 3.
 2. Divergência num campo: corrija o campo.
 3. Checagem retirada do ar, veredito mudado para rótulo que não conta como voto, ou outra agência da lista dizendo verdadeiro onde esta diz falso (ou o contrário): adicione `observacao` explicando (o item sai do jogo). Nunca apague um item, nem mude o `lado` de um item existente. Itens fora do jogo não entram no verificador de links.
-4. Cartão que não consegue ser fiel à fala sem confundir (o veredito depende de um contexto que não cabe no cartão): também é motivo para sair do jogo, mas é decisão do dono. Não adicione `observacao` por isso; registre o item na nota, com o porquê, para o dono decidir. Vale igual para os dois lados.
+4. Cartão que não consegue ser fiel à fala sem confundir (o veredito depende de um contexto que não cabe no cartão), ou afirmação datada (só fazia sentido durante uma campanha eleitoral: promessa de candidato, ato de campanha, a própria disputa): também é motivo para sair do jogo, mas é decisão do dono. Não adicione `observacao` por isso; registre o item na nota, com o porquê, para o dono decidir. Vale igual para os dois lados.
 5. Item que já tem `observacao`: reavalie. Se o motivo não vale mais, remova a `observacao` e ele volta ao jogo.
 
 Página que o script não consegue ler (erro HTTP ou tempo esgotado): tente uma vez mais; se continuar, registre o item na nota como "não verificado" e não o altere. A revisão só está completa quando todos os itens foram conferidos ou listados como "não verificado"; a nota diz quantos de cada.
 
 ## 2. Adicionar novas
 
-Pesquise com WebSearch checagens publicadas depois da `data_checagem` mais recente do arquivo, só nestes sites: aosfatos.org, agencialupa.org (ou lupa.uol.com.br), projetocomprova.com.br, g1.globo.com/fato-ou-fake, estadao.com.br (Estadão Verifica). Assunto: falas de Lula, Flávio Bolsonaro, seus vices e aliados sobre a disputa, atribuídas a um lado pela agência.
+Pesquise com WebSearch checagens publicadas depois da `data_checagem` mais recente do arquivo, só nestes sites: aosfatos.org, agencialupa.org (ou lupa.uol.com.br), projetocomprova.com.br, g1.globo.com/fato-ou-fake, estadao.com.br (Estadão Verifica). Assunto: falas de políticos de esquerda ou de direita, de qualquer partido (políticos de centro só quando publicamente alinhados a um dos lados), e posts que circulam nas redes quando a agência diz quem os espalhou; o lado vem dessa atribuição. Não entram afirmações datadas, que só fazem sentido durante uma campanha eleitoral (promessa de candidato, ato de campanha, a própria disputa).
 
 Prioridade: o que mais circulou; e os pares (lado, veredito) com menos itens jogáveis no arquivo (conte antes de escolher). Limites, conferidos pelo script: **até 6 novas por rodada, até 3 por lado**. Prefira menos itens bem documentados a muitos fracos.
 
