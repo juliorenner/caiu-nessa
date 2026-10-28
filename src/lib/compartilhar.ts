@@ -24,7 +24,7 @@ export function textoDeConvite(url?: string): string {
 
 // O mesmo convite, da home: quem compartilha ali pode ainda não ter jogado, então sem "já joguei".
 export function textoDeChamado(url?: string): string {
-  const frase = 'Conhece o Caiu Nessa? É um quiz sobre a eleição: será que você cai?'
+  const frase = 'Conhece o Caiu Nessa? É um quiz sobre o mundo político brasileiro: será que você cai?'
   return url ? [frase, url].join('\n') : frase
 }
 
