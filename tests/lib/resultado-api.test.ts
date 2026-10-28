@@ -48,6 +48,27 @@ describe('processarResultado', () => {
     expect(linha.acertosEsquerda).toBe(5)
   })
 
+  it('jogada interna: devolve o mesmo corpo de uma jogada normal, mas não grava jogada', async () => {
+    const d = await deps()
+    const r = await processarResultado({ respostas: todasCertas, interno: true }, cab, d)
+    expect(r.status).toBe(200)
+    if (r.status !== 200) return
+    const regular = await processarResultado({ respostas: todasCertas }, cab, await deps())
+    expect(regular.status).toBe(200)
+    if (regular.status !== 200) return
+    expect(r.body).toEqual(regular.body)
+    expect(await d.db.select().from(jogadas)).toHaveLength(0)
+  })
+
+  it('jogada interna também tem limite por IP: 429 na 6ª em um minuto, sem afetar o limite das jogadas normais', async () => {
+    const d = await deps()
+    for (let i = 0; i < 5; i++)
+      expect((await processarResultado({ respostas: todasCertas, interno: true }, cab, d)).status).toBe(200)
+    expect((await processarResultado({ respostas: todasCertas, interno: true }, cab, d)).status).toBe(429)
+    expect(await d.db.select().from(jogadas)).toHaveLength(0)
+    expect((await processarResultado({ respostas: todasCertas }, cab, d)).status).toBe(200)
+  })
+
   it('429 na 6ª jogada do mesmo IP em um minuto', async () => {
     const d = await deps()
     for (let i = 0; i < 5; i++) expect((await processarResultado({ respostas: todasCertas }, cab, d)).status).toBe(200)

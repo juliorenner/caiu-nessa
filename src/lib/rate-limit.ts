@@ -64,6 +64,25 @@ export async function inserirDentroDoLimite(
   return rows.length === 1
 }
 
+// A jogada interna não é gravada, mas passa pelo mesmo limite por IP: cada uma deixa só um evento
+// `interno`, sem conteúdo (o ip_hash some com o TTL), que as métricas não leem.
+export const TIPO_EVENTO_INTERNO = 'interno'
+
+// Mesmo statement único de inserirDentroDoLimite, contando os eventos `interno` do IP na janela.
+export async function registrarInternoDentroDoLimite(db: Db, ipHash: string, agora: Date = new Date()): Promise<boolean> {
+  const resultado = await db.execute(sql`
+    insert into ${eventos} (tipo, ip_hash)
+    select ${TIPO_EVENTO_INTERNO}::text, ${ipHash}::text
+    where (
+      select count(*) from ${eventos}
+      where tipo = ${TIPO_EVENTO_INTERNO}::text and ip_hash = ${ipHash}::text
+        and created_at > ${agora.toISOString()}::timestamptz - ${JANELA_MS}::int * interval '1 millisecond'
+    ) < ${LIMITE_POR_MINUTO}::int
+    returning id`)
+  const { rows } = resultado as { rows: { id: number }[] }
+  return rows.length === 1
+}
+
 export async function limparIpHashesExpirados(db: Db, agora: Date = new Date()): Promise<void> {
   const limite = new Date(agora.getTime() - TTL_IP_HASH_MS)
   await db

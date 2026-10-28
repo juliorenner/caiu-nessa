@@ -1,8 +1,15 @@
 import type { Evento } from '@/lib/eventos'
+import { jogadorInterno } from '@/lib/interno'
 
 // Envio em segundo plano: o chamador não espera e nada aqui lança (nem sem fetch no navegador:
 // globalThis.fetch dá undefined onde `fetch` puro daria ReferenceError fora do try).
-export function registrarEvento(evento: Evento, enviar: typeof fetch = globalThis.fetch): void {
+// O jogador interno não envia nada.
+export function registrarEvento(
+  evento: Evento,
+  enviar: typeof fetch = globalThis.fetch,
+  interno: boolean = jogadorInterno(),
+): void {
+  if (interno) return
   try {
     enviar('/api/evento', {
       method: 'POST',

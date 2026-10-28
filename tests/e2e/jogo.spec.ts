@@ -1,9 +1,15 @@
 import { expect, test } from '@playwright/test'
 import afirmacoes from '../../src/data/afirmacoes.json' with { type: 'json' }
+import { CHAVE_INTERNO } from '../../src/lib/interno'
 import { TOTAL_AFIRMACOES } from '../../src/lib/rodadas'
 
 // Em produção: só lê. Jogar uma rodada inteira grava uma jogada no placar.
 const somenteLeitura = process.env.E2E_SOMENTE_LEITURA === '1'
+
+// Em produção, o navegador do teste é jogador interno: responder a primeira carta não conta como partida nas métricas.
+test.beforeEach(async ({ page }) => {
+  if (somenteLeitura) await page.addInitScript(chave => localStorage.setItem(chave, '1'), CHAVE_INTERNO)
+})
 
 test('joga uma rodada inteira', async ({ page }) => {
   test.skip(somenteLeitura, 'grava uma jogada')

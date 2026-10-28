@@ -1,6 +1,6 @@
-import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Atkinson_Hyperlegible, Bungee, Bungee_Shade } from "next/font/google";
+import { MarcaInterna } from "@/components/MarcaInterna";
 import { FUNDO_PAGINA } from "@/components/rotulos";
 import { DESCRICAO, SITE_URL, TITULO } from "@/lib/site";
 import "./globals.css";
@@ -47,8 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className={`flex min-h-full flex-col font-sans ${FUNDO_PAGINA}`}>
         {children}
-        {/* Vercel Web Analytics: visitas, origem, país e aparelho, sem cookies; só carrega na Vercel. */}
-        <Analytics />
+        <MarcaInterna />
       </body>
     </html>
   );

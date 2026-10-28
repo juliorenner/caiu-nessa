@@ -5,16 +5,28 @@ import { TOTAL_AFIRMACOES } from '@/lib/rodadas'
 import { type Avaliacao, gerarAvaliacao } from '@/lib/avaliacao'
 import { type Estatisticas, obterEstatisticas, percentilAbaixo } from '@/lib/estatisticas'
 import { type Resultado, calcularResultado } from '@/lib/pontuacao'
-import { extrairIp, hashIp, inserirDentroDoLimite, limparIpHashesExpirados } from '@/lib/rate-limit'
+import {
+  extrairIp,
+  hashIp,
+  inserirDentroDoLimite,
+  limparIpHashesDeEventosExpirados,
+  limparIpHashesExpirados,
+  registrarInternoDentroDoLimite,
+} from '@/lib/rate-limit'
 
-export const corpoSchema = z.object({ respostas: z.record(z.string(), z.enum(VEREDITOS)) })
+// `interno`: jogador interno (o dono testando, o teste de fumaça); a jogada não é gravada nem entra na comparação,
+// mas passa pelo mesmo limite por IP.
+export const corpoSchema = z.object({
+  respostas: z.record(z.string(), z.enum(VEREDITOS)),
+  interno: z.boolean().optional(),
+})
 
 export interface RespostaResultado {
   resultado: Resultado
   avaliacao: Avaliacao
   estatisticas: Estatisticas | null
   percentilAbaixo: number | null
-  // true só quando a consulta de estatísticas falhou depois de gravar a jogada.
+  // true só quando a consulta de estatísticas falhou depois de gravar a jogada (ou de aceitar a interna).
   estatisticasIndisponiveis: boolean
 }
 
@@ -49,27 +61,31 @@ export async function processarResultado(
   if (!validacao.success || !rodada) {
     return { status: 400, body: { erro: 'respostas_invalidas' } }
   }
-  const { respostas } = validacao.data
+  const { respostas, interno } = validacao.data
+  const resultado = calcularResultado(rodada, respostas)
 
   const ipHash = hashIp(extrairIp(headers), salt)
   await limparIpHashesExpirados(db, agora)
+  if (interno) {
+    await limparIpHashesDeEventosExpirados(db, agora)
+    if (!(await registrarInternoDentroDoLimite(db, ipHash, agora))) return { status: 429, body: { erro: 'muitas_jogadas' } }
+  } else {
+    const gravada = await inserirDentroDoLimite(
+      db,
+      {
+        respostas,
+        acertos: resultado.acertos,
+        total: resultado.total,
+        acertosEsquerda: resultado.acertosEsquerda,
+        acertosDireita: resultado.acertosDireita,
+        ipHash,
+      },
+      agora,
+    )
+    if (!gravada) return { status: 429, body: { erro: 'muitas_jogadas' } }
+  }
 
-  const resultado = calcularResultado(rodada, respostas)
-  const gravada = await inserirDentroDoLimite(
-    db,
-    {
-      respostas,
-      acertos: resultado.acertos,
-      total: resultado.total,
-      acertosEsquerda: resultado.acertosEsquerda,
-      acertosDireita: resultado.acertosDireita,
-      ipHash,
-    },
-    agora,
-  )
-  if (!gravada) return { status: 429, body: { erro: 'muitas_jogadas' } }
-
-  // A jogada já foi gravada: se as estatísticas falharem, o jogador não deve ser mandado tentar de novo.
+  // A jogada já foi gravada (ou é interna): se as estatísticas falharem, o jogador não deve ser mandado tentar de novo.
   let estatisticas: Estatisticas | null = null
   let estatisticasIndisponiveis = false
   try {
