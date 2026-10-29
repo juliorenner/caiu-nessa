@@ -36,7 +36,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Ligar o auto-merge
-        uses: anthropics/claude-code-action@e4a6faad497d33dbc7144135c75e41f82f0bf6c0 # v1.0.255
+        uses: anthropics/claude-code-action@8041f1d17e0e7d2f2cfe35002962e9f26237c0bb # v1.0.263
         with:
           # Token do Claude Code da conta do dono (assinatura Max), guardado no ambiente `revisao`.
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -115,7 +115,7 @@ jobs:
 
       - name: Corrigir os apontamentos do cubic
         if: steps.teto.outputs.rodadas <= 2
-        uses: anthropics/claude-code-action@e4a6faad497d33dbc7144135c75e41f82f0bf6c0 # v1.0.255
+        uses: anthropics/claude-code-action@8041f1d17e0e7d2f2cfe35002962e9f26237c0bb # v1.0.263
         env:
           BASE_REF: origin/${{ github.event.pull_request.base.ref }}
           GH_REPO: ${{ github.repository }}
